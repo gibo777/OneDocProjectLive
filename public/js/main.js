@@ -159,6 +159,7 @@ $(document).ready(function(){
     });*/
 
 
+
     $("#current_eye_view").on('click', function(e) {
         var x = $("#current_password");
         var show_eye = $("#current_show_eye");
@@ -1498,7 +1499,18 @@ $(document).ready(function(){
                         $("#myModal").modal("hide");
                         // $("#dialog_content").html(data);
                         // $("#dialog_content").html("Approved by HR/Admin.").css('color','#008000');
-                        $("#dialog_content").html(data);
+                        
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: '',
+                        text: '',
+        
+                      }).then(function(){
+                        window.location.reload();
+                      });
+
+                        /*$("#dialog_content").html(data);
                         // $("#popup" ).attr('title','NOTIFICATION');
                         $("#dialog" ).dialog({
                             modal: true,
@@ -1515,7 +1527,7 @@ $(document).ready(function(){
                                 }
                             }
                             ]
-                        });
+                        });*/
                         console.log(data);
                     }
                 });
@@ -1539,7 +1551,17 @@ $(document).ready(function(){
                 data: { 'leaveID': $("#hid_leave_id").val() }, // prefer use serialize method
                 success:function(data){
                     $("#myModal").modal("hide");
-                    // $("#dialog_content").html(data);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Leave Taken',
+                        text: '',
+        
+                      }).then(function(){
+                        window.location.reload();
+                      });
+
+                    /*// $("#dialog_content").html(data);
                     // $("#dialog_content").html("Approved by HR/Admin.").css('color','#008000');
                     $("#dialog_content").html("Leave Taken");
                     // $("#popup" ).attr('title','NOTIFICATION');
@@ -1558,7 +1580,7 @@ $(document).ready(function(){
                             }
                         }
                         ]
-                    });
+                    });*/
                     console.log(data);
                 }
             });
@@ -1967,6 +1989,8 @@ $('.tabledata').DataTable();
                 success:function(data){
                     // prompt('',data); return false;
                     $("#departmentAddModal").modal('hide');
+
+
                     $("#dialog" ).dialog({
                         modal: true,
                         title: "DEPARTMENTS",
