@@ -1282,19 +1282,19 @@ $(document).ready(function(){
                 $("#myModalLabel").html("EDIT HOLIDAY");
                 $("#holidayAddModal").modal('show');
                 break;
-            case "edit_department":
-                // alert($(this).val() );
-                var dS = $(this).val().split('|');
-                $("#save_department").html('UPDATE');
-                $("#save_department").attr('disabled',true);
-                $("input").removeClass('empty');
-                $("select").removeClass('empty');
-                $("#hid_department_id").val(dS[0]);
-                $("#department_code").val(dS[1]);
-                $("#department").val(dS[2]);
-                $("#myModalLabel").html("EDIT DEPARTMENT");
-                $("#departmentAddModal").modal('show');
-                break;
+            // case "edit_department":
+            //     // alert($(this).val() );
+            //     var dS = $(this).val().split('|');
+            //     $("#save_department").html('UPDATE');
+            //     $("#save_department").attr('disabled',true);
+            //     $("input").removeClass('empty');
+            //     $("select").removeClass('empty');
+            //     $("#hid_department_id").val(dS[0]);
+            //     $("#department_code").val(dS[1]);
+            //     $("#department").val(dS[2]);
+            //     $("#myModalLabel").html("EDIT DEPARTMENT");
+            //     $("#departmentAddModal").modal('show');
+            //     break;
             default:
                 break;
             }
@@ -2013,6 +2013,27 @@ $('.tabledata').DataTable();
             });
         return false;
     });
+
+    //Naps Edits For Department
+    $(document).on('dblclick','.edit_department',function(){
+        try{
+            // alert($(this).val() );
+            var dS = $(this).attr('value').split('|');
+            $("#save_department").html('UPDATE');
+            $("#save_department").attr('disabled',true);
+            $("input").removeClass('empty');
+            $("select").removeClass('empty');
+            $("#hid_department_id").val(dS[0]);
+            $("#department_code").val(dS[1]);
+            $("#department").val(dS[2]);
+            $("#myModalLabel").html("EDIT DEPARTMENT");
+            $("#departmentAddModal").modal('show');
+        }catch(error){
+            console.log(error);
+        }
+    });
+
+
     /* DEPARTMENT end */
 
     /* OFFICE begin */
@@ -2446,8 +2467,7 @@ $('.tabledata').DataTable();
         //     });
         // return false;
     });
-
-    $('.edit-office-modal').click(async function(){
+    $(document).on('dblclick','.office-table tr',async function(){
         isEditInitialized = true;
         isEdit = true;
         isAdd = false;
@@ -2540,3 +2560,6 @@ $('.tabledata').DataTable();
     }
 
 });
+
+
+                                                     

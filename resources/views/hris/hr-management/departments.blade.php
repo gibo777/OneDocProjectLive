@@ -36,17 +36,21 @@
                                                 <th>ID</th>
                                                 <th>Code</th>
                                                 <th>Department</th>
-                                                <th>Actions</th>
+                                                {{-- <th>Actions</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody class="data" id="data">
                                             @foreach($departments as $department)
-                                                <tr>
+                                                <tr
+                                                    class="edit_department" 
+                                                    value="{{ $department->id.'|'.$department->department_code.'|'.$department->department }}" 
+                                                    title="Edit {{ $department->department }}" 
+                                                >
                                                     <td class="text-center">{{ $department->id }}</td>
                                                     <td class="text-center">{{ $department->department_code }}</td>
                                                     <td>{{ strtoupper($department->department) }}</td>
-                                                    <td id="action_buttons" class="text-center">
-                                                        <button 
+                                                    {{-- <td id="action_buttons" class="text-center"> --}}
+                                                        {{-- <button 
                                                             id="edit_department-{{ $department->id }}" 
                                                             value="{{ $department->id.'|'.$department->department_code.'|'.$department->department }}" 
                                                             title="Edit {{ $department->department }}" 
@@ -54,7 +58,7 @@
                                                             data-toggle="modal" 
                                                             data-target="#myModal">
                                                             {{ __('EDIT') }}
-                                                        </button>
+                                                        </button> --}}
                                                         <!-- <button id="delete-{{ $department->id }}" 
                                                             value="{{ $department->id }}" 
                                                             title="Delete {{ $department->department }}" 
@@ -64,7 +68,7 @@
 
 
 
-                                                    </td>
+                                                    {{-- </td> --}}
                                                 </tr>
                                             @endforeach
                                         </tbody>

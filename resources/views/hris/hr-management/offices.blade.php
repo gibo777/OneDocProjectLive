@@ -29,7 +29,7 @@
             <div id="table_data">
             <!-- Name -->
             <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                <table id="data_departments" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
+                <table id="data_departments" class="office-table table table-bordered table-striped sm:justify-center table-hover tabledata">
                 <thead class="thead">
                 <tr>
                     <th>Company Name</th>
@@ -38,12 +38,16 @@
                     <th>ZIP Code</th>
                     <th>TIN</th>
                     <th>Contact #</th>
-                    <th>Actions</th>
+                    {{-- <th>Actions</th> --}}
                 </tr>
                 </thead>
                 <tbody class="data" id="data">
                 @foreach($offices as $office)
-                    <tr>
+                    <tr
+                        id="{{ $office->id }}" 
+                        value="{{ $office->id.'|'.$office->company_name.'|'.$office->address }}" 
+                        title="Edit {{ $office->company_name }}" 
+                    >
                         <td class="text-center">{{ $office->company_name }}</td>
                         <td class="text-center">{{ join(', ',[$office->address,$office->city]) }}</td>
                         <td class="text-center">{{ $office->country }}</td>
@@ -51,7 +55,7 @@
                         <td class="text-center">{{ $office->tin }}</td>
                         <td class="text-center">{{ $office->contact }}</td>
                         {{-- <td class="text-center">{{ $office->department }}</td> --}}
-                        <td id="action_buttons" class="text-center">
+                        {{-- <td id="action_buttons" class="text-center">
                             <button 
                                 id="{{ $office->id }}" 
                                 value="{{ $office->id.'|'.$office->company_name.'|'.$office->address }}" 
@@ -61,7 +65,7 @@
                                 {{ __('EDIT') }}
                             </button>
                         
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
                 </tbody>
