@@ -398,6 +398,33 @@
                                         <x-jet-input-error for="birth_place" class="mt-2" />
                                 </div>
                             </div>
+                            <div class="row pt-2">
+                                <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="vacation_leaves" type="text" class="form-control block w-full" placeholder="Vacation Leaves" autocomplete="off" readonly/>
+                                    <x-jet-label for="vacation_leaves" value="{{ __('Vacation Leaves') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="civil_status" class="mt-2" />
+                                </div>
+                                <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="sick_leaves" type="text" class="form-control block w-full" placeholder="Sick Leaves" autocomplete="off" readonly/>
+                                    <x-jet-label for="sick_leaves" value="{{ __('Sick Leaves') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="civil_status" class="mt-2" />
+                                </div>
+                                <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="maternity_leaves" type="text" class="form-control block w-full" placeholder="Maternity Leaves" autocomplete="off" readonly/>
+                                    <x-jet-label for="maternity_leaves" value="{{ __('Maternity Leaves') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="civil_status" class="mt-2" />
+                                </div>
+                                <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="paternity_leaves" type="text" class="form-control block w-full" placeholder="Paternity Leaves" autocomplete="off" readonly/>
+                                    <x-jet-label for="paternity_leaves" value="{{ __('Paternity Leaves') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="civil_status" class="mt-2" />
+                                </div>
+                                <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="emergency_leaves" type="text" class="form-control block w-full" placeholder="Emergency Leaves" autocomplete="off" readonly/>
+                                    <x-jet-label for="emergency_leaves" value="{{ __('Emergency Leaves') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="civil_status" class="mt-2" />
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -444,18 +471,19 @@ $(document).ready(function() {
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
+                const {getemployee,getLeaves} = data;
                 var imgProfilePhotoLocation = '';
-                var dh = data.date_hired.split('-');
-                var sched = data.weekly_schedule.split('|');
+                var dh = getemployee.date_hired.split('-');
+                var sched = getemployee.weekly_schedule.split('|');
 
                 $("#update_weekly_schedule").val(sched);
                 $("#update_weekly_schedule").multiselect("refresh");
 
 
-                if (data.profile_photo_path!=null) {
-                    imgProfilePhotoLocation = document.location.origin+'/storage/'+data.profile_photo_path;
+                if (getemployee.profile_photo_path!=null) {
+                    imgProfilePhotoLocation = document.location.origin+'/storage/'+getemployee.profile_photo_path;
                 } else {
-                    switch(data.gender){
+                    switch(getemployee.gender){
                         case 'M':
                         imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-formal-male.png';
                         break;
@@ -467,33 +495,40 @@ $(document).ready(function() {
                     }
                 }
                 $("#imgProfile").attr('src',imgProfilePhotoLocation);
-                $("#employment_status").val(data.employment_status);
+                $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( [dh[1],dh[2],dh[0]].join('/') );
                 // $("input[name='weekly_schedule']").val(1);
-                $("#supervisor").val(data.supervisor);
+                $("#supervisor").val(getemployee.supervisor);
 
-                // alert(data.weekly_schedule);
-                $("#last_name").val(data.last_name);
-                $("#first_name").val(data.first_name);
-                $("#middle_name").val(data.middle_name);
-                $("#suffix").val(data.suffix);
+                // alert(getemployee.weekly_schedule);
+                $("#last_name").val(getemployee.last_name);
+                $("#first_name").val(getemployee.first_name);
+                $("#middle_name").val(getemployee.middle_name);
+                $("#suffix").val(getemployee.suffix);
 
-                $("#employee_id").val(data.employee_id);
-                $("#position").val(data.position);
-                $("#department").val(data.department);
+                $("#employee_id").val(getemployee.employee_id);
+                $("#position").val(getemployee.position);
+                $("#department").val(getemployee.department);
 
-                $("#country").val(data.country);
-                $("#province").val(data.province);
-                $("#city").val(data.city);
+                $("#country").val(getemployee.country);
+                $("#province").val(getemployee.province);
+                $("#city").val(getemployee.city);
 
-                $("#barangay").val(data.barangay);
-                $("#home_address").val(data.home_address);
-                $("#zip_code").val(data.zip_code);
+                $("#barangay").val(getemployee.barangay);
+                $("#home_address").val(getemployee.home_address);
+                $("#zip_code").val(getemployee.zip_code);
 
-                $("#email").val(data.email);
-                $("#contact_number").val(data.contact_number);
+                $("#email").val(getemployee.email);
+                $("#contact_number").val(getemployee.contact_number);
 
-                $('#updateEmployee > button').attr('id',data.id);
+                $('#vacation_leaves').val(getLeaves.VL ? getLeaves.VL : 0);
+                $('#sick_leaves').val(getLeaves.SL ? getLeaves.SL : 0);
+                $('#maternity_leaves').val(getLeaves.ML ? getLeaves.ML : 0);
+                $('#paternity_leaves').val(getLeaves.PL ? getLeaves.PL : 0);
+                $('#emergency_leaves').val(getLeaves.EL ? getLeaves.EL : 0);
+
+
+                $('#updateEmployee > button').attr('id',getemployee.id);
                 $("#EmployeesModal").modal('show');
             }
         });
