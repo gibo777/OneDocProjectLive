@@ -557,6 +557,7 @@ $(document).ready(function() {
             method: 'post',
             data: uD, // prefer use serialize method
             success:function(data){
+                console.log(data);
                 if(data.isSuccess==true) {
                     $("#EmployeesModal").modal('hide');
                     Swal.fire({
@@ -569,7 +570,7 @@ $(document).ready(function() {
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: data.message,
+                        title: JSON.stringify(data.message),
                     });
                 }
             }

@@ -847,11 +847,71 @@ $(document).ready(function(){
 
 
     /* VIEW HISTORY begin*/
-    $("#status_view > button").each(function (){
-        $(this).click(function() {
-            // alert($(this).val()); return false;
-        /*alert("Access ID: "+$("#hid_access_id").val()
-            +"\nLeave ID: "+$(this).val()); return false;*/
+    // $("#status_view > button").each(function (){
+    //     $(this).click(function() {
+    //         // alert($(this).val()); return false;
+    //     /*alert("Access ID: "+$("#hid_access_id").val()
+    //         +"\nLeave ID: "+$(this).val()); return false;*/
+    //         $.ajaxSetup({
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             }
+    //         });
+    //         $.ajax({
+    //             url: window.location.origin+'/hris/view-history',
+    //             method: 'get',
+    //             data: {'leave_reference': $(this).val() }, // prefer use serialize method
+    //             success:function(data){
+    //                 alert('test');
+    //                 // prompt('',data); return false;
+    //                 var historyLabel = "leave history";
+
+    //                 $("#data_history > tbody").empty();
+
+    //                 for(var n=0; n<data.length; n++) {
+    //                     $("#data_history > tbody:last-child")
+    //                     .append('<tr>');
+    //                     /*if ($("#hid_access_id").val()==1) {
+    //                         $("#data_history > tbody:last-child")
+    //                         .append('<td>'+data[n]['name']+'</td>')
+    //                         .append('<td>'+data[n]['employee_id']+'</td>')
+    //                         .append('<td>'+data[n]['department']+'</td>')
+    //                     }*/
+    //                     $("#data_history > tbody:last-child")
+    //                     .append('<td>'+data[n]['head_name']+'</td>')
+    //                     // .append('<td>'+data[n]['leave_number']+'</td>')
+    //                     .append('<td>'+data[n]['leave_type']+'</td>')
+    //                     .append('<td>'+data[n]['leave_balance']+'</td>')
+    //                     .append('<td>'+data[n]['action']+'</td>')
+    //                     .append('<td>'+data[n]['created_at']+'</td>')
+    //                     .append('<td id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason'].slice(0,10)+'</td>')
+    //                     .append('<td>'+data[n]['date_applied']+'</td>')
+    //                     .append('<td>'+data[n]['date_from']+'</td>')
+    //                     .append('<td>'+data[n]['date_to']+'</td>')
+    //                     .append('<td>'+data[n]['no_of_days']+'</td>');
+
+    //                     $("#title"+n).click(function () {
+    //                         $(this).attr('title').show();
+    //                     });
+    //                 }
+    //                 if ($("#hid_access_id").val()==1) {
+    //                     historyLabel = historyLabel+" of "+data[0]['name'];
+    //                 }
+    //                 historyLabel = historyLabel+" (Leave #"+data[0]['leave_number']+")";
+    //                 // var historyLabel = "leave history of Pangalan"+" (leave #"+7+")";
+    //                 $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
+    //                 $("#modalHistory").modal("show");
+    //             }
+    //         });
+
+
+    //         return false;
+    //     });
+    // });
+   
+    $(document).on('click','.open_leave',function(e){
+        try{
+            e.preventDefault();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -862,7 +922,7 @@ $(document).ready(function(){
                 method: 'get',
                 data: {'leave_reference': $(this).val() }, // prefer use serialize method
                 success:function(data){
-                    alert('test');
+                    // alert('test');
                     // prompt('',data); return false;
                     var historyLabel = "leave history";
 
@@ -903,10 +963,9 @@ $(document).ready(function(){
                     $("#modalHistory").modal("show");
                 }
             });
-
-
-            return false;
-        });
+        }catch(error){
+            console.log(error);
+        }
     });
     /* VIEW HISTORY end */
 
@@ -922,176 +981,176 @@ $(document).ready(function(){
             $("#confirm_reason").val('');
 
             switch (action) {
-                case "view":
-                    // $('#EmployeeModal').modal.show();
-                    $.ajax({
-                        method: "GET",
-                        url: "/getemployees",
-                        data: {'employeeid':empid},
-                        success: function (response) {
-                            // alert('ajdioad');
-                            $('#EmployeesModal').modal('show');
+                // case "view":
+                //     // $('#EmployeeModal').modal.show();
+                //     $.ajax({
+                //         method: "GET",
+                //         url: "/getemployees",
+                //         data: {'employeeid':empid},
+                //         success: function (response) {
+                //             // alert('ajdioad');
+                //             $('#EmployeesModal').modal('show');
 
-                        }
-                    });
-                break;
+                //         }
+                //     });
+                // break;
 
-            case "open": case "history":
-                // alert(window.location.origin+'/hris/view-leave-details'); return false;
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: window.location.origin+'/hris/view-leave-details',
-                    method: 'GET',
-                    data: { 'leaveID': leaveID }, // prefer use serialize method
-                    success:function(data){
+            // case "open": case "history":
+            //     // alert(window.location.origin+'/hris/view-leave-details'); return false;
+            //     $.ajaxSetup({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         }
+            //     });
+            //     $.ajax({
+            //         url: window.location.origin+'/hris/view-leave-details',
+            //         method: 'GET',
+            //         data: { 'leaveID': leaveID }, // prefer use serialize method
+            //         success:function(data){
 
-                        // alert(data[0]['employee_id']);
-                        var leave_number = data[0]['control_number'];
+            //             // alert(data[0]['employee_id']);
+            //             var leave_number = data[0]['control_number'];
 
-                        var modalHeader = "VIEW LEAVE (Control Number "+leave_number+")";
-                        var dateFrom = data[0]['date_from'].split('-');
-                            dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
-                        var dateTo = data[0]['date_to'].split('-');
-                            dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
-                        var notif1 = "", notif2 = "", notif3 = "";
-                        var notification = data[0]['notification'].split('|');
+            //             var modalHeader = "VIEW LEAVE (Control Number "+leave_number+")";
+            //             var dateFrom = data[0]['date_from'].split('-');
+            //                 dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
+            //             var dateTo = data[0]['date_to'].split('-');
+            //                 dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
+            //             var notif1 = "", notif2 = "", notif3 = "";
+            //             var notification = data[0]['notification'].split('|');
 
-                        $("#update_leave").hide();
-                        $("#cancel_leave").hide();
-                        $("#deny_leave").hide();
-                        $("#approve_leave").hide();
-                        $("#taken_leave").hide();
-                        $("#date_from").removeAttr('disabled');
-                        $("#date_to").removeAttr('disabled');
-                        $("#leave_type").removeAttr('disabled');
-                        $("#reason").removeAttr('disabled');
-                        $("#div_others").attr('hidden',true);
-                        $("#others_leave").attr('hidden',true);
-                        $("#others_leave").removeAttr('readonly');
-                        $("input[name='leave_notification[]']").each( function() {
-                            $(this).removeAttr("disabled");
-                        });
+            //             $("#update_leave").hide();
+            //             $("#cancel_leave").hide();
+            //             $("#deny_leave").hide();
+            //             $("#approve_leave").hide();
+            //             $("#taken_leave").hide();
+            //             $("#date_from").removeAttr('disabled');
+            //             $("#date_to").removeAttr('disabled');
+            //             $("#leave_type").removeAttr('disabled');
+            //             $("#reason").removeAttr('disabled');
+            //             $("#div_others").attr('hidden',true);
+            //             $("#others_leave").attr('hidden',true);
+            //             $("#others_leave").removeAttr('readonly');
+            //             $("input[name='leave_notification[]']").each( function() {
+            //                 $(this).removeAttr("disabled");
+            //             });
 
 
-                        $("input[name='leave_notification[]']").each( function() {
-                            $(this).prop("checked", false);
-                            for (var i=0; i<notification.length; i++) {
-                                if (notification[i]==$(this).val()) {
-                                    $(this).prop("checked", true);
-                                }
-                            }
-                        });
-                        $("#hid_leave_id").val(data[0]['id']);
-                        $("#myModalLabel").html(modalHeader);
-                        $("#name").val(data[0]['name']);
-                        $("#employee_number").val(data[0]['employee_id']);
-                        $("#hid_dept").val(data[0]['department']);
-                        $("#department").val(data[0]['dept']);
-                        if (data[0]['status']=="Pending") {
-                            $("#date_applied").val(currentDate());
-                        } else {
-                            $("#date_applied").val(formatDates(data[0]['date_applied']));
-                        }
-                        $("#leave_type").val(data[0]['leave_type']);
-                        if (data[0]['leave_type']=="Others") {
-                            $("#div_others").attr('hidden',false);
-                            $("#others_leave").attr('hidden',false);
-                            $("#others_leave").val(data[0]['others']);
-                        }
-                        $("#view_date_applied").val(data[0]['date_applied']);
-                        $("#date_from").val(dateFrom);
-                        $("#date_to").val(dateTo);
-                        $("#hid_no_days").val(data[0]['no_of_days']);
-                        $("#reason").val(data[0]['reason']);
-                        $("#td_balance").html(data[0]['balance']);
+            //             $("input[name='leave_notification[]']").each( function() {
+            //                 $(this).prop("checked", false);
+            //                 for (var i=0; i<notification.length; i++) {
+            //                     if (notification[i]==$(this).val()) {
+            //                         $(this).prop("checked", true);
+            //                     }
+            //                 }
+            //             });
+            //             $("#hid_leave_id").val(data[0]['id']);
+            //             $("#myModalLabel").html(modalHeader);
+            //             $("#name").val(data[0]['name']);
+            //             $("#employee_number").val(data[0]['employee_id']);
+            //             $("#hid_dept").val(data[0]['department']);
+            //             $("#department").val(data[0]['dept']);
+            //             if (data[0]['status']=="Pending") {
+            //                 $("#date_applied").val(currentDate());
+            //             } else {
+            //                 $("#date_applied").val(formatDates(data[0]['date_applied']));
+            //             }
+            //             $("#leave_type").val(data[0]['leave_type']);
+            //             if (data[0]['leave_type']=="Others") {
+            //                 $("#div_others").attr('hidden',false);
+            //                 $("#others_leave").attr('hidden',false);
+            //                 $("#others_leave").val(data[0]['others']);
+            //             }
+            //             $("#view_date_applied").val(data[0]['date_applied']);
+            //             $("#date_from").val(dateFrom);
+            //             $("#date_to").val(dateTo);
+            //             $("#hid_no_days").val(data[0]['no_of_days']);
+            //             $("#reason").val(data[0]['reason']);
+            //             $("#td_balance").html(data[0]['balance']);
 
-                        if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
-                            if (data['auth_id']==data[0]['supervisor']) {
-                                $("#date_from").attr('disabled', true);
-                                $("#date_to").attr('disabled', true);
-                                $("#leave_type").attr('disabled', true);
-                                $("#reason").attr('disabled', true);
-                                $("#others_leave").attr('readonly', true);
-                                $("input[name='leave_notification[]']").each( function() {
-                                    $(this).attr("disabled", true);
-                                });
-                                if (data[0]['status']=="Pending") {
-                                    $("#deny_leave").show();
-                                    $("#approve_leave").show();
-                                } else {
-                                    if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
-                                        $("#cancel_leave").hide();
-                                    } else {
-                                        $("#cancel_leave").show();
-                                    }
-                                    /*if (data['auth_department']==1) {
-                                        $("#taken_leave").show();
-                                    }*/
-                                }
-                            } else {
-                                if (data['auth_id']==data[0]['employee_id']) {
-                                    if (data[0]['status']=="Pending") {
-                                        $("#update_leave").show();
-                                    } else {
-                                        $("#date_from").attr('disabled', true);
-                                        $("#date_to").attr('disabled', true);
-                                        $("#leave_type").attr('disabled', true);
-                                        $("#reason").attr('disabled', true);
-                                        $("#others_leave").attr('readonly', true);
-                                        $("input[name='leave_notification[]']").each( function() {
-                                            $(this).attr("disabled", true);
-                                        });
-                                        if (data[0]['status']=="Cancelled") {
-                                            $("#cancel_leave").hide();
-                                        } else {
-                                            $("#cancel_leave").show();
-                                        }
-                                    }
-                                } else {
-                                    $("#date_from").attr('disabled', true);
-                                    $("#date_to").attr('disabled', true);
-                                    $("#leave_type").attr('disabled', true);
-                                    $("#reason").attr('disabled', true);
-                                    $("#others_leave").attr('readonly', true);
-                                    $("input[name='leave_notification[]']").each( function() {
-                                        $(this).attr("disabled", true);
-                                    });
-                                    /*if (data['auth_department']==1) {
-                                        if (data[0]['status']=="Head Approved") {
-                                            $("#taken_leave").show();
-                                        }
-                                    }*/
-                                }
-                            }
-                        } else {
-                            // alert(data[0]['status']); return false;
-                            if (data[0]['status']=="Pending") {
-                                $("#update_leave").show();
-                            } else {
-                                if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
-                                    $("#cancel_leave").hide();
-                                } else {
-                                    $("#cancel_leave").show();
-                                }
-                                $("#date_from").attr('disabled', true);
-                                $("#date_to").attr('disabled', true);
-                                $("#leave_type").attr('disabled', true);
-                                $("#reason").attr('disabled', true);
-                                $("#others_leave").attr('readonly', true);
-                                $("input[name='leave_notification[]']").each( function() {
-                                    $(this).attr("disabled", true);
-                                });
-                            }
-                        }
-                        /* OPEN MODAL View */
-                        $("#myModal").modal("show");
-                    }
-                });
-                break;
+            //             if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
+            //                 if (data['auth_id']==data[0]['supervisor']) {
+            //                     $("#date_from").attr('disabled', true);
+            //                     $("#date_to").attr('disabled', true);
+            //                     $("#leave_type").attr('disabled', true);
+            //                     $("#reason").attr('disabled', true);
+            //                     $("#others_leave").attr('readonly', true);
+            //                     $("input[name='leave_notification[]']").each( function() {
+            //                         $(this).attr("disabled", true);
+            //                     });
+            //                     if (data[0]['status']=="Pending") {
+            //                         $("#deny_leave").show();
+            //                         $("#approve_leave").show();
+            //                     } else {
+            //                         if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
+            //                             $("#cancel_leave").hide();
+            //                         } else {
+            //                             $("#cancel_leave").show();
+            //                         }
+            //                         /*if (data['auth_department']==1) {
+            //                             $("#taken_leave").show();
+            //                         }*/
+            //                     }
+            //                 } else {
+            //                     if (data['auth_id']==data[0]['employee_id']) {
+            //                         if (data[0]['status']=="Pending") {
+            //                             $("#update_leave").show();
+            //                         } else {
+            //                             $("#date_from").attr('disabled', true);
+            //                             $("#date_to").attr('disabled', true);
+            //                             $("#leave_type").attr('disabled', true);
+            //                             $("#reason").attr('disabled', true);
+            //                             $("#others_leave").attr('readonly', true);
+            //                             $("input[name='leave_notification[]']").each( function() {
+            //                                 $(this).attr("disabled", true);
+            //                             });
+            //                             if (data[0]['status']=="Cancelled") {
+            //                                 $("#cancel_leave").hide();
+            //                             } else {
+            //                                 $("#cancel_leave").show();
+            //                             }
+            //                         }
+            //                     } else {
+            //                         $("#date_from").attr('disabled', true);
+            //                         $("#date_to").attr('disabled', true);
+            //                         $("#leave_type").attr('disabled', true);
+            //                         $("#reason").attr('disabled', true);
+            //                         $("#others_leave").attr('readonly', true);
+            //                         $("input[name='leave_notification[]']").each( function() {
+            //                             $(this).attr("disabled", true);
+            //                         });
+            //                         /*if (data['auth_department']==1) {
+            //                             if (data[0]['status']=="Head Approved") {
+            //                                 $("#taken_leave").show();
+            //                             }
+            //                         }*/
+            //                     }
+            //                 }
+            //             } else {
+            //                 // alert(data[0]['status']); return false;
+            //                 if (data[0]['status']=="Pending") {
+            //                     $("#update_leave").show();
+            //                 } else {
+            //                     if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
+            //                         $("#cancel_leave").hide();
+            //                     } else {
+            //                         $("#cancel_leave").show();
+            //                     }
+            //                     $("#date_from").attr('disabled', true);
+            //                     $("#date_to").attr('disabled', true);
+            //                     $("#leave_type").attr('disabled', true);
+            //                     $("#reason").attr('disabled', true);
+            //                     $("#others_leave").attr('readonly', true);
+            //                     $("input[name='leave_notification[]']").each( function() {
+            //                         $(this).attr("disabled", true);
+            //                     });
+            //                 }
+            //             }
+            //             /* OPEN MODAL View */
+            //             $("#myModal").modal("show");
+            //         }
+            //     });
+            //     break;
 
             case "delete":
                 Swal.fire({

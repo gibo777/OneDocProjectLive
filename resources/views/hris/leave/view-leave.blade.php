@@ -140,7 +140,7 @@
                                                 <th># of Days</th>
                                                 <th>Supervisor</th>
                                                 <th>Status</th>
-                                                <th>Actions</th>
+                                                {{-- <th>Actions</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody class="data hover" id="viewLeave">
@@ -160,19 +160,19 @@
                                                     <td>{{ $leave->head_name }}</td>
 
                                                     @if ($leave->status!="Pending")
-                                                    <td id="status_view">
+                                                    <td id="status_view" class="open_history">
                                                         <button
                                                             id="{{ $leave->id }}"
                                                             value="{{ $leave->id }}"
                                                             title="Show History Leave #{{ $leave->leave_number }}"
-                                                            class="open_leave green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500 focus:outline-none transition hover"
-                                                            data-bs-toggle="modal" >
+                                                            class="open_leave green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500"
+                                                            >
                                                             {{ $leave->status }}
                                                         </button></td>
                                                     @else
                                                     <td>{{ $leave->status }}</td>
                                                     @endif
-                                                    <td id="action_buttons">
+                                                    {{-- <td id="action_buttons">
                                                         @if ($leave->status!="Taken")
                                                         <button
                                                             id="open-{{ $leave->id }}"
@@ -195,7 +195,7 @@
                                                             {{ __('Delete') }}
                                                         </button>
                                                         @endif
-                                                    </td>
+                                                    </td> --}}
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -359,6 +359,51 @@
       </div>
     </div>
   </div>
+
+  <!-- =========================================== -->
+<!-- Modal for History -->
+<div class="modal fade" id="modalHistory" tabindex="-1" role="dialog" aria-labelledby="leaveHistoryLabel" >
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title text-lg text-white" id="leaveHistoryLabel">
+              LEAVE HISTORY
+          </h4>
+          <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        </div>
+        <div class="modal-body bg-gray-50">
+  
+              <div class="grid grid-cols-6 gap-6 pb-3">
+                  <div class="col-span-6 sm:col-span-6 sm:justify-center font-medium scrollable">
+                  <table id="data_history" class="table table-bordered data-table sm:justify-center table-hover">
+                      <thead class="thead">
+                          <tr>
+                              <th>Supervisor</th>
+                              <th>Leave Type</th>
+                              <th>Available</th>
+                              <th>Action</th>
+                              <th>Action Date</th>
+                              <th>Reason</th>
+                              <th>Date Applied</th>
+                              <th>Begin Date</th>
+                              <th>End Date</th>
+                              <th># of Days</th>
+                          </tr>
+                      </thead>
+                      <tbody class="data text-center" id="data">
+                      </tbody>
+                  </table>
+              </div>
+  
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  <!-- =========================================== -->
+  
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
@@ -609,50 +654,6 @@
 
 
 
-<!-- =========================================== -->
-<!-- Modal for History -->
-<div class="modal fade" id="modalHistory" tabindex="-1" role="dialog" aria-labelledby="leaveHistoryLabel" >
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title text-lg text-white" id="leaveHistoryLabel">
-            LEAVE HISTORY
-        </h4>
-        <button type="button" class="close btn btn-primary fa fa-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-      </div>
-      <div class="modal-body bg-gray-50">
-
-            <div class="grid grid-cols-6 gap-6 pb-3">
-                <div class="col-span-6 sm:col-span-6 sm:justify-center font-medium scrollable">
-                <table id="data_history" class="table table-bordered data-table sm:justify-center table-hover">
-                    <thead class="thead">
-                        <tr>
-                            <th>Supervisor</th>
-                            <th>Leave Type</th>
-                            <th>Available</th>
-                            <th>Action</th>
-                            <th>Action Date</th>
-                            <th>Reason</th>
-                            <th>Date Applied</th>
-                            <th>Begin Date</th>
-                            <th>End Date</th>
-                            <th># of Days</th>
-                        </tr>
-                    </thead>
-                    <tbody class="data text-center" id="data">
-                    </tbody>
-                </table>
-            </div>
-
-
-      </div>
-    </div>
-  </div>
-</div>
-<!-- =========================================== -->
-
-
-
 </x-app-layout>
 
 
@@ -677,9 +678,32 @@
 $(document).ready( function () {
     $('#data').DataTable();
 
+    function formatDates(date) {
+        var d = new Date(date),
+        month = d.getMonth()+1,
+        day = d.getDate();
+
+        var new_date =
+        (month<10 ? '0' : '') + month + '/' +
+        (day<10 ? '0' : '') + day
+        + '/' + d.getFullYear()
+        ;
+        var hours = d.getHours();
+        var minutes = d.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        new_date = new_date+" "+strTime;
+        return new_date;
+    }
+
 
 $("#viewLeave > tr").on('dblclick', function() {
-    
+    let leaveID = this.id;
+    $("#popup").show();
+    $("#confirm_reason").val('');
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -690,7 +714,6 @@ $("#viewLeave > tr").on('dblclick', function() {
         method: 'GET',
         data: { 'leaveID': leaveID }, // prefer use serialize method
         success:function(data){
-
             // alert(data[0]['employee_id']);
             var leave_number = data[0]['leave_number'];
 

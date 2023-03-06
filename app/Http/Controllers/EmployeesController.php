@@ -93,30 +93,27 @@ class EmployeesController extends Controller
      **/
     public function updateEmployee (Request $request)
     {
-        return "update...".$request->id;
-        /*try{
-            $updateUser = DB::table('users')
-                ->where('id', $request->id)
-                ->update([
-                    'last_name' => $request->userLastName,
-                    'first_name' => $request->userFirstName,
-                    'middle_name' => $request->userMiddleName,
-                    'suffix' => $request->userExt,
-                    'user_name' => $request->user_name,
-                    'email' => $request->email,
-                    'group_id' => $request->userGroup,
-                    'role_name' => $request->userRole,
-                    'updated_by' => Auth::user()->user_name,
-                    'updated_at' => now(),
-                ]);
+        // return "update...".$request->id;
+        try{
+            $data_array = array(
+                'employee_id' => $request->employee_id,
+                'position' => $request->position,
+                'department' => $request->department,
+                
+                'employment_status' => $request->employment_status,
+                'date_hired' => date('Y-m-d',strtotime($request->date_hired)),
+                'weekly_schedule' => join('|',$request->update_weekly_schedule),
+                'supervisor' => $request->supervisor,
+            );
 
-            if ($updateUser) {
-                return response(['isSuccess' => true]);
-            } 
+            $update = DB::table('users');
+            $update = $update->where('id',$request->id);
+            $update = $update->update($data_array);
 
-        }catch(\Exception $e){
-            return response(['isSuccess' => false,'message' => $e]);
-        }*/
+            return response(['isSuccess' => true,'message'=>'Successfully updated!']);
+        }catch(\Error $e){
+            return response(['isSuccess'=>false,'message'=>$e]);
+        }
     }
    
 }
