@@ -105,10 +105,20 @@ class EmployeesController extends Controller
                 'weekly_schedule' => join('|',$request->update_weekly_schedule),
                 'supervisor' => $request->supervisor,
             );
+            $leaves = [
+                'VL'=>$request->vl,
+                'SL'=>$request->sl,
+                'ML'=>$request->ml,
+                'PL'=>$request->pl,
+                'EL'=>$request->el,
+                'others'=>$request->others
+            ];
 
             $update = DB::table('users');
             $update = $update->where('id',$request->id);
             $update = $update->update($data_array);
+
+            DB::table('leave_balances')->where('employee_id',$request->employee_id)->update($leaves);
 
             return response(['isSuccess' => true,'message'=>'Successfully updated!']);
         }catch(\Error $e){
