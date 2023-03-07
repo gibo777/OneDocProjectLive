@@ -393,9 +393,11 @@ $(document).ready(function() {
     });*/
 
     /* ACCOUNTING DATA - DEPENDENTS */
-    var dCounter = $("div.dependents").children("div.dependents").length;
+
     $(".btnDependents").each(function(){
         $(this).click(function() {
+            var dCounter = $('.dependentsRow').length;
+            console.log(dCounter);
             $(function () {
                 // $('#date_applied').datepicker({ dateFormat: 'mm/dd/yy' });
                 $('#date_from').datepicker({
@@ -427,24 +429,22 @@ $(document).ready(function() {
                 });
 
             });
-            dCounter++;
-            console.log(dCounter);
-            if (dCounter<=4) {
+            if (dCounter < 4) {
             $("#dependents")
             .append(`
-                    <div class="row dependents">
+                    <div class="row dependentsRow">
                         <div class="col-md-8 p-1">
                             <div class="form-floating col-span-8 sm:col-span-1">
-                                <x-jet-input id="dependent_name${dCounter}" type="text" class="form-control block w-full" wire:model.defer="state.dependent1" autocomplete="off" placeholder="Dependent"/>
-                                <x-jet-label for="dependent_name${dCounter}" value="{{ __('Dependent ${dCounter}') }}" />
+                                <x-jet-input name="dependent_name" id="dependent_name${dCounter+1}" type="text" class="dependentsName form-control block w-full" wire:model.defer="state.dependent1" autocomplete="off" placeholder="Dependent"/>
+                                <x-jet-label for="dependent_name${dCounter+1}" value="{{ __('Dependent ${dCounter+1}') }}" />
                                 <x-jet-input-error for="dependent_name1" class="mt-2" />
                             </div>
                         </div>
                         <div class="col-md-3 p-1">
                             <div class="form-floating col-span-8 sm:col-span-1">
-                                <x-jet-input id="dependent_birthdate${dCounter}" type="text" class="form-control datepicker block w-full" wire:model.defer="state.dependent_birthdate${dCounter}" placeholder="mm/dd/yyyy"/>
-                                <x-jet-label for="dependent_birthdate${dCounter}" value="{{ __('Birthdate') }}" />
-                                <x-jet-input-error for="dependent_birthdate${dCounter}" class="mt-2" />
+                                <x-jet-input name="dependent_birthdate" id="dependent_birthdate${dCounter+1}" type="text" class="dependentsBday form-control datepicker block w-full" wire:model.defer="state.dependent_birthdate${dCounter+1}" placeholder="mm/dd/yyyy"/>
+                                <x-jet-label for="dependent_birthdate${dCounter+1}" value="{{ __('Birthdate') }}" />
+                                <x-jet-input-error for="dependent_birthdate${dCounter+1}" class="mt-2" />
                             </div>
                         </div>
                     </div>
@@ -454,24 +454,7 @@ $(document).ready(function() {
         return false;
     });
 
-    /* SUBMIT ACCOUNTING DATA start - Gilbert Retiro */
-    $('#submitAccountingData').on('click', function(){
-        // alert('test'); return false;
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: '/update-accounting-data',
-            method: 'post',
-            data: $("#accountingDataForm").serialize(),
-            success:function(data){
-                alert(data);
-            }
-        });
-        return false
-    });
+  
 
 });
 </script>
