@@ -397,7 +397,7 @@ $(document).ready(function() {
     $(".btnDependents").each(function(){
         $(this).click(function() {
             var dCounter = $('.dependentsRow').length;
-            console.log(dCounter);
+            // console.log(dCounter);
             $(function () {
                 // $('#date_applied').datepicker({ dateFormat: 'mm/dd/yy' });
                 $('#date_from').datepicker({

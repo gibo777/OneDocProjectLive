@@ -78,9 +78,10 @@
             <div class="col-md-3 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="tin_number" name="tin_number" type="text" class="accounting form-control block w-full" placeholder="TIN Number" autocomplete="off" value="{{$accData->tin_number}}"/>
-                    <x-jet-label for="tin_number" value="{{ __('TIN Number') }}" />
+                    <label>TIN Number <span class="text-danger">*</span></label>
                     <x-jet-input-error for="tin_number" class="mt-2" />
                 </div>
+               
             </div>
         </div>
 
@@ -104,7 +105,7 @@
                         @endif
                         
                     </select>
-                    <x-jet-label for="tax_status" value="{{ __('Tax Status') }}" />
+                    <label>Tax Status <span class="text-danger">*</span></label>
                     <x-jet-input-error for="tax_status" class="mt-2" />
                 </div>
             </div>
@@ -274,24 +275,25 @@
                     return;
                 }
 
-                $('.dependentsRow').each(function(index){
-                   if($(`.dependent_name${index+1}`).val() && !$(`.dependent_birthdate${index+1}`).val()){
+                for(let i = 0; i < $('.dependentsRow').length; i++){
+                    if($(`#dependent_name${i+1}`).val() && !$(`#dependent_birthdate${i+1}`).val()){
                         Swal.fire({
                             icon:'error',
                             title:'Error',
-                            message:`A Dependent Name is present in Dependent Name${index+1} so a Dependent Birthdate is required`
+                            text:`A Dependent Name is present in Dependent Name${i+1} so a Dependent Birthdate is required`
                         })
                         return;
                    }
-                   if(!$(`.dependent_name${index+1}`).val() && $(`.dependent_birthdate${index+1}`).val()){
+
+                   if(!$(`#dependent_name${i+1}`).val() && $(`#dependent_birthdate${i+1}`).val()){
                         Swal.fire({
                             icon:'error',
                             title:'Error',
-                            message:`A Dependent Name is required becase a Dependent Birthdate is present in Dependent Birthdate${index+1}`
+                            text:`A Dependent Name is required becase a Dependent Birthdate is present in Dependent Birthdate${i+1}`
                         })
                         return;
                    }
-                });
+                }
                 
                 $.ajaxSetup({
                     headers: {
