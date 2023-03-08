@@ -13,6 +13,8 @@ class AccountingData extends Component
      *
      * @return void
      */
+    protected $listeners = ['refetchAcc'=>'accDataRefetcher'];
+    public $isRefetch = false;
     public function mount()
     {
         /*$this->accounting = Auth::user()->withoutRelations()->toArray();
@@ -22,7 +24,9 @@ class AccountingData extends Component
         // $this->accounting = (object) DB::table('accounting_data')->where('employee_id', Auth::user()->employee_id)->get()->toArray();
         // dd($this->accounting);
     }
-
+    public function accDataRefetcher(){
+        $this->isRefetch = true;
+    }
 
     /**
      * Render views.
@@ -38,7 +42,7 @@ class AccountingData extends Component
         $taxStatusDesc = '';
         $accData ? (
             $accData->tax_status ?
-                $taxStatusDesc = DB::table('tax_statuses')->where('tax_status_code',$accData->tax_status)->pluck('tax_status_desc')->first()
+                $taxStatusDesc = DB::table('tax_statuses')->where('tax_status_code',$accData->tax_status)->pluck('tax_status_description')->first()
             : 
                 $taxStatusDesc = ''
          ) : '';

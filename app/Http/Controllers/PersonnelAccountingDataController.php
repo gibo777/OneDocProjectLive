@@ -38,32 +38,43 @@ class PersonnelAccountingDataController extends Controller
 	{
 		try{
 			$accountingData = $request->accountingData??'';
-			$dependentDataName = $request->dependentDataName ?? '';
-			$dependentDataBday = $request->dependentDataBday ?? '';
-			PersonnelAccountingData::findOrFail(Auth::user()->id)->update($accountingData);
+			$dependentDataName = $request->dependentDataName ?? [];
+	
+			$dependentDataBday = $request->dependentDataBday ?? [];
 
-			for($i = 0; $i < sizeof($dependentDataName); $i++){
-				$isRecorded = DB::table('dependents')->select('id')->where(['employee_id'=>Auth::user()->employee_id,'dependent_name'=>$dependentDataName[$i]])->first() ?? '';
-				if($isRecorded){
-					Dependents::findOrFail($isRecorded->id)->update([
-						'dependent_name' => $dependentDataName[$i],
-						'dependent_birthdate' => $dependentDataBday[$i],
-					]);
-				}else{
-					Dependents::create([
-						'employee_id' => Auth::user()->employee_id,
-						'dependent_name' => $dependentDataName[$i],
-						'dependent_birthdate' => Carbon::parse($dependentDataBday[$i]),
-					]);
+			$empId = Auth::user()->employee_id;
+			$accountingData['passport_expiry'] = Carbon::parse($accountingData['passport_expiry']);
+			PersonnelAccountingData::findOrFail(Auth::user()->id)->update($accountingData);
+			
+			if(sizeof($dependentDataBday) > 0 && sizeof($dependentDataName)){
+				for($i = 0; $i < sizeof($dependentDataName); $i++){
+					$isRecorded = array_key_exists('id', $dependentDataName[$i] ) ? DB::table('dependents')->select('id')->where(['employee_id' => $empId, 'id' => $dependentDataName[$i]['id']])->first() ?? '' : '';
+					if($isRecorded){
+						Dependents::findOrFail($isRecorded->id)->update([
+							'dependent_name' => $dependentDataName[$i]['dependent_name'],
+							'dependent_birthdate' => Carbon::parse($dependentDataBday[$i]['dependent_birthdate']),
+						]);
+					}else{
+						Dependents::create([
+							'employee_id' => Auth::user()->employee_id,
+							'dependent_name' => $dependentDataName[$i]['dependent_name'],
+							'dependent_birthdate' => Carbon::parse($dependentDataBday[$i]['dependent_birthdate']),
+						]);
+					}
 				}
 			}
+			
 
 			return response(['isSuccess'=>true,'message'=>'Accounting Data Successfully Saved']);
 
-			return response(['isSuccess'=>true,'message'=>'Accounting Data Successfully Saved']);
 		}catch(\Throwable $e){
 			return response(['isSuccess' => false, 'message'=>$e]);
 		}
+	
+
+
+		
+		
 
 
 			

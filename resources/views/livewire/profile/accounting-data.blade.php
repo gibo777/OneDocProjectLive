@@ -115,14 +115,14 @@
                 <div class="row dependentsRow">
                         <div class="col-md-8 p-1">
                             <div class="form-floating col-span-8 sm:col-span-1">
-                                <x-jet-input name="dependent_name" id="dependent_name{{$loop->iteration}}" type="text" class="dependentsName form-control block w-full" autocomplete="off" placeholder="Dependent" value="{{$dependent->dependent_name}}"/>
+                                <x-jet-input record_id="{{$dependent->id}}" name="dependent_name" id="dependent_name{{$loop->iteration}}" type="text" class="dependentsName form-control block w-full" autocomplete="off" placeholder="Dependent" value="{{$dependent->dependent_name}}"/>
                                 <x-jet-label for="dependent_name{{$loop->iteration}}" value="{{ __('Dependent ')}} {{$loop->iteration }}" />
                                 <x-jet-input-error for="dependent_name{{$loop->iteration}}" class="mt-2" />
                             </div>
                         </div>
                         <div class="col-md-3 p-1">
                             <div class="form-floating col-span-8 sm:col-span-1">
-                                <x-jet-input name="dependent_birthdate" id="dependent_birthdate{{$loop->iteration}}" type="text" class="dependentsBday form-control datepicker block w-full" placeholder="mm/dd/yyyy" value="{{$dependent->dependent_birthdate}}"/>
+                                <x-jet-input record_id="{{$dependent->id}}" name="dependent_birthdate" id="dependent_birthdate{{$loop->iteration}}" type="text" class="dependentsBday form-control datepicker block w-full" placeholder="mm/dd/yyyy" value="{{$dependent->dependent_birthdate}}"/>
                                 <x-jet-label for="dependent_birthdate{{$loop->iteration}}" value="{{ __('Birthdate') }}" />
                                 <x-jet-input-error for="dependent_birthdate{{$loop->iteration}}" class="mt-2" />
                             </div>
@@ -222,6 +222,8 @@
                 let dependentDataName = [];
                 let dependentDataBday = [];
                 let accountingData = {};
+                let filteredDN = [];
+                let filteredDB = [];
                 
                 // const leaveData = {
                 //     VL: $("#vacation_leaves").val(),
@@ -232,21 +234,63 @@
                 //     others: $('#others').val(),
                 // };
                 $("#accountingDataForm .dependentsName").each(function(){
-                    dependentDataName.push($(this).val());
+                    dependentDataName.push({[$(this).attr('name')]:$(this).val(),id:$(this).attr('record_id')});
                 });
                 $("#accountingDataForm .dependentsBday").each(function(){
-                    dependentDataBday.push($(this).val());
+                    dependentDataBday.push({[$(this).attr('name')]:$(this).val(),id:$(this).attr('record_id')});
                 });
 
                 $('#accountingDataForm .accounting').each(function(){
-                    console.log($(this).val());
                     const name = this.id;
-                    console.log(name);
                     accountingData = {
                         ...accountingData,
                         [name] : $(this).val(),
                     }
                     
+                });
+                
+                dependentDataName.map((dn,index)=>{
+                    let toRemoveIndex;
+                    if(dn.dependent_name != ''){
+                        filteredDN.push(dn);
+                    }
+                })
+                dependentDataBday.map((db,index)=>{
+                    if(db.dependent_birthdate != ''){
+                        filteredDB.push(db);
+                    }
+                })
+                dependentDataName = filteredDN;
+                dependentDataBday = filteredDB;
+                
+                if(!$('#tax_status').val() || !$('#tin_number').val()){
+                    let taxStatusMessage = !$('#tax_status').val() ? 'Tax Status is Required' : '';
+                    let tinNumberMessage = !$('#tin_number').val() ? 'Tin Number is Required' : '';
+                    Swal.fire({
+                        icon:'error',
+                        title:'Error',
+                        text:taxStatusMessage || tinNumberMessage,
+                    })
+                    return;
+                }
+
+                $('.dependentsRow').each(function(index){
+                   if($(`.dependent_name${index+1}`).val() && !$(`.dependent_birthdate${index+1}`).val()){
+                        Swal.fire({
+                            icon:'error',
+                            title:'Error',
+                            message:`A Dependent Name is present in Dependent Name${index+1} so a Dependent Birthdate is required`
+                        })
+                        return;
+                   }
+                   if(!$(`.dependent_name${index+1}`).val() && $(`.dependent_birthdate${index+1}`).val()){
+                        Swal.fire({
+                            icon:'error',
+                            title:'Error',
+                            message:`A Dependent Name is required becase a Dependent Birthdate is present in Dependent Birthdate${index+1}`
+                        })
+                        return;
+                   }
                 });
                 
                 $.ajaxSetup({
@@ -262,11 +306,12 @@
                         console.log(data);
                         const {isSuccess,message} = data;
                         isSuccess ?
+                            (Livewire.emit('refetchAcc'),
                             Swal.fire({
                                 icon:'success',
                                 title:'Success',
                                 text:message
-                            })
+                            }))
                         :
                             Swal.fire({
                                 icon:'error',
