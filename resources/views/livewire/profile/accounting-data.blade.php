@@ -280,7 +280,7 @@
                         Swal.fire({
                             icon:'error',
                             title:'Error',
-                            text:`A Dependent Name is present in Dependent Name${i+1} so a Dependent Birthdate is required`
+                            text:`A Dependent Name is present in Dependent Name field #${i+1} so a Dependent Birthdate is required`
                         })
                         return;
                    }
@@ -289,7 +289,7 @@
                         Swal.fire({
                             icon:'error',
                             title:'Error',
-                            text:`A Dependent Name is required becase a Dependent Birthdate is present in Dependent Birthdate${i+1}`
+                            text:`A Dependent Name is required becase a Dependent Birthdate is present in Dependent Birthdate field #${i+1}`
                         })
                         return;
                    }
