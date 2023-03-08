@@ -22,37 +22,34 @@
 
     <div class="max-w-7xl mx-auto py-3 sm:px-6 lg:px-8">
         <div class="px-2 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
-           <div class="row pt-1 px-3">
-                <div class="col-md-5">
+           <div class="row px-3">
+                <div class="col-md-5 pt-5">
                     <!-- <div class="grid grid-cols-5 gap-6 text-center sm:justify-center"> -->
-                    <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded w-50 mx-auto d-block py-2" alt="{{ strtoupper(config('app.name')) }}">
+                    {{-- <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded w-50 mx-auto d-block py-2" alt="{{ strtoupper(config('app.name')) }}"> --}}
                         {{-- {{ __('WELCOME TO ').strtoupper(config('app.name')) }} --}}
                         <ol>
                           <li>
-                            <p>
-                            WHO WE ARE
-                            </p>
-                            <p>
+                            <p>WHO WE ARE</p>
+                            <p class="h6">
                             One Document Corporation is focused on Information Technology-related project developments and technology-based solutions, on its decade of existence this 2021 is expanding its reach through program-based versatile integrated systems that accelerate progress for any business operations.
                             </p>
-                            <p>                  
-                            Mission:
-                            </p>
-                            <p>
+
+                            <p>Mission:</p>
+                            <p class="h6">
                             To have the entrepreneurial spirit in the continuous search for project opportunities, vigilant in growing from current businesses focused on our customers, and from new initiatives through ingenuity and reinvention, always committed to deliver dependable goods and services, locally and globally.
                             </p>
-                            <p>
-                            Vision:
-                            </p>
-                            <p>
+
+                            <p>Vision:</p>
+                            <p class="h6">
                             To be a recognized socially-responsible leader in productive and profitabletechnology-based project developments, committed to improve lives, here and/or abroad
                             </p>
                           </li>
                         </ol>
                     <!-- </div> -->
                 </div>
+
             <div class="col-md-7">
-                <div id="carouselExampleIndicators" class="carousel slide pt-5" data-ride="carousel">
+                <div id="carouselExampleIndicators" class="carousel slide pt-3" data-ride="carousel">
                   <ol class="carousel-indicators">
                     @if(date('a')=='am')
                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
