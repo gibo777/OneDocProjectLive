@@ -21,13 +21,13 @@
                 Personal Data
                 </button>
             </li>
-            @if (Auth::user()->role_type=='SUPER ADMIN')
             {{-- tab 2 | Accounting Data --}}
             <li class="nav-item" role="presentation">
                 <button id="pills-ad-tab" class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-ad" type="button" role="tab" aria-controls="pills-ad" aria-selected="false">
                 Accounting Data
                 </button>
             </li>
+            @if (Auth::user()->role_type=='SUPER ADMIN')
             {{-- tab 3 | Family Background --}}
             <li class="nav-item" role="presentation">
                 <button id="pills-fb-tab" class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-fb" type="button" role="tab" aria-controls="pills-fb" aria-selected="false">
