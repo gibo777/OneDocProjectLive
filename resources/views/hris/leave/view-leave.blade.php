@@ -700,6 +700,20 @@ $(document).ready( function () {
     }
 
 
+
+    function currentDate() {
+        var d = new Date(),
+            month = d.getMonth()+1,
+            day = d.getDate();
+
+        var current_date =
+            (month<10 ? '0' : '') + month + '/' +
+            (day<10 ? '0' : '') + day
+            + '/' + d.getFullYear()
+            ;
+        return current_date;
+    }
+
 $("#viewLeave > tr").on('dblclick', function() {
     let leaveID = this.id;
     $("#popup").show();
@@ -756,7 +770,7 @@ $("#viewLeave > tr").on('dblclick', function() {
             $("#employee_number").val(data[0]['employee_id']);
             $("#hid_dept").val(data[0]['department']);
             $("#department").val(data[0]['dept']);
-            if (data[0]['status']=="Pending") {
+            if (data[0]['status']=="Penc`ding") {
                 $("#date_applied").val(currentDate());
             } else {
                 $("#date_applied").val(formatDates(data[0]['date_applied']));
