@@ -52,6 +52,7 @@ return array(
     'App\\Http\\Livewire\\Profile\\EducationalBackground' => $baseDir . '/app/Http/Livewire/Profile/EducationalBackground.php',
     'App\\Http\\Livewire\\Profile\\EmploymentHistory' => $baseDir . '/app/Http/Livewire/Profile/EmploymentHistory.php',
     'App\\Http\\Livewire\\Profile\\FamilyBackground' => $baseDir . '/app/Http/Livewire/Profile/FamilyBackground.php',
+    'App\\Http\\Middleware\\AllowOnlyAdmin' => $baseDir . '/app/Http/Middleware/AllowOnlyAdmin.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
     'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => $baseDir . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',

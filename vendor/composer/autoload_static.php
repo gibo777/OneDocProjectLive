@@ -672,6 +672,7 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         'App\\Http\\Livewire\\Profile\\EducationalBackground' => __DIR__ . '/../..' . '/app/Http/Livewire/Profile/EducationalBackground.php',
         'App\\Http\\Livewire\\Profile\\EmploymentHistory' => __DIR__ . '/../..' . '/app/Http/Livewire/Profile/EmploymentHistory.php',
         'App\\Http\\Livewire\\Profile\\FamilyBackground' => __DIR__ . '/../..' . '/app/Http/Livewire/Profile/FamilyBackground.php',
+        'App\\Http\\Middleware\\AllowOnlyAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/AllowOnlyAdmin.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => __DIR__ . '/../..' . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
