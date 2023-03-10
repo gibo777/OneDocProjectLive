@@ -74,6 +74,7 @@ class EmployeesController extends Controller
             return redirect('/');
         }
     }
+    
     public function getEmployeeInfo (Request $request){
         $empid = $request->id;
         $getemployee = DB::table('users')->where('id',$empid)->first();
