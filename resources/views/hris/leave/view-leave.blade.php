@@ -521,7 +521,7 @@
                                 <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY E-MAIL" wire:model.defer="state.leave_notification" />BY E-MAIL
                             </div> --}}
 
-                            <div class="form-floating col-md-7 p-1">
+                            <div class="form-floating col-md-6 p-1">
                                 <textarea id="reason" name="reason" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-1/2" placeholder="REASON" /> </textarea>
                                 <x-jet-label for="reason" value="{{ __('REASON') }}" class="font-semibold text-gray-800 leading-tight pt-4"/>
                                 <x-jet-input-error for="reason" class="mt-2" />

@@ -116,7 +116,7 @@
                     <!-- Notification of Leave -->
                     <div class="col-md-9 text-center">
                         <div class="row">
-                            <div class="col-md-5 p-1">
+                            {{-- <div class="col-md-5 p-1">
                                 <x-jet-label value="{{ __('NOTIFICATION OF LEAVE') }}" class="font-semibold text-xl text-gray-800 leading-tight"/>
 
                                 <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="IN PERSON" class="" />IN PERSON &nbsp; &nbsp;
@@ -124,9 +124,9 @@
                                 <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY SMS" class=""  />BY SMS &nbsp; &nbsp;
 
                                 <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY E-MAIL" class="" />BY E-MAIL
-                            </div>
+                            </div> --}}
 
-                            <div class="form-floating col-md-7 p-1">
+                            <div class="form-floating col-md-6 p-1">
                                 <textarea id="reason" name="reason" class="form-control block w-full" placeholder="REASON" /></textarea>
                                 <x-jet-label for="reason" value="{{ __('REASON') }}" class="w-full" />
                                 <x-jet-input-error for="reason" class="mt-2" />
