@@ -167,7 +167,7 @@ class ViewLeavesController extends Controller
 	        	'L.no_of_days', 
                 'L.others',
 	        	'L.reason',
-	        	'L.notification', 
+	        	// 'L.notification', 
 	        	'd.department as dept',
 	        	'u.access_code',
                 'u.supervisor',
@@ -214,7 +214,7 @@ class ViewLeavesController extends Controller
         		$leave_type       = $request->leave_type;
         		$others_leave     = $request->others_leave;
         		$reason           = $request->reason;
-        		$notification     = implode('|',$request->leave_notification);
+        		// $notification     = implode('|',$request->leave_notification);
         		$date_from        = date('Y-m-d',strtotime($request->date_from));
         		$date_to          = date('Y-m-d',strtotime($request->date_to));
         		$hid_no_days      = $request->hid_no_days;
@@ -226,7 +226,7 @@ class ViewLeavesController extends Controller
                             'date_applied'  => $date_applied,
                             'leave_type'    => $leave_type,
                             'reason'        => $reason,
-                            'notification'  => $notification,
+                            // 'notification'  => $notification,
                             'date_from'     => $date_from,
                             'date_to'       => $date_to,
                             'no_of_days'    => $hid_no_days
@@ -292,7 +292,7 @@ class ViewLeavesController extends Controller
                                 END) as leave_balance'), 
                             'L.others', 
                             'L.reason', 
-                            'L.notification', 
+                            // 'L.notification', 
                             'L.date_from', 
                             'L.date_to', 
                             'L.no_of_days', 
@@ -317,7 +317,7 @@ class ViewLeavesController extends Controller
                         'leave_balance', 
                         'others', 
                         'reason', 
-                        'notification', 
+                        // 'notification', 
                         'date_from', 
                         'date_to', 
                         'no_of_days', 
@@ -401,7 +401,7 @@ class ViewLeavesController extends Controller
                                 END) as leave_balance'), 
                             'L.others', 
                             'L.reason', 
-                            'L.notification', 
+                            // 'L.notification', 
                             'L.date_from', 
                             'L.date_to', 
                             'L.no_of_days', 
@@ -426,7 +426,7 @@ class ViewLeavesController extends Controller
                         'leave_balance', 
                         'others', 
                         'reason', 
-                        'notification', 
+                        // 'notification', 
                         'date_from', 
                         'date_to', 
                         'no_of_days', 
@@ -501,7 +501,7 @@ class ViewLeavesController extends Controller
                                 END) as leave_balance'), 
                             'L.others', 
                             'L.reason', 
-                            'L.notification', 
+                            // 'L.notification', 
                             'L.date_from', 
                             'L.date_to', 
                             'L.no_of_days', 
@@ -526,7 +526,7 @@ class ViewLeavesController extends Controller
                         'leave_balance', 
                         'others', 
                         'reason', 
-                        'notification', 
+                        // 'notification', 
                         'date_from', 
                         'date_to', 
                         'no_of_days', 
@@ -611,7 +611,7 @@ class ViewLeavesController extends Controller
                                 END) as leave_balance'), 
                             'L.others', 
                             'L.reason', 
-                            'L.notification', 
+                            // 'L.notification', 
                             'L.date_from', 
                             'L.date_to', 
                             'L.no_of_days', 
@@ -636,7 +636,7 @@ class ViewLeavesController extends Controller
                         'leave_balance', 
                         'others', 
                         'reason', 
-                        'notification', 
+                        // 'notification', 
                         'date_from', 
                         'date_to', 
                         'no_of_days', 
@@ -706,7 +706,7 @@ class ViewLeavesController extends Controller
                     END) as leave_balance'),*/
                 'h.others', 
                 'h.reason', 
-                'h.notification', 
+                // 'h.notification', 
                 DB::raw("DATE_FORMAT(h.date_from, '%m/%d/%Y') as date_from"),
                 DB::raw("DATE_FORMAT(h.date_to, '%m/%d/%Y') as date_to"),
                 'h.no_of_days'

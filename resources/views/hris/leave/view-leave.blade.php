@@ -46,7 +46,7 @@
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <x-slot name="header">
             @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                @if (Auth::user()->department=='HR')
+                @if (Auth::user()->department=='1D-HR')
                     {{ __('VIEW ALL LEAVES (HR/ADMIN VIEW)') }}
                 @else
                     {{ __('VIEW ALL LEAVES (HEAD VIEW)') }}
@@ -511,15 +511,15 @@
                     <!-- Notification of Leave -->
                     <div class="col-md-9 text-center">
                         <div class="row">
-                            <div class="col-md-5 p-1">
-                        <x-jet-label for="leave_notification" value="{{ __('NOTIFICATION OF LEAVE') }}" class="font-semibold text-xl text-gray-800 leading-tight"/>
+                            {{-- <div class="col-md-5 p-1">
+                                <x-jet-label for="leave_notification" value="{{ __('NOTIFICATION OF LEAVE') }}" class="font-semibold text-xl text-gray-800 leading-tight"/>
 
-                        <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="IN PERSON" wire:model.defer="state.leave_notification" />IN PERSON &nbsp; &nbsp;
+                                <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="IN PERSON" wire:model.defer="state.leave_notification" />IN PERSON &nbsp; &nbsp;
 
-                        <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY SMS" wire:model.defer="state.leave_notification" />BY SMS &nbsp; &nbsp;
+                                <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY SMS" wire:model.defer="state.leave_notification" />BY SMS &nbsp; &nbsp;
 
-                        <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY E-MAIL" wire:model.defer="state.leave_notification" />BY E-MAIL
-                            </div>
+                                <x-jet-input id="leave_notification" name="leave_notification[]" type="checkbox" value="BY E-MAIL" wire:model.defer="state.leave_notification" />BY E-MAIL
+                            </div> --}}
 
                             <div class="form-floating col-md-7 p-1">
                                 <textarea id="reason" name="reason" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-1/2" placeholder="REASON" /> </textarea>
@@ -737,7 +737,7 @@ $("#viewLeave > tr").on('dblclick', function() {
             var dateTo = data[0]['date_to'].split('-');
                 dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
             var notif1 = "", notif2 = "", notif3 = "";
-            var notification = data[0]['notification'].split('|');
+            // var notification = data[0]['notification'].split('|');
 
             $("#update_leave").hide();
             $("#cancel_leave").hide();
@@ -751,19 +751,19 @@ $("#viewLeave > tr").on('dblclick', function() {
             $("#div_others").attr('hidden',true);
             $("#others_leave").attr('hidden',true);
             $("#others_leave").removeAttr('readonly');
-            $("input[name='leave_notification[]']").each( function() {
+            /*$("input[name='leave_notification[]']").each( function() {
                 $(this).removeAttr("disabled");
-            });
+            });*/
 
 
-            $("input[name='leave_notification[]']").each( function() {
+            /*$("input[name='leave_notification[]']").each( function() {
                 $(this).prop("checked", false);
                 for (var i=0; i<notification.length; i++) {
                     if (notification[i]==$(this).val()) {
                         $(this).prop("checked", true);
                     }
                 }
-            });
+            });*/
             $("#hid_leave_id").val(data[0]['id']);
             $("#myModalLabel").html(modalHeader);
             $("#name").val(data[0]['name']);
@@ -795,9 +795,9 @@ $("#viewLeave > tr").on('dblclick', function() {
                     $("#leave_type").attr('disabled', true);
                     $("#reason").attr('disabled', true);
                     $("#others_leave").attr('readonly', true);
-                    $("input[name='leave_notification[]']").each( function() {
+                    /*$("input[name='leave_notification[]']").each( function() {
                         $(this).attr("disabled", true);
-                    });
+                    });*/
                     if (data[0]['status']=="Pending") {
                         $("#deny_leave").show();
                         $("#approve_leave").show();
@@ -821,9 +821,9 @@ $("#viewLeave > tr").on('dblclick', function() {
                             $("#leave_type").attr('disabled', true);
                             $("#reason").attr('disabled', true);
                             $("#others_leave").attr('readonly', true);
-                            $("input[name='leave_notification[]']").each( function() {
+                            /*$("input[name='leave_notification[]']").each( function() {
                                 $(this).attr("disabled", true);
-                            });
+                            });*/
                             if (data[0]['status']=="Cancelled") {
                                 $("#cancel_leave").hide();
                             } else {
@@ -836,9 +836,9 @@ $("#viewLeave > tr").on('dblclick', function() {
                         $("#leave_type").attr('disabled', true);
                         $("#reason").attr('disabled', true);
                         $("#others_leave").attr('readonly', true);
-                        $("input[name='leave_notification[]']").each( function() {
+                        /*$("input[name='leave_notification[]']").each( function() {
                             $(this).attr("disabled", true);
-                        });
+                        });*/
                         /*if (data['auth_department']==1) {
                             if (data[0]['status']=="Head Approved") {
                                 $("#taken_leave").show();
@@ -861,9 +861,9 @@ $("#viewLeave > tr").on('dblclick', function() {
                     $("#leave_type").attr('disabled', true);
                     $("#reason").attr('disabled', true);
                     $("#others_leave").attr('readonly', true);
-                    $("input[name='leave_notification[]']").each( function() {
+                    /*$("input[name='leave_notification[]']").each( function() {
                         $(this).attr("disabled", true);
-                    });
+                    });*/
                 }
             }
             /* OPEN MODAL View */

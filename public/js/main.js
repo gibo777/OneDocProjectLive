@@ -461,7 +461,7 @@ $(document).ready(function(){
     }
 
 
-    function submitLeaveValidation (leave_type='',others_leave='', date_from='', date_to='',notification=0,reason='') {
+    function submitLeaveValidation (leave_type='',others_leave='', date_from='', date_to='',reason='') {
 
         var empty_fields=0;
         if (leave_type=="Others") {
@@ -472,7 +472,7 @@ $(document).ready(function(){
         if (leave_type=="") { empty_fields++; }
         if (date_from=="") { empty_fields++; }
         if (date_to=="") { empty_fields++; }
-        if (notification==0) { empty_fields++; }
+        // if (notification==0) { empty_fields++; }
         if ($.trim(reason)=="") { empty_fields++; }
 
         if (empty_fields>0) {
@@ -561,7 +561,7 @@ $(document).ready(function(){
             $(this).val(),
             $("#date_from").val(),
             $("#date_to").val(),
-            $("input[name='leave_notification[]']:checked").length,
+            // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
     });
@@ -609,7 +609,7 @@ $(document).ready(function(){
             $("#others_leave").val(),
             $(this).val(),
             $("#date_to").val(),
-            $("input[name='leave_notification[]']:checked").length,
+            // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
     });
@@ -627,21 +627,15 @@ $(document).ready(function(){
             $("#others_leave").val(),
             $("#date_from").val(),
             $(this).val(),
-            $("input[name='leave_notification[]']:checked").length,
+            // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
     });
 
 
-    $("input[name='leave_notification[]']").each(function() {
+    /*$("input[name='leave_notification[]']").each(function() {
         var checked=0;
         $(this).change(function () {
-            /*if ($("input[name='leave_notification[]']:checked").length == 0) {
-                $("input[name='leave_notification[]']").addClass('empty');
-            } else {
-
-                $("input[name='leave_notification[]']").removeClass('empty');
-            }*/
             submitLeaveValidation (
                 $("#leave_type").val(),
                 $("#others_leave").val(),
@@ -651,7 +645,7 @@ $(document).ready(function(){
                 $("#reason").val()
                 );
         });
-    });
+    });*/
 
     $("#reason").keyup(function () {
         /*if ($.trim($(this).val())=="") {
@@ -664,14 +658,14 @@ $(document).ready(function(){
             $("others_leave").val(),
             $("#date_from").val(),
             $("#date_to").val(),
-            $("input[name='leave_notification[]']:checked").length,
+            // $("input[name='leave_notification[]']:checked").length,
             $(this).val()
             );
     });
 
     /* SUBMIT LEAVE FORM begin*/
     $("#submit_leave").click(function (){
-        if ($("input[name='leave_notification[]']:checked").length == 0) {
+        /*if ($("input[name='leave_notification[]']:checked").length == 0) {
             $("input[name='leave_notification[]']").each(function() {
                 $(this).addClass('empty');
             });
@@ -680,7 +674,7 @@ $(document).ready(function(){
             $("input[name='leave_notification[]']").each(function() {
                 $(this).removeClass('empty');
             });
-        }
+        }*/
 
         if ($("#leave_type").val()==""){
             $("#leave_type").addClass('empty');
@@ -726,25 +720,7 @@ $(document).ready(function(){
                 text: 'Kindly fill-up all required fields',
 
               });
-            // $("#pop_content").html("Kindly fill-up all required fields").css('color','#FF0000');
-            // // $("#popup" ).attr('title','NOTIFICATION');
-            // $("#popup" ).dialog({
-            //     modal: true,
-            //     title: "NOTIFICATION",
-            //     width: "auto",
-            //     height: "auto",
-            //     buttons: [
-            //         {
-            //             id: "OK",
-            //             text: "OK",
-            //             click: function () {
-            //                 $(this).dialog('close');
-            //             }
-            //         }
-            //     ]
-            // });
         } else {
-            // prompt('',$('#leave-form').serialize());
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -772,38 +748,7 @@ $(document).ready(function(){
                     $('#notificationofleaveofemp').text("Notification of Leave: "+notificationslev);
                     $('#reasonofemp').text("Reason: "+$('#reason').val());
                     $('#PreviewModal').modal('show');
-                    // Swal.fire(
-                    //     'LEAVE FORM successfully submitted!',
-                    //     '',
-                    //     'success'
-                    //   )
-                    //   $('.swal2-confirm').click(function(){
-
-                    //     // window.location.href = "{{URL::to('hris/view-leave')}}";
-                    //             window.location = window.location.origin+"/hris/view-leave";
-                    //     // window.location.origin+'/hris/view-leave';
-                    //   });
-                    // // prompt('',data); return false;
-                    // $("#pop_content").html("LEAVE FORM successfuly submitted!");
-                    // $("#popup" ).attr('title','NOTIFICATION');
-                    // $("#popup" ).dialog({
-                    //     modal: true,
-                    //     title: "Confirmation",
-                    //     width: "auto",
-                    //     height: "auto",
-                    //     buttons: [
-                    //     {
-                    //         id: "OK",
-                    //         text: "OK",
-                    //         click: function () {
-                    //             $(this).dialog('close');
-                    //             // location.reload();
-                    //             window.location = window.location.origin+"/hris/view-leave";
-                    //         }
-                    //     }
-                    //     ]
-                    // });
-                    // console.log(data);
+                    
                         $('#truesubmitleave').click(function(){
                             $('#PreviewModal').modal('hide');
                              Swal.fire(
@@ -812,10 +757,7 @@ $(document).ready(function(){
                             'success'
                           )
                           $('.swal2-confirm').click(function(){
-
-                            // window.location.href = "{{URL::to('hris/view-leave')}}";
-                                    window.location = window.location.origin+"/hris/view-leave";
-                            // window.location.origin+'/hris/view-leave';
+                            window.location = window.location.origin+"/hris/view-leave";
                           });
                         });
                     } else {
@@ -829,17 +771,6 @@ $(document).ready(function(){
     /* SUBMIT LEAVE FORM end*/
 
     $("#show_filter").click(function (){
-        // alert($("#filter_fields").attr('hidden'));
-        // if ($("#div_filter_leave_type").attr('hidden')=='hidden') {
-        //     $("#div_filter_department").removeClass('hidden');
-        //     $("#div_filter_leave_type").removeClass('hidden');
-
-        // } else {
-        //     $("#div_filter_department").attr('hidden','hidden');
-        //     $("#div_filter_leave_type").attr('hidden','hidden');
-        //     // $("#filter_fields").toggle(200);
-        // }
-
         $("#div_filter_department").toggle();
         $("#div_filter_leave_type").toggle();
         return false;
@@ -847,67 +778,6 @@ $(document).ready(function(){
 
 
     /* VIEW HISTORY begin*/
-    // $("#status_view > button").each(function (){
-    //     $(this).click(function() {
-    //         // alert($(this).val()); return false;
-    //     /*alert("Access ID: "+$("#hid_access_id").val()
-    //         +"\nLeave ID: "+$(this).val()); return false;*/
-    //         $.ajaxSetup({
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             }
-    //         });
-    //         $.ajax({
-    //             url: window.location.origin+'/hris/view-history',
-    //             method: 'get',
-    //             data: {'leave_reference': $(this).val() }, // prefer use serialize method
-    //             success:function(data){
-    //                 alert('test');
-    //                 // prompt('',data); return false;
-    //                 var historyLabel = "leave history";
-
-    //                 $("#data_history > tbody").empty();
-
-    //                 for(var n=0; n<data.length; n++) {
-    //                     $("#data_history > tbody:last-child")
-    //                     .append('<tr>');
-    //                     /*if ($("#hid_access_id").val()==1) {
-    //                         $("#data_history > tbody:last-child")
-    //                         .append('<td>'+data[n]['name']+'</td>')
-    //                         .append('<td>'+data[n]['employee_id']+'</td>')
-    //                         .append('<td>'+data[n]['department']+'</td>')
-    //                     }*/
-    //                     $("#data_history > tbody:last-child")
-    //                     .append('<td>'+data[n]['head_name']+'</td>')
-    //                     // .append('<td>'+data[n]['leave_number']+'</td>')
-    //                     .append('<td>'+data[n]['leave_type']+'</td>')
-    //                     .append('<td>'+data[n]['leave_balance']+'</td>')
-    //                     .append('<td>'+data[n]['action']+'</td>')
-    //                     .append('<td>'+data[n]['created_at']+'</td>')
-    //                     .append('<td id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason'].slice(0,10)+'</td>')
-    //                     .append('<td>'+data[n]['date_applied']+'</td>')
-    //                     .append('<td>'+data[n]['date_from']+'</td>')
-    //                     .append('<td>'+data[n]['date_to']+'</td>')
-    //                     .append('<td>'+data[n]['no_of_days']+'</td>');
-
-    //                     $("#title"+n).click(function () {
-    //                         $(this).attr('title').show();
-    //                     });
-    //                 }
-    //                 if ($("#hid_access_id").val()==1) {
-    //                     historyLabel = historyLabel+" of "+data[0]['name'];
-    //                 }
-    //                 historyLabel = historyLabel+" (Leave #"+data[0]['leave_number']+")";
-    //                 // var historyLabel = "leave history of Pangalan"+" (leave #"+7+")";
-    //                 $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
-    //                 $("#modalHistory").modal("show");
-    //             }
-    //         });
-
-
-    //         return false;
-    //     });
-    // });
    
     $(document).on('click','.open_leave',function(e){
         try{

@@ -83,7 +83,7 @@ Route::get('/welcome', function () {
 
 
 /*======= E-LEAVE APPLICATION ======*/
-Route::get('/hris/eleave', [LeaveFormController::class, 'create_leave'])->name('hris.leave.eleave');
+Route::get('/hris/eleave', [LeaveFormController::class, 'index'])->name('hris.leave.eleave');
 Route::post('/hris/eleave', [LeaveFormController::class, 'submit_leave']);
 
 Route::get('/hris/eleave/balance', [LeaveFormController::class, 'show_balance'])->name('hris.leave.leave-balance');

@@ -304,7 +304,7 @@
                 </div>
                 <!-- E-LEAVE MENU end  -->
                 
-                @if (Auth::user()->department == 'HR')
+                @if (Auth::user()->department == '1D-HR')
                 <!-- PROCESS start-->
                 <div class="ml-3 relative">
 

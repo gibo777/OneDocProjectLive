@@ -24,17 +24,6 @@ class LeaveFormController extends Controller
      */
     public function index()
     {
-        //
-        // $view_leaves = DB::select('select * from leave');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create_leave()
-    {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
         {
             $holidays = DB::table('holidays')
@@ -48,6 +37,27 @@ class LeaveFormController extends Controller
             return redirect('/');
         }
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    /*public function create_leave()
+    {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
+        {
+            $holidays = DB::table('holidays')
+                        ->where( function($query) {
+                          return $query->where('holiday_office','')->orWhereNull('holiday_office')->orWhere('holiday_office',Auth::user()->office);
+                        })->get();
+            $departments = DB::table('departments')->get();
+            $leave_types = DB::table('leave_types')->get();
+            return view('hris.leave.eleave', ['holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types]);
+        } else {
+            return redirect('/');
+        }
+    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -111,7 +121,7 @@ class LeaveFormController extends Controller
                 $insert->date_applied = $dateapplied;
                 $insert->leave_type = $data['leave_type'];
                 $insert->reason = $data['reason'];
-                $insert->notification = implode('|',$data['leave_notification']);
+                // $insert->notification = implode('|',$data['leave_notification']);
                 $insert->date_from = date('Y-m-d',strtotime($data['date_from']));
                 $insert->date_to = date('Y-m-d',strtotime($data['date_to']));
                 $insert->no_of_days = $data['hid_no_days'];
