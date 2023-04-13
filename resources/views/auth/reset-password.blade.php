@@ -17,15 +17,15 @@
 
             <div class="block">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+                <x-jet-input id="email" class="block border-0 bg-white shadow-none w-full" type="email" name="email" :value="old('email', $request->email)" readonly autofocus />
             </div>
 
-            <div class="mt-4">
+            <div class="mt-2">
                 <!-- <x-jet-label for="password" value="{{ __('Password') }}" />
                 <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" /> -->
 
 
-                <x-jet-label for="password" value="{{ __('Confirm Password') }}" />
+                <x-jet-label for="password" value="{{ __('New Password') }}" />
                 <div class="input-group mb-3">
                   <input name="password" type="password" value="" class="input form-control " id="password" placeholder="New Password" required="true" aria-label="password" aria-describedby="basic-addon1" autocomplete="new-password"/>
                   <div class="input-group-append hover" id="eye_view1">
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-2">
                 <!-- <x-jet-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                 <x-jet-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" /> -->
 
@@ -124,7 +124,7 @@
 </script>
 <script>
     $(function() {
-        $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password is not a match ');
+        /*$('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password do not a match!');*/
 
         // $('#btnsubmit').attr('disabled','disabled');
         var checkfn=$('#first_name').val();
@@ -155,12 +155,12 @@
     if ($('#password').val() != $('#password_confirmation').val()) {
 
     $('.passconfirm').empty();
-    $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password is not a match ');
+    $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
 
     } else {
 
     $('.passconfirm').empty();
-    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password is a match ');
+    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
 
 
     }
@@ -176,12 +176,12 @@
         if ($('#password').val() != $('#password_confirmation').val()) {
 
         $('.passconfirm').empty();
-    $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password is not a match ');
+    $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
 
         } else {
 
             $('.passconfirm').empty();
-    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password is a match ');
+    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
 
 
         }
