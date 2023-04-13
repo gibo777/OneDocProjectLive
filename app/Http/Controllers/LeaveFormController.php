@@ -32,7 +32,8 @@ class LeaveFormController extends Controller
                         })->get();
             $departments = DB::table('departments')->get();
             $leave_types = DB::table('leave_types')->get();
-            return view('hris.leave.eleave', ['holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types]);
+            $leave_credits = DB::table('leave_balances')->where('employee_id',Auth::user()->employee_id)->get();
+            return view('hris.leave.eleave', ['holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types,'leave_credits'=>$leave_credits]);
         } else {
             return redirect('/');
         }

@@ -20,12 +20,12 @@
             @csrf
 
 
-            <div class="px-4 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+            <div class="px-5 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="row">
                     <div class="col-md-4 p-1">
                         <!-- Name -->
                         <div class="form-floating">
-                            <x-jet-input id="name" name="name" type="text" class="form-control mt-1 block w-full" value="{{ join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name]) }}" placeholder="NAME" readonly/>
+                            <x-jet-input id="name" name="name" type="text" class="form-control border-0 bg-white shadow-none mt-1 block w-full" value="{{ join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name]) }}" placeholder="NAME" readonly/>
                             <x-jet-label for="name" value="{{ __('NAME') }}" class="w-full" />
                             <x-jet-input-error for="name" class="mt-2" />
                         </div>
@@ -33,7 +33,7 @@
                     <div class="col-md-3 p-1">
                         <!-- Employee Number -->
                         <div class="form-floating">
-                            <x-jet-input id="employee_number" name="employee_number" type="text" class="form-control mt-1 block w-full" value="{{ Auth::user()->employee_id }}" placeholder="EMPLOYEE NUMBER" readonly/>
+                            <x-jet-input id="employee_number" name="employee_number" type="text" class="form-control mt-1 border-0 bg-white shadow-none block w-full" value="{{ Auth::user()->employee_id }}" placeholder="EMPLOYEE NUMBER" readonly/>
                             <x-jet-label for="employee_number" value="{{ __('EMPLOYEE NUMBER') }}" class="w-full" />
                             <x-jet-input-error for="employee_number" class="mt-2" />
                         </div>
@@ -41,8 +41,9 @@
                     <div class="col-md-3 p-1">
                         <!-- Department -->
                         <div class="form-floating">
-                            <!-- <x-jet-input id="department" name="department" type="text" class="mt-1 block w-full" value="{{ Auth::user()->department }}" readonly/>  -->
-                            <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" placeholder="DEPARTMENT" disabled>
+                            <x-jet-input id="department" name="department" type="text" class="form-control mt-1 border-0 bg-white shadow-none block w-full" value="{{ Auth::user()->department }}" readonly/> 
+
+                            {{-- <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 border-0 bg-white shadow-none block w-full" placeholder="DEPARTMENT" disabled>
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $dept)
                                     @if (Auth::user()->department==$dept->department_code)
@@ -51,7 +52,7 @@
                                     <option value="{{ $dept->department_code }}">{{ $dept->department_code.' - '.$dept->department }}</option>
                                     @endif
                                 @endforeach
-                            </select>
+                            </select> --}}
                             <x-jet-label for="department" value="{{ __('DEPARTMENT') }}" class="w-full" />
                             <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" />
                         </div>
@@ -59,7 +60,7 @@
                     <div class="col-md-2 p-1">
                         <!-- Date Applied -->
                         <div class="form-floating">
-                            <x-jet-input id="date_applied" name="date_applied" value="{{ date('m/d/Y') }}" type="text" class="form-control mt-1 block date-input" placeholder="DATE APPLIED" readonly/>
+                            <x-jet-input id="date_applied" name="date_applied" value="{{ date('m/d/Y') }}" type="text" class="form-control mt-1 border-0 bg-white shadow-none block date-input" placeholder="DATE APPLIED" readonly/>
                             <x-jet-label for="date_applied" value="{{ __('DATE APPLIED') }}" class="w-full" />
                             <x-jet-input-error for="date_applied" class="mt-2" />
                         </div>
@@ -85,29 +86,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mt-2">
+                    <div class="col-md-8 mt-2">
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <x-jet-input id="date_from" name="date_from" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
                                     <x-jet-label for="date_from" value="{{ __('BEGIN (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
                             TO
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <x-jet-input id="date_to" name="date_to" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
                                     <x-jet-label for="date_from" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 p-1">
-                        <!-- Number of Days -->
-                        <div class="form-floating" id="div_number_of_days">
-                            <x-jet-input id="hid_no_days" type="text" name="hid_no_days" class="form-control" readonly/>
-                            <x-jet-input id="hid_schedule" name="hid_schedule" value="{{Auth::user()->weekly_schedule }}" hidden/>
-                            <x-jet-label for="number_of_days" value="{{ __('NUMBER OF DAY/S') }}" class="w-full" />
+                            <div class="col-md-3">
+                                <!-- Number of Days -->
+                                <div class="form-floating" id="div_number_of_days">
+                                    <x-jet-input id="hid_no_days" type="text" name="hid_no_days" class="form-control" readonly/>
+                                    <x-jet-input id="hid_schedule" name="hid_schedule" value="{{Auth::user()->weekly_schedule }}" hidden/>
+                                    <x-jet-label for="number_of_days" value="{{ __('NUMBER OF DAY/S') }}" class="w-full" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,6 +133,48 @@
                                 <x-jet-input-error for="reason" class="mt-2" />
                             </div>
 
+                            <div class="form-floating col-md-6 p-1">
+                                <table class="table table-bordered data-table mx-auto">
+                                    <tr>
+                                        <th>VL</th>
+                                        <th>SL</th>
+                                        <th>EL</th>
+                                        <th>ML/PL</th>
+                                        <th>Other</th>
+                                    </tr>
+                                    <tr>
+                                        @foreach($leave_credits as $leave_balance)
+                                        <td>{{ $leave_balance->VL }}</td>
+                                        <td>{{ $leave_balance->SL }}</td>
+                                        <td>{{ $leave_balance->EL }}</td>
+                                        @if(Auth::user()->gender==='M')
+                                        <td>{{ $leave_balance->PL }}</td>
+                                        @elseif (Auth::user()->gender==='F')
+                                        <td>{{ $leave_balance->ML }}</td>
+                                        @endif
+                                        <td>{{ $leave_balance->others }}</td>
+                                        @endforeach
+                                    </tr>
+                                    {{-- <tr class="leave-status-field">
+                                        <th>Available</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Taken</th>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Balance</th>
+                                        <td id="td_balance"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>As of:</th>
+                                        <td id="td_as_of">{{ date('m/d/Y') }}</td>
+                                    </tr> --}}
+                                  </tbody>
+                                </table>
+                            </div>
+
                         </div>
                         <div class="row text-left">
                             <!-- INSTRUCTIONS -->
@@ -153,7 +196,7 @@
                     <div class="col-md-3">
                             <div class="col-span-5 sm:col-span-1 sm:jusitfy-start">
                                 <table class="table table-bordered data-table mx-auto">
-                                    <tr><th colspan="2">STATUS</th></tr>
+                                    <tr><th class="text-center" colspan="2">STATUS</th></tr>
                                     <tr class="leave-status-field">
                                         <th>Available</th>
                                         <td></td>
