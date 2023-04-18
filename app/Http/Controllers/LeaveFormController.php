@@ -168,8 +168,11 @@ class LeaveFormController extends Controller
                 case 'PL':
                     return $leaves_balances[0]->PL;
                     break;
+                case 'EL':
+                    return $leaves_balances[0]->EL;
+                    break;
                 case 'Others':
-                    return $leaves_balances[0]->Others;
+                    return $leaves_balances[0]->others;
                     break;
                 
                 default:

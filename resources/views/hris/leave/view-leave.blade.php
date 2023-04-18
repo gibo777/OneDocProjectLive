@@ -729,9 +729,9 @@ $("#viewLeave > tr").on('dblclick', function() {
         data: { 'leaveID': leaveID }, // prefer use serialize method
         success:function(data){
             // alert(data[0]['employee_id']);
-            var leave_number = data[0]['leave_number'];
+            var leave_number = data[0]['control_number'];
 
-            var modalHeader = "VIEW LEAVE #"+leave_number;
+            var modalHeader = "VIEW LEAVE (Control No. "+leave_number+")";
             var dateFrom = data[0]['date_from'].split('-');
                 dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
             var dateTo = data[0]['date_to'].split('-');

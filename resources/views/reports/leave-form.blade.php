@@ -191,7 +191,7 @@
                 <img src='data:image/jpeg;base64, {{ $data['imageLogo'] }}' width="275px" height="70px" />
             </div>
             <div class="columnHeader">
-                <div class="headerLabel" style="float: right; "> Control NO. {{ $data['leave_details'][0]->control_number }} <br>
+                <div class="headerLabel" style="float: right; "> Control No. {{ $data['leave_details'][0]->control_number }} <br>
                     </div>
             </div>
         </div>
