@@ -8,35 +8,35 @@
 <form id="accountingDataForm">
 @csrf
 
-<div class="col-span-12 sm:col-span-12 mx-2"> 
+<div class="col-span-12 sm:col-span-12 mx-4"> 
         <div class="row pt-2">
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="vacation_leaves" type="text" class="leaves form-control block w-full" placeholder="Vacation Leaves" autocomplete="off" value="{{$leaves->VL}}" readonly/>
+                <x-jet-input id="vacation_leaves" type="text" class="leaves form-control text-center block w-full"  autocomplete="off" value="{{$leaves->VL!=null?$leaves->VL:0}}" readonly/>
                 <x-jet-label for="vacation_leaves" value="{{ __('Vacation Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="vacation_leaves" class="mt-2" />
             </div>
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="sick_leaves" type="text" class="leaves form-control block w-full" placeholder="Sick Leaves" autocomplete="off" value="{{$leaves->SL}}" readonly/>
+                <x-jet-input id="sick_leaves" type="text" class="leaves form-control text-center block w-full"  autocomplete="off" value="{{$leaves->SL!=null?$leaves->SL:0}}" readonly/>
                 <x-jet-label for="sick_leaves" value="{{ __('Sick Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="sick_leaves" class="mt-2" />
             </div>
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="maternity_leaves" type="text" class="leaves form-control block w-full" placeholder="Maternity Leaves" autocomplete="off" value="{{$leaves->ML}}" readonly/>
+                <x-jet-input id="maternity_leaves" type="text" class="leaves form-control text-center block w-full"  autocomplete="off" value="{{$leaves->ML!=null?$leaves->ML:0}}" readonly/>
                 <x-jet-label for="maternity_leaves" value="{{ __('Maternity Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="civil_status" class="mt-2" />
             </div>
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="paternity_leaves" type="text" class="leaves form-control block w-full" placeholder="Paternity Leaves" autocomplete="off" value="{{$leaves->PL}}" readonly/>
+                <x-jet-input id="paternity_leaves" type="text" class="leaves form-control text-center block w-full"  autocomplete="off" value="{{$leaves->PL!=null?$leaves->PL:0}}" readonly/>
                 <x-jet-label for="paternity_leaves" value="{{ __('Paternity Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="paternity_leaves" class="mt-2" />
             </div>
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="emergency_leaves" type="text" class="leaves form-control block w-full" placeholder="Emergency Leaves" autocomplete="off" value="{{$leaves->EL}}" readonly/>
+                <x-jet-input id="emergency_leaves" type="text" class="leaves form-control text-center block w-full"  autocomplete="off" value="{{$leaves->EL!=null?$leaves->EL:0}}" readonly/>
                 <x-jet-label for="emergency_leaves" value="{{ __('Emergency Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="emergency_leaves" class="mt-2" />
             </div>
             <div class="col-md-2 form-floating px-1">
-                <x-jet-input id="others" type="text" class="leaves form-control block w-full" placeholder="Other Leaves" autocomplete="off" value="{{$leaves->others}}" readonly/>
+                <x-jet-input id="others" type="text" class="leaves form-control text-center block w-full" autocomplete="off" value="{{$leaves->others!=null?$leaves->others:0}}" readonly/>
                 <x-jet-label for="others" value="{{ __('Other Leaves') }}" class="text-black-50 w-full" />
                 <x-jet-input-error for="others" class="mt-2" />
             </div>
