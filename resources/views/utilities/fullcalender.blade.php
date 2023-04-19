@@ -1,19 +1,19 @@
 <x-app-layout>
-<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script> --}}
 
 <link rel="stylesheet" href="{{ asset('/full-calendar/css/fullcalendar.css') }}" />
-<link rel="stylesheet" href="{{ asset('/full-calendar/css/toastr.min.css') }}" />
+{{-- <link rel="stylesheet" href="{{ asset('/full-calendar/css/toastr.min.css') }}" /> --}}
 <script src="{{ asset('/full-calendar/js/jquery.min.js') }}"></script>
 <script src="{{ asset('/full-calendar/js/moment.min.js') }}"></script>
 <script src="{{ asset('/full-calendar/js/fullcalendar.js') }}"></script>
-<script src="{{ asset('/full-calendar/js/toastr.min.js') }}"></script>
+{{-- <script src="{{ asset('/full-calendar/js/toastr.min.js') }}"></script> --}}
 
-<script type="text/javascript" src="{{ asset('/js/bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ asset('/js/bootstrap.min.js') }}"></script> --}}
+{{-- <script type="text/javascript" src="{{ asset('/js/dataTables.bootstrap4.min.js') }}"></script> --}}
+{{-- <script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.js') }}"></script>
 <script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('/js/hris-jquery.js') }}"></script>
+<script src="{{ asset('/js/hris-jquery.js') }}"></script> --}}
 
 
     <x-slot name="header">
@@ -123,6 +123,8 @@
                              events: SITEURL + "/fullcalender",
                              displayEventTime: false,
                              editable: true,
+                             eventTextColor: '#fff',
+                             eventBackgroundColor: '#206CCE',
                              eventRender: function (event, element, view) {
                                  if (event.allDay === 'true') {
                                          event.allDay = true;
