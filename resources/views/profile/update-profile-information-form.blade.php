@@ -36,12 +36,12 @@
 
                         <!-- Current Profile Photo -->
                         <div  id="divPhotoPreview1" class="flex justify-center mt-1 w-100" x-show="! photoPreview">
-                            <img id="imgProfile" src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded h-id w-id object-cover">
+                            <img id="imgProfile" src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-id w-id object-cover">
                         </div>
                         <!-- New Profile Photo Preview -->
                         <div id="divPhotoPreview2" class="flex justify-center mt-1 w-100" x-show="photoPreview" style="display: none;">
                             <!-- <span class="block rounded-full w-id h-id bg-cover bg-no-repeat bg-center" x-bind:style="'background-image: url(\'' + photoPreview + '\');'"> -->
-                            <span class="block rounded w-id h-id bg-cover bg-no-repeat bg-center" x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
+                            <span class="block rounded-full w-id h-id bg-cover bg-no-repeat bg-center" x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                             </span>
                         </div>
                         <div id="divPhotoPreview3" class="hidden">
