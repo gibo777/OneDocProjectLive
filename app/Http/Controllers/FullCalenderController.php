@@ -68,8 +68,8 @@ class FullCalenderController extends Controller
                          ->get([ 
                           'L.id', 'L.leave_number', 'L.control_number',
                           'L.name', 'L.employee_id',
-                          'L.leave_type', 
-                          'L.reason',
+                          'L.leave_type', 'L.no_of_days', 
+                          'L.reason', 'L.leave_status',
                           DB::raw("DATE_FORMAT(L.date_from, '%b %d, %Y (%a)') as date_from"),
                           DB::raw("DATE_FORMAT(L.date_to, '%b %d, %Y (%a)') as date_to"),
                           DB::raw('concat(L.name," (",L.leave_type,") ") as title'), 

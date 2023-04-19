@@ -135,7 +135,7 @@
 
                             <div class="form-floating col-md-6 p-1">
                                 <table class="table table-bordered data-table mx-auto">
-                                    <tr>
+                                    <tr class="text-center">
                                         <th>VL</th>
                                         <th>SL</th>
                                         <th>EL</th>
@@ -155,22 +155,6 @@
                                         <td>{{ $leave_balance->others }}</td>
                                         @endforeach
                                     </tr>
-                                    {{-- <tr class="leave-status-field">
-                                        <th>Available</th>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Taken</th>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Balance</th>
-                                        <td id="td_balance"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>As of:</th>
-                                        <td id="td_as_of">{{ date('m/d/Y') }}</td>
-                                    </tr> --}}
                                   </tbody>
                                 </table>
                             </div>

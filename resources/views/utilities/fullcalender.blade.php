@@ -58,7 +58,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title text-lg" id="calendarLabel">
+        <h4 class="modal-title text-xl text-white" id="calendarLabel">
         </h4>
         <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
@@ -85,14 +85,19 @@
                 <x-jet-label id="calendar_date_range" class="text-base" />
             </div>
 
-            <div class="col-span-6 sm:col-span-2 font-semibold">
+            <div class="col-span-6 sm:col-span-1 font-semibold">
                 <x-jet-label for="calendar_date_range" value="{{ __('Number of Day/s:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                {{-- <x-jet-label id="calendar_date_range" class="text-base" /> --}}
+                <x-jet-label id="no_of_days" class="text-base text-center" />
             </div>
 
-            <div class="col-span-6 sm:col-span-3 font-semibold">
+            <div class="col-span-6 sm:col-span-4 font-semibold">
                 <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}" class="font-semibold text-xs leading-tight uppercase" />
                 <x-jet-label id="calendar_reason" class="text-base" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-2 font-semibold">
+                <x-jet-label for="leave_status" value="{{ __('Status:') }}" class="font-semibold text-xs leading-tight uppercase" />
+                <x-jet-label id="leave_status" class="text-base" />
             </div>
 
         </div>
@@ -196,6 +201,8 @@
                                             $("#calendar_leave_type").html(response['leave_type']);
                                             $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
                                             $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
+                                            $("#no_of_days").html(response['no_of_days']),
+                                            $("#leave_status").html(response['leave_status']),
                                             $("#modalCalendar").modal('show');
 
                                             /*$("#dialog" ).dialog({
