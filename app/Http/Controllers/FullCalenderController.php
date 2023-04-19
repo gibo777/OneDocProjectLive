@@ -66,7 +66,7 @@ class FullCalenderController extends Controller
                // $data = $data->leftJoin();
                $data = $data->where('L.id', '=', $request->id)
                          ->get([ 
-                          'L.id', 'L.leave_number',
+                          'L.id', 'L.leave_number', 'L.control_number',
                           'L.name', 'L.employee_id',
                           'L.leave_type', 
                           'L.reason',
