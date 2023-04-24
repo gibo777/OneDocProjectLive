@@ -72,7 +72,8 @@ class FullCalenderController extends Controller
                           'L.name', 
                           'L.employee_id',
                           'L.leave_type', 'L.no_of_days', 
-                          'L.reason', 'L.leave_status',
+                          'L.reason', /*'L.leave_status',*/
+                          DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as leave_status'),
                           DB::raw("DATE_FORMAT(L.date_from, '%b %d, %Y (%a)') as date_from"),
                           DB::raw("DATE_FORMAT(L.date_to, '%b %d, %Y (%a)') as date_to"),
                           DB::raw('concat(L.name," (",L.leave_type,") ") as title'), 
