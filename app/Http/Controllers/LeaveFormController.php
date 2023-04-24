@@ -31,7 +31,9 @@ class LeaveFormController extends Controller
                           return $query->where('holiday_office','')->orWhereNull('holiday_office')->orWhere('holiday_office',Auth::user()->office);
                         })->get();
             $departments = DB::table('departments')->get();
-            $leave_types = DB::table('leave_types')->get();
+            $leave_types = DB::table('leave_types');
+            (Auth::user()->gender=='F') ? $leave_types=$leave_types->where('leave_type','!=', 'PL') : $leave_types=$leave_types->where('leave_type','!=', 'ML');
+            $leave_types =$leave_types->get();
             $leave_credits = DB::table('leave_balances')
             ->select(
               DB::raw('(CASE WHEN VL is not null THEN VL ELSE 0 END) as VL'),

@@ -39,7 +39,9 @@ class FullCalenderController extends Controller
                   });
 
                 $data = $data->get([ 'id', 
-                          DB::raw('concat(name," (",leave_type,") ") as title'), 
+                          DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ',
+                          SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.',
+                          ' (',leave_type,')') as title"), 
                           'date_from as start', 'date_to as end']);
 
     
@@ -67,7 +69,8 @@ class FullCalenderController extends Controller
                $data = $data->where('L.id', '=', $request->id)
                          ->get([ 
                           'L.id', 'L.leave_number', 'L.control_number',
-                          'L.name', 'L.employee_id',
+                          'L.name', 
+                          'L.employee_id',
                           'L.leave_type', 'L.no_of_days', 
                           'L.reason', 'L.leave_status',
                           DB::raw("DATE_FORMAT(L.date_from, '%b %d, %Y (%a)') as date_from"),
