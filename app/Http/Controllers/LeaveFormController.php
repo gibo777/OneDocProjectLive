@@ -41,7 +41,7 @@ class LeaveFormController extends Controller
               DB::raw('(CASE WHEN ML is not null THEN ML ELSE 0 END) as ML'),
               DB::raw('(CASE WHEN PL is not null THEN PL ELSE 0 END) as PL'),
               DB::raw('(CASE WHEN EL is not null THEN EL ELSE 0 END) as EL'),
-              DB::raw('(CASE WHEN others != null THEN others ELSE 0 END) as others')
+              DB::raw('(CASE WHEN others is not null THEN others ELSE 0 END) as others')
             )
             ->where('employee_id',Auth::user()->employee_id)->get();
 
