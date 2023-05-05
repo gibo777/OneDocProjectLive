@@ -20,7 +20,7 @@
             {{ __('LEAVE APPLICATION CALENDAR') }}
     </x-slot>
     <div>
-        <div class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto mt-2 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -123,6 +123,16 @@
                              events: SITEURL + "/fullcalender",
                              displayEventTime: false,
                              editable: true,
+                             weekMode: 'variable', // allow the number of weeks to change dynamically
+                             weekNumbers: false, // show week numbers
+                             fixedWeekCount: false,
+                             contentHeight: function() {
+                                // calculate the content height based on the number of weeks displayed
+                                var numWeeks = $('#calendar').fullCalendar('getView').end.diff(
+                                  $('#calendar').fullCalendar('getView').start, 'weeks'
+                                );
+                                return numWeeks * 100; // set the height to be 100 pixels per week
+                            },
                              eventTextColor: '#fff',
                              eventBackgroundColor: '#206CCE',
                              eventRender: function (event, element, view) {
@@ -132,7 +142,7 @@
                                          event.allDay = false;
                                  }
                              },
-                             selectable: true,
+                             // selectable: true,
                              selectHelper: true,
                              select: function (start, end, allDay) {
                                  /*var title = prompt('Event Title:');

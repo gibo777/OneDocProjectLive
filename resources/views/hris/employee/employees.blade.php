@@ -393,40 +393,40 @@
                                         <x-jet-input-error for="birthdate" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="birth_place" type="text" class="form-control block w-full" placeholder="Birth Place" autocomplete="off" />
+                                        <x-jet-input id="birth_place" type="text" class="form-control block w-full" placeholder="Birth Place" autocomplete="off" disabled/>
                                         <x-jet-label for="birth_place" value="{{ __('Birth Place') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birth_place" class="mt-2" />
                                 </div>
                             </div>
                             <div class="row pt-2">
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="vacation_leaves" type="text" class="form-control block w-full" placeholder="Vacation Leaves" autocomplete="off"/>
-                                    <x-jet-label for="vacation_leaves" value="{{ __('Vacation Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="vacation_leaves" type="text" class="form-control block w-full" placeholder="Vacation Leave" autocomplete="off"/>
+                                    <x-jet-label for="vacation_leaves" value="{{ __('Vacation Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="sick_leaves" type="text" class="form-control block w-full" placeholder="Sick Leaves" autocomplete="off"/>
-                                    <x-jet-label for="sick_leaves" value="{{ __('Sick Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="sick_leaves" type="text" class="form-control block w-full" placeholder="Sick Leave" autocomplete="off"/>
+                                    <x-jet-label for="sick_leaves" value="{{ __('Sick Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="maternity_leaves" type="text" class="form-control block w-full" placeholder="Maternity Leaves" autocomplete="off"/>
-                                    <x-jet-label for="maternity_leaves" value="{{ __('Maternity Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="maternity_leaves" type="text" class="form-control block w-full" placeholder="Maternity Leave" autocomplete="off"/>
+                                    <x-jet-label for="maternity_leaves" value="{{ __('Maternity Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="paternity_leaves" type="text" class="form-control block w-full" placeholder="Paternity Leaves" autocomplete="off"/>
-                                    <x-jet-label for="paternity_leaves" value="{{ __('Paternity Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="paternity_leaves" type="text" class="form-control block w-full" placeholder="Paternity Leave" autocomplete="off"/>
+                                    <x-jet-label for="paternity_leaves" value="{{ __('Paternity Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="emergency_leaves" type="text" class="form-control block w-full" placeholder="Emergency Leaves" autocomplete="off"/>
-                                    <x-jet-label for="emergency_leaves" value="{{ __('Emergency Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="emergency_leaves" type="text" class="form-control block w-full" placeholder="Emergency Leave" autocomplete="off"/>
+                                    <x-jet-label for="emergency_leaves" value="{{ __('Emergency Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="other_leaves" type="text" class="form-control block w-full" placeholder="Other Leaves" autocomplete="off"/>
-                                    <x-jet-label for="other_leaves" value="{{ __('Other Leaves') }}" class="text-black-50 w-full" />
+                                <div class="col-md-2 form-floating px-1">
+                                    <x-jet-input id="other_leaves" type="text" class="form-control block w-full" placeholder="Other Leave" autocomplete="off"/>
+                                    <x-jet-label for="other_leaves" value="{{ __('Other Leave') }}" class="text-black-50 text-sm-left w-full" />
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
                             </div>
