@@ -59,6 +59,7 @@ class EmployeesController extends Controller
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
                 ->where('role_type','ADMIN')->orWhere('role_type','SUPER ADMIN')
+                ->where('id','!=',Auth::user()->id)
                 ->get();
 
             return view('/hris/employee/employees', 
