@@ -193,7 +193,7 @@
                         <div class="row mt-1">
                                 <div class="col-md-4 px-1">
                                     <div class="form-floating">
-                                        <x-jet-input id="last_name" type="text" class="form-control block w-full"  placeholder="Last Name" autocomplete="last_name" readonly/>
+                                        <x-jet-input id="last_name" type="text" class="form-control block w-full"  placeholder="Last Name" autocomplete="last_name" disabled/>
                                         <x-jet-label for="last_name" value="{{ __('Last Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="last_name" class="mt-2" />
                                     </div>
@@ -201,18 +201,18 @@
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <div class=" form-floating">
-                                        <x-jet-input id="first_name" type="text" class="form-control block w-full" placeholder="First Name" autocomplete="first_name" readonly/>
+                                        <x-jet-input id="first_name" type="text" class="form-control block w-full" placeholder="First Name" autocomplete="first_name" disabled/>
                                         <x-jet-label for="first_name" value="{{ __('First Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="first_name" class="mt-2" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="middle_name" type="text" class="form-control block w-full"  placeholder="Middle Name" autocomplete="middle_name" readonly/>
+                                        <x-jet-input id="middle_name" type="text" class="form-control block w-full"  placeholder="Middle Name" autocomplete="middle_name" disabled/>
                                         <x-jet-label for="middle_name" value="{{ __('Middle Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="middle_name" class="mt-2" />
                                 </div>
                                 <div class="col-md-1 form-floating px-1">
-                                        <x-jet-input id="suffix" type="text" class="form-control block w-full"  placeholder="Ext." autocomplete="suffix" readonly/>
+                                        <x-jet-input id="suffix" type="text" class="form-control block w-full"  placeholder="Ext." autocomplete="suffix" disabled/>
                                         <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="suffix" class="mt-2" />
                                 </div>
@@ -262,7 +262,7 @@
                                             </select>
                                             <x-jet-label for="country" value="{{ __('Country') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="country" class="mt-2" /> --}}
-                                            <x-jet-input id="country" type="text" class="form-control block w-full"  placeholder="Country" autocomplete="Country" readonly/>
+                                            <x-jet-input id="country" type="text" class="form-control block w-full"  placeholder="Country" autocomplete="Country" disabled/>
                                             <x-jet-label for="country" value="{{ __('Country') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="country" class="mt-2" />
                                 </div>
@@ -273,7 +273,7 @@
                                             </select>
                                             <x-jet-label for="province" value="{{ __('Province') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="province" class="mt-2" /> --}}
-                                            <x-jet-input id="province" type="text" class="form-control block w-full" placeholder="Province" autocomplete="Province" readonly/>
+                                            <x-jet-input id="province" type="text" class="form-control block w-full" placeholder="Province" autocomplete="Province" disabled/>
                                             <x-jet-label for="province" value="{{ __('Province') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="province" class="mt-2" />
                                 </div>
@@ -284,7 +284,7 @@
                                             </select>
                                             <x-jet-label for="municipality" value="{{ __('City/Municipality') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="city" class="mt-2" /> --}}
-                                            <x-jet-input id="city" type="text" class="form-control block w-full" placeholder="City" autocomplete="City" readonly/>
+                                            <x-jet-input id="city" type="text" class="form-control block w-full" placeholder="City" autocomplete="City" disabled/>
                                             <x-jet-label for="city" value="{{ __('City') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="city" class="mt-2" />
                                 </div>
@@ -299,17 +299,17 @@
                                             </select>
                                             <x-jet-label for="barangay" value="{{ __('Barangay') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="barangay" class="mt-2" /> --}}
-                                            <x-jet-input id="barangay" type="text" class="form-control block w-full" placeholder="Barangay" autocomplete="barangay" readonly/>
+                                            <x-jet-input id="barangay" type="text" class="form-control block w-full" placeholder="Barangay" autocomplete="barangay" disabled/>
                                             <x-jet-label for="barangay" value="{{ __('Barangay') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="barangay" class="mt-2" />
                                 </div>
                                 <div class="col-md-6 form-floating px-1">
-                                        <x-jet-input id="home_address" type="text" class="form-control block w-full" placeholder="House No./Street" autocomplete="off" readonly/>
+                                        <x-jet-input id="home_address" type="text" class="form-control block w-full" placeholder="House No./Street" autocomplete="off" disabled/>
                                         <x-jet-label for="home_address" value="{{ __('House No./Street') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="home_address" class="mt-2" />
                                 </div>
                                 <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="zip_code" type="text" class="form-control block w-full" placeholder="Zip Code" autocomplete="off" readonly/>
+                                        <x-jet-input id="zip_code" type="text" class="form-control block w-full" placeholder="Zip Code" autocomplete="off" disabled/>
                                         <x-jet-label for="zip_code" value="{{ __('Zip Code') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="zip_code" class="mt-2" />
                                 </div>
@@ -318,17 +318,17 @@
                             <div class="row pt-2">
                                 <div class="col-md-4 form-floating px-1">
                                     <!-- Email -->
-                                        <x-jet-input id="email" type="email" class="form-control block w-full" placeholder="Email" readonly/>
+                                        <x-jet-input id="email" type="email" class="form-control block w-full" placeholder="Email" disabled/>
                                         <x-jet-label for="email" value="{{ __('Email') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="email" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="contact_number" type="text" class="form-control block w-full" placeholder="Contact Number" autocomplete="off" readonly/>
+                                        <x-jet-input id="contact_number" type="text" class="form-control block w-full" placeholder="Contact Number" autocomplete="off" disabled/>
                                         <x-jet-label for="contact_number" value="{{ __('Contact Number') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="contact_number" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="mobile_number" type="text" class="form-control block w-full" placeholder="Mobile Number" autocomplete="off" readonly/>
+                                        <x-jet-input id="mobile_number" type="text" class="form-control block w-full" placeholder="Mobile Number" autocomplete="off" disabled/>
                                         <x-jet-label for="mobile_number" value="{{ __('Mobile Number') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="mobile_number" class="mt-2" />
                                 </div>
@@ -336,12 +336,12 @@
 
                             <div class="row pt-2">
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="height" type="text" class="form-control block w-full" placeholder="Height" autocomplete="off" readonly/>
+                                        <x-jet-input id="height" type="text" class="form-control block w-full" placeholder="Height" autocomplete="off" disabled/>
                                         <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="height" class="mt-2" />
                                 </div>
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="weight" type="text" class="form-control block w-full" placeholder="Weight" autocomplete="off" readonly/>
+                                        <x-jet-input id="weight" type="text" class="form-control block w-full" placeholder="Weight" autocomplete="off" disabled/>
                                         <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="weight" class="mt-2" />
                                 </div>
@@ -353,12 +353,12 @@
                                         <x-jet-label for="gender" value="{{ __('Gender') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="gender" class="mt-2" /> --}}
 
-                                        <x-jet-input id="gender" type="text" class="form-control block w-full" placeholder="Sex" autocomplete="gender" readonly/>
+                                        <x-jet-input id="gender" type="text" class="form-control block w-full" placeholder="Sex" autocomplete="gender" disabled/>
                                         <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="gender" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="civil_status" type="text" class="form-control block w-full" placeholder="Civil Status" autocomplete="off" readonly/>
+                                        <x-jet-input id="civil_status" type="text" class="form-control block w-full" placeholder="Civil Status" autocomplete="off" disabled/>
                                         <x-jet-label for="civil_status" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
@@ -372,7 +372,7 @@
                                         </select>
                                         <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="nationality" class="mt-2" /> --}}
-                                        <x-jet-input id="nationality" type="text" class="form-control block w-full" placeholder="Nationality" autocomplete="Nationality" readonly/>
+                                        <x-jet-input id="nationality" type="text" class="form-control block w-full" placeholder="Nationality" autocomplete="Nationality" disabled/>
                                         <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="nationality" class="mt-2" />
                                 </div>
@@ -383,12 +383,12 @@
                                         </select>
                                         <x-jet-label for="religion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="religion" class="mt-2" /> --}}
-                                        <x-jet-input id="religion" type="text" class="form-control block w-full" placeholder="Religion" autocomplete="religion" readonly/>
+                                        <x-jet-input id="religion" type="text" class="form-control block w-full" placeholder="Religion" autocomplete="religion" disabled/>
                                         <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="religion" class="mt-2" />
                                 </div>
                                 <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
+                                        <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" disabled/>
                                         <x-jet-label for="birthdate" value="{{ __('Birthdate') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birthdate" class="mt-2" />
                                 </div>

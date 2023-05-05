@@ -1272,7 +1272,7 @@ $(document).ready(function(){
                 method: 'post',
                 data: data, // prefer use serialize method
                 success:function(data){
-                    // prompt('',data); return false;
+                    prompt('',data); return false;
                     $("#myModal").modal("hide");
                     // $("#dialog_content").html(data).css('color','#008000');
                     Swal.fire(

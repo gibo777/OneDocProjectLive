@@ -90,6 +90,7 @@
 <script type="text/javascript" src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 <script src="{{ asset('/js/pusher.min.js') }}"></script>
 
+{{-- MAIN JS --}}
 {{-- <script type="text/javascript" src="{{ asset('/js/hris-jquery.js') }}"></script> --}}
 <script type="text/javascript" src="{{ asset('/js/main.js') }}"></script>
 

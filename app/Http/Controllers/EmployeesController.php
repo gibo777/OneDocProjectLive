@@ -87,10 +87,10 @@ class EmployeesController extends Controller
     }
 
     /**
-     * undocumented function
+     * Update Employee
      *
-     * @return void
-     * @author 
+     * @return isSuccess, message
+     * @author Gilbert L. Retiro
      **/
     public function updateEmployee (Request $request)
     {

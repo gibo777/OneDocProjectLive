@@ -580,7 +580,7 @@
                             {{ __('Export PDF') }}
                         </x-jet-button>
                         <x-jet-button type="button" id="update_leave" name="update_leave">
-                            {{ __('UPDATE') }}
+                            {{ __('Update') }}
                         </x-jet-button>
                         <x-jet-button type="button" id="cancel_leave" name="cancel_leave">
                             {{ __('CANCEL LEAVE') }}
