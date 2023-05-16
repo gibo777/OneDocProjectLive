@@ -50,11 +50,11 @@ Route::get('/', function () {
             return view('/dashboard');
         } else {
             // return view('/auth/login');
-            return redirect('/');
+            return redirect('/login');
         }
     } else{
         // return view('/auth/login');
-        return redirect('/');
+        return redirect('/login');
 	}
 });
 
