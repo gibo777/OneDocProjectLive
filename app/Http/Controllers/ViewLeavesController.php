@@ -37,6 +37,7 @@ class ViewLeavesController extends Controller
 	        $leaves = $leaves->select(
                 'L.id',
 	        	'L.leave_number',
+                'L.control_number',
                 'L.name',
                 /*'L.first_name',
 	        	'L.last_name',*/

@@ -145,7 +145,7 @@
                                         </thead>
                                         <tbody class="data hover" id="viewLeave">
                                             @forelse($leaves as $leave)
-                                                <tr class="view_leave" id="{{ $leave->id }}">
+                                                <tr id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                     <td>{{ $leave->name }}</td>
                                                     <td>{{ $leave->employee_id }}</td>
@@ -714,7 +714,7 @@ $(document).ready( function () {
         return current_date;
     }
 
-$(document).on('dblclick','.view_leave',function(){
+$("#viewLeave > tr").on('dblclick', function() {
     let leaveID = this.id;
     $("#popup").show();
     $("#confirm_reason").val('');

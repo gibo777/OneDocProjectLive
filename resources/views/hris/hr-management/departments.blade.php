@@ -41,11 +41,9 @@
                                         </thead>
                                         <tbody class="data" id="data">
                                             @foreach($departments as $department)
-                                                <tr
-                                                    class="edit_department" 
+                                                <tr class="edit_department" 
                                                     value="{{ $department->id.'|'.$department->department_code.'|'.$department->department }}" 
-                                                    title="Edit {{ $department->department }}" 
-                                                >
+                                                    title="Edit {{ $department->department }}" >
                                                     <td class="text-center">{{ $department->id }}</td>
                                                     <td class="text-center">{{ $department->department_code }}</td>
                                                     <td>{{ strtoupper($department->department) }}</td>

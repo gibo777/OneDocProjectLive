@@ -49,11 +49,12 @@ Route::get('/', function () {
         if (Auth::user()->email_verified_at != NULL) {
             return view('/dashboard');
         } else {
-            return view('/auth/login');
+            // return view('/auth/login');
+            return redirect(env('APP_URL'));
         }
     } else{
-        return view('/auth/login');
-        // return redirect(env('MAIN_URL'));
+        // return view('/auth/login');
+        return redirect(env('APP_URL'));
 	}
 });
 
