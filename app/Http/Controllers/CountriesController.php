@@ -39,6 +39,7 @@ class CountriesController extends Controller
         $select = $select->distinct();
         $select = $select->where('country_code', '=', $request->country_code);
         // $select = $select->groupBy('province');
+        $select = $select->orderBy('province');
         $select = $select->get();
         return $select;
     }
