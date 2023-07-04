@@ -391,11 +391,10 @@
 
 
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script> -->
-    <script src="{{ asset('js/webcam.js') }}"></script>
+    {{-- <script src="{{ asset('js/webcam.js') }}"></script> --}}
 
 
 <div class="container">
-    <!-- <h1 class="text-center">Laravel webcam capture image and save from camera - ItSolutionStuff.com</h1> -->
      
     <form id="formWebCam">
         @csrf
@@ -483,7 +482,7 @@
             data: $("#formWebCam").serialize(),
             success:function(data){
                 $("#modalWebCam").modal("hide");
-                alert(data); return false;
+                // alert(data); return false;
                 Webcam.reset( '#my_camera' );
                 $("#divPhotoPreview1").addClass("hidden");
                 $("#divPhotoPreview2").addClass("hidden");
@@ -506,11 +505,29 @@
 
 
     document.getElementById("PDS").onclick = function(){
-        
-        var $test = document.getElementById('employee_id').value;
-        // alert ($test);
 
-        location.href = "/user/profile/pds/"+$test;
+        Swal.fire({
+          title: 'EXPORT TO PDF',
+          text: 'Do you want to export your profile to pdf?',
+          // icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Export',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            var $test = document.getElementById('employee_id').value;
+            location.href = "/user/profile/pds/"+$test;
+            Swal.fire({
+              title: 'Succesfully Exported',
+              // text: 'The form has been successfully submitted!',
+              icon: 'success',
+              timer: 3000,
+            });
+          } /*else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Cancelled', 'The form submission has been cancelled.', 'error');
+          }*/
+        });
+        
     }
 </script>
 

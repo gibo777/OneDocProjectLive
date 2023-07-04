@@ -1,8 +1,15 @@
 <?php
     
 namespace App\Http\Controllers;
-    
+
+use Auth;
+use App\Models\TimeLogs;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use \Illuminate\Http\Response;
 use Storage;
   
 class WebcamController extends Controller
@@ -57,5 +64,44 @@ class WebcamController extends Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    function timeLogs(Request $reqeust) {
+        return view('time_logs/time-logs');
+    }
+
+    function saveTimeLogs (Request $request) {
+        // return $request->ip();
+        try{
+
+            $data = [
+                'employee_id' => Auth::user()->employee_id, 
+                'profile_photo_path' => $request->image,
+                'ip_address' => $request->ip(),
+                // 'latitude' => ,
+                // 'longitude' => ,
+                // 'country_name' => ,
+                // 'country_code' => ,
+                // 'region_name' => ,
+                // 'region_code' => ,
+                // 'city_name' => ,
+                // 'zip_code' => ,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            if ($request->logEvent=='TimeIn') {
+                $data['time_in'] = date('Y-m-d H:i:s');
+            } else {
+                $data['time_out'] = date('Y-m-d H:i:s');
+            }
+            // return var_dump($data);
+            DB::table('time_logs')->insert($data);
+
+            return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
+
+        }catch(\Error $e){
+            return response(['isSuccess'=>false,'message'=>$e]);
+        }
     }
 }

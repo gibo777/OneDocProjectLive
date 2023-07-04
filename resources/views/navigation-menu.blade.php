@@ -21,6 +21,11 @@
       /*background: blue;*/
       /*color: white;*/
     }
+
+    .my-popup-class {
+      animation: none !important;
+      transform: none !important;
+    }
 </style>
 
 
@@ -418,11 +423,70 @@
             </div>
         </div> --}}
 
+            <div class="items-center justify-center">
+                <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn">
+                    {{ __('Time-In') }}
+                </x-jet-button>
+                <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut" disabled>
+                    {{ __('Time-Out') }}
+                </x-jet-button>
+            </div>
         </div>
     </div>
+
+
+
+
+<div class="modal fade" id="modalTimeLogCam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-lg text-white">Capture Image for Timelog</h4>
+            <button id="closeLogCamModal" type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" arial-label="Close"><span aria-hidden="true"></span></button>
+        </div>
+      <div class="modal-body">
+        <!-- content -->
+        <div class="container">
+            <form id="formWebCam">
+                @csrf
+
+                <div id="image-capture-container">
+                  <video id="video-element" hidden></video>
+                  <canvas id="canvas-element" hidden></canvas>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="logCamera"></div>
+                        <input type="hidden" name="image" class="image-tag text-center rounded-md">
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div id="results" class="hidden rounded-md"></div>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-12 text-center">
+                        <input id="logEvent" hidden>
+                        <input type="button" id="takeSnapshot" value="Take Snapshot" class="btn btn-primary ">
+                    </div>
+                </div>
+                {{-- <div class="row">
+                    <div class="col-md-12 text-center">
+                        <x-jet-button id="saveTempPhoto">{{ __('Ok') }} 
+                        </x-jet-button>
+                    </div>
+                </div> --}}
+
+            </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </nav>
-
-
 
 
 <!-- NAVIGATOR end -->
@@ -461,16 +525,6 @@ $(document).ready(function(){
       });
     }); 
 
-    /*$("#hide_nav_header").on('click', function(e){
-        $("#nav_header").toggle();
-        $("#nav_header_showed").removeClass('hidden');
-        $("#nav_header_hid").addClass('hidden');
-    });
-    $("#show_nav_header").on('click', function(e){
-        $("#nav_header").toggle();
-        $("#nav_header_showed").addClass('hidden');
-        $("#nav_header_hid").removeClass('hidden');
-    });*/
 
     $("#d_nav_eleave").on('click', function(e){
         if  (role_type!='SUPER ADMIN') {
@@ -485,5 +539,195 @@ $(document).ready(function(){
             } 
         }
     });
+
+    /*$("#btnTimeIn").on('click', function(e){
+        Swal.fire({
+          title: 'TIME-IN',
+          text: 'Be ready to pose for Camera Capture.',
+          // icon: 'question',
+          showCancelButton: false,
+          confirmButtonText: "OK",
+          customClass: {
+            popup: 'my-popup-class'
+          }
+        });
+    });*/
+
+
+    /**
+    * This will capture temporary photo using webcam
+    */
+    $("#saveTempPhoto").click(function() {
+
+        var data_uri = $("#capturedPhoto").attr("src");
+        Webcam.reset( '#logCamera' );
+
+        $('#divPhotoPreview1').addClass('hidden');
+        $('#divPhotoPreview2').empty();
+        $('#divPhotoPreview2').css('display','flex');
+        $('#divPhotoPreview2').append('<span class="block rounded-full w-id h-id bg-cover bg-no-repeat" id="capturedPhoto text-center" style="background-image:url('+data_uri+')"></span>');
+        // alert("{{ route('webcam.capture') }}"); return false;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "{{ route('webcam.capture') }}",
+            method: 'post',
+            data: $("#formWebCam").serialize(),
+            success:function(data){
+                $("#modalWebCam").modal("hide");
+                // alert(data); return false;
+                Webcam.reset( '#logCamera' );
+                $("#divPhotoPreview1").addClass("hidden");
+                $("#divPhotoPreview2").addClass("hidden");
+                $("#divPhotoPreview3").removeClass("hidden");
+                $("#profilePhotoPreview").attr("src",data);
+
+                // $("#modalWebCam").modal("show");
+
+            }
+        });
+        return false;
+    });
+});
+
+
+/* TIME-LOGS CAPTURE */
+
+$(document).ready(function() {
+  // Variables for video element, canvas, and media stream
+  var video = document.getElementById('video-element');
+  var canvas = document.getElementById('canvas-element');
+  var stream = null;
+
+  // Function to start the webcam
+  function startWebcam() {
+    // Access the user's webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(mediaStream) {
+        // Store the media stream for later use
+        stream = mediaStream;
+        video.srcObject = mediaStream;
+        video.play();
+      })
+      .catch(function(error) {
+        // Display an error message using Swal
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Failed to access webcam!',
+        });
+      });
+  }
+
+  // Function to capture an image
+  function captureImage() {
+
+    if (stream !== null) {
+      // Pause the video playback
+      video.pause();
+
+      // Draw the current video frame onto the canvas
+      var context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert the canvas image to a data URL
+      var dataURL = canvas.toDataURL('image/png');
+
+
+      // Display the captured image using Swal
+      Swal.fire({
+        // title: 'Captured Image',
+        imageUrl: dataURL,
+        imageAlt: 'Captured Image',
+        showCancelButton: true,
+        cancelButtonText: 'Close',
+        confirmButtonText: 'Save',
+      }).then(function(result) {
+        if (result.isConfirmed) {
+            $("#modalTimeLogCam").modal("hide");
+          // Handle saving the image (e.g., send to server, download, etc.)
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "{{ route('save.timelogs') }}",
+            method: 'post',
+            data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
+            success:function(data){
+                if (data.isSuccess==true) {
+                  // Display a success message using Swal
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Image saved successfully!',
+                    // text: dataURL,
+                  });
+                  video.currentTime = 0;
+                  video.style.display = "none";
+                  // alert(window.location.href);
+                  setTimeout(function() {
+                    location.reload();
+                  }, 5000);
+
+                  $("#btnTimeIn").prop('disabled', true);
+                  $("#btnTimeOut").prop('disabled', false);
+                }
+            }
+        });
+
+
+        } else {
+          // Resume video playback
+          video.play();
+        }
+      });
+    }
+  }
+
+  // Event handler for the capture button
+    $('#btnTimeIn').click(function() {
+
+        $("#modalTimeLogCam").modal("show");
+        $("#logEvent").val("TimeIn");
+
+        Webcam.set({
+            width: 430,
+            height: 350,
+            image_format: 'jpeg',
+            jpeg_quality: 90,
+            constraints: {
+                video: {
+                    facingMode: "user",
+                    mirror: true
+                }
+            }
+        });
+
+        Webcam.attach( '#logCamera' );
+
+        // Start the webcam when the page loads
+        startWebcam();
+        // $("#modalTimeLogCam").modal("show");
+
+    });
+
+    // Capture image for Time Logs
+    $('#takeSnapshot').click(function() {
+        captureImage();
+    });
+
+    // Closing Camera Modal
+    $("#closeLogCamModal").click(function() {
+        Webcam.reset( '#logCamera' );
+        location.reload();
+    });
+
 });
 </script>

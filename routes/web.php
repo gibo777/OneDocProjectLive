@@ -235,3 +235,8 @@ Route::get('/encrypt', function () {
 Route::get('/decrypt', function () {
     return view('test/decrypt');
 });
+
+
+/* TIME LOGS */
+Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
+Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');

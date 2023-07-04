@@ -98,6 +98,10 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
 <script type="text/javascript" src="{{ asset('DataTables/datatables.min.js') }}"></script>
 
+
+{{-- WEBCAM --}}
+<script src="{{ asset('js/webcam.js') }}"></script>
+
 <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
 {{-- END --}}
     </head>

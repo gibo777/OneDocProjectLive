@@ -8,7 +8,7 @@
             {{ __('APPLICATION FOR LEAVE OF ABSENCE') }}
     </x-slot>
     <div>
-        <div class="max-w-6xl mx-auto mt-4">
+        <div class="max-w-6xl mx-auto mt-3">
             <!-- FORM start -->
 
             @if (session('status'))
