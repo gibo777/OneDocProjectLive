@@ -43,6 +43,7 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex p-6">
                     <h6>Accelerating Our Nation’s Progress Through Information Technology.</h6>
+                    {{ $timeIn.'|'.$timeOut }}
                 </div>
 
                 <!-- Navigation Links -->
@@ -424,12 +425,27 @@
         </div> --}}
 
             <div class="items-center justify-center">
+
+                @if ($timeIn)
+                <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn" disabled>
+                    {{ __('Time-In') }}
+                </x-jet-button>
+                @else
                 <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn">
                     {{ __('Time-In') }}
                 </x-jet-button>
+                @endif
+
+                @if ($timeOut)
                 <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut" disabled>
                     {{ __('Time-Out') }}
                 </x-jet-button>
+                @else
+                <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut">
+                    {{ __('Time-Out') }}
+                </x-jet-button>
+                @endif
+
             </div>
         </div>
     </div>
