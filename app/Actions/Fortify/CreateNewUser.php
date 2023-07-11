@@ -90,7 +90,7 @@ class CreateNewUser implements CreatesNewUsers
     protected function createTeam(User $user)
     {
         // dd($user->employee_id);
-        $insert = new PersonnelAccountingData;
+        /*$insert = new PersonnelAccountingData;
         $insert->employee_id = $user->employee_id;
         $insert->created_by = Auth::user()->employee_id;
         $insert->updated_by = Auth::user()->employee_id;
@@ -116,7 +116,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $insert = new LeaveBalances;
         $insert->employee_id = $user->employee_id;
-        $insert->save();
+        $insert->save();*/
 
         $user->ownedTeams()->save(Team::forceCreate([
             'user_id' => $user->id,
