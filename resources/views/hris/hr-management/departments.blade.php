@@ -33,7 +33,7 @@
                                     <table id="data_departments" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
                                         <thead class="thead">
                                             <tr>
-                                                <th>ID</th>
+                                                {{-- <th>ID</th> --}}
                                                 <th>Code</th>
                                                 <th>Department</th>
                                                 {{-- <th>Actions</th> --}}
@@ -44,7 +44,7 @@
                                                 <tr class="edit_department" 
                                                     value="{{ $department->id.'|'.$department->department_code.'|'.$department->department }}" 
                                                     title="Edit {{ $department->department }}" >
-                                                    <td class="text-center">{{ $department->id }}</td>
+                                                    {{-- <td class="text-center">{{ $department->id }}</td> --}}
                                                     <td class="text-center">{{ $department->department_code }}</td>
                                                     <td>{{ strtoupper($department->department) }}</td>
                                                     {{-- <td id="action_buttons" class="text-center"> --}}
