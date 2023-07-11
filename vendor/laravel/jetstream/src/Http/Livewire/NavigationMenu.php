@@ -33,9 +33,13 @@ class NavigationMenu extends Component
         foreach ($counts as $count) {
             $counter = $counter + $count->memo_count;
         }
-
+        $timeCount = DB::table('time_logs')->where('employee_id', Auth::user()->employee_id)->orderBy('id','desc')->count();
         $timeLogs = DB::table('time_logs')->where('employee_id', Auth::user()->employee_id)->orderBy('id','desc')->first();
-        ($timeLogs->time_in !== null) ? $timeIn='disabled' : $timeOut='disabled';
-        return view('navigation-menu', ['notification_count'=>$counter, 'timeIn'=>$timeIn, 'timeOut'=>$timeOut, ]);
+        if ($timeCount>0) {
+            ($timeLogs->time_in !== null) ? $timeIn='disabled' : $timeOut='disabled' ;
+        } else {
+            $timeIn=''; $timeOut='disabled';
+        }
+        return view('navigation-menu', ['notification_count'=>$counter, 'timeIn'=>$timeIn, 'timeOut'=>$timeOut, 'timeCount'=> $timeCount ]);
     }
 }
