@@ -43,7 +43,6 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex p-6">
                     <h6>Accelerating Our Nation’s Progress Through Information Technology.</h6>
-                    {{ $timeIn.'|'.$timeOut }}
                 </div>
 
                 <!-- Navigation Links -->
