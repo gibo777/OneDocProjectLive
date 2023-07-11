@@ -43,7 +43,6 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex p-6">
                     <h6>Accelerating Our Nation’s Progress Through Information Technology.</h6>
-                    {{ $timeCount }}
                 </div>
 
                 <!-- Navigation Links -->
@@ -712,6 +711,32 @@ $(document).ready(function() {
 
         $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeIn");
+
+        Webcam.set({
+            width: 430,
+            height: 350,
+            image_format: 'jpeg',
+            jpeg_quality: 90,
+            constraints: {
+                video: {
+                    facingMode: "user",
+                    mirror: true
+                }
+            }
+        });
+
+        Webcam.attach( '#logCamera' );
+
+        // Start the webcam when the page loads
+        startWebcam();
+        // $("#modalTimeLogCam").modal("show");
+
+    });
+
+    $('#btnTimeOut').click(function() {
+
+        $("#modalTimeLogCam").modal("show");
+        $("#logEvent").val("TimeOut");
 
         Webcam.set({
             width: 430,
