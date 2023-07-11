@@ -45,6 +45,7 @@ class EmployeesController extends Controller
                 DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
                 'o.company_name',
             );
+            $employees = $employees->where('u.id','!=',1);
             $employees = $employees->where( function($query) {
                 return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
                 });
