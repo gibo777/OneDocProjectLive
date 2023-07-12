@@ -734,6 +734,7 @@ $(document).ready(function() {
     });
 
     $('#btnTimeOut').click(function() {
+        // alert('Gibs'); return false;
 
         $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeOut");

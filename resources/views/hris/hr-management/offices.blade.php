@@ -6,7 +6,7 @@
                 {{ __('OFFICES') }}
     </x-slot>
 <div id="view_departments">
-    <div class="max-w-8xl mx-auto py-8 sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto py-2 sm:px-6 lg:px-8">
     <!-- FORM start -->
 
         @if (session('status'))
@@ -218,6 +218,14 @@
     // $("#office_country").select2();
     $('#office_country').dataList({return_mask:'text', value_selected_to:'username', clearOnFocus: true});
     // $('#office_country').dataList({return_mask:'text', value_selected_to:'username'});
+    });
+
+    $('#data_departments').DataTable({
+        columnDefs: [
+          { width: '220px', targets: [0, 1] }, 
+          { width: '50px', targets: [3, 4] },
+          // { width: '100px', targets: '_all' }
+        ]
     });
 
 </script>
