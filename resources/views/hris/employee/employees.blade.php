@@ -176,10 +176,22 @@
                                     <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
                                         @foreach ($heads as $head)
-                                        <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name,$head->first_name,$head->suffix,$head->middle_name]) }}</option>
+                                        <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->suffix,$head->middle_name]) }}</option>
                                         @endforeach
                                     </select>
                                     <x-jet-label for="supervisor" value="{{ __('Head') }}" class="text-black-50 w-full" />
+                                </div>
+                        </div>
+
+                        <div class="col-md-12 nopadding mt-2">
+                                <div class="form-floating">
+                                    <select name="updateRoleType" id="updateRoleType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" required>
+                                        <option value=""></option>
+                                        @foreach ($roleTypeUsers as $key=>$roleTypeUser)
+                                            <option value="{{ $roleTypeUser->role_type }}">{{ $roleTypeUser->role_type }}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-jet-label for="updateRoleType" value="{{ __('Role Type') }}" class="text-black-50 w-full" />
                                 </div>
                         </div>
 
@@ -493,7 +505,6 @@ $(document).ready(function() {
                 $("#update_weekly_schedule").val(sched);
                 $("#update_weekly_schedule").multiselect("refresh");
 
-
                 if (getemployee.profile_photo_path!=null) {
                     imgProfilePhotoLocation = document.location.origin+'/storage/'+getemployee.profile_photo_path;
                 } else {
@@ -513,6 +524,9 @@ $(document).ready(function() {
                 $("#date_hired").val( valDateHired );
                 // $("input[name='weekly_schedule']").val(1);
                 $("#supervisor").val(getemployee.supervisor);
+
+                $("#updateRoleType").val(getemployee.role_type);
+                // $("#EmployeesModal #updateRoleType").val(getemployee.role_type);
 
                 // alert(getemployee.weekly_schedule);
                 $("#last_name").val(getemployee.last_name);

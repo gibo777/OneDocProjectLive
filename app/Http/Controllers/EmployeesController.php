@@ -59,8 +59,14 @@ class EmployeesController extends Controller
             $employment_statuses = DB::table('employment_statuses')->get();
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
-                ->where('role_type','ADMIN')->orWhere('role_type','SUPER ADMIN')
+                ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
                 ->where('id','!=',Auth::user()->id)
+                ->where('id','!=',1)
+                ->get();
+            $roleTypeUsers = DB::table('role_type_users')
+                ->select('role_type')
+                ->where('is_deleted', NULL)
+                ->orWhere('is_deleted',0)
                 ->get();
 
             return view('/hris/employee/employees', 
@@ -70,7 +76,8 @@ class EmployeesController extends Controller
                     'departments'=>$departments, 
                     'leave_types'=>$leave_types, 
                     'employment_statuses'=>$employment_statuses,
-                    'heads'=>$heads
+                    'heads'=>$heads,
+                    'roleTypeUsers'=>$roleTypeUsers
                 ]);
         } else {
             return redirect('/');

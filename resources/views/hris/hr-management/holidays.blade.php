@@ -59,7 +59,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data_holidays" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="data_holidays" class="view-holidays table table-bordered table-striped sm:justify-center table-hover tabledata">
                                         <thead class="thead">
                                             <tr>
                                                 <th>Date</th>
@@ -216,7 +216,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    $("#viewHolidays > tr").on('dblclick', function() {
+    $(document).on('dblclick','.view-holidays tr',async function(){
         var hS = $(this).attr('id').split('|');
         $("#save_holiday").html('UPDATE');
         $("#save_holiday").attr('disabled',true);
