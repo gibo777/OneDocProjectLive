@@ -179,7 +179,7 @@
                                         <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->suffix,$head->middle_name]) }}</option>
                                         @endforeach
                                     </select>
-                                    <x-jet-label for="supervisor" value="{{ __('Head') }}" class="text-black-50 w-full" />
+                                    <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
                                 </div>
                         </div>
 
@@ -582,8 +582,7 @@ $(document).ready(function() {
             'pl': $('#paternity_leaves').val(),
             'el': $('#emergency_leaves').val(),
             'others':$('#other_leaves').val(),
-
-
+            'roleType': $("#updateRoleType").val(),
         };
         $.ajaxSetup({
             headers: {
@@ -595,6 +594,7 @@ $(document).ready(function() {
             method: 'post',
             data: uD, // prefer use serialize method
             success:function(data){
+                // prompt('',data); return false;
                 console.log(data);
                 if(data.isSuccess==true) {
                     $("#EmployeesModal").modal('hide');

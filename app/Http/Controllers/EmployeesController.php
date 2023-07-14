@@ -60,8 +60,9 @@ class EmployeesController extends Controller
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
                 ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
-                ->where('id','!=',Auth::user()->id)
+                ->where('id','!=',Auth::user()->id)->orWhere('employee_id','2000-0001')
                 ->where('id','!=',1)
+                ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();
             $roleTypeUsers = DB::table('role_type_users')
                 ->select('role_type')
@@ -103,7 +104,7 @@ class EmployeesController extends Controller
      **/
     public function updateEmployee (Request $request)
     {
-        // return "update...".$request->id;
+        // return var_dump($request->input());
         try{
             $data_array = array(
                 'employee_id' => $request->employee_id,
@@ -114,6 +115,7 @@ class EmployeesController extends Controller
                 'date_hired' => date('Y-m-d',strtotime($request->date_hired)),
                 'weekly_schedule' => join('|',$request->update_weekly_schedule),
                 'supervisor' => $request->supervisor,
+                'role_type'=> $request->roleType,
             );
             $leaves = [
                 'VL'=>$request->vl,
