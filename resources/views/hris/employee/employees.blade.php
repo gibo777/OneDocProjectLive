@@ -44,7 +44,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data_holidays" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="data_holidays" class="view-employees table table-bordered table-striped sm:justify-center table-hover tabledata">
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
@@ -454,23 +454,25 @@
     </div>
   </div>
 
+<!-- =========================================== -->
+<!-- Load Data -->
+<div id="dataLoad" style="display: none">
+    <img src="{{asset('/img/misc/loading-blue-circle.gif')}}">
+</div>
+
+<!-- =========================================== -->
 
 
 
 <script type="text/javascript">
 $(document).ready(function() {
 
-    // $('#update_weekly_schedule').find('option[value=2]').attr("selected", "selected");
-    
-    /*$('#update_weekly_schedule').multiselect({
-    });*/
-                    
-    $("#viewEmployee > tr").on('dblclick', function() {
-        /*Swal.fire({
-                        icon: 'success',
-                        title: $(this).attr('id'),
-                        // text: '',
-                    });*/
+    /* Double Click event to show Employee details */
+    $(document).on('dblclick','.view-employees tr',async function(){
+        $('#dataLoad').css('display','flex');
+        $('#dataLoad').css('position','absolute');
+        $('#dataLoad').css('top','40%');
+        $('#dataLoad').css('left','40%');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -481,6 +483,7 @@ $(document).ready(function() {
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
+                $('#dataLoad').css('display','none');
                 const {getemployee,getLeaves} = data;
                 var imgProfilePhotoLocation = '';
                 var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
@@ -545,7 +548,9 @@ $(document).ready(function() {
             }
         });
     });
-
+                    
+   
+    /* Button to update Employee details */
     $('#updateEmployee > button').on('click', function() {
         const uD = {
             'id' : $(this).attr('id'),

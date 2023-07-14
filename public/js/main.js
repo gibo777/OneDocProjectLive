@@ -665,6 +665,8 @@ $(document).ready(function(){
 
     /* SUBMIT LEAVE FORM begin*/
     $("#submit_leave").click(function (){
+                // prompt('','data'); return false;
+
         /*if ($("input[name='leave_notification[]']:checked").length == 0) {
             $("input[name='leave_notification[]']").each(function() {
                 $(this).addClass('empty');
@@ -675,7 +677,6 @@ $(document).ready(function(){
                 $(this).removeClass('empty');
             });
         }*/
-
         if ($("#leave_type").val()==""){
             $("#leave_type").addClass('empty');
             empty_fields++;
@@ -721,6 +722,8 @@ $(document).ready(function(){
 
               });
         } else {
+                // prompt('','data2'); return false;
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -730,9 +733,26 @@ $(document).ready(function(){
                 url: '/hris/eleave',
                 method: 'post',
                 data: $('#leave-form').serialize(), // prefer use serialize method
-                success:function(response){
-                // alert(response); return false;
-                if (response=='success') {
+                success:function(data){
+                // prompt('',data); return false;
+                        console.log(data);
+                        const {isSuccess,message} = data;
+                        /*isSuccess ?
+                            (Livewire.emit('refetchAcc'),
+                            Swal.fire({
+                                icon:'success',
+                                title:'Success',
+                                text:message
+                            }))
+                        :
+                            Swal.fire({
+                                icon:'error',
+                                title:'Error',
+                                text:JSON.stringify(message)
+                            })*/
+                // prompt('',isSuccess); return false;
+
+                if (isSuccess==true) {
                     var notificationslev = [];
                     $("input:checkbox[name='leave_notification[]']:checked").each(function(){
                         notificationslev.push($(this).val());
@@ -761,7 +781,11 @@ $(document).ready(function(){
                           });
                         });
                     } else {
-
+                        Swal.fire({
+                                icon:'error',
+                                title:'Error',
+                                text:JSON.stringify(message)
+                            })
                     }
                 }
             });
@@ -1272,7 +1296,7 @@ $(document).ready(function(){
                 method: 'post',
                 data: data, // prefer use serialize method
                 success:function(data){
-                    prompt('',data); return false;
+                    // prompt('',data); return false;
                     $("#myModal").modal("hide");
                     // $("#dialog_content").html(data).css('color','#008000');
                     Swal.fire(
@@ -1283,24 +1307,6 @@ $(document).ready(function(){
                       $('.swal2-confirm').click(function(){
                         location.reload();
                       })
-                    // $("#dialog_content").html("LEAVE FORM successfully updated.").css('color','#008000');
-                    // // $("#popup" ).attr('title','NOTIFICATION');
-                    // $("#dialog" ).dialog({
-                    //     modal: true,
-                    //     // title: "Confirmation",
-                    //     width: "auto",
-                    //     height: "auto",
-                    //     buttons: [
-                    //     {
-                    //         id: "OK",
-                    //         text: "OK",
-                    //         click: function () {
-                    //             $(this).dialog('close');
-                    //             location.reload();
-                    //         }
-                    //     }
-                    //     ]
-                    // });
                     console.log(data);
                 }
             });

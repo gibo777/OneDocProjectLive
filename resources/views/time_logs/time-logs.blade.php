@@ -64,7 +64,7 @@
       var dataURL = canvas.toDataURL('image/png');
 
 
-      prompt('',dataURL);
+      // prompt('',dataURL);
 
       // Display the captured image using Swal
       Swal.fire({

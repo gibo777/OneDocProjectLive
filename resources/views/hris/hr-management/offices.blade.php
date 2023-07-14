@@ -29,7 +29,7 @@
             <div id="table_data">
             <!-- Name -->
             <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                <table id="data_departments" class="office-table table table-bordered table-striped sm:justify-center table-hover tabledata">
+                <table id="data_departments" class="office-table table table-bordered table-striped sm:justify-center table-hover">
                 <thead class="thead">
                 <tr>
                     <th>Company Name</th>
@@ -222,7 +222,8 @@
 
     $('#data_departments').DataTable({
         columnDefs: [
-          { width: '220px', targets: [0, 1] }, 
+          { width: '140px', targets: [0] }, 
+          { width: '280px', targets: [1] }, 
           { width: '50px', targets: [3, 4] },
           // { width: '100px', targets: '_all' }
         ]

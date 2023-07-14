@@ -108,47 +108,73 @@ class LeaveFormController extends Controller
         else{
             // return "gibs";
             // return var_dump($request->input());
-            $data = $request->input();
+            $inputData = $request->input();
             try{
                 // return $data['employee_number'];
                 $insert_increment = DB::table('leaves')
                 ->select('leave_number')
-                ->where('employee_id','=',$data['employee_number'])
+                ->where('employee_id','=',$inputData['employee_number'])
                 ->orderBy('leave_number','desc')->first();
                 
-                // return var_dump($insert_increment);
                 if ($insert_increment==NULL) {
                     $new_leave_number = 1;
                 } else {
                     $new_leave_number = $insert_increment->leave_number+1;
                 }
-                // return $new_leave_number; die();
+            // return $new_leave_number;
 
-                $date = strtotime($data['date_applied'].date('G:i:s'));
-                $dateapplied =  date('Y-m-d G:i:s', $date);
-                $insert = new LeaveForm;
+                $date = strtotime($inputData['date_applied'].date('G:i:s'));
+                $dateapplied =  date('Y-m-d H:i:s', $date);
+
+
+
+                /*$insert = new LeaveForm;
                 $insert->leave_number = $new_leave_number;
-                $insert->name = $data['name'];
-                $insert->employee_id = $data['employee_number'];
-                $insert->department = $data['hid_dept'];
+                $insert->name = $inputData['name'];
+                $insert->employee_id = $inputData['employee_number'];
+                $insert->department = $inputData['hid_dept'];
                 $insert->date_applied = $dateapplied;
-                $insert->leave_type = $data['leave_type'];
-                $insert->reason = $data['reason'];
+                $insert->leave_type = $inputData['leave_type'];
+                $insert->reason = $inputData['reason'];
                 // $insert->notification = implode('|',$data['leave_notification']);
-                $insert->date_from = date('Y-m-d',strtotime($data['date_from']));
-                $insert->date_to = date('Y-m-d',strtotime($data['date_to']));
-                $insert->no_of_days = $data['hid_no_days'];
-                if ($data['leave_type']=='Others') {
-                    $insert->others = $data['others_leave'];
+                $insert->date_from = date('Y-m-d',strtotime($inputData['date_from']));
+                $insert->date_to = date('Y-m-d',strtotime($inputData['date_to']));
+                $insert->no_of_days = $inputData['hid_no_days'];
+                if ($inputData['leave_type']=='Others') {
+                    $insert->others = $inputData['others_leave'];
                 }
                 $insert->ip_address = request()->ip();
-                $insert->save();
-                return "success";
+                $insert->save();*/
+
+
+
+                $data = [
+                    'leave_number' => $new_leave_number, 
+                    'name' => Auth::user()->last_name.' '.Auth::user()->suffix.', '.Auth::user()->first_name.' '.Auth::user()->middle_name,
+                    'employee_id' => Auth::user()->employee_id,
+                    'department' => Auth::user()->department,
+                    'date_applied' => date('Y-m-d H:i:s'),
+                    'leave_type' => $inputData['leave_type'],
+                    'reason' => $inputData['reason'],
+                    'date_from'=>date('Y-m-d',strtotime($inputData['date_from'])),
+                    'date_to'=>date('Y-m-d',strtotime($inputData['date_to'])),
+                    'no_of_days' => $inputData['hid_no_days'],
+                    'ip_address' => $request->ip(),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                // return var_dump($data);
+                if ($inputData['leave_type']=='Others') {
+                    $data['others'] = $inputData['others_leave'];
+                }
+                // return var_dump($data);
+                DB::table('leaves')->insert($data);
+                return response(['isSuccess' => true,'message'=>'Leave application submitted!']);
                 // return redirect(route('hris.leave.eleave'))->with('status',"Leave application submitted");
-            }
-            catch(Exception $e){
+            } catch(Exception $e){
                 return "failed";
-                // return redirect(route('hris.leave.eleave'))->with('failed',"operation failed");
+                return response(['isSuccess'=>false,'message'=>$e]);
             }
         }
           
@@ -168,26 +194,13 @@ class LeaveFormController extends Controller
 
             $leaves_balances = DB::table('leave_balances')->where('employee_id','=',$emp_id)->get();
             switch ($type) {
-                case 'VL':
-                    return $leaves_balances[0]->VL;
-                    break;
-                case 'SL':
-                    return $leaves_balances[0]->SL;
-                    break;
-                case 'ML':
-                    return $leaves_balances[0]->ML;
-                    break;
-                case 'PL':
-                    return $leaves_balances[0]->PL;
-                    break;
-                case 'EL':
-                    return $leaves_balances[0]->EL;
-                    break;
-                case 'Others':
-                    return $leaves_balances[0]->others;
-                    break;
-                
-                default:
+                case 'VL': return $leaves_balances[0]->VL; break;
+                case 'SL': return $leaves_balances[0]->SL; break;
+                case 'ML': return $leaves_balances[0]->ML; break;
+                case 'PL': return $leaves_balances[0]->PL; break;
+                case 'EL': return $leaves_balances[0]->EL; break;
+                case 'Others': return $leaves_balances[0]->others; break;
+                default: 
                     # code...
                     break;
             }

@@ -145,7 +145,7 @@
                                         </thead>
                                         <tbody class="data hover" id="viewLeave">
                                             @forelse($leaves as $leave)
-                                                <tr class="view_leave" id="{{ $leave->id }}">
+                                                <tr class="view-leave" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                     <td>{{ $leave->name }}</td>
                                                     <td>{{ $leave->employee_id }}</td>
@@ -714,7 +714,7 @@ $(document).ready( function () {
         return current_date;
     }
 
-$(document).on('dblclick','.view_leave',function(){
+$(document).on('dblclick','.view-leave',function(){
     let leaveID = this.id;
     $("#popup").show();
     $("#confirm_reason").val('');
@@ -731,7 +731,7 @@ $(document).on('dblclick','.view_leave',function(){
             // alert(data[0]['employee_id']);
             var leave_number = data[0]['control_number'];
 
-            var modalHeader = "VIEW LEAVE (Control No. "+leave_number+")";
+            var modalHeader = "Control No. "+leave_number;
             var dateFrom = data[0]['date_from'].split('-');
                 dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
             var dateTo = data[0]['date_to'].split('-');
@@ -770,7 +770,7 @@ $(document).on('dblclick','.view_leave',function(){
             $("#employee_number").val(data[0]['employee_id']);
             $("#hid_dept").val(data[0]['department']);
             $("#department").val(data[0]['dept']);
-            if (data[0]['status']=="Penc`ding") {
+            if (data[0]['status']=="Pending") {
                 $("#date_applied").val(currentDate());
             } else {
                 $("#date_applied").val(formatDates(data[0]['date_applied']));
@@ -870,18 +870,16 @@ $(document).on('dblclick','.view_leave',function(){
             $("#myModal").modal("show");
         }
     });
-});
+
+    });
     
 });
 
 
 
 document.getElementById("leave_form").onclick = function(){
-    
-        var $leave_id = document.getElementById('hid_leave_id').value;
-        // alert ($leave_id);
+    var $leave_id = document.getElementById('hid_leave_id').value;
+    location.href = "/hris/view-leave/form-leave/"+$leave_id;
+}
 
-
-        location.href = "/hris/view-leave/form-leave/"+$leave_id;
-    }
 </script>
