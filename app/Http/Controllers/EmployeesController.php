@@ -16,7 +16,7 @@ use Carbon\Carbon;
 class EmployeesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -74,7 +74,7 @@ class EmployeesController extends Controller
                 [
                     'holidays'=>$holidays, 
                     'employees'=>$employees, 
-                    'departments'=>$departments, 
+                    'departments'=>$departments,
                     'leave_types'=>$leave_types, 
                     'employment_statuses'=>$employment_statuses,
                     'heads'=>$heads,
@@ -97,7 +97,7 @@ class EmployeesController extends Controller
     }
 
     /**
-     * Update Employee
+     * Update Employee Details
      *
      * @return isSuccess, message
      * @author Gilbert L. Retiro
@@ -116,6 +116,7 @@ class EmployeesController extends Controller
                 'weekly_schedule' => join('|',$request->update_weekly_schedule),
                 'supervisor' => $request->supervisor,
                 'role_type'=> $request->roleType,
+                'is_head'=>$request->is_head,
             );
             $leaves = [
                 'VL'=>$request->vl,

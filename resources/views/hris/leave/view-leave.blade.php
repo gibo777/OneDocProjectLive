@@ -652,6 +652,10 @@
 </div>
 <!-- =========================================== -->
 
+<!-- Load Data -->
+<div id="dataLoad" style="display: none">
+    <img src="{{asset('/img/misc/loading-blue-circle.gif')}}">
+</div>
 
 
 </x-app-layout>
@@ -718,6 +722,11 @@ $(document).on('dblclick','.view-leave',function(){
     let leaveID = this.id;
     $("#popup").show();
     $("#confirm_reason").val('');
+    $('#dataLoad').css('display','flex');
+    $('#dataLoad').css('position','absolute');
+    $('#dataLoad').css('top','40%');
+    $('#dataLoad').css('left','40%');
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -729,6 +738,7 @@ $(document).on('dblclick','.view-leave',function(){
         data: { 'leaveID': leaveID }, // prefer use serialize method
         success:function(data){
             // alert(data[0]['employee_id']);
+            $('#dataLoad').css('display','none');
             var leave_number = data[0]['control_number'];
 
             var modalHeader = "Control No. "+leave_number;

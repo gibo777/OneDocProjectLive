@@ -184,6 +184,8 @@
                         </div>
 
                         <div class="col-md-12 nopadding mt-2">
+                            <div class="row">
+                                <div class="col-md-7 w-full pr-0">
                                 <div class="form-floating">
                                     <select name="updateRoleType" id="updateRoleType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" required>
                                         <option value=""></option>
@@ -193,7 +195,20 @@
                                     </select>
                                     <x-jet-label for="updateRoleType" value="{{ __('Role Type') }}" class="text-black-50 w-full" />
                                 </div>
+                                </div>
+                                <div class="col-md-5 w-full position-relative">
+                                    <div class="position-absolute bottom-0">
+                                        <label for="isHead">Is Head?</label>
+                                        <input type="checkbox" id="isHead">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- <div class="col-md-4 w-full nopadding mt-2 text-right">
+                                <label for="isHead">Is Head?</label>
+                                <input type="checkbox" id="isHead">
+                        </div> --}}
 
                         {{-- <div class="col-md-12 nopadding w-full sm:justify-center mt-5">
                             <x-jet-button id="PDS" name="PDS">
@@ -527,6 +542,7 @@ $(document).ready(function() {
 
                 $("#updateRoleType").val(getemployee.role_type);
                 // $("#EmployeesModal #updateRoleType").val(getemployee.role_type);
+                (getemployee.is_head==1) ? $('#isHead').prop('checked', true) : $('#isHead').prop('checked', false);
 
                 // alert(getemployee.weekly_schedule);
                 $("#last_name").val(getemployee.last_name);
@@ -566,6 +582,8 @@ $(document).ready(function() {
    
     /* Button to update Employee details */
     $('#updateEmployee > button').on('click', function() {
+        var isHead = 0;
+        $("#isHead").is(':checked') ? isHead = 1 : isHead = 0;
         const uD = {
             'id' : $(this).attr('id'),
             'employment_status': $("#employment_status").val(),
@@ -583,7 +601,9 @@ $(document).ready(function() {
             'el': $('#emergency_leaves').val(),
             'others':$('#other_leaves').val(),
             'roleType': $("#updateRoleType").val(),
+            'is_head': isHead,
         };
+        // alert(isHead); return false;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
