@@ -623,7 +623,7 @@ $(document).ready(function() {
                         title: data.message,
                         // text: '',
                     }).then(function() {
-                        location.reload();
+                        // location.reload();
                     });
                 } else {
                     Swal.fire({

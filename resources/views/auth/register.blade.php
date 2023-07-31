@@ -33,6 +33,7 @@
         <div class="row mx-2 mt-2">
             <div class="flex items-center">
                 <p>Only authorized person can register a new user. Upon clicking "REGISTER USER", there will be a link to be sent on the specified email.</p>
+                {{-- {{ dd($request) }} --}}
             </div>
         </div>
 
