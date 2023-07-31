@@ -48,7 +48,7 @@
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
-                                                {{-- <th>ID</th> --}}
+                                                <th>Emp.ID</th>
                                                 <th>Department</th>
                                                 <th>Position</th>
                                                 <th>Supervisor</th>
@@ -61,7 +61,7 @@
                                             @forelse($employees as $employee)
                                                 <tr id="{{ $employee->id }}">
                                                     <td>{{ join(' ',[$employee->last_name.',',$employee->first_name,$employee->suffix,$employee->middle_name]) }}</td>
-                                                    {{-- <td>{{ $employee->employee_id}}</td> --}}
+                                                    <td>{{ $employee->employee_id}}</td>
                                                     <td>{{ $employee->dept }}</td>
                                                     <td>{{ $employee->position }}</td>
                                                     <td>{{ $employee->head_name }}</td>

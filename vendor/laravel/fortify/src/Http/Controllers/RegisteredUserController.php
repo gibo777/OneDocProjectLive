@@ -63,6 +63,8 @@ class RegisteredUserController extends Controller
         $request['genders'] = $genders;
         $request['employment_statuses'] = $employment_statuses;
 
+        // dd($request);
+
         if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') {
             return app(RegisterViewResponse::class);
         }
