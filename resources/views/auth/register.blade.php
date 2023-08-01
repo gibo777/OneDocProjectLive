@@ -79,7 +79,7 @@
         <div class="row mx-2 my-2">
             <div class="col-md-3 px-1">
                 <div class="form-floating">
-                    <x-jet-input id="employee_id" class="form-control all-caps block mt-1 w-full" type="text" name="employee_id" :value="old('employee_id')" placeholder="Emloyee Number" required autofocus autocomplete="off" />
+                    <x-jet-input id="employee_id" class="form-control all-caps block mt-1 w-full" type="text" name="employee_id" :value="old('employee_id')" placeholder="Emloyee Number" {{-- required --}} autofocus autocomplete="off" />
                     <x-jet-label for="employee_id" value="{{ __('Employee Number') }}" class="text-black-50 w-full" />
                 </div>
             </div>

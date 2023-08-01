@@ -357,9 +357,11 @@
                                 {{ __('View Employees') }}
                             </x-jet-dropdown-link>
 
-                            {{-- <x-jet-dropdown-link href="{{ route('hr.management.memos') }}">
+                            {{-- @if (Auth::user()->role_type=='SUPER ADMIN')
+                            <x-jet-dropdown-link href="{{ route('hr.management.memos') }}">
                                 {{ __('Memo') }}
-                            </x-jet-dropdown-link> --}}
+                            </x-jet-dropdown-link>
+                            @endif --}}
 
                         </x-slot>
                     </x-jet-dropdown>

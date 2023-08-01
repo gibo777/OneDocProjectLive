@@ -84,7 +84,7 @@
     </li>
     {{-- tab 3 | Family Background --}}
     <li class="nav-item mt-1 pl-5" role="presentation">
-        @if (Auth::user()->department == 'HR')
+        @if (Auth::user()->department == '1D-HR')
             <x-jet-button id="addMemo" data-toggle="tab" href="#add-memo-desktop">
                 {{ __('Add Memo') }}
             </x-jet-button>
