@@ -39,7 +39,7 @@ class CreateNewUser implements CreatesNewUsers
             'first_name'    => ['required', 'string', 'max:255'],
             'last_name'     => ['required', 'string', 'max:255'],
             'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'employee_id'   => ['required', 'string', 'max:12','unique:users'],
+            // 'employee_id'   => ['required', 'string', 'max:12','unique:users'],
             'department'    =>['required','string', 'max:12'],
             'position'      =>['required','string','max:255'],
             'gender'        =>['required','string','max:25'],

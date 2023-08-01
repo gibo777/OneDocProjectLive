@@ -30,7 +30,7 @@ class User extends Authenticatable
         'first_name', 
         'last_name', 
         'middle_name',
-        // 'employee_id', 
+        'employee_id', 
         'position', 
         'department', 
         'office',
