@@ -216,6 +216,12 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
+    /*$('#data_holidays').DataTable({
+        columnDefs: [
+          { width: '140px', targets: [0] }, 
+        ]
+    });*/
+
     $(document).on('dblclick','.view-holidays tr',async function(){
         var hS = $(this).attr('id').split('|');
         $("#save_holiday").html('UPDATE');

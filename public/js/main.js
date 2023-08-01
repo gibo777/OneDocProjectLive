@@ -1902,16 +1902,15 @@ $('.tabledata').DataTable();
 
     $("#save_department").click(function () {
             // alert($(this).html()); return false;
-            var url = "";
+            var url = ""; var message="";
             if ($(this).html()=="SAVE") {
                 url = window.location.origin+'/save-departments';
-                $("#dialog_content").html("New Department successfully added!");
+                message = "New Department successfully added!";
             } else {
                 url = window.location.origin+'/update-departments';
-                $("#dialog_content").html("Update successful!");
+                message = "Update successful!";
             }
-            // prompt('', $('#save-department-form').serialize()); return false;
-            // alert(url); return false;
+            
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1922,27 +1921,16 @@ $('.tabledata').DataTable();
                 method: 'post',
                 data: $('#save-department-form').serialize(), // prefer use serialize method
                 success:function(data){
-                    // prompt('',data); return false;
                     $("#departmentAddModal").modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: message,
+                        // text: '',
+        
+                      })/*.then(function(){
+                        window.location.reload();
+                      })*/;
 
-
-                    $("#dialog" ).dialog({
-                        modal: true,
-                        title: "DEPARTMENTS",
-                        width: "auto",
-                        height: "auto",
-                        buttons: [
-                        {
-                            id: "OK",
-                            text: "OK",
-                            click: function () {
-                                $(this).dialog('close');
-                                location.reload();
-                            }
-                        }
-                        ]
-                    });
-                    // $(".ui-dialog-titlebar").addClass('banner-blue');
                     console.log(data);
                 }
             });

@@ -39,7 +39,7 @@
                                                 {{-- <th>Actions</th> --}}
                                             </tr>
                                         </thead>
-                                        <tbody class="data" id="data">
+                                        <tbody class="data hover" id="data">
                                             @foreach($departments as $department)
                                                 <tr class="edit_department" 
                                                     value="{{ $department->id.'|'.$department->department_code.'|'.$department->department }}" 
@@ -96,7 +96,7 @@
       <div class="modal-body">
         <form id="save-department-form" method="POST" action="{{ route('hr.management.save-departments') }}">
         @csrf
-        <div class="px-4 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+        {{-- <div class="px-4 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}"> --}}
                 <div class="grid grid-cols-5 gap-6">
                     <!-- Department Description -->
                     <div class="col-span-5 sm:col-span-4 w-full">
@@ -131,9 +131,8 @@
                     <!-- <button type="button" class="btn btn btn-success" data-dismiss="modal">Save</button> -->
                     <!-- <button type="button" class="btn btn-orange" data-dismiss="modal">Cancel</button> -->
                   <!-- </div> -->
-          </form>
-        <!--  -->
-      </div>
+      {{-- </div> --}}
+  </form>
     </div>
   </div>
 </div>
@@ -161,6 +160,19 @@
   </div>
 </div>
 <!-- =========================================== -->
+
+<script type="text/javascript">
+    
+$(document).ready(function() {
+    $('#data_departments').DataTable().destroy();
+    $('#data_departments').DataTable({
+        columnDefs: [
+          { width: '40px', targets: [0] }, 
+          { width: '180px', targets: [1] }, 
+        ]
+    });
+});
+</script>
 </x-app-layout>
 
 

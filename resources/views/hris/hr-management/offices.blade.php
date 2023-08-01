@@ -29,7 +29,7 @@
             <div id="table_data">
             <!-- Name -->
             <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                <table id="data_departments" class="office-table table table-bordered table-striped sm:justify-center table-hover">
+                <table id="data_offices" class="office-table table table-bordered table-striped sm:justify-center table-hover">
                 <thead class="thead">
                 <tr>
                     <th>Company Name</th>
@@ -41,7 +41,7 @@
                     {{-- <th>Actions</th> --}}
                 </tr>
                 </thead>
-                <tbody class="data" id="data">
+                <tbody class="data hover" id="data">
                 @foreach($offices as $office)
                     <tr
                         id="{{ $office->id }}" 
@@ -220,7 +220,7 @@
     // $('#office_country').dataList({return_mask:'text', value_selected_to:'username'});
     });
 
-    $('#data_departments').DataTable({
+    $('#data_offices').DataTable({
         columnDefs: [
           { width: '140px', targets: [0] }, 
           { width: '280px', targets: [1] }, 
