@@ -220,7 +220,7 @@
                         <div class="row mt-1">
                                 <div class="col-md-4 px-1">
                                     <div class="form-floating">
-                                        <x-jet-input id="last_name" type="text" class="form-control block w-full" autocomplete="last_name" disabled/>
+                                        <x-jet-input id="last_name" type="text" class="form-control block w-full bg-white border-0" autocomplete="last_name" disabled/>
                                         <x-jet-label for="last_name" value="{{ __('Last Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="last_name" class="mt-2" />
                                     </div>
@@ -238,8 +238,13 @@
                                         <x-jet-label for="middle_name" value="{{ __('Middle Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="middle_name" class="mt-2" />
                                 </div>
-                                <div class="col-md-1 form-floating px-1">
+                                {{-- <div class="col-md-1 form-floating px-1">
                                         <x-jet-input id="suffix" type="text" class="form-control block w-full"autocomplete="suffix" disabled/>
+                                        <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
+                                        <x-jet-input-error for="suffix" class="mt-2" />
+                                </div> --}}
+                                <div class="col-md-1 form-floating px-1">
+                                        <x-jet-input id="suffix" type="text" class="form-control block w-full" autocomplete="suffix" disabled/>
                                         <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="suffix" class="mt-2" />
                                 </div>

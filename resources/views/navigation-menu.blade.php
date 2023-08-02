@@ -324,16 +324,10 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- E-LEAVE -->
-                            <!-- <?php echo route('hris.leave.eleave'); ?> -->
+                            <!-- PROCESS E-LEAVE -->
                             <x-jet-dropdown-link href="{{ route('process.eleave') }}">
                                 {{ __('Process e-Leave Applications') }}
                             </x-jet-dropdown-link>
-
-                            <!-- <x-jet-dropdown-link href="{{ route('hris.leave.view-leave') }}">
-                                {{ __('View Leave') }}
-                            </x-jet-dropdown-link> -->
-
                         </x-slot>
                     </x-jet-dropdown>
                 </div>
@@ -371,7 +365,7 @@
 
 
                 {{-- ADMIN begin--}}
-                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+                @if (Auth::user()->role_type=='SUPER ADMIN')
                 <div class="ml-3 relative">
                     <x-jet-dropdown align="left" width="48">
                         <x-slot name="trigger">
@@ -391,7 +385,6 @@
                             {{-- <x-jet-dropdown-link href="{{ route('register') }}">
                                 {{ __('User Define') }}
                             </x-jet-dropdown-link> --}}
-                            @if (Auth::user()->role_type=='SUPER ADMIN')
                             <x-jet-dropdown-link href="{{ route('hr.management.offices') }}">
                                 {{ __('Offices') }}
                             </x-jet-dropdown-link>
@@ -403,7 +396,6 @@
                             <x-jet-dropdown-link href="{{ route('hr.management.holidays') }}">
                                 {{ __('Holidays') }}
                             </x-jet-dropdown-link>
-                            @endif
 
                         </x-slot>
                     </x-jet-dropdown>

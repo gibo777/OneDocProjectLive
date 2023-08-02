@@ -27,7 +27,7 @@
                 Accounting Data
                 </button>
             </li>
-            @if (Auth::user()->role_type=='SUPER ADMIN')
+            @if (Auth::user()->id==1)
             {{-- tab 3 | Family Background --}}
             <li class="nav-item" role="presentation">
                 <button id="pills-fb-tab" class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-fb" type="button" role="tab" aria-controls="pills-fb" aria-selected="false">
