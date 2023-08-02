@@ -309,7 +309,7 @@
                 </div>
                 <!-- E-LEAVE MENU end  -->
                 
-                @if (Auth::user()->department == '1D-HR')
+                @if (Auth::user()->role_type == 'SUPER ADMIN')
                 <!-- PROCESS start-->
                 <div class="ml-3 relative">
 
