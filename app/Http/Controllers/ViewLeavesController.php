@@ -174,6 +174,7 @@ class ViewLeavesController extends Controller
                 'u.supervisor',
 	        	'L.is_head_approved',
 	        	'L.is_hr_approved',
+                'L.is_taken',
                 DB::raw('(CASE 
                     WHEN L.leave_type="VL" THEN b.VL 
                     WHEN L.leave_type="SL" THEN b.SL
@@ -193,7 +194,8 @@ class ViewLeavesController extends Controller
             $leaves['auth_department'] = Auth::user()->department;
             $leaves['role_type'] = Auth::user()->role_type;
 
-			return $leaves;
+            return $leaves;
+			// return var_dump($leaves);
     		// return view('hris.leave.view-leave-details', ['leaves'=>$leaves,'holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types]);
     	}
     	/*else {
@@ -679,6 +681,7 @@ class ViewLeavesController extends Controller
             ->select(
                 'h.leave_reference', 
                 'h.leave_number', 
+                'h.control_number',
                 'h.action', 
                 DB::raw("DATE_FORMAT(h.created_at,'%m/%d/%Y %h:%i %p') as created_at"),
                 'h.action_reason', 

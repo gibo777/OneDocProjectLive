@@ -737,7 +737,7 @@ $(document).on('dblclick','.view-leave',function(){
         method: 'GET',
         data: { 'leaveID': leaveID }, // prefer use serialize method
         success:function(data){
-            // alert(data[0]['employee_id']);
+            // alert(data[0]['is_taken']);
             $('#dataLoad').css('display','none');
             var leave_number = data[0]['control_number'];
 
@@ -812,7 +812,7 @@ $(document).on('dblclick','.view-leave',function(){
                         $("#deny_leave").show();
                         $("#approve_leave").show();
                     } else {
-                        if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
+                        if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                             $("#cancel_leave").hide();
                         } else {
                             $("#cancel_leave").show();
@@ -834,7 +834,7 @@ $(document).on('dblclick','.view-leave',function(){
                             /*$("input[name='leave_notification[]']").each( function() {
                                 $(this).attr("disabled", true);
                             });*/
-                            if (data[0]['status']=="Cancelled") {
+                            if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                                 $("#cancel_leave").hide();
                             } else {
                                 $("#cancel_leave").show();
@@ -861,7 +861,7 @@ $(document).on('dblclick','.view-leave',function(){
                 if (data[0]['status']=="Pending") {
                     $("#update_leave").show();
                 } else {
-                    if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied") {
+                    if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                         $("#cancel_leave").hide();
                     } else {
                         $("#cancel_leave").show();

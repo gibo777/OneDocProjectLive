@@ -851,8 +851,7 @@ $(document).ready(function(){
                     if ($("#hid_access_id").val()==1) {
                         historyLabel = historyLabel+" of "+data[0]['name'];
                     }
-                    historyLabel = historyLabel+" (Leave #"+data[0]['leave_number']+")";
-                    // var historyLabel = "leave history of Pangalan"+" (leave #"+7+")";
+                    historyLabel = historyLabel+" (Leave #"+data[0]['control_number']+")";
                     $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
                     $("#modalHistory").modal("show");
                 }
@@ -1910,7 +1909,7 @@ $('.tabledata').DataTable();
                 url = window.location.origin+'/update-departments';
                 message = "Update successful!";
             }
-            
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
