@@ -309,7 +309,7 @@
                 </div>
                 <!-- E-LEAVE MENU end  -->
                 
-                @if (Auth::user()->role_type == 'SUPER ADMIN')
+                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                 <!-- PROCESS start-->
                 <div class="ml-3 relative">
 
@@ -391,7 +391,7 @@
                             {{-- <x-jet-dropdown-link href="{{ route('register') }}">
                                 {{ __('User Define') }}
                             </x-jet-dropdown-link> --}}
-
+                            @if (Auth::user()->role_type=='SUPER ADMIN')
                             <x-jet-dropdown-link href="{{ route('hr.management.offices') }}">
                                 {{ __('Offices') }}
                             </x-jet-dropdown-link>
@@ -403,6 +403,7 @@
                             <x-jet-dropdown-link href="{{ route('hr.management.holidays') }}">
                                 {{ __('Holidays') }}
                             </x-jet-dropdown-link>
+                            @endif
 
                         </x-slot>
                     </x-jet-dropdown>
