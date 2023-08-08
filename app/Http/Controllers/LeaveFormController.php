@@ -24,7 +24,7 @@ class LeaveFormController extends Controller
      */
     public function index()
     {
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) && (Auth::user()->supervisor!=null) )
         {
             $holidays = DB::table('holidays')
                         ->where( function($query) {
@@ -45,7 +45,13 @@ class LeaveFormController extends Controller
             )
             ->where('employee_id',Auth::user()->employee_id)->get();
 
-            return view('hris.leave.eleave', ['holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types,'leave_credits'=>$leave_credits]);
+            return view('hris.leave.eleave', 
+              [
+                'holidays'=>$holidays, 
+                'departments'=>$departments, 
+                'leave_types'=>$leave_types,
+                'leave_credits'=>$leave_credits
+              ]);
         } else {
             return redirect('/');
         }

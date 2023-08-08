@@ -220,7 +220,7 @@
                         <div class="row mt-1">
                                 <div class="col-md-4 px-1">
                                     <div class="form-floating">
-                                        <x-jet-input id="last_name" type="text" class="form-control block w-full bg-white border-0" autocomplete="last_name" disabled/>
+                                        <x-jet-input id="last_name" type="text" class="form-control block w-full bg-white border-0 shadow-0" autocomplete="last_name" disabled/>
                                         <x-jet-label for="last_name" value="{{ __('Last Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="last_name" class="mt-2" />
                                     </div>

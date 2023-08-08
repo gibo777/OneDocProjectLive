@@ -139,4 +139,55 @@ class EmployeesController extends Controller
         }
     }
    
+    /**
+     * Listing of Time Logs
+     *
+     * @return view
+     * @author Gilbert L. Retiro
+     **/
+    public function timeLogsListing (Request $request)
+    {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
+        {
+
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+
+            $employees = DB::table('time_logs as t');
+            $employees = $employees->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id');
+            $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
+            $employees = $employees->select(
+                'u.id',
+                'u.first_name',
+                'u.middle_name',
+                'u.last_name',
+                'u.suffix',
+                'u.employee_id',
+                'u.department',
+                'd.department as dept',
+                't.time_in',
+                't.time_out',
+                't.profile_photo_path',
+                'u.supervisor',
+                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+            );
+            // $employees = $employees->where('u.id','!=',1);
+            // $employees = $employees->where('u.employee_id','!=',1);
+            $employees = $employees->where('u.employee_id','=',$employee_id);
+            $employees = $employees->where( function($query) {
+                return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
+                });
+            $employees = $employees->orderBy('t.created_at', 'desc');
+            $employees = $employees->orderBy('u.last_name');
+            $employees = $employees->orderBy('u.first_name');
+            $employees = $employees->get();
+
+            return view('/time_logs/time-logs-listing', 
+                [
+                    'employees'=>$employees, 
+                ]);
+        } else {
+            return redirect('/');
+        }
+    }
 }

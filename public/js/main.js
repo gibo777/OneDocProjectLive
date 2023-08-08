@@ -1552,7 +1552,10 @@ $(document).ready(function(){
 /* PAGINATION end */
 
     // $('table').DataTable();
-$('.tabledata').DataTable();
+$('.tabledata').DataTable(
+    "columnDefs": [
+      { "orderable": false, "targets": 0 } // Disable sorting on the first column (index 0)
+    ]);
     /* NAVIGATIONS begin */
     $(".view_nav").click(function() {
         // alert($(this).html());
