@@ -173,7 +173,9 @@ class EmployeesController extends Controller
             );
             // $employees = $employees->where('u.id','!=',1);
             // $employees = $employees->where('u.employee_id','!=',1);
-            $employees = $employees->where('u.employee_id','=',$employee_id);
+            if (Auth::user()->role_type!='SUPER ADMIN' || Auth::user()->role_type!='ADMIN') {
+                $employees = $employees->where('u.employee_id','=',$employee_id);
+            }
             $employees = $employees->where( function($query) {
                 return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
                 });
