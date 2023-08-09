@@ -240,3 +240,5 @@ Route::get('/decrypt', function () {
 /* TIME LOGS */
 Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
 Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
+
+Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
