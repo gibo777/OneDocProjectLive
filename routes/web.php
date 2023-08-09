@@ -122,6 +122,10 @@ Route::get('/getemployees',[EmployeesController::class,'getEmployeeInfo']);
 Route::post('/updateemployees',[EmployeesController::class,'updateEmployee']);
 
 
+
+
+
+
 /* HOLIDAYS */
 Route::get('/holidays', [HRManagementController::class, 'view_holidays'])->name('hr.management.holidays');
 Route::get('/filter-holidays', [HRManagementController::class, 'filter_holidays'])->name('hr.management.filter-holidays');
@@ -237,8 +241,9 @@ Route::get('/decrypt', function () {
 });
 
 
-/* TIME LOGS */
+/*======= TIME LOGS =======*/
 Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
 Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
+
 
 Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');

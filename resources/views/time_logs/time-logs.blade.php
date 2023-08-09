@@ -1,11 +1,4 @@
-{{-- <!-- SweetAlert2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
 
-<!-- jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- SweetAlert2 library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script> --}}
 
 <x-app-layout>
 

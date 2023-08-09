@@ -20,51 +20,22 @@
 <!-- Scripts -->
 
 <script src="{{ mix('js/app.js') }}" defer></script>
-{{-- <script src="{{ asset('/js/jquery.backstretch.js') }}"></script>
-<script src="{{ asset('/js/jquery.backstretch.min.js') }}"></script> --}}
-{{-- <script src="{{ asset('/js/year-select.js') }}"></script> --}}
-{{-- SWEETALERT CDN --}}
-{{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 <script src="{{ asset('/sweetalert/js/sweetalert.js') }}"></script>
 <link href="{{ asset('/sweetalert/css/sweetalert.css') }}" rel='stylesheet' type='text/css'>
 
 
 <!-- font awesome  -->
-{{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" /> --}}
-{{-- DAGDAG NI MARK FOR ICONS --}}
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
 <link rel="stylesheet" href="{{ asset('/fontawesome-6.2.0/css/all.css') }}">
-{{-- <link rel="stylesheet" href="{{ asset('/font-awesome/css/font-awesome.min.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('/fontawesome-6.2.0/css/fontawesome.css') }}">
-<script src="{{ asset('/fontawesome-6.2.0/js/fontawesome.js') }}"></script> --}}
 
-
-
-
-{{-- <link rel="stylesheet" href="{{ asset('/css/app.css') }}"/> --}}
-{{-- <link href="{{ asset('/selectsearch/select2/dist/css/select2.min.css') }}" rel='stylesheet' type='text/css'> --}}
 <link rel="stylesheet" href="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.css') }}">
 <link rel="stylesheet" href="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.css') }}">
 
-
-
 <script type="text/javascript" src="{{ asset('/js/jquery.min-3.6.0.js') }}"></script>
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
-{{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
 
-{{-- <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.js') }}"></script> --}}
 <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
-{{-- <script src="{{ asset('/selectsearch/jquery-3.2.1.min.js') }}" type='text/javascript'></script> --}}
-{{-- <script type="text/javascript" src="{{ asset('/js/jquery.dataTables.min.js') }}"></script> --}}
-
-
-{{-- <script src="{{ asset('/selectsearch/select2/dist/js/select2.min.js') }}" type='text/javascript'></script> --}}
-
 
 
 {{-- BOOTSTRAP --}}
-{{-- <link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}"> --}}
-{{-- <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script> --}}
 <link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
 <script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js') }}"></script>
 
@@ -76,14 +47,12 @@
 <script src="{{ asset('/multiple-select/js/bootstrap-multiselect.js') }}"></script>
 
 
-
-{{--  --}}
+{{-- JQUERY UI --}}
 <script type="text/javascript" src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.js') }}"></script>
 <!-- TABLE WITH PAGINATION end -->
 
 {{-- <script type="text/javascript" src="{{ asset('/js/datetimepicker.js') }}"></script> --}}
-
 
 
 {{-- OTHER PLUGINS --}}
