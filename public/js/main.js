@@ -36,8 +36,8 @@ $(document).ready(function(){
     var leave_type      = $("#leave_type");
     var others          = $("#others");
     var reason          = $("#reason");
-    var date_from       = $("#date_from");
-    var date_to         = $("#date_to");
+    var leaveDateFrom   = $("#leaveDateFrom");
+    var leaveDateTo     = $("#leaveDateTo");
     var date_applied    = $("#date_applied");
     var td_as_of        = $("#td_as_of0");
 
@@ -51,8 +51,8 @@ $(document).ready(function(){
     // date_applied.val(currentDate()); // Applied Date - Current Date
     td_as_of.html(currentDate());
 
-    var old_date_from = $("#date_from").val();
-    var old_date_to = $("#date_to").val();
+    var oldLeaveDateFrom = $("#leaveDateFrom").val();
+    var oldLeaveDateTo = $("#leaveDateTo").val();
 
     /* MONTHS */
     var month_names = [
@@ -351,8 +351,8 @@ $(document).ready(function(){
         // alert ('gilbert'); return false;
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
         if ($('#leave_type').val()=="SL"&& Date.parse(datefrom) > Date.now()){
-            $('#date_from').val("");
-            $('#date_to').val("");
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
             $('#hid_no_days').val("");
             Swal.fire({
                 icon: 'error',
@@ -364,8 +364,8 @@ $(document).ready(function(){
         else if ( Date.parse(dateto) < Date.parse(datefrom)) {
             // $("#range_notice").html("Invalid Date Range.");
             // $("#range_notice").css("color","#ff0800");
-            $('#date_from').val("");
-            $('#date_to').val("");
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
             $('#hid_no_days').val("");
             Swal.fire({
                 icon: 'error',
@@ -405,7 +405,7 @@ $(document).ready(function(){
         // var div_upload = $("#div_upload");
         // alert('gilbert'); return false;
         var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
-        var weekends_count =  isWeekendandHolidays ($("#date_from").val(),$("#date_to").val());
+        var weekends_count =  isWeekendandHolidays ($("#leaveDateFrom").val(),$("#leaveDateTo").val());
         var number_of_days = (parseInt(date_range) - parseInt(weekends_count)) - 1;
 
         return parseInt(number_of_days);
@@ -461,7 +461,7 @@ $(document).ready(function(){
     }
 
 
-    function submitLeaveValidation (leave_type='',others_leave='', date_from='', date_to='',reason='') {
+    function submitLeaveValidation (leave_type='',others_leave='', leaveDateFrom='', leaveDateTo='',reason='') {
 
         var empty_fields=0;
         if (leave_type=="Others") {
@@ -470,8 +470,8 @@ $(document).ready(function(){
             }
         }
         if (leave_type=="") { empty_fields++; }
-        if (date_from=="") { empty_fields++; }
-        if (date_to=="") { empty_fields++; }
+        if (leaveDateFrom=="") { empty_fields++; }
+        if (leaveDateTo=="") { empty_fields++; }
         // if (notification==0) { empty_fields++; }
         if ($.trim(reason)=="") { empty_fields++; }
 
@@ -488,8 +488,8 @@ $(document).ready(function(){
         } else {*/
             $(this).removeClass('empty');
             leaveValidation(
-                $("#date_from").val(),
-                $("#date_to").val(),
+                $("#leaveDateFrom").val(),
+                $("#leaveDateTo").val(),
                 $(this).val()
                 );
 
@@ -510,9 +510,9 @@ $(document).ready(function(){
                 return true;
             } else {
                 // alert(priorLeaveValidation(currentDate(),$("#date_from").val())); return false;
-                if (priorLeaveValidation(currentDate(),$("#date_from").val()) <3 && $(this).val()!="") {
-                    $('#date_from').val("");
-                    $('#date_to').val("");
+                if (priorLeaveValidation(currentDate(),$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
+                    $('#leaveDateFrom').val("");
+                    $('#leaveDateTo').val("");
                     $('#hid_no_days').val("");
                     // alert('Mak');
                     Swal.fire({
@@ -543,8 +543,8 @@ $(document).ready(function(){
         submitLeaveValidation (
             $(this).val(),
             $("#others_leave").val(),
-            $("#date_from").val(),
-            $("#date_to").val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
             $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
@@ -559,17 +559,17 @@ $(document).ready(function(){
         submitLeaveValidation (
             $("#leave_type").val(),
             $(this).val(),
-            $("#date_from").val(),
-            $("#date_to").val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
     });
 
 
-    $("#date_from").change(function(){
+    $("#leaveDateFrom").change(function(){
         $("#number_of_days").html('');
-        $("#date_to").val($(this).val());
+        $("#leaveDateTo").val($(this).val());
         /*$(this).removeClass('empty');
         $("#date_to").removeClass('empty');*/
         /*if ($("#leave_type").val()=="SL" || $("#leave_type").val()=="EL") {
@@ -577,8 +577,8 @@ $(document).ready(function(){
         } else {
             var prior = priorLeaveValidation(currentDate(),$("#date_from").val());
             if (prior <3 && $("#leave_type").val()!="") {
-                // alert(old_date_from);
-                $("#date_from").val(old_date_from);
+                // alert(oldLeaveDateFrom);
+                $("#date_from").val(oldLeaveDateFrom);
                 $("#dialog_content").html("Application for leave of absence must be filed at the latest, <br>three (3) working days prior to the date of leave.").css('color','#FF0000');
                 // $("#popup" ).attr('title','NOTIFICATION');
                 $("#dialog" ).dialog({
@@ -601,31 +601,31 @@ $(document).ready(function(){
 
         leaveValidation(
             $(this).val(),
-            $("#date_to").val(),
+            $("#leaveDateTo").val(),
             $("#leave_type").val()
             );
         submitLeaveValidation (
             $("#leave_type").val(),
             $("#others_leave").val(),
             $(this).val(),
-            $("#date_to").val(),
+            $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
             );
     });
 
 
-    $("#date_to").change(function(){
+    $("#leaveDateTo").change(function(){
         $("#number_of_days").html('');
         leaveValidation(
-            $("#date_from").val(),
+            $("#leaveDateFrom").val(),
             $(this).val(),
             $("#leave_type").val()
             );
         submitLeaveValidation (
             $("#leave_type").val(),
             $("#others_leave").val(),
-            $("#date_from").val(),
+            $("#leaveDateFrom").val(),
             $(this).val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
@@ -656,8 +656,8 @@ $(document).ready(function(){
         submitLeaveValidation (
             $("#leave_type").val(),
             $("others_leave").val(),
-            $("#date_from").val(),
-            $("#date_to").val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $(this).val()
             );
@@ -692,18 +692,18 @@ $(document).ready(function(){
             }
         }
 
-        if ($("#date_from").val()=="") {
-            $("#date_from").addClass('empty');
+        if ($("#leaveDateFrom").val()=="") {
+            $("#leaveDateFrom").addClass('empty');
             empty_fields++;
         } else {
-            $("#date_from").removeClass('empty');
+            $("#leaveDateFrom").removeClass('empty');
         }
 
-        if ($("#date_to").val()=="") {
-            $("#date_to").addClass('empty');
+        if ($("#leaveDateTo").val()=="") {
+            $("#leaveDateTo").addClass('empty');
             empty_fields++;
         } else {
-            $("#date_to").removeClass('empty');
+            $("#leaveDateTo").removeClass('empty');
         }
 
         if ($.trim($("#reason").val())=="") {
@@ -734,7 +734,7 @@ $(document).ready(function(){
                 method: 'post',
                 data: $('#leave-form').serialize(), // prefer use serialize method
                 success:function(data){
-                // prompt('',data); return false;
+                prompt('',data); return false;
                         console.log(data);
                         const {isSuccess,message} = data;
                         /*isSuccess ?
@@ -764,7 +764,7 @@ $(document).ready(function(){
                     $('#departmentofemp').text("Department: "+$('#department').val());
                     $('#dateappliedofemp').text("Date Applied: "+$('#date_applied').val());
                     $('#leavetypeofemp').text("Leave Type: "+$('#leave_type').val());
-                    $('#datecoveredofemp').text("Date Covered: "+$('#date_from').val()+" TO " +$('#date_to').val() );
+                    $('#datecoveredofemp').text("Date Covered: "+$('#leaveDateFrom').val()+" TO " +$('#leaveDateTo').val() );
                     $('#notificationofleaveofemp').text("Notification of Leave: "+notificationslev);
                     $('#reasonofemp').text("Reason: "+$('#reason').val());
                     $('#PreviewModal').modal('show');
@@ -1552,10 +1552,8 @@ $(document).ready(function(){
 /* PAGINATION end */
 
     // $('table').DataTable();
-$('.tabledata').DataTable(
-    "columnDefs": [
-      { "orderable": false, "targets": 0 } // Disable sorting on the first column (index 0)
-    ]);
+    $('.tabledata').DataTable();
+
     /* NAVIGATIONS begin */
     $(".view_nav").click(function() {
         // alert($(this).html());
