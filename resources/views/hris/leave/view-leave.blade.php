@@ -39,6 +39,10 @@
             /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
         -webkit-print-color-adjust: exact;
         }
+
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
 }
 </style>
 <x-app-layout>
@@ -122,7 +126,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="data" class="table table-bordered table-striped sm:justify-center table-hover">
 
                                         <thead class="thead">
 
@@ -132,7 +136,7 @@
                                                 <th>Emp. No.</th>
                                                 <th>Department</th>
                                                 @endif
-                                                <th>Leave#</th>
+                                                <th>Control#</th>
                                                 <th>Leave Type</th>
                                                 <th>Date Applied</th>
                                                 <th>Begin Date</th>

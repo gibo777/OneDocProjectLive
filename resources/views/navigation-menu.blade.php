@@ -317,6 +317,7 @@
 
 
                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+                    @if (strpos(Auth::user()->department, 'ACCTG') || Auth::user()->id=1)
                     <div class="dropdown mt-3 mx-1">
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownProcess" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         PROCESS
@@ -327,16 +328,29 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
                     <div class="dropdown mt-3 mx-1">
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        HR MANAGEMENT
+                        RECORDS MANAGEMENT
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
-                              <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
+                              {{-- <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
                                   {{ __('View Employees') }}
-                              </a>
+                              </a> --}}
+                              <div class="dropdown dropend">
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Employee Management </a>
+                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                        <a class="dropdown-item" href="{{ route('register') }}" >
+                                            {{ __('User Registration') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
+                                            {{ __('View Employees') }}
+                                        </a>
+                                  </div>
+                              </div>
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Time Keeping </a>
@@ -349,6 +363,10 @@
                               </a> --}}
                             </div>
                         </div>
+                    </div>
+                @else
+                    <div class="dropdown mt-3 mx-1">
+                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="{{ route('timelogslisting') }}" id="nav_home" >TIME LOGS</a>
                     </div>
                 @endif
 
@@ -372,9 +390,9 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
-                              <a class="dropdown-item" href="{{ route('register') }}" >
+                              {{-- <a class="dropdown-item" href="{{ route('register') }}" >
                                   {{ __('User Registration') }}
-                              </a>
+                              </a> --}}
                               <a class="dropdown-item" href="{{ route('hr.management.offices') }}">
                                   {{ __('Offices') }}
                               </a>

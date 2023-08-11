@@ -86,8 +86,6 @@ class LeaveFormController extends Controller
      */
     public function submit_leave(Request $request)
     {
-        // return var_dump($request->all());
-
         $rules = [
             'name' => 'required',
             'employee_number' => 'required',
@@ -95,25 +93,20 @@ class LeaveFormController extends Controller
             'leave_type' => 'required',
             'reason' => 'required',
             'date_applied' => 'required',
-            'date_from' => 'required',
-            'date_to' => 'required'
+            'leaveDateFrom' => 'required',
+            'leaveDateTo' => 'required'
         ];
-
-        // return var_dump($request->all());
 
         $validator = Validator::make($request->all(),$rules);
 
-        // return var_dump($validator);
-        // return $validator->fails();
-
         if ($validator->fails()) {
+          // return "gibs 1";
             return redirect(route('hris.leave.eleave'))
             ->withInput()
             ->withErrors($validator);
         }
         else{
-            // return "gibs";
-            // return var_dump($request->input());
+          // return "gibs 2";
             $inputData = $request->input();
             try{
                 // return $data['employee_number'];
@@ -127,7 +120,7 @@ class LeaveFormController extends Controller
                 } else {
                     $new_leave_number = $insert_increment->leave_number+1;
                 }
-            // return $new_leave_number;
+                // return $new_leave_number;
 
                 $date = strtotime($inputData['date_applied'].date('G:i:s'));
                 $dateapplied =  date('Y-m-d H:i:s', $date);
@@ -136,15 +129,15 @@ class LeaveFormController extends Controller
 
                 /*$insert = new LeaveForm;
                 $insert->leave_number = $new_leave_number;
-                $insert->name = $inputData['name'];
-                $insert->employee_id = $inputData['employee_number'];
-                $insert->department = $inputData['hid_dept'];
-                $insert->date_applied = $dateapplied;
+                $insert->name = Auth::user()->last_name.' '.Auth::user()->suffix.', '.Auth::user()->first_name.' '.Auth::user()->middle_name;
+                $insert->employee_id = Auth::user()->employee_id;
+                $insert->department = Auth::user()->department;
+                $insert->date_applied = date('Y-m-d H:i:s');
                 $insert->leave_type = $inputData['leave_type'];
                 $insert->reason = $inputData['reason'];
                 // $insert->notification = implode('|',$data['leave_notification']);
-                $insert->date_from = date('Y-m-d',strtotime($inputData['date_from']));
-                $insert->date_to = date('Y-m-d',strtotime($inputData['date_to']));
+                $insert->date_from = date('Y-m-d',strtotime($inputData['leaveDateFrom']));
+                $insert->date_to = date('Y-m-d',strtotime($inputData['leaveDateTo']));
                 $insert->no_of_days = $inputData['hid_no_days'];
                 if ($inputData['leave_type']=='Others') {
                     $insert->others = $inputData['others_leave'];
@@ -162,8 +155,8 @@ class LeaveFormController extends Controller
                     'date_applied' => date('Y-m-d H:i:s'),
                     'leave_type' => $inputData['leave_type'],
                     'reason' => $inputData['reason'],
-                    'date_from'=>date('Y-m-d',strtotime($inputData['date_from'])),
-                    'date_to'=>date('Y-m-d',strtotime($inputData['date_to'])),
+                    'date_from'=>date('Y-m-d',strtotime($inputData['leaveDateFrom'])),
+                    'date_to'=>date('Y-m-d',strtotime($inputData['leaveDateTo'])),
                     'no_of_days' => $inputData['hid_no_days'],
                     'ip_address' => $request->ip(),
                     'created_at' => date('Y-m-d H:i:s'),
@@ -175,11 +168,10 @@ class LeaveFormController extends Controller
                     $data['others'] = $inputData['others_leave'];
                 }
                 // return var_dump($data);
-                DB::table('leaves')->insert($data);
+                $insert = DB::table('leaves')->insert($data);
+                // dd($insert->toSql());
                 return response(['isSuccess' => true,'message'=>'Leave application submitted!']);
-                // return redirect(route('hris.leave.eleave'))->with('status',"Leave application submitted");
             } catch(Exception $e){
-                return "failed";
                 return response(['isSuccess'=>false,'message'=>$e]);
             }
         }
@@ -215,39 +207,6 @@ class LeaveFormController extends Controller
             // return view('hris.leave.view-leave-details', ['leaves'=>$leaves,'holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\LeaveForm  $leaveForm
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LeaveForm $leaveForm)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\LeaveForm  $leaveForm
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, LeaveForm $leaveForm)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\LeaveForm  $leaveForm
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(LeaveForm $leaveForm)
-    {
-        //
-    }
     public function leaveform(Request $request)
     {
         $leave_id = $request->leave_id;

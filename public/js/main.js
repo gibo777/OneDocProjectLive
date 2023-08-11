@@ -569,7 +569,8 @@ $(document).ready(function(){
 
     $("#leaveDateFrom").change(function(){
         $("#number_of_days").html('');
-        $("#leaveDateTo").val($(this).val());
+        $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
+        
         /*$(this).removeClass('empty');
         $("#date_to").removeClass('empty');*/
         /*if ($("#leave_type").val()=="SL" || $("#leave_type").val()=="EL") {
@@ -734,7 +735,7 @@ $(document).ready(function(){
                 method: 'post',
                 data: $('#leave-form').serialize(), // prefer use serialize method
                 success:function(data){
-                prompt('',data); return false;
+                    // prompt('', data); return false;
                         console.log(data);
                         const {isSuccess,message} = data;
                         /*isSuccess ?
@@ -1552,7 +1553,10 @@ $(document).ready(function(){
 /* PAGINATION end */
 
     // $('table').DataTable();
-    $('.tabledata').DataTable();
+    $('.tabledata').DataTable({
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
+    });
 
     /* NAVIGATIONS begin */
     $(".view_nav").click(function() {

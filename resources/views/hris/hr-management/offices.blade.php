@@ -1,7 +1,11 @@
 
 <x-app-layout>
-<!-- <script src="{{ asset('/js/hris-jquery.js') }}"></script> -->
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
+    <style type="text/css">
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
+    </style>
     <x-slot name="header">
                 {{ __('OFFICES') }}
     </x-slot>

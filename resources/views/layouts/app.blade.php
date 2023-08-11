@@ -13,7 +13,6 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 
         @livewireStyles
 
@@ -59,14 +58,14 @@
 <script type="text/javascript" src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 <script src="{{ asset('/js/pusher.min.js') }}"></script>
 
-{{-- MAIN JS --}}
-{{-- <script type="text/javascript" src="{{ asset('/js/hris-jquery.js') }}"></script> --}}
-<script type="text/javascript" src="{{ asset('/js/main.js') }}"></script>
 
 {{-- DATA TABLES PLUGIN --}}
 <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
 <script type="text/javascript" src="{{ asset('DataTables/datatables.min.js') }}"></script>
 
+{{-- MAIN CSS/JS --}}
+<link rel="stylesheet" href="{{ asset('css/main.css') }}">
+<script type="text/javascript" src="{{ asset('/js/main.js') }}"></script>
 
 {{-- WEBCAM --}}
 <script src="{{ asset('js/webcam.js') }}"></script>

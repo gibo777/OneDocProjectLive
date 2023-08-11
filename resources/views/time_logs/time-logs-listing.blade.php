@@ -2,6 +2,18 @@
 <x-app-layout>
 
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
+    <style type="text/css">
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataTimeLogs thead th {
+        text-align: center; /* Center-align the header text */
+    }
+    </style>
+
     <x-slot name="header">
                 {{ __('TIME LOGS') }}
     </x-slot>
@@ -42,13 +54,13 @@
                                         </thead>
                                         <tbody class="data hover" id="viewEmployee">
                                             @forelse($employees as $employee)
-                                                <tr id="{{ $employee->id }}">
-                                                    <td>{{ join(' ',[$employee->last_name.',',$employee->first_name,$employee->suffix,$employee->middle_name]) }}</td>
-                                                    <td>{{ $employee->employee_id}}</td>
+                                                <tr id="{{ $employee->employee_id }}">
+                                                    <td>{{ $employee->full_name }}</td>
+                                                    <td>{{ $employee->employee_id }}</td>
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
-                                                    <td>{{ $employee->head_name }}</td>
+                                                    <td>{{ $employee->supervisor }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
@@ -392,7 +404,10 @@ $(document).ready(function() {
 
 
   // Initialize DataTable
-  var table = $('#dataTimeLogs').DataTable();
+  var table = $('#dataTimeLogs').DataTable({
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
+  });
 
     function formatDate(inputDate) {
         var date = new Date(inputDate); // Create a Date object from the input string
@@ -414,12 +429,11 @@ $(document).ready(function() {
             var searchDateTo    = formatDate($('#dateTo').val());
             var searchTimeIn    = data[3]; //Time-In Column, it may change depending on the exact column
             var searchTimeOut   = data[4]; //Time-Out Column
+            if ( ($('#dateFrom').val()==null || $('#dateFrom').val()=='') && ($('#dateTo').val()==null || $('#dateTo').val()=='') ) { return true; }
 
             if (searchTimeIn.includes(searchDateFrom) || searchTimeOut.includes(searchDateFrom) || searchTimeIn.includes(searchDateTo) || searchTimeOut.includes(searchDateTo)) {
                 return true;
             }
-
-            
             return false;
         }
     );

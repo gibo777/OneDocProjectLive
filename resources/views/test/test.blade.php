@@ -1,84 +1,53 @@
-
-
-<nav>
-    <link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
-    {{-- <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enlarge Image on Hover</title>
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+<link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
     <style>
-        .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
-            margin-left:-1px !important;
-            margin-top:-1px !important;
+        .enlarge-image {
+            transition: transform 0.2s; /* Apply a smooth transition effect */
+            max-width: 100%;
+            max-height: 100%;
         }
+        
+        .enlarge-image:hover {
+            transform: scale(5); /* Enlarge the image by 20% */
+            cursor: pointer; /* Change the cursor to indicate interactivity */
+        }
+
+
+        .enlarge-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px; /* Set the desired height for the container */
+        }
+
+        
     </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row mt-lg-5">
+      .
+    </div>
+    <div class="row mt-lg-5">
+      .
+    </div>
+    <div class="row mt-lg-5">
+        <div class="col-md-12 text-center">
+            <img src="{{ asset('storage/profile-photos/M0AmuyQVVubYjGfbLlc5p169Nyfi8hGPuuOLbp8F.jpg') }}" alt="Image" width="100px" class="img-fluid enlarge-image">
 
 
-    <div class="container" style="padding-top: 3.5rem">
-            <div class="col">
-
-                <div class="d-flex dropdown-hover-all">
-
-                    {{-- menu 1 --}}
-                    <div class="dropdown mt-3 mx-1">
-                        <button class="btn btn-outline-primary border-0" href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Home') }}
-                        </button>
-                    </div>
-
-
-                        {{-- menu 2 --}}
-                      <div class="dropdown mt-3 mx-1">
-                          <button class="btn btn-outline-primary dropdown-toggle border-0" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              E-FORMS
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                              <div class="dropdown dropend">
-                                  <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-LEAVE</a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                      <a class="dropdown-item" href="#">E-LEAVE APPLICATION</a>
-                                      <a class="dropdown-item" href="#">VIEW LEAVES</a>
-                                      <a class="dropdown-item" href="#">LEAVES CALENDAR</a>
-                                  </div>
-                              </div>
-                              <div class="dropdown dropend">
-                                  <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">REIMBURSEMENT</a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                      <a class="dropdown-item" href="#">Basic</a>
-                                      <a class="dropdown-item" href="#">Compact Aside</a>
-                                      <div class="dropdown-divider"></div>
-                                      <div class="dropdown dropend">
-                                          <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Custom</a>
-                                          <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                              <a class="dropdown-item" href="#">Fullscreen</a>
-                                              <a class="dropdown-item" href="#">Empty</a>
-                                              <div class="dropdown-divider"></div>
-                                              <a class="dropdown-item" href="#">Magic</a>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                    </div>
-
-                    {{-- menu 3 --}}
-                    <div class="dropdown mt-3 mx-1">
-                        <button class="btn btn-outline-primary dropdown-toggle border-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          PROCESS
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                          <div class="dropdown dropend">
-                              <a class="dropdown-item" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-LEAVE</a>
-                          </div>
-                          
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
         </div>
     </div>
-    {{-- <script src="node_modules/@popperjs/core/dist/umd/popper.min.js"></script> --}}
-    <script type="text/javascript" src="{{ asset('/popper/js/bootstrap.bundle.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/nav-bar/bootstrap5-dropdown-ml-hack.js') }}"></script>
-</nav>
+</div>
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+<script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

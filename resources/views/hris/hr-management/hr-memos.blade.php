@@ -1,4 +1,9 @@
 <x-app-layout>
+    <style type="text/css">
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
+    </style>
     <x-slot name="header">
             {{ __('MEMO') }}
     </x-slot>

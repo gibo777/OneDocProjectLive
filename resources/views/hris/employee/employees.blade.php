@@ -2,6 +2,11 @@
 <x-app-layout>
 
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
+    <style type="text/css">
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
+    </style>
     <x-slot name="header">
                 {{ __('VIEW ALL EMPLOYEES') }}
     </x-slot>
@@ -116,7 +121,7 @@
 
   <!-- EmployeeModal -->
   <div class="modal fade" id="EmployeesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-xl mt-2" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-white fs-5" id="EmployeesModalLabel">EMPLOYEE DETAILS</h5>
@@ -143,14 +148,6 @@
                                     <x-jet-label for="employment_status" value="{{ __('Employment Status') }}" class="text-black-50 w-full" />
                                 </div>
                         </div>
-                        <!-- DATE HIRED -->
-                        {{-- <div class="col-md-12 nopadding my-2">
-                            <div class="form-floating w-full">
-                                <x-jet-input id="date_hired" name="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
-                                <x-jet-label for="date_hired" value="{{ __('Date Started (mm/dd/yyyy)') }}" class="text-left nopadding" />
-                                <x-jet-input-error for="date_hired" class="mt-2" />
-                            </div>
-                        </div> --}}
 
                         <div class="col-md-12 form-floating nopadding mt-2">
                                 <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
@@ -204,23 +201,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- <div class="col-md-4 w-full nopadding mt-2 text-right">
-                                <label for="isHead">Is Head?</label>
-                                <input type="checkbox" id="isHead">
-                        </div> --}}
-
-                        {{-- <div class="col-md-12 nopadding w-full sm:justify-center mt-5">
-                            <x-jet-button id="PDS" name="PDS">
-                                {{ __('Export to PDF') }}
-                            </x-jet-button>
-                        </div> --}}
                     </div>
                     <div class="col-md-9">
                         <div class="row mt-1">
                                 <div class="col-md-4 px-1">
                                     <div class="form-floating">
-                                        <x-jet-input id="last_name" type="text" class="form-control block w-full bg-white border-0 shadow-0" autocomplete="last_name" disabled/>
+                                        <x-jet-input id="last_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="last_name" disabled/>
                                         <x-jet-label for="last_name" value="{{ __('Last Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="last_name" class="mt-2" />
                                     </div>
@@ -228,23 +214,18 @@
                                 </div>
                                 <div class="col-md-4 px-1">
                                     <div class=" form-floating">
-                                        <x-jet-input id="first_name" type="text" class="form-control block w-full" autocomplete="first_name" disabled/>
+                                        <x-jet-input id="first_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="first_name" disabled/>
                                         <x-jet-label for="first_name" value="{{ __('First Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="first_name" class="mt-2" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="middle_name" type="text" class="form-control block w-full" autocomplete="middle_name" disabled/>
+                                        <x-jet-input id="middle_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="middle_name" disabled/>
                                         <x-jet-label for="middle_name" value="{{ __('Middle Name') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="middle_name" class="mt-2" />
                                 </div>
-                                {{-- <div class="col-md-1 form-floating px-1">
-                                        <x-jet-input id="suffix" type="text" class="form-control block w-full"autocomplete="suffix" disabled/>
-                                        <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="suffix" class="mt-2" />
-                                </div> --}}
                                 <div class="col-md-1 form-floating px-1">
-                                        <x-jet-input id="suffix" type="text" class="form-control block w-full" autocomplete="suffix" disabled/>
+                                        <x-jet-input id="suffix" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="suffix" disabled/>
                                         <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="suffix" class="mt-2" />
                                 </div>
@@ -264,11 +245,6 @@
                                         <x-jet-input-error for="position" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                    <!-- Department -->
-                                        {{-- <x-jet-input id="department" type="text" class="form-control block w-full"  placeholder="Department" autocomplete="department" readonly/>
-                                        <x-jet-label for="department" value="{{ __('Department') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="department" class="mt-2" /> --}}
-            
                                         <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value="">Select Department</option>
                                             @foreach ($departments as $dept)
@@ -277,46 +253,23 @@
                                         </select>
                                         <x-jet-label for="department" value="{{ __('Department') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="department" class="mt-2" />
-                                        <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" /> 
-
-
-                                        {{-- <x-jet-input id="department" type="text" class="form-control block w-full"  placeholder="Department" autocomplete="department" readonly/>
-                                        <x-jet-label for="department" value="{{ __('Department') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="department" class="mt-2" /> --}}
+                                        <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" />
                                 </div>
                             </div>
 
                             <div class="row pt-2">
                                 <div class="col-md-4 form-floating px-1">
-                                            {{-- <select id="country" name="country" placeholder="Search" style="width: 100%;" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                                <option value="">-Select Country-</option>
-
-                                            </select>
-                                            <x-jet-label for="country" value="{{ __('Country') }}" class="text-black-50 w-full" />
-                                            <x-jet-input-error for="country" class="mt-2" /> --}}
-                                            <x-jet-input id="country" type="text" class="form-control block w-full" autocomplete="Country" disabled/>
+                                            <x-jet-input id="country" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Country" disabled/>
                                             <x-jet-label for="country" value="{{ __('Country') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="country" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                            {{-- <select id="province" name="province" placeholder="Search" style="width: 100%;" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                                <option value="">-Select Province-</option>
-
-                                            </select>
-                                            <x-jet-label for="province" value="{{ __('Province') }}" class="text-black-50 w-full" />
-                                            <x-jet-input-error for="province" class="mt-2" /> --}}
-                                            <x-jet-input id="province" type="text" class="form-control block w-full" autocomplete="Province" disabled/>
+                                            <x-jet-input id="province" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Province" disabled/>
                                             <x-jet-label for="province" value="{{ __('Province') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="province" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                            {{-- <select id="city" name="city" placeholder="Search" style="width: 100%;" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                                <option value="">-City/Municipality-</option>
-
-                                            </select>
-                                            <x-jet-label for="municipality" value="{{ __('City/Municipality') }}" class="text-black-50 w-full" />
-                                            <x-jet-input-error for="city" class="mt-2" /> --}}
-                                            <x-jet-input id="city" type="text" class="form-control block w-full" autocomplete="City" disabled/>
+                                            <x-jet-input id="city" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="City" disabled/>
                                             <x-jet-label for="city" value="{{ __('City') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="city" class="mt-2" />
                                 </div>
@@ -325,23 +278,17 @@
 
                             <div class="row pt-2">
                                 <div class="col-md-4 form-floating px-1">
-                                            {{-- <select id="barangay" name="barangay" placeholder="Search" style="width: 100%;" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                                <option value="">-Select Barangay-</option>
-
-                                            </select>
-                                            <x-jet-label for="barangay" value="{{ __('Barangay') }}" class="text-black-50 w-full" />
-                                            <x-jet-input-error for="barangay" class="mt-2" /> --}}
-                                            <x-jet-input id="barangay" type="text" class="form-control block w-full" autocomplete="barangay" disabled/>
+                                            <x-jet-input id="barangay" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="barangay" disabled/>
                                             <x-jet-label for="barangay" value="{{ __('Barangay') }}" class="text-black-50 w-full" />
                                             <x-jet-input-error for="barangay" class="mt-2" />
                                 </div>
                                 <div class="col-md-6 form-floating px-1">
-                                        <x-jet-input id="home_address" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="home_address" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="home_address" value="{{ __('House No./Street') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="home_address" class="mt-2" />
                                 </div>
                                 <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="zip_code" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="zip_code" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="zip_code" value="{{ __('Zip Code') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="zip_code" class="mt-2" />
                                 </div>
@@ -350,17 +297,17 @@
                             <div class="row pt-2">
                                 <div class="col-md-4 form-floating px-1">
                                     <!-- Email -->
-                                        <x-jet-input id="email" type="email" class="form-control block w-full" disabled/>
+                                        <x-jet-input id="email" type="email" class="form-control block w-full border-1 shadow-none" disabled/>
                                         <x-jet-label for="email" value="{{ __('Email') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="email" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="contact_number" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="contact_number" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="contact_number" value="{{ __('Contact Number') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="contact_number" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="mobile_number" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="mobile_number" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="mobile_number" value="{{ __('Mobile Number') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="mobile_number" class="mt-2" />
                                 </div>
@@ -368,29 +315,22 @@
 
                             <div class="row pt-2">
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="height" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="height" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="height" class="mt-2" />
                                 </div>
                                 <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="weight" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="weight" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="weight" class="mt-2" />
                                 </div>
                                 <div class="col-md-2 form-floating px-1">
-                                        {{-- <select name="gender" id="gender" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" >
-                                            <option value="">-Gender-</option>
-
-                                        </select>
-                                        <x-jet-label for="gender" value="{{ __('Gender') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="gender" class="mt-2" /> --}}
-
-                                        <x-jet-input id="gender" type="text" class="form-control block w-full" autocomplete="gender" disabled/>
+                                        <x-jet-input id="gender" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="gender" disabled/>
                                         <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="gender" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="civil_status" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="civil_status" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="civil_status" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
@@ -398,38 +338,27 @@
 
                             <div class="row pt-2">
                                 <div class="col-md-3 form-floating px-1">
-                                        {{-- <select name="nationality" id="nationality" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
-                                            <option value="">-Nationality-</option>
-
-                                        </select>
-                                        <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="nationality" class="mt-2" /> --}}
-                                        <x-jet-input id="nationality" type="text" class="form-control block w-full" autocomplete="Nationality" disabled/>
+                                        <x-jet-input id="nationality" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Nationality" disabled/>
                                         <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="nationality" class="mt-2" />
                                 </div>
                                 <div class="col-md-3 form-floating px-1">
-                                        {{-- <select name="religion" id="religion" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
-                                            <option value="">-Religion-</option>
-
-                                        </select>
-                                        <x-jet-label for="religion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="religion" class="mt-2" /> --}}
-                                        <x-jet-input id="religion" type="text" class="form-control block w-full" autocomplete="religion" disabled/>
+                                        <x-jet-input id="religion" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="religion" disabled/>
                                         <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="religion" class="mt-2" />
                                 </div>
                                 <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="birthdate" value="{{ __('Birthdate') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birthdate" class="mt-2" />
                                 </div>
                                 <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="birth_place" type="text" class="form-control block w-full" autocomplete="off" disabled/>
+                                        <x-jet-input id="birth_place" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="birth_place" value="{{ __('Birth Place') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birth_place" class="mt-2" />
                                 </div>
                             </div>
+                            @if (strpos(Auth::user()->department, 'ACCTG') || Auth::user()->id=1)
                             <div class="row pt-2">
                                 <div class="col-md-2 form-floating px-1">
                                     <x-jet-input id="vacation_leaves" type="text" class="form-control block w-full" autocomplete="off"/>
@@ -462,6 +391,7 @@
                                     <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
                             </div>
+                            @endif
 
                         </div>
                     </div>
