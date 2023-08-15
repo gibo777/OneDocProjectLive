@@ -52,8 +52,8 @@ class CreateNewUser implements CreatesNewUsers
         $insertFields = [
                 'first_name'    => strtoupper($input['first_name']),
                 'last_name'     => strtoupper($input['last_name']),
-                'middle_name'   => strtoupper($input['middle_name']),
-                'suffix'        => strtoupper($input['suffix']),
+                'middle_name'   => $input['middle_name'] ? strtoupper($input['middle_name']) : null,
+                'suffix'        => $input['suffix'] ? strtoupper($input['suffix']) : null,
 
                 'employee_id'       => $input['employee_id'],
                 'employment_status' => $input['employment_status'],
@@ -71,6 +71,7 @@ class CreateNewUser implements CreatesNewUsers
 
                 'remember_token' => $token,
                 'expires_at' => Carbon::now()->addHour(),
+                'created_by' => Auth::user()->employee_id,
                 // 'password' => Hash::make($input['password']),
             ];
             // dd($insertFields);

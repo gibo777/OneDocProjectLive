@@ -161,6 +161,7 @@ class EmployeesController extends Controller
                 'u.first_name',
                 'u.middle_name',
                 'u.last_name',
+                DB::raw('CONCAT(u.last_name,", ",u.first_name," ",u.middle_name) as full_name'),
                 'u.suffix',
                 'u.employee_id',
                 'u.department',
@@ -186,7 +187,7 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.last_name');
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();*/
-            
+
             $employees = DB::select('CALL sp_timelogs()');
 
             return view('/time_logs/time-logs-listing', 

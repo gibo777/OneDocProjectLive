@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('profile_photo_path', 2048)->nullable();
             $table->boolean('is_deleted')->nullable();
             $table->string('deleted_by',12)->nullable();
+            // $table->string('created_by',12)->nullable();
             $table->timestamp('date_deleted')->nullable();
             $table->timestamps();
         });

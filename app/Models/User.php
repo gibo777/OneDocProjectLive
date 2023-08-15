@@ -30,6 +30,7 @@ class User extends Authenticatable
         'first_name', 
         'last_name', 
         'middle_name',
+        'suffix',
         'employee_id', 
         'position', 
         'department', 
@@ -42,7 +43,8 @@ class User extends Authenticatable
         'email', 
         'password',
         'remember_token',
-        'expires_at'
+        'expires_at',
+        'created_by',
     ];
 
     /**

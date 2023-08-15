@@ -60,7 +60,7 @@
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
-                                                    <td>{{ $employee->supervisor }}</td>
+                                                    <td>{{ $employee->head_name }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
