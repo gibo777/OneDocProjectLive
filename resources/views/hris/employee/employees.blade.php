@@ -561,7 +561,7 @@ $(document).ready(function() {
             method: 'post',
             data: uD, // prefer use serialize method
             success:function(data){
-                // prompt('',data); return false;
+                prompt('',data); return false;
                 console.log(data);
                 if(data.isSuccess==true) {
                     $("#EmployeesModal").modal('hide');

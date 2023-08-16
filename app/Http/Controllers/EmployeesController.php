@@ -188,7 +188,8 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();*/
 
-            $employees = DB::select('CALL sp_timelogs()');
+
+            $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
 
             return view('/time_logs/time-logs-listing', 
                 [
