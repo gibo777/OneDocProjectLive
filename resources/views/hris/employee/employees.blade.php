@@ -6,6 +6,12 @@
     .dataTables_wrapper thead th {
         padding: 5px !important; /* Adjust the padding value as needed */
     }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataViewEmployees thead th {
+        text-align: center; /* Center-align the header text */
+    }
     </style>
     <x-slot name="header">
                 {{ __('VIEW ALL EMPLOYEES') }}
@@ -49,7 +55,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data_holidays" class="view-employees table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="dataViewEmployees" class="view-employees table table-bordered table-striped sm:justify-center table-hover">
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
@@ -429,6 +435,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
+    $('#dataViewEmployees').DataTable({
+            "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+            "iDisplayLength": 5 // Set the default number of entries per page
+      });
+
     /* Double Click event to show Employee details */
     $(document).on('dblclick','.view-employees tr',async function(){
         $('#dataLoad').css('display','flex');
@@ -446,6 +457,7 @@ $(document).ready(function() {
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
                 $('#dataLoad').css('display','none');
+
                 const {getemployee,getLeaves} = data;
                 var imgProfilePhotoLocation = '';
                 var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';

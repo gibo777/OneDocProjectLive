@@ -88,9 +88,9 @@ class EmployeesController extends Controller
     public function getEmployeeInfo (Request $request){
         $empid = $request->id;
         $getemployee = DB::table('users')->where('id',$empid)->first();
-        $getLeaves = DB::table('leave_balances')->where('id',$empid)->first();
+        $getLeaves = DB::table('leave_balances')->where('ref_id',$empid)->first();
 
-        // return var_dump($getemployee);
+        // return var_dump($getLeaves);
 
         return response()->json(['getemployee'=>$getemployee,'getLeaves' => $getLeaves]);
         // return var_dump(response()->json($getemployee));

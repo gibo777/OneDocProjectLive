@@ -45,6 +45,17 @@
     }
 }
 </style>
+    <style type="text/css">
+    .dataTables_wrapper thead th {
+        padding: 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataViewLeaves thead th {
+        text-align: center; /* Center-align the header text */
+    }
+    </style>
 <x-app-layout>
 
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
@@ -126,7 +137,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data" class="table table-bordered table-striped sm:justify-center table-hover">
+                                    <table id="dataViewLeaves" class="table table-bordered table-striped sm:justify-center table-hover">
 
                                         <thead class="thead">
 
@@ -141,7 +152,7 @@
                                                 <th>Date Applied</th>
                                                 <th>Begin Date</th>
                                                 <th>End Date</th>
-                                                <th># of Days</th>
+                                                <th># of Day/s</th>
                                                 <th>Supervisor</th>
                                                 <th>Status</th>
                                                 {{-- <th>Actions</th> --}}
@@ -431,35 +442,39 @@
                 <div class="row">
                     <div class="col-md-4 p-1">
                         <!-- Name -->
-                        <div class="form-floating">
-                        <x-jet-input id="name" name="name" type="text" class="form-control mt-1 block w-full" placeholder="NAME" readonly/>
-                        <x-jet-label for="name" value="{{ __('NAME') }}" />
+                        {{-- <div class="form-floating"> --}}
+                        {{-- <x-jet-input id="name" name="name" type="text" class="form-control mt-1 block w-full" placeholder="NAME" readonly/> --}}
+                        <x-jet-label class="text-secondary" for="name" value="{{ __('NAME') }}" />
+                        <x-jet-label id="name" name="name"/>
                         <x-jet-input-error for="name" class="mt-2" />
-                        </div>
+                        {{-- </div> --}}
                     </div>
                     <div class="col-md-3 p-1">
                         <!-- Employee Number -->
-                        <div class="form-floating">
-                        <x-jet-input id="employee_number" name="employee_number" type="text" class="form-control mt-1 block" placeholder="EMPLOYEE #" readonly/>
-                        <x-jet-label for="employee_number" value="{{ __('EMPLOYEE #') }}" />
+                        {{-- <div class="form-floating"> --}}
+                        {{-- <x-jet-input id="employee_number" name="employee_number" type="text" class="form-control mt-1 block" placeholder="EMPLOYEE #" readonly/> --}}
+                        <x-jet-label class="text-secondary" for="employee_number" value="{{ __('EMPLOYEE #') }}" />
+                        <x-jet-label id="employee_number" name="employee_number"/>
                         <x-jet-input-error for="employee_number" class="mt-2" />
-                        </div>
+                        {{-- </div> --}}
                     </div>
                     <div class="col-md-3 p-1">
                         <!-- Department -->
-                        <div class="form-floating">
-                        <x-jet-input id="department" name="department" type="text" class="form-control mt-1 block" placeholder="DEPARTMENT" readonly/>
-                        <x-jet-label for="department" value="{{ __('DEPARTMENT') }}" />
+                        {{-- <div class="form-floating"> --}}
+                        {{-- <x-jet-input id="department" name="department" type="text" class="form-control mt-1 block" placeholder="DEPARTMENT" readonly/> --}}
+                        <x-jet-label class="text-secondary" for="department" value="{{ __('DEPARTMENT') }}" />
+                        <x-jet-label id="department" name="department"/>
                         <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" />
-                        </div>
+                        {{-- </div> --}}
                     </div>
                     <div class="col-md-2 p-1">
                         <!-- Date Applied -->
-                        <div class="form-floating">
-                        <x-jet-input id="date_applied" name="date_applied" type="text" class="form-control mt-1 block date-input" placeholder="DATE APPLIED" readonly/>
-                        <x-jet-label for="date_applied" value="{{ __('DATE APPLIED') }}" />
+                        {{-- <div class="form-floating"> --}}
+                        {{-- <x-jet-input id="date_applied" name="date_applied" type="text" class="form-control mt-1 border-0 bg-white shadow-none block date-input" placeholder="DATE APPLIED" readonly/> --}}
+                        <x-jet-label class="text-secondary" for="date_applied" value="{{ __('DATE APPLIED') }}" />
+                        <x-jet-label id="date_applied" name="date_applied"/>
                         <x-jet-input-error for="date_applied" class="mt-2" />
-                        </div>
+                        {{-- </div> --}}
                     </div>
                 </div>
 
@@ -684,7 +699,10 @@
         // console.log("PRINT FUNCTION FUNCTIONAL");
     }
 $(document).ready( function () {
-    $('#data').DataTable();
+    $('#dataViewLeaves').DataTable({
+            "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+            "iDisplayLength": 5 // Set the default number of entries per page
+      });
 
     function formatDates(date) {
         var d = new Date(date),
@@ -780,14 +798,14 @@ $(document).on('dblclick','.view-leave',function(){
             });*/
             $("#hid_leave_id").val(data[0]['id']);
             $("#myModalLabel").html(modalHeader);
-            $("#name").val(data[0]['name']);
-            $("#employee_number").val(data[0]['employee_id']);
+            $("#name").text(data[0]['name']);
+            $("#employee_number").text(data[0]['employee_id']);
             $("#hid_dept").val(data[0]['department']);
-            $("#department").val(data[0]['dept']);
+            $("#department").text(data[0]['dept']);
             if (data[0]['status']=="Pending") {
-                $("#date_applied").val(currentDate());
+                $("#date_applied").text(currentDate());
             } else {
-                $("#date_applied").val(formatDates(data[0]['date_applied']));
+                $("#date_applied").text(formatDates(data[0]['date_applied']));
             }
             $("#leave_type").val(data[0]['leave_type']);
             if (data[0]['leave_type']=="Others") {
