@@ -189,7 +189,14 @@ class EmployeesController extends Controller
             $employees = $employees->get();*/
 
 
-            $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+                $employees = DB::select('CALL sp_timelogs_admins()');
+            } else {
+                $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+            }
+
+
+            // $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
 
             return view('/time_logs/time-logs-listing', 
                 [
