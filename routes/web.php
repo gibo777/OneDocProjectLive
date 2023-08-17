@@ -51,12 +51,12 @@ Route::get('/', function () {
             return view('/dashboard');
         } else {
             // return view('/auth/login');
-            Session::flush();
+            // Session::flush();
             return redirect('/login');
         }
     } else{
         // return view('/auth/login');
-        Session::flush();
+        // Session::flush();
         return redirect('/login');
 	}
 });
