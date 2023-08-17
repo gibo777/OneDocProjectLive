@@ -37,6 +37,7 @@ class EmployeesController extends Controller
                 'u.last_name',
                 'u.suffix',
                 'u.employee_id',
+                'u.department',
                 'd.department as dept',
                 'u.position',
                 'u.role_type',
@@ -54,9 +55,13 @@ class EmployeesController extends Controller
             $employees = $employees->get();
 
             $departments = DB::table('departments')->get();
+            
             $leave_types = DB::table('leave_types')->get();
+
             $holidays = DB::table('holidays')->get();
+
             $employment_statuses = DB::table('employment_statuses')->get();
+
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
                 ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
@@ -64,6 +69,7 @@ class EmployeesController extends Controller
                 ->where('id','!=',1)
                 ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();
+
             $roleTypeUsers = DB::table('role_type_users')
                 ->select('role_type')
                 ->where('is_deleted', NULL)
@@ -194,7 +200,6 @@ class EmployeesController extends Controller
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
-
 
             // $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
 

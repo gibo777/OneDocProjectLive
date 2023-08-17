@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\LeaveFormController;
 use App\Http\Controllers\ViewLeavesController;
 use App\Http\Controllers\CalenderController;
@@ -50,10 +51,12 @@ Route::get('/', function () {
             return view('/dashboard');
         } else {
             // return view('/auth/login');
+            Session::flush();
             return redirect('/login');
         }
     } else{
         // return view('/auth/login');
+        Session::flush();
         return redirect('/login');
 	}
 });

@@ -73,7 +73,7 @@
                                                 <tr id="{{ $employee->id }}">
                                                     <td>{{ join(' ',[$employee->last_name.',',$employee->first_name,$employee->suffix,$employee->middle_name]) }}</td>
                                                     <td>{{ $employee->employee_id}}</td>
-                                                    <td>{{ $employee->dept }}</td>
+                                                    <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->position }}</td>
                                                     <td>{{ $employee->head_name }}</td>
                                                     {{-- <td>{{ $employee->role_type }}</td> --}}
@@ -561,7 +561,7 @@ $(document).ready(function() {
             method: 'post',
             data: uD, // prefer use serialize method
             success:function(data){
-                prompt('',data); return false;
+                // prompt('',data); return false;
                 console.log(data);
                 if(data.isSuccess==true) {
                     $("#EmployeesModal").modal('hide');
