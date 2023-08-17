@@ -64,7 +64,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="7">There are no users.</td>
+                                                    <td colspan="7">There are no time logs.</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
