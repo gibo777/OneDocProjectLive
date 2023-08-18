@@ -55,7 +55,7 @@ class EmployeesController extends Controller
             $employees = $employees->get();
 
             $departments = DB::table('departments')->get();
-            
+
             $leave_types = DB::table('leave_types')->get();
 
             $holidays = DB::table('holidays')->get();
@@ -194,13 +194,12 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();*/
 
-
+            // $employees = [];
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
                 $employees = DB::select('CALL sp_timelogs_admins()');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
-
             // $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
 
             return view('/time_logs/time-logs-listing', 

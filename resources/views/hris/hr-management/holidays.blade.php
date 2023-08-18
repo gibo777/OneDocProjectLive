@@ -5,6 +5,12 @@
     .dataTables_wrapper thead th {
         padding: 5px !important; /* Adjust the padding value as needed */
     }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataHolidays thead th {
+        text-align: center; /* Center-align the header text */
+    }
     </style>
     <x-slot name="header">
                 {{ __('HOLIDAYS') }}
@@ -62,7 +68,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data_holidays" class="view-holidays table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="dataHolidays" class="view-holidays table table-bordered table-striped sm:justify-center table-hover">
                                         <thead class="thead">
                                             <tr>
                                                 <th>Date</th>
@@ -219,11 +225,13 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    /*$('#data_holidays').DataTable({
+    $('#dataHolidays').DataTable({
         columnDefs: [
           { width: '140px', targets: [0] }, 
-        ]
-    });*/
+        ],
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
+    });
 
     $(document).on('dblclick','.view-holidays tr',async function(){
         var hS = $(this).attr('id').split('|');

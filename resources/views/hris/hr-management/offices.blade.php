@@ -5,6 +5,12 @@
     .dataTables_wrapper thead th {
         padding: 5px !important; /* Adjust the padding value as needed */
     }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataOffices thead th {
+        text-align: center; /* Center-align the header text */
+    }
     </style>
     <x-slot name="header">
                 {{ __('OFFICES') }}
@@ -33,7 +39,7 @@
             <div id="table_data">
             <!-- Name -->
             <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                <table id="data_offices" class="office-table table table-bordered table-striped sm:justify-center table-hover">
+                <table id="dataOffices" class="office-table table table-bordered table-striped sm:justify-center table-hover">
                 <thead class="thead">
                 <tr>
                     <th>Company Name</th>
@@ -224,13 +230,15 @@
     // $('#office_country').dataList({return_mask:'text', value_selected_to:'username'});
     });
 
-    $('#data_offices').DataTable({
+    $('#dataOffices').DataTable({
         columnDefs: [
           { width: '140px', targets: [0] }, 
           { width: '280px', targets: [1] }, 
           { width: '50px', targets: [3, 4] },
           // { width: '100px', targets: '_all' }
-        ]
+        ],
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
     });
 
 </script>

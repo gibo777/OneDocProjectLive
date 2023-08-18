@@ -403,11 +403,11 @@
 $(document).ready(function() {
 
 
-  // Initialize DataTable
-  var table = $('#dataTimeLogs').DataTable({
+    // Initialize DataTable
+    var table = $('#dataTimeLogs').DataTable({
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5 // Set the default number of entries per page
-  });
+    });
 
     function formatDate(inputDate) {
         var date = new Date(inputDate); // Create a Date object from the input string
@@ -419,6 +419,27 @@ $(document).ready(function() {
         return [month,day,year].join("/");
       }
 
+
+// $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+//     var startDateCol1 = $('#start-date-col1').val();
+//     var endDateCol1 = $('#end-date-col1').val();
+//     var startDateCol2 = $('#start-date-col2').val();
+//     var endDateCol2 = $('#end-date-col2').val();
+    
+//     var currentDateCol1 = data[0]; // Date in the first column
+//     var currentDateCol2 = data[1]; // Date in the second column
+
+//     if (
+//         // Check if current date is within range for both columns
+//         ((startDateCol1 === '' || endDateCol1 === '') ||
+//         (currentDateCol1 >= startDateCol1 && currentDateCol1 <= endDateCol1)) &&
+//         ((startDateCol2 === '' || endDateCol2 === '') ||
+//         (currentDateCol2 >= startDateCol2 && currentDateCol2 <= endDateCol2))
+//     ) {
+//         return true;
+//     }
+//     return false;
+// });
 
 
 

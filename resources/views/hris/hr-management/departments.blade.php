@@ -5,6 +5,12 @@
     .dataTables_wrapper thead th {
         padding: 5px !important; /* Adjust the padding value as needed */
     }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataDepartments thead th {
+        text-align: center; /* Center-align the header text */
+    }
     </style>
     <x-slot name="header">
                 {{ __('DEPARTMENTS') }}
@@ -33,7 +39,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="data_departments" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
+                                    <table id="dataDepartments" class="table table-bordered table-striped sm:justify-center table-hover tabledata">
                                         <thead class="thead">
                                             <tr>
                                                 {{-- <th>ID</th> --}}
@@ -167,12 +173,14 @@
 <script type="text/javascript">
     
 $(document).ready(function() {
-    $('#data_departments').DataTable().destroy();
-    $('#data_departments').DataTable({
+    $('#dataDepartments').DataTable().destroy();
+    $('#dataDepartments').DataTable({
         columnDefs: [
           { width: '40px', targets: [0] }, 
           { width: '180px', targets: [1] }, 
-        ]
+        ],
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
     });
 });
 </script>

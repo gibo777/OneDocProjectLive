@@ -1,53 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Enlarge Image on Hover</title>
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-<link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
-    <style>
-        .enlarge-image {
-            transition: transform 0.2s; /* Apply a smooth transition effect */
-            max-width: 100%;
-            max-height: 100%;
-        }
-        
-        .enlarge-image:hover {
-            transform: scale(5); /* Enlarge the image by 20% */
-            cursor: pointer; /* Change the cursor to indicate interactivity */
-        }
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"> --}}
+    {{-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    {{-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script> --}}
 
+{{-- DATA TABLES PLUGIN --}}
 
-        .enlarge-image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 300px; /* Set the desired height for the container */
-        }
-
-        
-    </style>
+<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
+<script type="text/javascript" src="{{ asset('DataTables/datatables.min.js') }}"></script>
 </head>
 <body>
 
-<div class="container">
-    <div class="row mt-lg-5">
-      .
-    </div>
-    <div class="row mt-lg-5">
-      .
-    </div>
-    <div class="row mt-lg-5">
-        <div class="col-md-12 text-center">
-            <img src="{{ asset('storage/profile-photos/M0AmuyQVVubYjGfbLlc5p169Nyfi8hGPuuOLbp8F.jpg') }}" alt="Image" width="100px" class="img-fluid enlarge-image">
+<input type="date" id="startDateInput">
+<input type="date" id="endDateInput">
 
+<table id="dataTable table table-bordered table-striped sm:justify-center table-hover">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>2023-08-01</td>
+            <td>2023-08-10</td>
+        </tr>
+        <tr>
+            <td>2023-07-15</td>
+            <td>2023-07-15</td>
+        </tr>
+        <tr>
+            <td>2023-07-15</td>
+            <td>2023-07-16</td>
+        </tr>
+        <tr>
+            <td>2023-07-17</td>
+            <td>2023-07-20</td>
+        </tr>
+        <tr>
+            <td>2023-07-15</td>
+            <td>2023-07-25</td>
+        </tr>
+        <tr>
+            <td>2023-07-19</td>
+            <td>2023-07-25</td>
+        </tr>
+        <!-- More rows... -->
+    </tbody>
+</table>
 
-        </div>
-    </div>
-</div>
+<script>
+$(document).ready(function() {
+    var dataTable = $('#dataTable').DataTable();
+    
+    $('#startDateInput, #endDateInput').on('change', function() {
+        var startDate = $('#startDateInput').val();
+        var endDate = $('#endDateInput').val();
+        // alert('startDate: '+startDate+'\nendDate: '+endDate);
+        
+        dataTable.column(0).search(startDate, true, false).draw();
+        dataTable.column(1).search(endDate, true, false).draw();
+    });
+});
+</script>
 
-{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
-<script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
