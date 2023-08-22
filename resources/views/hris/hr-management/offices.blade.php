@@ -16,7 +16,7 @@
                 {{ __('OFFICES') }}
     </x-slot>
 <div id="view_departments">
-    <div class="max-w-8xl mx-auto py-2 sm:px-6 lg:px-8">
+    <div class="max-w-9xl mx-auto py-2 sm:px-6 lg:px-8">
     <!-- FORM start -->
 
         @if (session('status'))

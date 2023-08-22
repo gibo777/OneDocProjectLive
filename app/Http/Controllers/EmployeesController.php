@@ -195,7 +195,7 @@ class EmployeesController extends Controller
             $employees = $employees->get();*/
 
             // $employees = [];
-            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+            if (Auth::user()->is_head ==  || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
                 $employees = DB::select('CALL sp_timelogs_admins()');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
@@ -209,5 +209,15 @@ class EmployeesController extends Controller
         } else {
             return redirect('/');
         }
+    }
+    /**
+     * Timelogs Details
+     *
+     * @return view for modal
+     * @author Gilbert L. Retiro
+     **/
+    public function timeLogsDetailed (Request $request)
+    {
+        return "gibs.kent";
     }
 }

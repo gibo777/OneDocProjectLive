@@ -40,7 +40,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="dataTimeLogs" class="view-employees table table-bordered table-striped sm:justify-center table-hover">
+                                    <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover">
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
@@ -54,7 +54,7 @@
                                         </thead>
                                         <tbody class="data hover" id="viewEmployee">
                                             @forelse($employees as $employee)
-                                                <tr id="{{ $employee->employee_id }}">
+                                                <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}">
                                                     <td>{{ $employee->full_name }}</td>
                                                     <td>{{ $employee->employee_id }}</td>
                                                     <td>{{ $employee->department }}</td>
@@ -488,86 +488,89 @@ $(document).ready(function() {
 
 
     /* Double Click event to show Employee details */
-    $(document).on('dblclick','.view-employees tr',async function(){
-        $('#dataLoad').css('display','flex');
-        $('#dataLoad').css('position','absolute');
-        $('#dataLoad').css('top','40%');
-        $('#dataLoad').css('left','40%');
+    $(document).on('dblclick','.view-detailed-timelogs tr',async function(){
+        // alert($(this).attr('id')); return false;
+
+        // $('#dataLoad').css('display','flex');
+        // $('#dataLoad').css('position','absolute');
+        // $('#dataLoad').css('top','40%');
+        // $('#dataLoad').css('left','40%');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
         $.ajax({
-            url: '/getemployees',
+            url: '/timelogs-detailed',
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
-                $('#dataLoad').css('display','none');
-                const {getemployee,getLeaves} = data;
-                var imgProfilePhotoLocation = '';
-                var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
-                var valDateHired = (getemployee.date_hired!=null) ? [dh[1],dh[2],dh[0]].join('/') : '';
-                var sched = getemployee.weekly_schedule.split('|');
+                // $('#dataLoad').css('display','none');
+                // alert(data); return false;
+                // const {getemployee,getLeaves} = data;
+                // var imgProfilePhotoLocation = '';
+                // var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
+                // var valDateHired = (getemployee.date_hired!=null) ? [dh[1],dh[2],dh[0]].join('/') : '';
+                // var sched = getemployee.weekly_schedule.split('|');
 
-                $("#update_weekly_schedule").val(sched);
-                $("#update_weekly_schedule").multiselect("refresh");
+                // $("#update_weekly_schedule").val(sched);
+                // $("#update_weekly_schedule").multiselect("refresh");
 
-                if (getemployee.profile_photo_path!=null) {
-                    imgProfilePhotoLocation = document.location.origin+'/storage/'+getemployee.profile_photo_path;
-                } else {
-                    switch(getemployee.gender){
-                        case 'M':
-                        imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-formal-male.png';
-                        break;
-                        case 'F':
-                        imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-female.png';
-                        break;
-                        default:
-                        imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-photo.png';
-                    }
-                }
-                $("#imgProfile").attr('src',imgProfilePhotoLocation);
-                $("#employment_status").val(getemployee.employment_status);
-                $("#date_hired").val( valDateHired );
-                // $("input[name='weekly_schedule']").val(1);
-                $("#supervisor").val(getemployee.supervisor);
+                // if (getemployee.profile_photo_path!=null) {
+                //     imgProfilePhotoLocation = document.location.origin+'/storage/'+getemployee.profile_photo_path;
+                // } else {
+                //     switch(getemployee.gender){
+                //         case 'M':
+                //         imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-formal-male.png';
+                //         break;
+                //         case 'F':
+                //         imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-female.png';
+                //         break;
+                //         default:
+                //         imgProfilePhotoLocation = document.location.origin+'/storage/profile-photos/default-photo.png';
+                //     }
+                // }
+                // $("#imgProfile").attr('src',imgProfilePhotoLocation);
+                // $("#employment_status").val(getemployee.employment_status);
+                // $("#date_hired").val( valDateHired );
+                // // $("input[name='weekly_schedule']").val(1);
+                // $("#supervisor").val(getemployee.supervisor);
 
-                $("#updateRoleType").val(getemployee.role_type);
-                // $("#EmployeesModal #updateRoleType").val(getemployee.role_type);
-                (getemployee.is_head==1) ? $('#isHead').prop('checked', true) : $('#isHead').prop('checked', false);
+                // $("#updateRoleType").val(getemployee.role_type);
+                // // $("#EmployeesModal #updateRoleType").val(getemployee.role_type);
+                // (getemployee.is_head==1) ? $('#isHead').prop('checked', true) : $('#isHead').prop('checked', false);
 
-                // alert(getemployee.weekly_schedule);
-                $("#last_name").val(getemployee.last_name);
-                $("#first_name").val(getemployee.first_name);
-                $("#middle_name").val(getemployee.middle_name);
-                $("#suffix").val(getemployee.suffix);
+                // // alert(getemployee.weekly_schedule);
+                // $("#last_name").val(getemployee.last_name);
+                // $("#first_name").val(getemployee.first_name);
+                // $("#middle_name").val(getemployee.middle_name);
+                // $("#suffix").val(getemployee.suffix);
 
-                $("#employee_id").val(getemployee.employee_id);
-                $("#position").val(getemployee.position);
-                $("#department").val(getemployee.department);
+                // $("#employee_id").val(getemployee.employee_id);
+                // $("#position").val(getemployee.position);
+                // $("#department").val(getemployee.department);
 
-                $("#country").val(getemployee.country);
-                $("#province").val(getemployee.province);
-                $("#city").val(getemployee.city);
+                // $("#country").val(getemployee.country);
+                // $("#province").val(getemployee.province);
+                // $("#city").val(getemployee.city);
 
-                $("#barangay").val(getemployee.barangay);
-                $("#home_address").val(getemployee.home_address);
-                $("#zip_code").val(getemployee.zip_code);
+                // $("#barangay").val(getemployee.barangay);
+                // $("#home_address").val(getemployee.home_address);
+                // $("#zip_code").val(getemployee.zip_code);
 
-                $("#email").val(getemployee.email);
-                $("#contact_number").val(getemployee.contact_number);
+                // $("#email").val(getemployee.email);
+                // $("#contact_number").val(getemployee.contact_number);
 
-                $('#vacation_leaves').val(getLeaves.VL ? getLeaves.VL : 0);
-                $('#sick_leaves').val(getLeaves.SL ? getLeaves.SL : 0);
-                $('#maternity_leaves').val(getLeaves.ML ? getLeaves.ML : 0);
-                $('#paternity_leaves').val(getLeaves.PL ? getLeaves.PL : 0);
-                $('#emergency_leaves').val(getLeaves.EL ? getLeaves.EL : 0);
-                $('#other_leaves').val(getLeaves.others ? getLeaves.others : 0);
+                // $('#vacation_leaves').val(getLeaves.VL ? getLeaves.VL : 0);
+                // $('#sick_leaves').val(getLeaves.SL ? getLeaves.SL : 0);
+                // $('#maternity_leaves').val(getLeaves.ML ? getLeaves.ML : 0);
+                // $('#paternity_leaves').val(getLeaves.PL ? getLeaves.PL : 0);
+                // $('#emergency_leaves').val(getLeaves.EL ? getLeaves.EL : 0);
+                // $('#other_leaves').val(getLeaves.others ? getLeaves.others : 0);
 
 
-                $('#updateEmployee > button').attr('id',getemployee.id);
-                $("#EmployeesModal").modal('show');
+                // $('#updateEmployee > button').attr('id',getemployee.id);
+                // $("#EmployeesModal").modal('show');
             }
         });
     });

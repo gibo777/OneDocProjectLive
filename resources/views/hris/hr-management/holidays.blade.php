@@ -16,7 +16,7 @@
                 {{ __('HOLIDAYS') }}
     </x-slot>
     <div id="view_holidays">
-        <div class="max-w-6xl mx-auto py-2 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto py-2 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
