@@ -510,7 +510,7 @@
                             <div class="col-md-5">
                                 <div class="form-floating">
                                     <x-jet-input id="date_to" name="date_to" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                                    <x-jet-label for="date_from" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
+                                    <x-jet-label for="date_to" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
                         </div>

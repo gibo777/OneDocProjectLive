@@ -173,7 +173,9 @@ class EmployeesController extends Controller
                 'u.department',
                 'd.department as dept',
                 't.time_in',
+                't.time_in as f_time_in',
                 't.time_out',
+                't.time_out as f_time_out',
                 't.profile_photo_path',
                 'u.supervisor',
                 DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
@@ -194,7 +196,6 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();*/
 
-            // $employees = [];
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
                 $employees = DB::select('CALL sp_timelogs_admins()');
             } else {
@@ -218,6 +219,42 @@ class EmployeesController extends Controller
      **/
     public function timeLogsDetailed (Request $request)
     {
-        return "gibs.kent";
+        $data = explode('|', $request->id);
+        $employeeId = $data[0];
+        $searchDate = $data[1];
+
+        $employees = DB::table('time_logs as t')
+            ->select(
+                'u.first_name',
+                'u.middle_name',
+                'u.last_name',
+                DB::raw("CONCAT(u.last_name, ', ', u.first_name, ' ', u.middle_name) as full_name"),
+                'u.suffix',
+                'u.employee_id',
+                'u.department',
+                'd.department as dept',
+                't.profile_photo_path',
+                DB::raw("(CASE WHEN t.time_in IS NOT NULL THEN DATE_FORMAT(t.time_in, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_in"),
+                DB::raw("(CASE WHEN t.time_out IS NOT NULL THEN DATE_FORMAT(t.time_out, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_out"),
+                DB::raw("DATE_FORMAT(t.time_in, '%Y-%m-%d') as f_time_in"),
+                DB::raw("DATE_FORMAT(t.time_out, '%Y-%m-%d') as f_time_out"),
+                'u.supervisor',
+                DB::raw("(SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE employee_id = u.supervisor) as head_name")
+            )
+            ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
+            ->leftJoin('departments as d', 'u.department', '=', 'd.department_code')
+            ->where('t.employee_id', $employeeId)
+            ->where(function ($query) use ($searchDate) {
+                $query->whereBetween(DB::raw('DATE(t.time_in)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"])
+                    ->orWhereBetween(DB::raw('DATE(t.time_out)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"]);
+            })
+            ->where(function ($query) {
+                $query->where('u.is_deleted', 0)
+                    ->orWhereNull('u.is_deleted');
+            })
+            ->orderBy('t.created_at', 'desc')
+            ->get();
+
+        return $employees;
     }
 }
