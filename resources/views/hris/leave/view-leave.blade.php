@@ -598,12 +598,14 @@
                         <x-jet-button type="button" id="leave_form" name="leave_form">
                             {{ __('Export PDF') }}
                         </x-jet-button>
-                        <x-jet-button type="button" id="update_leave" name="update_leave">
+                        {{-- <x-jet-button type="button" id="update_leave" name="update_leave">
                             {{ __('Update') }}
-                        </x-jet-button>
+                        </x-jet-button> --}}
+                        @if (Auth::user()->is_head==1)
                         <x-jet-button type="button" id="cancel_leave" name="cancel_leave">
                             {{ __('CANCEL LEAVE') }}
                         </x-jet-button>
+                        @endif
                         <x-jet-button type="button" id="deny_leave" name="deny_leave">
                             {{ __('DENY') }}
                         </x-jet-button>
@@ -759,7 +761,7 @@ $(document).on('dblclick','.view-leave',function(){
         method: 'GET',
         data: { 'leaveID': leaveID }, // prefer use serialize method
         success:function(data){
-            // alert(data[0]['is_taken']);
+            // alert(data[0]['is_head_approved']); return false;
             $('#dataLoad').css('display','none');
             var leave_number = data[0]['control_number'];
 
@@ -770,7 +772,7 @@ $(document).on('dblclick','.view-leave',function(){
                 dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
             var notif1 = "", notif2 = "", notif3 = "";
             // var notification = data[0]['notification'].split('|');
-
+            (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
             $("#update_leave").hide();
             $("#cancel_leave").hide();
             $("#deny_leave").hide();
@@ -907,6 +909,25 @@ $(document).on('dblclick','.view-leave',function(){
     
 });
 
+
+
+    $("#date_from").change(function(){
+        alert($("#reason").val()); return false;
+        $("#number_of_days").html('');
+        $("#date_from").val()=='' ? $("#date_to").val($(this).val()) : $("#date_to").val();
+        /*leaveValidation(
+            $(this).val(),
+            $("#date_to").val(),
+            $("#leave_type").val()
+            );
+        submitLeaveValidation (
+            $("#leave_type").val(),
+            $("#others_leave").val(),
+            $(this).val(),
+            $("#date_to").val(),
+            $("#reason").val()
+            );*/
+    });
 
 
 document.getElementById("leave_form").onclick = function(){
