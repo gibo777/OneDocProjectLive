@@ -279,7 +279,7 @@ $(document).ready(function() {
 
                     for(var n=0; n<data.length; n++) {
                     tDT += `<tr>
-                                <td><img src="`+data[n]['profile_photo_path']+
+                                <td><img width="124px" src="`+data[n]['profile_photo_path']+
                                 `"</img></td><td>`+data[n]['time_in']+`</td><td>`+data[n]['time_out']+`</td>`;
                     }
 
@@ -291,7 +291,7 @@ $(document).ready(function() {
                         // icon: 'success',
                         // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
                         // text: '',
-                        allowOutsideClick: false,
+                        // allowOutsideClick: false,
                         html: tDT
                     });
             }
