@@ -159,49 +159,11 @@ class EmployeesController extends Controller
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
-            /*$employees = DB::table('time_logs as t');
-            $employees = $employees->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id');
-            $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
-            $employees = $employees->select(
-                'u.id',
-                'u.first_name',
-                'u.middle_name',
-                'u.last_name',
-                DB::raw('CONCAT(u.last_name,", ",u.first_name," ",u.middle_name) as full_name'),
-                'u.suffix',
-                'u.employee_id',
-                'u.department',
-                'd.department as dept',
-                't.time_in',
-                't.time_in as f_time_in',
-                't.time_out',
-                't.time_out as f_time_out',
-                't.profile_photo_path',
-                'u.supervisor',
-                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
-            );
-            if (Auth::user()->id!=1) {
-                if (Auth::user()->is_head == 1) {
-                    $employees = $employees->where('u.employee_id','=',$employee_id);
-                    $employees = $employees->orWhere('u.supervisor','=',$employee_id);
-                } else {
-                    $employees = $employees->where('u.employee_id','=',$employee_id);
-                }
-            }
-            $employees = $employees->where( function($query) {
-                return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
-                });
-            $employees = $employees->orderBy('t.created_at', 'desc');
-            $employees = $employees->orderBy('u.last_name');
-            $employees = $employees->orderBy('u.first_name');
-            $employees = $employees->get();*/
-
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
                 $employees = DB::select('CALL sp_timelogs_admins()');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
-            // $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
 
             return view('/time_logs/time-logs-listing', 
                 [

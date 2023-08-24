@@ -133,6 +133,11 @@ $(document).ready(function() {
 
     // Initialize DataTable
     var table = $('#dataTimeLogs').DataTable({
+        "order": [
+            [3, 'desc'],
+            [4, 'desc'],
+            [0, 'asc'],
+        ],
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5 // Set the default number of entries per page
     });
