@@ -251,23 +251,49 @@ $(document).ready(function() {
             success:function(data){
                 // prompt('',data); return false;
 
-                    $("#dataDetailedTimeLogs > tbody").empty();
+
+                    // $("#dataDetailedTimeLogs > tbody").empty();
+
+                    // for(var n=0; n<data.length; n++) {
+                    //     $("#dataDetailedTimeLogs > tbody:last-child")
+                    //     .append('<tr>');
+                    //     $("#dataDetailedTimeLogs > tbody:last-child")
+                    //     .append('<td><img src="'+data[n]['profile_photo_path']+'"></td>')
+                    //     .append('<td>'+data[n]['time_in']+'</td>')
+                    //     .append('<td>'+data[n]['time_out']+'</td>');
+                    // }
+                    // $("#detailedTimeLogsModal").modal('show');
+
+
+
+                let tDT = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
+                          <thead class="thead">
+                              <tr>
+                                  <th>Photo</th>
+                                  <th>Time-In</th>
+                                  <th>Time-Out</th>
+                              </tr>
+                          </thead>
+                          <tbody class="data text-center" id="data">`;
+
 
                     for(var n=0; n<data.length; n++) {
-                        $("#dataDetailedTimeLogs > tbody:last-child")
-                        .append('<tr>');
-                        /*if ($("#hid_access_id").val()==1) {
-                            $("#dataDetailedTimeLogs > tbody:last-child")
-                            .append('<td>'+data[n]['name']+'</td>')
-                            .append('<td>'+data[n]['employee_id']+'</td>')
-                            .append('<td>'+data[n]['department']+'</td>')
-                        }*/
-                        $("#dataDetailedTimeLogs > tbody:last-child")
-                        .append('<td><img src="'+data[n]['profile_photo_path']+'"></td>')
-                        .append('<td>'+data[n]['time_in']+'</td>')
-                        .append('<td>'+data[n]['time_out']+'</td>');
+                    tDT += `<tr>
+                                <td><img src="`+data[n]['profile_photo_path']+
+                                `"</img></td><td>`+data[n]['time_in']+`</td><td>`+data[n]['time_out']+`</td>`;
                     }
-                $("#detailedTimeLogsModal").modal('show');
+
+                    tDT +=`</tbody>
+                      </table>`;
+
+
+                    Swal.fire({
+                        // icon: 'success',
+                        // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
+                        // text: '',
+                        allowOutsideClick: false,
+                        html: tDT
+                    });
             }
         });
     });

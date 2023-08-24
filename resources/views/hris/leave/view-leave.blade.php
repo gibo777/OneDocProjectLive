@@ -482,7 +482,7 @@
                     <div class="col-md-4 p-1">
                         <!--  Leave Type -->
                         <div class="form-floating">
-                        <select name="leave_type" id="leave_type" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" placeholder="LEAVE TYPE">
+                        <select name="leave_type" id="leave_type" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" placeholder="LEAVE TYPE" disabled>
                             <option value="">Select Leave Type</option>
                                 @foreach ($leave_types as $leave_type)
                                     <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
@@ -502,14 +502,14 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-floating">
-                                    <x-jet-input id="date_from" name="date_from" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                    <x-jet-input id="date_from" name="date_from" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" disabled/>
                                     <x-jet-label for="date_from" value="{{ __('BEGIN (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
                             TO
                             <div class="col-md-5">
                                 <div class="form-floating">
-                                    <x-jet-input id="date_to" name="date_to" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                    <x-jet-input id="date_to" name="date_to" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" disabled/>
                                     <x-jet-label for="date_to" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
@@ -541,7 +541,7 @@
                             </div> --}}
 
                             <div class="form-floating col-md-6 p-1">
-                                <textarea id="reason" name="reason" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-1/2" placeholder="REASON" /> </textarea>
+                                <textarea id="reason" name="reason" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-1/2" placeholder="REASON" disabled/> </textarea>
                                 <x-jet-label for="reason" value="{{ __('REASON') }}" class="font-semibold text-gray-800 leading-tight pt-4"/>
                                 <x-jet-input-error for="reason" class="mt-2" />
                             </div>
@@ -601,7 +601,7 @@
                         {{-- <x-jet-button type="button" id="update_leave" name="update_leave">
                             {{ __('Update') }}
                         </x-jet-button> --}}
-                        @if (Auth::user()->is_head==1)
+                        @if (Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->role_type=='ADMIN')
                         <x-jet-button type="button" id="cancel_leave" name="cancel_leave">
                             {{ __('CANCEL LEAVE') }}
                         </x-jet-button>
@@ -773,17 +773,18 @@ $(document).on('dblclick','.view-leave',function(){
             var notif1 = "", notif2 = "", notif3 = "";
             // var notification = data[0]['notification'].split('|');
             (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
+            (data[0]['is_cancelled']==1 || data[0]['is_denied']==1) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
             $("#update_leave").hide();
-            $("#cancel_leave").hide();
+            // $("#cancel_leave").hide();
             $("#deny_leave").hide();
             $("#approve_leave").hide();
             $("#taken_leave").hide();
-            $("#date_from").removeAttr('disabled');
-            $("#date_to").removeAttr('disabled');
-            $("#leave_type").removeAttr('disabled');
-            $("#reason").removeAttr('disabled');
+            // $("#date_from").removeAttr('disabled');
+            // $("#date_to").removeAttr('disabled');
+            // $("#leave_type").removeAttr('disabled');
+            // $("#reason").removeAttr('disabled');
             $("#div_others").attr('hidden',true);
-            $("#others_leave").attr('hidden',true);
+            // $("#others_leave").attr('hidden',true);
             $("#others_leave").removeAttr('readonly');
             /*$("input[name='leave_notification[]']").each( function() {
                 $(this).removeAttr("disabled");
@@ -824,52 +825,49 @@ $(document).on('dblclick','.view-leave',function(){
 
             if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
                 if (data['auth_id']==data[0]['supervisor']) {
-                    $("#date_from").attr('disabled', true);
-                    $("#date_to").attr('disabled', true);
-                    $("#leave_type").attr('disabled', true);
-                    $("#reason").attr('disabled', true);
-                    $("#others_leave").attr('readonly', true);
+                    // $("#date_from").attr('disabled', true);
+                    // $("#date_to").attr('disabled', true);
+                    // $("#leave_type").attr('disabled', true);
+                    // $("#reason").attr('disabled', true);
+                    // $("#others_leave").attr('readonly', true);
                     /*$("input[name='leave_notification[]']").each( function() {
                         $(this).attr("disabled", true);
                     });*/
                     if (data[0]['status']=="Pending") {
                         $("#deny_leave").show();
                         $("#approve_leave").show();
-                    } else {
+                    } /*else {
                         if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                             $("#cancel_leave").hide();
                         } else {
                             $("#cancel_leave").show();
                         }
-                        /*if (data['auth_department']==1) {
-                            $("#taken_leave").show();
-                        }*/
-                    }
+                    }*/
                 } else {
                     if (data['auth_id']==data[0]['employee_id']) {
                         if (data[0]['status']=="Pending") {
                             $("#update_leave").show();
                         } else {
-                            $("#date_from").attr('disabled', true);
-                            $("#date_to").attr('disabled', true);
-                            $("#leave_type").attr('disabled', true);
-                            $("#reason").attr('disabled', true);
-                            $("#others_leave").attr('readonly', true);
+                            // $("#date_from").attr('disabled', true);
+                            // $("#date_to").attr('disabled', true);
+                            // $("#leave_type").attr('disabled', true);
+                            // $("#reason").attr('disabled', true);
+                            // $("#others_leave").attr('readonly', true);
                             /*$("input[name='leave_notification[]']").each( function() {
                                 $(this).attr("disabled", true);
                             });*/
-                            if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
+                            /*if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                                 $("#cancel_leave").hide();
                             } else {
                                 $("#cancel_leave").show();
-                            }
+                            }*/
                         }
                     } else {
-                        $("#date_from").attr('disabled', true);
-                        $("#date_to").attr('disabled', true);
-                        $("#leave_type").attr('disabled', true);
-                        $("#reason").attr('disabled', true);
-                        $("#others_leave").attr('readonly', true);
+                        // $("#date_from").attr('disabled', true);
+                        // $("#date_to").attr('disabled', true);
+                        // $("#leave_type").attr('disabled', true);
+                        // $("#reason").attr('disabled', true);
+                        // $("#others_leave").attr('readonly', true);
                         /*$("input[name='leave_notification[]']").each( function() {
                             $(this).attr("disabled", true);
                         });*/
@@ -885,16 +883,16 @@ $(document).on('dblclick','.view-leave',function(){
                 if (data[0]['status']=="Pending") {
                     $("#update_leave").show();
                 } else {
-                    if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
+                    /*if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
                         $("#cancel_leave").hide();
                     } else {
                         $("#cancel_leave").show();
-                    }
-                    $("#date_from").attr('disabled', true);
-                    $("#date_to").attr('disabled', true);
-                    $("#leave_type").attr('disabled', true);
-                    $("#reason").attr('disabled', true);
-                    $("#others_leave").attr('readonly', true);
+                    }*/
+                    // $("#date_from").attr('disabled', true);
+                    // $("#date_to").attr('disabled', true);
+                    // $("#leave_type").attr('disabled', true);
+                    // $("#reason").attr('disabled', true);
+                    // $("#others_leave").attr('readonly', true);
                     /*$("input[name='leave_notification[]']").each( function() {
                         $(this).attr("disabled", true);
                     });*/
