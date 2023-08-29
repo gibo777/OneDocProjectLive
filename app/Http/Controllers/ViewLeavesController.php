@@ -46,7 +46,8 @@ class ViewLeavesController extends Controller
 	        	'L.date_applied',
 	        	'L.date_from', 'L.date_to',
 	        	'L.no_of_days', 
-	        	'd.department as dept',
+                'd.department',
+	        	'd.department_code as dept',
 	        	'u.supervisor',
 	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
 	        	DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));

@@ -4,7 +4,7 @@
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <style type="text/css">
     .dataTables_wrapper thead th {
-        padding: 5px !important; /* Adjust the padding value as needed */
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
@@ -87,7 +87,7 @@
 
 <!-- =========================================== -->
 <!-- Modal for History -->
-<div class="modal fade" id="detailedTimeLogsModal" tabindex="-1" role="dialog" aria-labelledby="detailedTimelogsLabel" >
+{{-- <div class="modal fade" id="detailedTimeLogsModal" tabindex="-1" role="dialog" aria-labelledby="detailedTimelogsLabel" >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -115,7 +115,7 @@
       </div>
     </div>
   </div>
-  </div>
+  </div> --}}
 
 <!-- =========================================== -->
 <!-- Load Data -->
@@ -133,11 +133,12 @@ $(document).ready(function() {
 
     // Initialize DataTable
     var table = $('#dataTimeLogs').DataTable({
-        "order": [
+        /*"order": [
             [3, 'desc'],
             [4, 'desc'],
             [0, 'asc'],
-        ],
+        ],*/
+        "ordering": false,
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5 // Set the default number of entries per page
     });
@@ -264,8 +265,6 @@ $(document).ready(function() {
                     // }
                     // $("#detailedTimeLogsModal").modal('show');
 
-
-
                 let tDT = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
                           <thead class="thead">
                               <tr>
@@ -299,60 +298,7 @@ $(document).ready(function() {
     });
                     
    
-    /* Button to update Employee details */
-    $('#updateEmployee > button').on('click', function() {
-        var isHead = 0;
-        $("#isHead").is(':checked') ? isHead = 1 : isHead = 0;
-        const uD = {
-            'id' : $(this).attr('id'),
-            'employment_status': $("#employment_status").val(),
-            'date_hired': $("#date_hired").val(),
-            'update_weekly_schedule': $("#update_weekly_schedule").val(),
-            'supervisor': $("#supervisor").val(),
-            'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),
-            'employee_id' : $("#employee_id").val(), 
-            'position' : $("#position").val(),
-            'department' : $("#department").val(),
-            'vl': $('#vacation_leaves').val(),
-            'sl':$('#sick_leaves').val(),
-            'ml': $('#maternity_leaves').val(),
-            'pl': $('#paternity_leaves').val(),
-            'el': $('#emergency_leaves').val(),
-            'others':$('#other_leaves').val(),
-            'roleType': $("#updateRoleType").val(),
-            'is_head': isHead,
-        };
-        // alert(isHead); return false;
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: '/updateemployees',
-            method: 'post',
-            data: uD, // prefer use serialize method
-            success:function(data){
-                // prompt('',data); return false;
-                console.log(data);
-                if(data.isSuccess==true) {
-                    $("#EmployeesModal").modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: data.message,
-                        // text: '',
-                    }).then(function() {
-                        // location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: JSON.stringify(data.message),
-                    });
-                }
-            }
-        });
-    });
+    
 
 });
 </script>

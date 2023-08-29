@@ -41,14 +41,11 @@
         }
 
     .dataTables_wrapper thead th {
-        padding: 5px !important; /* Adjust the padding value as needed */
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
 }
 </style>
     <style type="text/css">
-    .dataTables_wrapper thead th {
-        padding: 5px !important; /* Adjust the padding value as needed */
-    }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
     }
@@ -72,7 +69,7 @@
     </x-slot>
     <div id="view_leaves">
         {{-- <div class="max-w-8xl mx-auto py-2 sm:px-6 lg:px-8"> --}}
-        <div class="w-full mx-auto py-2 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto pt-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -83,55 +80,51 @@
             <form id="leave-form" action="{{ route('hris.leave.view-leave-details') }}" method="POST">
             @csrf
 
-            <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+            <div class="px-4 bg-white sm:p-3 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                        <div id="filter_fields" class="grid grid-cols-6 py-1 gap-2">
-                            <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
-                                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <!-- <div class="col-span-8 sm:col-span-1">
-                                    <x-jet-label for="filter_search" value="{{ __('SEARCH') }}" />
-                                    <x-jet-input id="filter_search" name="filter_search" type="text" class="mt-1 block w-full" placeholder="Name or Employee No."/>
-                                </div> -->
-                                <!-- FILTER by Department -->
-                                <div class="col-span-8 sm:col-span-1 hidden" id="div_filter_department">
-                                    <x-jet-label for="filter_department" value="{{ __('DEPARTMENT') }}" />
-                                    <select name="filter_department" id="filter_department" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                        <option value="">All Departments</option>
-                                        @foreach ($departments as $dept)
-                                        <option value="{{ $dept->department_code }}">{{ $dept->department }}</option>
-                                        @endforeach
-                                    </select>
+                        <div id="filter_fields" class="col-md-6 py-1 gap-2">
+                            <div class="row pb-1">
+                                <div class="col-md-1 pl-1">
+                                    <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
                                 </div>
-                                @endif
-                                <!-- FILTER by Leave Type -->
-                                <div class="col-span-8 sm:col-span-1 hidden" id="div_filter_leave_type">
-                                    <x-jet-label for="filter_leave_type" value="{{ __('LEAVE TYPE') }}" />
-                                    <select name="filter_leave_type" id="filter_leave_type" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                        <option value="">All Leave Types</option>
-                                        @foreach ($leave_types as $leave_type)
-                                        <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md-5 pl-1">
+                                    @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+                                        <!-- FILTER by Department -->
+                                    <div class="form-floating" id="divfilterDepartment">
+                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Departments</option>
+                                            @foreach ($departments as $dept)
+                                            <option>{{ $dept->department }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                    </div>
+                                    @endif
                                 </div>
-                                  <!-- DIV_GRID4 -->
-                                  <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
-                                   {{-- <h1>dhaodhia</h1> --}}
+                                <div class="col-md-5 pl-1">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="div_filterLeaveType">
+                                        <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Leave Types</option>
+                                            @foreach ($leave_types as $leave_type)
+                                            <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterLeaveType" value="{{ __('LEAVE TYPE') }}" />
+                                    </div>
                                 </div>
-                                  <!-- DIV_GRID5 -->
-                                  <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
-                                   {{-- <h1>jdaidjai</h1> --}}
-                                </div>
-                                 <!-- DIV_GRID6 -->
-                                 <div class="col-span-8 sm:col-span-1 " id="div_grid6">
+                            </div>
 
-                                </div>
 
-                                {{-- <svg xmlns="http://www.w3.org/2000/svg" style="width:11%;" onclick="printreport()" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg> --}}
-                                {{-- <i class="fa fa-print" style="font-size: 40px;" onclick="printreport()"></i> --}}
-                                {{-- <i class="fa fa-print" style="font-size: 40px; margin-left: 81%;" onclick="printreport()"></i> --}}
-                                {{-- <img src="/img/printer.png" style="width: 30%;
-                                margin-left: 68%;" onclick="printreport()"> --}}
-
+                              <!-- DIV_GRID4 -->
+                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
+                            </div>
+                              <!-- DIV_GRID5 -->
+                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
+                            </div>
+                             <!-- DIV_GRID6 -->
+                             <div class="col-span-8 sm:col-span-1 " id="div_grid6">
+                            </div>
                         </div>
 
                             <div id="table_data">
@@ -144,12 +137,12 @@
                                             <tr>
                                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                 <th>Name</th>
-                                                <th>Emp. No.</th>
+                                                {{-- <th>Emp. No.</th> --}}
                                                 <th>Department</th>
                                                 @endif
                                                 <th>Control#</th>
                                                 <th>Leave Type</th>
-                                                <th>Date Applied</th>
+                                                {{-- <th>Date Applied</th> --}}
                                                 <th>Begin Date</th>
                                                 <th>End Date</th>
                                                 <th># of Day/s</th>
@@ -163,12 +156,12 @@
                                                 <tr class="view-leave" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                     <td>{{ $leave->name }}</td>
-                                                    <td>{{ $leave->employee_id }}</td>
-                                                    <td>{{ $leave->dept }}</td>
+                                                    {{-- <td>{{ $leave->employee_id }}</td> --}}
+                                                    <td>{{ $leave->department }}</td>
                                                     @endif
                                                     <td>{{ $leave->control_number }}</td>
                                                     <td>{{ $leave->leave_type }}</td>
-                                                    <td>{{ date('m/d/Y g:i A',strtotime($leave->date_applied)) }}</td>
+                                                    {{-- <td>{{ date('m/d/Y g:i A',strtotime($leave->date_applied)) }}</td> --}}
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_from)) }}</td>
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_to)) }}</td>
                                                     <td>{{ $leave->no_of_days }}</td>
@@ -222,7 +215,7 @@
 
                                 </div>
                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <div class="mt-1">
+                                <div class="mt-1 hidden">
                                 <i class="fa fa-print inline-flex items-center justify-center px-4 py-2 bg-blue-800 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition hover" onclick="printreport()">&nbsp;print</i>
                                 </div>
                                 @endif
@@ -268,23 +261,19 @@
                                 <div id="filter_fields" class="grid grid-cols-6 py-1 gap-2">
                                     <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
                                         @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                        <!-- <div class="col-span-8 sm:col-span-1">
-                                            <x-jet-label for="filter_search" value="{{ __('SEARCH') }}" />
-                                            <x-jet-input id="filter_search" name="filter_search" type="text" class="mt-1 block w-full" placeholder="Name or Employee No."/>
-                                        </div> -->
                                         <!-- FILTER by Department -->
-                                        <div class="col-span-8 sm:col-span-1 hidden" id="div_filter_department">
-                                            <x-jet-label for="filter_department" value="{{ __('DEPARTMENT') }}" />
+                                        <div class="col-span-8 sm:col-span-1" id="div_filter_department">
                                             <select name="filter_department" id="filter_department" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                                 <option value="">All Departments</option>
                                                 @foreach ($departments as $dept)
                                                 <option value="{{ $dept->department_code }}">{{ $dept->department }}</option>
                                                 @endforeach
                                             </select>
+                                            <x-jet-label for="filter_department" value="{{ __('DEPARTMENT') }}" />
                                         </div>
                                         @endif
                                         <!-- FILTER by Leave Type -->
-                                        <div class="col-span-8 sm:col-span-1 hidden" id="div_filter_leave_type">
+                                        <div class="col-span-8 sm:col-span-1" id="div_filter_leave_type">
                                             <x-jet-label for="filter_leave_type" value="{{ __('LEAVE TYPE') }}" />
                                             <select name="filter_leave_type" id="filter_leave_type" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                                 <option value="">All Leave Types</option>
@@ -695,53 +684,85 @@
 
 {{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
 <script>
-     function printreport(){
-        $("#printtable").printThis();
-        // $("#printVisitModal").modal('show');
-        // console.log("PRINT FUNCTION FUNCTIONAL");
-    }
+ function printreport(){
+    $("#printtable").printThis();
+    // $("#printVisitModal").modal('show');
+    // console.log("PRINT FUNCTION FUNCTIONAL");
+}
 $(document).ready( function () {
-    $('#dataViewLeaves').DataTable({
+    var tableLeaves = $('#dataViewLeaves').DataTable({
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
       });
 
-    function formatDates(date) {
-        var d = new Date(date),
+function formatDates(date) {
+    var d = new Date(date),
+    month = d.getMonth()+1,
+    day = d.getDate();
+
+    var new_date =
+    (month<10 ? '0' : '') + month + '/' +
+    (day<10 ? '0' : '') + day
+    + '/' + d.getFullYear()
+    ;
+    var hours = d.getHours();
+    var minutes = d.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    new_date = new_date+" "+strTime;
+    return new_date;
+}
+
+
+
+function currentDate() {
+    var d = new Date(),
         month = d.getMonth()+1,
         day = d.getDate();
 
-        var new_date =
+    var current_date =
         (month<10 ? '0' : '') + month + '/' +
         (day<10 ? '0' : '') + day
         + '/' + d.getFullYear()
         ;
-        var hours = d.getHours();
-        var minutes = d.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        new_date = new_date+" "+strTime;
-        return new_date;
+    return current_date;
+}
+
+
+$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    var sD  = $('#filterDepartment').val();
+    var sLT = $('#filterLeaveType').val();
+    var cD  = data[1]; // Department Column
+    var cLT = data[3]; // LeaveType Column
+    
+    // Check if a department filter is selected
+    var departmentFilterActive = (sD != null && sD !== '');
+
+    // Check if a LeaveType filter is selected
+    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+
+    // Apply both filters
+    if (!departmentFilterActive && !leaveTypeFilterActive) {
+        return true; // No filters applied, show all rows
     }
+    
+    var departmentMatch = !departmentFilterActive || cD.includes(sD);
+    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+
+    return departmentMatch && leaveTypeMatch;
+});
 
 
+/* Filtering Departments - Gibs */
+$('#filterDepartment').on('keyup change', function() { tableLeaves.draw(); });
+/* Filtering Leave Types - Gibs */
+$('#filterLeaveType').on('keyup change', function() { tableLeaves.draw(); });
 
-    function currentDate() {
-        var d = new Date(),
-            month = d.getMonth()+1,
-            day = d.getDate();
 
-        var current_date =
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day
-            + '/' + d.getFullYear()
-            ;
-        return current_date;
-    }
-
+/* Viewing Leave Details per Control Number - Gibs */
 $(document).on('dblclick','.view-leave',function(){
     let leaveID = this.id;
     $("#popup").show();
@@ -773,7 +794,7 @@ $(document).on('dblclick','.view-leave',function(){
             var notif1 = "", notif2 = "", notif3 = "";
             // var notification = data[0]['notification'].split('|');
             (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
-            (data[0]['is_cancelled']==1 || data[0]['is_denied']==1) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
+            (data[0]['is_cancelled']==1 || data[0]['is_denied']==1 || data[0]['is_taken']==1 ) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
             $("#update_leave").hide();
             // $("#cancel_leave").hide();
             $("#deny_leave").hide();

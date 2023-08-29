@@ -3,7 +3,7 @@
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <style type="text/css">
     .dataTables_wrapper thead th {
-        padding: 5px !important; /* Adjust the padding value as needed */
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */

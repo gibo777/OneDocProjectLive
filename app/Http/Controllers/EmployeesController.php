@@ -173,6 +173,8 @@ class EmployeesController extends Controller
             return redirect('/');
         }
     }
+
+    
     /**
      * Timelogs Details
      *

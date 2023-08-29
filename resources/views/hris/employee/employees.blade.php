@@ -4,7 +4,7 @@
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <style type="text/css">
     .dataTables_wrapper thead th {
-        padding: 5px !important; /* Adjust the padding value as needed */
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
@@ -71,7 +71,7 @@
                                         <tbody class="data hover" id="viewEmployee">
                                             @forelse($employees as $employee)
                                                 <tr id="{{ $employee->id }}">
-                                                    <td>{{ join(' ',[$employee->last_name.',',$employee->first_name,$employee->suffix,$employee->middle_name]) }}</td>
+                                                    <td>{{ join(' ',[$employee->last_name.' '.$employee->suffix.',',$employee->first_name,$employee->middle_name]) }}</td>
                                                     <td>{{ $employee->employee_id}}</td>
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->position }}</td>
@@ -436,6 +436,9 @@
 $(document).ready(function() {
 
     $('#dataViewEmployees').DataTable({
+            /*"columnDefs": [
+              { width: '120px', targets: [0] }, 
+            ],*/
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
       });

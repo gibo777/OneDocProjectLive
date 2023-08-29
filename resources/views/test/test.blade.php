@@ -1,71 +1,68 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"> --}}
-    {{-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-    {{-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script> --}}
+<!-- SweetAlert CSS -->
+<link rel="stylesheet" href="path/to/sweetalert.css">
 
-{{-- DATA TABLES PLUGIN --}}
+<!-- Magnify.js CSS -->
+<link rel="stylesheet" href="path/to/magnify.css">
 
-<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
-<script type="text/javascript" src="{{ asset('DataTables/datatables.min.js') }}"></script>
-</head>
-<body>
+<!-- jQuery (required by Magnify.js) -->
+<script src="path/to/jquery.min.js"></script>
 
-<input type="date" id="startDateInput">
-<input type="date" id="endDateInput">
+<!-- SweetAlert and Magnify.js scripts -->
+<script src="path/to/sweetalert.min.js"></script>
+<script src="path/to/magnify.min.js"></script>
 
-<table id="dataTable table table-bordered table-striped sm:justify-center table-hover">
-    <thead>
-        <tr>
-            <th>Start Date</th>
-            <th>End Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>2023-08-01</td>
-            <td>2023-08-10</td>
-        </tr>
-        <tr>
-            <td>2023-07-15</td>
-            <td>2023-07-15</td>
-        </tr>
-        <tr>
-            <td>2023-07-15</td>
-            <td>2023-07-16</td>
-        </tr>
-        <tr>
-            <td>2023-07-17</td>
-            <td>2023-07-20</td>
-        </tr>
-        <tr>
-            <td>2023-07-15</td>
-            <td>2023-07-25</td>
-        </tr>
-        <tr>
-            <td>2023-07-19</td>
-            <td>2023-07-25</td>
-        </tr>
-        <!-- More rows... -->
-    </tbody>
+<style type="text/css">
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    .zoomable-image {
+      max-width: 100px;
+      cursor: pointer;
+    }
+</style>
+
+<table>
+  <tr>
+    <td>
+      <img class="zoomable-image" src="https://upload.wikimedia.org/wikipedia/en/d/d6/Superman_Man_of_Steel.jpg">
+    </td>
+    <td>
+      <!-- Other content -->
+    </td>
+  </tr>
 </table>
+<button onclick="showZoomableImage()">Show Zoomable Image</button>
 
-<script>
-$(document).ready(function() {
-    var dataTable = $('#dataTable').DataTable();
-    
-    $('#startDateInput, #endDateInput').on('change', function() {
-        var startDate = $('#startDateInput').val();
-        var endDate = $('#endDateInput').val();
-        // alert('startDate: '+startDate+'\nendDate: '+endDate);
-        
-        dataTable.column(0).search(startDate, true, false).draw();
-        dataTable.column(1).search(endDate, true, false).draw();
-    });
-});
+<script type="text/javascript">
+    function showZoomableImage() {
+  const content = `
+    <table>
+      <tr>
+        <td>
+          <img class="zoomable-image" src="https://upload.wikimedia.org/wikipedia/en/d/d6/Superman_Man_of_Steel.jpg">
+        </td>
+        <td>
+          <!-- Other content -->
+        </td>
+      </tr>
+    </table>`;
+
+  Swal.fire({
+    html: content,
+    showConfirmButton: false,
+    onOpen: () => {
+      // Initialize Magnify.js on the image
+      $('.zoomable-image').magnify();
+    }
+  });
+}
+
 </script>
-
-</body>
-</html>

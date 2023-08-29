@@ -431,34 +431,34 @@ $(document).ready(function(){
             return false;
     }
 
-    function filterLeaves (search="", leavetype="", department="") {
-        // alert('Gibs...'); return false;
-        var search = $("#search").val();
+    // function filterLeaves (search="", leavetype="", department="") {
+    //     // alert('Gibs...'); return false;
+    //     var search = $("#search").val();
 
-        $.ajaxSetup({
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            var data = $('#leave-form').serialize()/*+"&leave_type="+leavetype+"&department="+department*/;
-            // data.push({'leave_id': $("#leave_id").val()});
-            $.ajax({
-                url: window.location.origin+'/hris/filter-leave',
-                method: 'get',
-                data: data, // prefer use serialize method
-                success:function(data){
-                    // alert(data);
+    //     $.ajaxSetup({
+    //             headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             }
+    //         });
+    //         var data = $('#leave-form').serialize()/*+"&leave_type="+leavetype+"&department="+department*/;
+    //         // data.push({'leave_id': $("#leave_id").val()});
+    //         $.ajax({
+    //             url: window.location.origin+'/hris/filter-leave',
+    //             method: 'get',
+    //             data: data, // prefer use serialize method
+    //             success:function(data){
+    //                 // alert(data);
 
-                    $("#view_leaves").html(data);
-                    // $("#red").html(data);
-                    // $("#blue").html(data);
-                    // $("#dialog_content").html("LEAVE FORM successfuly updated.").css('color','#008000');
-                    // $("#popup" ).attr('title','NOTIFICATION');
+    //                 $("#view_leaves").html(data);
+    //                 // $("#red").html(data);
+    //                 // $("#blue").html(data);
+    //                 // $("#dialog_content").html("LEAVE FORM successfuly updated.").css('color','#008000');
+    //                 // $("#popup" ).attr('title','NOTIFICATION');
 
-                }
-            });
-            return false;
-    }
+    //             }
+    //         });
+    //         return false;
+    // }
 
 
     function submitLeaveValidation (leave_type='',others_leave='', leaveDateFrom='', leaveDateTo='',reason='') {
@@ -795,11 +795,11 @@ $(document).ready(function(){
     });
     /* SUBMIT LEAVE FORM end*/
 
-    $("#show_filter").click(function (){
+    /*$("#show_filter").click(function (){
         $("#div_filter_department").toggle();
         $("#div_filter_leave_type").toggle();
         return false;
-    });
+    });*/
 
 
     /* VIEW HISTORY begin*/
@@ -1271,13 +1271,13 @@ $(document).ready(function(){
     //     filterLeaves ($("#filter_search").val(),$("#filter_leave_type").val(),$("#filter_department").val());
 
     // });
-    $("#filter_leave_type").change(function () {
+    /*$("#filter_leave_type").change(function () {
         filterLeaves ($("#filter_search").val(),$("#filter_leave_type").val(),$("#filter_department").val());
     });
     $("#filter_department").change(function () {
         // alert('Gibs'); return false;
         filterLeaves ($("#filter_search").val(),$("#filter_leave_type").val(),$("#filter_department").val());
-    });
+    });*/
     /* FILTER LEAVES end*/
 
     $("#update_leave").click(function() {
