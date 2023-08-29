@@ -27,7 +27,7 @@
                 </div>
             @endif
             {{-- <form id="leave-form" action="{{ route('hris.leave.view-leave-details') }}" method="POST"> --}}
-            @csrf
+            {{-- @csrf --}}
 
 
             <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
@@ -86,38 +86,6 @@
     </div>
 
 <!-- =========================================== -->
-<!-- Modal for History -->
-{{-- <div class="modal fade" id="detailedTimeLogsModal" tabindex="-1" role="dialog" aria-labelledby="detailedTimelogsLabel" >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title text-lg text-white" id="detailedTimelogsLabel">
-              Detailed Timelogs
-          </h4>
-          <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-        </div>
-        <div class="modal-body bg-gray-50">
-              <div class="grid grid-cols-12 gap-6 pb-3">
-                  <div class="col-span-12 sm:col-span-12 sm:justify-center font-medium scrollable">
-                      <table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
-                          <thead class="thead">
-                              <tr>
-                                  <th>Photo</th>
-                                  <th>Time-In</th>
-                                  <th>Time-Out</th>
-                              </tr>
-                          </thead>
-                          <tbody class="data text-center" id="data">
-                          </tbody>
-                      </table>
-                  </div>
-            </div>
-      </div>
-    </div>
-  </div>
-  </div> --}}
-
-<!-- =========================================== -->
 <!-- Load Data -->
 <div id="dataLoad" style="display: none">
     <img src="{{asset('/img/misc/loading-blue-circle.gif')}}">
@@ -154,45 +122,42 @@ $(document).ready(function() {
       }
 
 
-// $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-//     var startDateCol1 = $('#start-date-col1').val();
-//     var endDateCol1 = $('#end-date-col1').val();
-//     var startDateCol2 = $('#start-date-col2').val();
-//     var endDateCol2 = $('#end-date-col2').val();
-    
-//     var currentDateCol1 = data[0]; // Date in the first column
-//     var currentDateCol2 = data[1]; // Date in the second column
-
-//     if (
-//         // Check if current date is within range for both columns
-//         ((startDateCol1 === '' || endDateCol1 === '') ||
-//         (currentDateCol1 >= startDateCol1 && currentDateCol1 <= endDateCol1)) &&
-//         ((startDateCol2 === '' || endDateCol2 === '') ||
-//         (currentDateCol2 >= startDateCol2 && currentDateCol2 <= endDateCol2))
-//     ) {
-//         return true;
-//     }
-//     return false;
-// });
-
-
-
     /* START - Date From and Date To Searching */
-    $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-            var searchDateFrom  = formatDate($('#dateFrom').val());
-            var searchDateTo    = formatDate($('#dateTo').val());
-            var searchTimeIn    = data[3]; //Time-In Column, it may change depending on the exact column
-            var searchTimeOut   = data[4]; //Time-Out Column
-            if ( ($('#dateFrom').val()==null || $('#dateFrom').val()=='') && ($('#dateTo').val()==null || $('#dateTo').val()=='') ) { return true; }
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var searchDateFrom = $('#dateFrom').val();
+        var searchDateTo = $('#dateTo').val();
 
-            if (searchTimeIn.includes(searchDateFrom) || searchTimeOut.includes(searchDateFrom) || searchTimeIn.includes(searchDateTo) || searchTimeOut.includes(searchDateTo)) {
-                return true;
-            }
-            return false;
+        // Convert search date strings to Date objects
+        var dateFrom = new Date(searchDateFrom);
+        var dateTo = new Date(searchDateTo);
+
+        // Set the time to the start and end of the selected days
+        dateFrom.setHours(0, 0, 0, 0);
+        dateTo.setHours(23, 59, 59, 999);
+
+        // Get the time-in and time-out values from columns 3 and 4
+        var searchTimeIn = data[3];
+        var searchTimeOut = data[4];
+
+        // Convert time-in and time-out strings to Date objects (if applicable)
+        var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
+        var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
+
+        // Check if the row's time-in or time-out falls within the selected date range
+        if (
+            (!searchDateFrom || !searchDateTo) || // No date range selected
+            (!timeIn && !timeOut) || // No time values available
+            (timeIn >= dateFrom && timeIn <= dateTo) ||
+            (timeOut >= dateFrom && timeOut <= dateTo)
+        ) {
+            return true; // Row matches the search criteria
         }
-    );
 
+        return false; // Row does not match the search criteria
+    });
+
+
+    /* Triggers Date From Searching of Time-In/Time-Out */
     $('#dateFrom').on('keyup change', function() {
         if ($('#dateTo').val()=='' || $('#dateTo').val()==null) {
             $('#dateTo').val($(this).val());
@@ -212,6 +177,7 @@ $(document).ready(function() {
         table.draw();
     });
 
+    /* Triggers Date To Searching of Time-In/Time-Out */
     $('#dateTo').on('keyup change', function() {
         var dateFrom = new Date($('#dateFrom').val());
         var dateTo = new Date($(this).val());
