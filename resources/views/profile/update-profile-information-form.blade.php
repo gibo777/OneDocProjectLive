@@ -50,7 +50,7 @@
                         <!-- END Profile Photo File Input -->
 
                         <div class="col-span-12 w-full btn">
-                            <x-jet-secondary-button id="capturePhoto" class="mt-1 mr-1 fa fa-solid fa-camera" type="button" data-bs-toggle="tooltip" title="Capture Photo">
+                            <x-jet-secondary-button id="capturePhoto" class="mt-1 mr-1 fa fa-solid fa-camera" type="button" data-bs-toggle="tooltip" title="Capture Photo" hidden>
                             </x-jet-secondary-button>
 
                             <x-jet-secondary-button id="uploadPhoto" class="mt-1 mr-1 fa fa-upload" type="button" x-on:click.prevent="$refs.photo.click()" data-bs-toggle="tooltip" title="Upload a New Photo">

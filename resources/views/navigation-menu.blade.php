@@ -33,8 +33,6 @@
 </style>
 
 
-
-
 <nav id="nav_header" x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
 
@@ -167,7 +165,7 @@
                     </div>
                     <div class="border-t border-gray-200" hidden>
                         <x-jet-responsive-nav-link href="{{ route('hris.leave.eleave') }}"  id="nav_eleave">
-                            {{ __('e-Leave Form') }}
+                            {{ __('E-Leave Form') }}
                         </x-jet-responsive-nav-link>
 
                         <x-jet-responsive-nav-link href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">
@@ -177,6 +175,11 @@
                         <!-- <x-jet-responsive-nav-link href="{{ route('calendar') }}"  id="nav_leaves_calendar">
                             {{ __('Leaves Calendar') }}
                         </x-jet-responsive-nav-link> -->
+                    </div>
+                    <div>
+                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogslisting') }}"  id="nav_time_logs">
+                            {{ __('TIME-LOGS') }}
+                        </a>
                     </div>
 
                     {{-- <div class="view_nav block px-4 py-2 text-xs text-gray-400">
@@ -284,7 +287,7 @@
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownEForms">
                           <div class="dropdown dropend">
-                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">e-Leave</a>
+                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
                               <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
                                   <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >{{ __('e-Leave Form') }} </a>
                                   <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Leaves') }} </a>
@@ -365,7 +368,7 @@
                     </div>
                 @else
                     <div class="dropdown mt-3 mx-1">
-                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="{{ route('timelogslisting') }}" id="nav_home" >TIME LOGS</a>
+                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="{{ route('timelogslisting') }}" id="nav_home" >TIME-LOGS</a>
                     </div>
                 @endif
 
