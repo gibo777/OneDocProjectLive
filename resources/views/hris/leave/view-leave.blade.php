@@ -41,7 +41,7 @@
         }
 
     .dataTables_wrapper thead th {
-        padding: 1px 5px !important; /* Adjust the padding value as needed */
+        padding: 0px 5px !important; /* Adjust the padding value as needed */
     }
 }
 </style>
@@ -82,13 +82,14 @@
 
             <div class="px-4 bg-white sm:p-3 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                        <div id="filter_fields" class="col-md-6 py-1 gap-2">
+                        <div id="filter_fields" class="col-md-12 py-1 gap-2">
                             <div class="row pb-1">
-                                <div class="col-md-1 pl-1">
+                                <div class="col-sm-1 pl-1">
                                     <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
                                 </div>
-                                <div class="col-md-5 pl-1">
-                                    @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+
+                                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+                                <div class="col-md-2 p-0 mt-1" {{ (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') ? '' : 'hidden' }}>
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterDepartment">
                                         <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -99,9 +100,10 @@
                                         </select>
                                         <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
                                     </div>
-                                    @endif
                                 </div>
-                                <div class="col-md-5 pl-1">
+                                @endif
+
+                                <div class="col-md-2 pl-1 mt-1">
                                     <!-- FILTER by Leave Type -->
                                     <div class="form-floating" id="div_filterLeaveType">
                                         <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -113,6 +115,14 @@
                                         <x-jet-label for="filterLeaveType" value="{{ __('LEAVE TYPE') }}" />
                                     </div>
                                 </div>
+
+
+			                    <div class="col-md-4 pl-1">
+			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
+			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
+			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
+				                    </div>
+			                    </div>
                             </div>
 
 
@@ -141,7 +151,7 @@
                                                 <th>Department</th>
                                                 @endif
                                                 <th>Control#</th>
-                                                <th>Leave Type</th>
+                                                <th>Type</th>
                                                 {{-- <th>Date Applied</th> --}}
                                                 <th>Begin Date</th>
                                                 <th>End Date</th>
@@ -689,6 +699,7 @@
     // $("#printVisitModal").modal('show');
     // console.log("PRINT FUNCTION FUNCTIONAL");
 }
+
 $(document).ready( function () {
     var tableLeaves = $('#dataViewLeaves').DataTable({
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
@@ -732,34 +743,129 @@ function currentDate() {
 }
 
 
-$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-    var sD  = $('#filterDepartment').val();
-    var sLT = $('#filterLeaveType').val();
-    var cD  = data[1]; // Department Column
-    var cLT = data[3]; // LeaveType Column
-    
-    // Check if a department filter is selected
-    var departmentFilterActive = (sD != null && sD !== '');
+	$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-    // Check if a LeaveType filter is selected
-    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+		const aRT = "{{ Auth::user()->role_type }}";
+		if (aRT=='SUPER ADMIN' || aRT=='ADMIN') {
+		    var sD  = $('#filterDepartment').val();
+		    var sLT = $('#filterLeaveType').val();
+		    var cD  = data[1]; // Department Column
+		    var cLT = data[3]; // LeaveType Column
+		    
+		    // Check if a department filter is selected
+		    var departmentFilterActive = (sD != null && sD !== '');
 
-    // Apply both filters
-    if (!departmentFilterActive && !leaveTypeFilterActive) {
-        return true; // No filters applied, show all rows
-    }
-    
-    var departmentMatch = !departmentFilterActive || cD.includes(sD);
-    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+		    // Check if a LeaveType filter is selected
+		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
 
-    return departmentMatch && leaveTypeMatch;
-});
+		    // Apply both filters
+		    if (!departmentFilterActive && !leaveTypeFilterActive) {
+		        return true; // No filters applied, show all rows
+		    }
+		    var departmentMatch = !departmentFilterActive || cD.includes(sD);
+		    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+
+		    return departmentMatch && leaveTypeMatch;
+		} else {
+		    var sLT = $('#filterLeaveType').val();
+		    var cLT = data[1]; // LeaveType Column
+		    
+		    // Check if a LeaveType filter is selected
+		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+
+		    // Apply both filters
+		    if (!leaveTypeFilterActive) {
+		        return true; // No filters applied, show all rows
+		    }
+		    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+
+		    return leaveTypeMatch;
+		}
+	    
+	});
+
+
+    /* START - Date From and Date To Searching */
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var searchDateFrom = $('#dateFrom').val();
+        var searchDateTo = $('#dateTo').val();
+
+        // Convert search date strings to Date objects
+        var dateFrom = new Date(searchDateFrom);
+        var dateTo = new Date(searchDateTo);
+
+        // Set the time to the start and end of the selected days
+        dateFrom.setHours(0, 0, 0, 0);
+        dateTo.setHours(23, 59, 59, 999);
+
+        // Get the time-in and time-out values from columns 3 and 4
+        var searchTimeIn = data[4];
+        var searchTimeOut = data[5];
+
+        // Convert time-in and time-out strings to Date objects (if applicable)
+        var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
+        var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
+
+        // Check if the row's time-in or time-out falls within the selected date range
+        if (
+            (!searchDateFrom || !searchDateTo) || // No date range selected
+            (!timeIn && !timeOut) || // No time values available
+            (timeIn >= dateFrom && timeIn <= dateTo) ||
+            (timeOut >= dateFrom && timeOut <= dateTo)
+        ) {
+            return true; // Row matches the search criteria
+        }
+
+        return false; // Row does not match the search criteria
+    });
+
+
+    /* Triggers Date From Searching of Time-In/Time-Out */
+    $('#dateFrom').on('keyup change', function() {
+        if ($('#dateTo').val()=='' || $('#dateTo').val()==null) {
+            $('#dateTo').val($(this).val());
+        } else {
+            var dateFrom = new Date($(this).val());
+            var dateTo = new Date($('#dateTo').val());
+            if( dateTo < dateFrom ) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Date Range',
+                    // text: '',
+                }).then(function() {
+                    $(this).val('');
+                });
+            }
+        }
+        tableLeaves.draw();
+    });
+
+    /* Triggers Date To Searching of Time-In/Time-Out */
+    $('#dateTo').on('keyup change', function() {
+        var dateFrom = new Date($('#dateFrom').val());
+        var dateTo = new Date($(this).val());
+        if( dateTo < dateFrom ) {
+            $(this).val($('#dateFrom').val());
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Date Range',
+                // text: '',
+            });
+        }
+        tableLeaves.draw();
+    });
+    /* END - Date From and Date To Searching */
 
 
 /* Filtering Departments - Gibs */
-$('#filterDepartment').on('keyup change', function() { tableLeaves.draw(); });
+$('#filterDepartment').on('keyup change', function() { 
+	tableLeaves.draw(); 
+});
 /* Filtering Leave Types - Gibs */
-$('#filterLeaveType').on('keyup change', function() { tableLeaves.draw(); });
+$('#filterLeaveType').on('keyup change', function() { 
+
+	tableLeaves.draw(); 
+});
 
 
 /* Viewing Leave Details per Control Number - Gibs */

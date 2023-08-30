@@ -101,12 +101,12 @@ $(document).ready(function() {
 
     // Initialize DataTable
     var table = $('#dataTimeLogs').DataTable({
-        /*"order": [
+        "order": [
             [3, 'desc'],
             [4, 'desc'],
             [0, 'asc'],
-        ],*/
-        "order": [],
+        ],
+        // "order": [],
         // "ordering": false,
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5 // Set the default number of entries per page
