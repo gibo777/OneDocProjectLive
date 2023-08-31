@@ -123,7 +123,7 @@ class UpdateProfileInformationForm extends Component
         $countries      = DB::table('countries')->orderBy('country')->get();
         $nationalities  = DB::table('nationalities')->get();
         $religions      = DB::table('religions')->get();
-        $genders        = DB::table('genders')->get();
+        $genders        = DB::table('genders')->where('id','!=',3)->get();
         $civilStatuses  = DB::table('civil_statuses')->get();
         $this->provinces    = [];
         $this->cities       = [];

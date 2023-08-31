@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
             ->orWhere('is_deleted',0)
             ->get();
         $rolesPermissions = DB::table('roles_permissions')->get();
-        $genders = DB::table('genders')->get();
+        $genders = DB::table('genders')->where('id','!=',3)->get();
         $employment_statuses = DB::table('employment_statuses')->get();
         $offices = DB::table('offices')->get();
 

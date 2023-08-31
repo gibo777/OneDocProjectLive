@@ -120,6 +120,7 @@
 			                    <div class="col-md-4 pl-1">
 			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
 			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
+			                    	to
 			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
 				                    </div>
 			                    </div>
