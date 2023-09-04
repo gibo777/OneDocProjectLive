@@ -44,7 +44,7 @@
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
-                                                <th>Employee ID</th>
+                                                <th class="p-0">Emp. ID</th>
                                                 <th>Department</th>
                                                 <th>Time-In</th>
                                                 <th>Time-Out</th>
@@ -56,8 +56,8 @@
                                             @forelse($employees as $employee)
                                                 <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}">
                                                     <td>{{ $employee->full_name }}</td>
-                                                    <td>{{ $employee->employee_id }}</td>
-                                                    <td>{{ $employee->department }}</td>
+                                                    <td class="p-0">{{ $employee->employee_id }}</td>
+                                                    <td>{{ $employee->dept }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
                                                     <td>{{ $employee->head_name }}</td>
@@ -98,18 +98,19 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-
+    if (("{{ count($employees) }}") == 0) { return false; }
     // Initialize DataTable
     var table = $('#dataTimeLogs').DataTable({
-        "order": [
+        /*"order": [
             [3, 'desc'],
             [4, 'desc'],
             [0, 'asc'],
-        ],
+        ],*/
         // "order": [],
-        // "ordering": false,
+        "ordering": false,
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5 // Set the default number of entries per page
+
     });
 
     function formatDate(inputDate) {

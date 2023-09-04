@@ -55,6 +55,7 @@ class EmployeesController extends Controller
             $employees = $employees->get();
 
             $offices = DB::table('offices')->get();
+            
             $departments = DB::table('departments')->get();
 
             $leave_types = DB::table('leave_types')->get();
@@ -198,8 +199,8 @@ class EmployeesController extends Controller
                 DB::raw("CONCAT(u.last_name, ', ', u.first_name, ' ', u.middle_name) as full_name"),
                 'u.suffix',
                 'u.employee_id',
-                'u.department',
-                'd.department as dept',
+                'u.department as dept',
+                'd.department',
                 't.profile_photo_path',
                 DB::raw("(CASE WHEN t.time_in IS NOT NULL THEN DATE_FORMAT(t.time_in, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_in"),
                 DB::raw("(CASE WHEN t.time_out IS NOT NULL THEN DATE_FORMAT(t.time_out, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_out"),

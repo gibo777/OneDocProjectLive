@@ -40,28 +40,45 @@
 
                                 <div class="col-md-2 pl-1 mt-1">
                                     <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="divfilterOffice">
-                                        <select name="filterOffice" id="filterOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                    <div class="form-floating" id="divfilterEmpOffice">
+                                        <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                             <option value="">All Offices</option>
                                             @foreach ($offices as $office)
                                             <option>{{ $office->company_name }}</option>
                                             @endforeach
                                         </select>
-                                        <x-jet-label for="filterOffice" value="{{ __('OFFICE') }}" />
+                                        <x-jet-label for="filterEmpOffice" value="{{ __('OFFICE') }}" />
                                     </div>
                                 </div>
 
-                                <div class="col-md-2 p-0 mt-1">
+                                <div class="col-md-2 pl-1 mt-1">
                                         <!-- FILTER by Department -->
-                                    <div class="form-floating" id="divfilterDepartment">
-                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                    <div class="form-floating" id="divfilterEmpDepartment">
+                                        <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $dept)
-                                            <option>{{ $dept->department }}</option>
+                                            <option value="{{ $dept->department_code }}">{{ $dept->department }}</option>
                                             @endforeach
                                         </select>
-                                        <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                        <x-jet-label for="filterEmpDepartment" value="{{ __('DEPARTMENT') }}" />
                                     </div>
+                                </div>
+
+                                <div class="col-md-2 pl-1 mt-1">
+                                        <!-- FILTER by Department -->
+                                    <div class="form-floating" id="divfilterEmpDepartment">
+                                        <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Statuses</option>
+                                            @foreach ($employment_statuses as $estat)
+                                            <option>{{ $estat->employment_status }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterEmpStatus" value="{{ __('STATUS') }}" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 nopadding text-right">
+                                    <x-jet-button  id="registerEmployee" class="btn btn-primary font-semibold text-xl thead mb-2">Register Employee</x-jet-button>
                                 </div>
                             </div>
                         </div>
@@ -73,13 +90,13 @@
                                         <thead class="thead">
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
-                                                <th>Emp.ID</th>
+                                                <th>Emp. ID</th>
+                                                <th>Office</th>
                                                 <th>Department</th>
                                                 <th>Position</th>
                                                 <th>Supervisor</th>
                                                 {{-- <th>Role</th> --}}
                                                 <th>Status</th>
-                                                <th>Office</th>
                                             </tr>
                                         </thead>
                                         <tbody class="data hover" id="viewEmployee">
@@ -87,12 +104,12 @@
                                                 <tr id="{{ $employee->id }}">
                                                     <td>{{ join(' ',[$employee->last_name.' '.$employee->suffix.',',$employee->first_name,$employee->middle_name]) }}</td>
                                                     <td>{{ $employee->employee_id}}</td>
+                                                    <td>{{ $employee->company_name }}</td>
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->position }}</td>
                                                     <td>{{ $employee->head_name }}</td>
                                                     {{-- <td>{{ $employee->role_type }}</td> --}}
                                                     <td>{{ $employee->employment_status }}</td>
-                                                    <td>{{ $employee->company_name }}</td>
                                                     {{-- <td id="action_buttons">
                                                         <button
                                                             id="view-{{ $employee->employee_id }}"
@@ -153,11 +170,11 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="flex justify-center mt-1 w-100">
+                        <div class="flex justify-center my-1 w-100">
                             <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover">
                         </div>
                         <!-- EMPLOYEE STATUS -->
-                        <div class="col-md-12 nopadding mt-2">
+                        <div class="col-md-12 nopadding my-1">
                                 <div class="form-floating">
                                     <select name="employment_status" id="employment_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
                                         <option value=""></option>
@@ -169,7 +186,7 @@
                                 </div>
                         </div>
 
-                        <div class="col-md-12 nopadding mt-2">
+                        <div class="col-md-12 nopadding my-1">
                             <div class="row">
                                 <div class="col-md-6 form-floating">
                                     <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
@@ -190,7 +207,8 @@
                                   </div>
                             </div>
                         </div>
-                        <div class="col-md-12 nopadding mt-2">
+
+                        <div class="col-md-12 nopadding my-1">
                                 <div class="form-floating">
                                     <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
@@ -201,7 +219,8 @@
                                     <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
                                 </div>
                         </div>
-                        <div class="col-md-12 nopadding mt-2">
+
+                        <div class="col-md-12 nopadding my-1">
                                 <div class="form-floating">
                                     <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
@@ -213,28 +232,25 @@
                                 </div>
                         </div>
 
-                        <div class="col-md-12 nopadding mt-2">
+                        <div class="col-md-12 nopadding my-1">
                             <div class="row">
-                                <div class="col-md-7 w-full pr-0">
-                                <div class="form-floating">
+                                <div class="col-md-7 form-floating">
                                     <select name="updateRoleType" id="updateRoleType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" required>
                                         <option value=""></option>
                                         @foreach ($roleTypeUsers as $key=>$roleTypeUser)
                                             <option value="{{ $roleTypeUser->role_type }}">{{ $roleTypeUser->role_type }}</option>
                                         @endforeach
                                     </select>
-                                    <x-jet-label for="updateRoleType" value="{{ __('Role Type') }}" class="text-black-50 w-full" />
+                                    <x-jet-label for="updateRoleType" value="{{ __('Role Type') }}" class="text-black-50 w-full pl-4" />
                                 </div>
-                                </div>
-                                <div class="col-md-5 w-full position-relative">
-                                    <div class="position-absolute bottom-0">
-                                        <label for="isHead">Is Head?</label>
+                                <div class="col-md-5 d-flex align-items-center justify-content-center">
+                                        <label for="isHead" class="pr-1">Is Head?</label>
                                         <input type="checkbox" id="isHead">
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-9">
                         <div class="row mt-1">
                                 <div class="col-md-4 px-1">
@@ -462,13 +478,59 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    $('#dataViewEmployees').DataTable({
+    var tableEmployee = $('#dataViewEmployees').DataTable({
             /*"columnDefs": [
               { width: '120px', targets: [0] }, 
             ],*/
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
       });
+
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var sO = $('#filterEmpOffice').val();
+            var sD = $('#filterEmpDepartment').val();
+            var sS = $('#filterEmpStatus').val();
+            var cO = data[2]; // Office Column
+            var cD = data[3]; // Department Column
+            var cS = data[6]; // Status Column
+            
+            // Check if an Office filter is selected
+            var officeFilterActive = (sO != null && sO !== '');
+
+            // Check if a Department filter is selected
+            var departmentFilterActive = (sD != null && sD !== '');
+
+            // Check if a Department filter is selected
+            var statusFilterActive = (sS != null && sS !== '');
+
+            // Apply both filters
+            if (!officeFilterActive && !departmentFilterActive && !statusFilterActive) {
+                return true; // No filters applied, show all rows
+            }
+            var officeMatch = !officeFilterActive || cO.includes(sO);
+            var departmentMatch = !departmentFilterActive || cD.includes(sD);
+            var statusMatch = !statusFilterActive || cS.includes(sS);
+
+            return officeMatch && departmentMatch && statusMatch;
+    });
+
+    /* Filtering OFfice - Gibs */
+    $('#filterEmpOffice').on('keyup change', function() { 
+        tableEmployee.draw(); 
+    });
+    /* Filtering Department - Gibs */
+    $('#filterEmpDepartment').on('keyup change', function() { 
+        tableEmployee.draw(); 
+    });
+    /* Filtering Department - Gibs */
+    $('#filterEmpStatus').on('keyup change', function() { 
+        tableEmployee.draw(); 
+    });
+
+    /* Reroute to User/Employee Registration */
+    $(document).on('click','#registerEmployee', async function() {
+        window.location.href = "{{ route('register') }}";
+    });
 
     /* Double Click event to show Employee details */
     $(document).on('dblclick','.view-employees tr',async function(){

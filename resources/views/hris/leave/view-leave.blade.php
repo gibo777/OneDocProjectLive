@@ -702,6 +702,8 @@
 }
 
 $(document).ready( function () {
+    
+    if (("{{ count($leaves) }}") == 0) { return false; }
     var tableLeaves = $('#dataViewLeaves').DataTable({
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
