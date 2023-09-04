@@ -257,7 +257,7 @@ $(document).ready(function() {
                         // icon: 'success',
                         // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
                         // text: '',
-                        // allowOutsideClick: false,
+                        allowOutsideClick: false,
                         html: tDT
                     });
             }

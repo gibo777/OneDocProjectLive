@@ -86,7 +86,7 @@
         </div>
 
         <div class="row pb-2">
-            <div class="col-md-3 p-1">
+            {{-- <div class="col-md-3 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                 <!-- Tax Status -->
                     <select name="tax_status" id="tax_status" class="accounting form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full"
@@ -108,7 +108,7 @@
                     <label>Tax Status <span class="text-danger">*</span></label>
                     <x-jet-input-error for="tax_status" class="mt-2" />
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-md-9 dependents" id="dependents">
                @if(sizeof($dependents) > 0)
@@ -159,37 +159,35 @@
             </div>
         </div>
         <div class="row pb-2">
-            <div class="col-md-6 p-1">
+            <div class="col-md-3 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="health_card_number" type="text" class="accounting form-control block w-full" placeholder="Health Card Number" autocomplete="off" value="{{$accData->health_card_number}}"/>
                     <x-jet-label for="health_card_number" value="{{ __('Health Card Number') }}" />
                     <x-jet-input-error for="health_card_number" class="mt-2" />
                 </div>
             </div>
-            <div class="col-md-6 p-1">
+            <div class="col-md-2.5 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="drivers_license" type="text" class="accounting form-control block w-full" placeholder="Driver's License" autocomplete="off" value="{{$accData->drivers_license}}"/>
                     <x-jet-label for="drivers_license" value="Driver's License" />
                     <x-jet-input-error for="drivers_license" class="mt-2" />
                 </div>
             </div>
-        </div>
-        <div class="row pb-2">
-            <div class="col-md-5 p-1">
+            <div class="col-md-2.5 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="passport_number" type="text" class="accounting form-control block w-full" placeholder="Passport Number" autocomplete="off" value="{{$accData->passport_number}}"/>
                     <x-jet-label for="passport_number" value="{{ __('Passport Number') }}" />
                     <x-jet-input-error for="passport_number" class="mt-2" />
                 </div>
             </div>
-            <div class="col-md-3 p-1">
+            <div class="col-md-2 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="passport_expiry" type="text" class="accounting form-control datepicker block w-full" placeholder="mm/dd/yyyy" value="{{$accData->passport_expiry}}" />
                     <x-jet-label for="passport_expiry" value="{{ __('Expiration Date:') }}" />
                     <x-jet-input-error for="passport_expiry" class="mt-2" />
                 </div>
             </div>
-            <div class="col-md-4 p-1">
+            <div class="col-md-2 p-1">
                 <div class="form-floating col-span-8 sm:col-span-1">
                     <x-jet-input id="prc" type="text" class="accounting form-control block w-full" placeholder="PRC" value="{{$accData->prc}}" />
                     <x-jet-label for="prc" value="{{ __('PRC') }}" />
@@ -264,13 +262,22 @@
                 dependentDataName = filteredDN;
                 dependentDataBday = filteredDB;
                 
-                if(!$('#tax_status').val() || !$('#tin_number').val()){
+                /*if(!$('#tax_status').val() || !$('#tin_number').val()){
                     let taxStatusMessage = !$('#tax_status').val() ? 'Tax Status is Required' : '';
                     let tinNumberMessage = !$('#tin_number').val() ? 'Tin Number is Required' : '';
                     Swal.fire({
                         icon:'error',
                         title:'Error',
                         text:taxStatusMessage || tinNumberMessage,
+                    })
+                    return;
+                }*/
+                if(!$('#tin_number').val()){
+                    let tinNumberMessage = !$('#tin_number').val() ? 'Tin Number is Required' : '';
+                    Swal.fire({
+                        icon:'error',
+                        title:'Error',
+                        text:tinNumberMessage,
                     })
                     return;
                 }

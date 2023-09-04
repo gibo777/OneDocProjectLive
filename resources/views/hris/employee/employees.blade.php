@@ -32,25 +32,39 @@
             <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
 
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                        {{-- <div id="filter_fields" class="grid grid-cols-6 py-1 gap-2">
-                            <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
-                                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <!-- <div class="col-span-8 sm:col-span-1">
-                                    <x-jet-label for="filter_search" value="{{ __('SEARCH') }}" />
-                                    <x-jet-input id="filter_search" name="filter_search" type="text" class="mt-1 block w-full" placeholder="Name or Employee No."/>
-                                </div> -->
-                                <!-- FILTER by Department -->
-                                <div class="col-span-8 sm:col-span-1" id="div_filter_department" hidden>
-                                    <x-jet-label for="filter_department" value="{{ __('DEPARTMENT') }}" />
-                                    <select name="filter_department" id="filter_department" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                        <option value="">All Departments</option>
-                                        @foreach ($departments as $dept)
-                                        <option value="{{ $dept->id }}">{{ $dept->department }}</option>
-                                        @endforeach
-                                    </select>
+                        <div id="filter_fields" class="col-md-12 py-1 gap-2">
+                            <div class="row pb-1">
+                                <div class="col-sm-1 pl-1">
+                                    <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
                                 </div>
-                                @endif
-                        </div> --}}
+
+                                <div class="col-md-2 pl-1 mt-1">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="divfilterOffice">
+                                        <select name="filterOffice" id="filterOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Offices</option>
+                                            @foreach ($offices as $office)
+                                            <option>{{ $office->company_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterOffice" value="{{ __('OFFICE') }}" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 p-0 mt-1">
+                                        <!-- FILTER by Department -->
+                                    <div class="form-floating" id="divfilterDepartment">
+                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Departments</option>
+                                            @foreach ($departments as $dept)
+                                            <option>{{ $dept->department }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                             <div id="table_data">
                                 <!-- Name -->
@@ -155,24 +169,37 @@
                                 </div>
                         </div>
 
-                        <div class="col-md-12 form-floating nopadding mt-2">
-                                <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
-                                <x-jet-label for="date_hired" value="{{ __('Date Started (mm/dd/yyyy)') }}" class="text-black-50 w-full" />
-                                <x-jet-input-error for="date_hired" class="mt-2" />
+                        <div class="col-md-12 nopadding mt-2">
+                            <div class="row">
+                                <div class="col-md-6 form-floating">
+                                    <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                    <x-jet-label for="date_hired" value="{{ __('Date Started') }}" class="pl-4 text-black-50 w-full" />
+                                    <x-jet-input-error for="date_hired" class="mt-2" />
+                                </div>
+                                  <div class="col-md-6 text-left align-items-center w-full nopadding">
+                                    <x-jet-label for="weekly_schedule" value="{{ __('Weekly Schedule') }}" class="nopadding"/>
+                                    <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
+                                        <option value="0">Sunday</option>
+                                        <option value="1" >Monday</option>
+                                        <option value="2" >Tuesday</option>
+                                        <option value="3" >Wednesday</option>
+                                        <option value="4" >Thursday</option>
+                                        <option value="5" >Friday</option>
+                                        <option value="6" >Saturday</option>
+                                    </select>
+                                  </div>
+                            </div>
                         </div>
-                        <div class="col-md-12 mt-1">
-                              <div class="text-left align-items-center w-full nopadding">
-                                <x-jet-label for="weekly_schedule" value="{{ __('Weekly Schedule') }}" class="nopadding"/>
-                                <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
-                                    <option value="0">Sunday</option>
-                                    <option value="1" >Monday</option>
-                                    <option value="2" >Tuesday</option>
-                                    <option value="3" >Wednesday</option>
-                                    <option value="4" >Thursday</option>
-                                    <option value="5" >Friday</option>
-                                    <option value="6" >Saturday</option>
-                                </select>
-                              </div>
+                        <div class="col-md-12 nopadding mt-2">
+                                <div class="form-floating">
+                                    <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                        <option value=""></option>
+                                        @foreach ($offices as $office)
+                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
+                                </div>
                         </div>
                         <div class="col-md-12 nopadding mt-2">
                                 <div class="form-floating">
@@ -320,7 +347,7 @@
                             </div>
 
                             <div class="row pt-2">
-                                <div class="col-md-3 form-floating px-1">
+                                {{-- <div class="col-md-3 form-floating px-1">
                                         <x-jet-input id="height" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="height" class="mt-2" />
@@ -329,36 +356,36 @@
                                         <x-jet-input id="weight" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="weight" class="mt-2" />
-                                </div>
+                                </div> --}}
                                 <div class="col-md-2 form-floating px-1">
                                         <x-jet-input id="gender" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="gender" disabled/>
                                         <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="gender" class="mt-2" />
                                 </div>
-                                <div class="col-md-4 form-floating px-1">
+                                <div class="col-md-2 form-floating px-1">
                                         <x-jet-input id="civil_status" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="civil_status" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="civil_status" class="mt-2" />
                                 </div>
-                            </div>
+                            {{-- </div>
 
-                            <div class="row pt-2">
+                            <div class="row pt-2"> --}}
                                 <div class="col-md-3 form-floating px-1">
                                         <x-jet-input id="nationality" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Nationality" disabled/>
                                         <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="nationality" class="mt-2" />
                                 </div>
-                                <div class="col-md-3 form-floating px-1">
+                                {{-- <div class="col-md-3 form-floating px-1">
                                         <x-jet-input id="religion" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="religion" disabled/>
                                         <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="religion" class="mt-2" />
-                                </div>
+                                </div> --}}
                                 <div class="col-md-2 form-floating px-1">
                                         <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="birthdate" value="{{ __('Birthdate') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birthdate" class="mt-2" />
                                 </div>
-                                <div class="col-md-4 form-floating px-1">
+                                <div class="col-md-3 form-floating px-1">
                                         <x-jet-input id="birth_place" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
                                         <x-jet-label for="birth_place" value="{{ __('Birth Place') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="birth_place" class="mt-2" />
@@ -488,6 +515,7 @@ $(document).ready(function() {
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
                 // $("input[name='weekly_schedule']").val(1);
+                $("#office").val(getemployee.office);
                 $("#supervisor").val(getemployee.supervisor);
 
                 $("#updateRoleType").val(getemployee.role_type);
@@ -539,6 +567,7 @@ $(document).ready(function() {
             'employment_status': $("#employment_status").val(),
             'date_hired': $("#date_hired").val(),
             'update_weekly_schedule': $("#update_weekly_schedule").val(),
+            'office': $("#office").val(),
             'supervisor': $("#supervisor").val(),
             'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),
             'employee_id' : $("#employee_id").val(), 

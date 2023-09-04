@@ -269,7 +269,7 @@
                 </div>
 
                 <div class="row pt-2">
-                    <div class="col-md-3 form-floating px-1">
+                    {{-- <div class="col-md-3 form-floating px-1">
                             <x-jet-input id="height" type="text" class="form-control block w-full" wire:model.defer="state.height" placeholder="Height" autocomplete="off" />
                             <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="height" class="mt-2" />
@@ -278,7 +278,7 @@
                             <x-jet-input id="weight" type="text" class="form-control block w-full" wire:model.defer="state.weight" placeholder="Weight" autocomplete="off" />
                             <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="weight" class="mt-2" />
-                    </div>
+                    </div> --}}
                     <div class="col-md-2 form-floating px-1">
                             <select name="gender" id="gender" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" wire:model.defer="state.gender" required>
                                 <option value="">-Sex-</option>
@@ -293,9 +293,7 @@
                             <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="gender" class="mt-2" />
                     </div>
-                    <div class="col-md-4 form-floating px-1">
-                            {{-- <x-jet-input id="civil_status" type="text" class="form-control block w-full" wire:model.defer="state.civil_status" placeholder="Civil Status" autocomplete="off" required/> --}}
-
+                    <div class="col-md-2 form-floating px-1">
                             <select name="civil_status" id="civil_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" wire:model.defer="state.civil_status" required>
                                 <option value="">-Civil Status-</option>
                                 @foreach ($civilStatuses as $key=>$civilStatus)
@@ -311,10 +309,10 @@
                             <x-jet-label for="civil_status" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="civil_status" class="mt-2" />
                     </div>
-                </div>
+                {{-- </div>
 
-                <div class="row pt-2">
-                    <div class="col-md-3 form-floating px-1">
+                <div class="row pt-2"> --}}
+                    <div class="col-md-2 form-floating px-1">
                             <select name="nationality" id="nationality" wire:model.defer="state.nationality" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                 <option value="">-Nationality-</option>
                                 @foreach ($nationalities as $key=>$nationality)
@@ -324,7 +322,7 @@
                             <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="nationality" class="mt-2" />
                     </div>
-                    <div class="col-md-3 form-floating px-1">
+                    {{-- <div class="col-md-3 form-floating px-1">
                             <select name="religion" id="religion" wire:model.defer="state.religion" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                 <option value="">-Religion-</option>
                                 @foreach ($religions as $key=>$religion)
@@ -333,7 +331,7 @@
                             </select>
                             <x-jet-label for="religion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
                             <x-jet-input-error for="religion" class="mt-2" />
-                    </div>
+                    </div> --}}
                     <div class="col-md-2 form-floating px-1">
                         <input type="text" name="taskduedate" id="taskduedate" 
                         class="form-control datepicker"

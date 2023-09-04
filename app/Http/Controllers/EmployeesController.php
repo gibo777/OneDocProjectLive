@@ -54,6 +54,7 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();
 
+            $offices = DB::table('offices')->get();
             $departments = DB::table('departments')->get();
 
             $leave_types = DB::table('leave_types')->get();
@@ -80,6 +81,7 @@ class EmployeesController extends Controller
                 [
                     'holidays'=>$holidays, 
                     'employees'=>$employees, 
+                    'offices'=>$offices,
                     'departments'=>$departments,
                     'leave_types'=>$leave_types, 
                     'employment_statuses'=>$employment_statuses,
@@ -120,6 +122,7 @@ class EmployeesController extends Controller
                 'employment_status' => $request->employment_status,
                 'date_hired' => date('Y-m-d',strtotime($request->date_hired)),
                 'weekly_schedule' => join('|',$request->update_weekly_schedule),
+                'office' => $request->office,
                 'supervisor' => $request->supervisor,
                 'role_type'=> $request->roleType,
                 'is_head'=>$request->is_head,
