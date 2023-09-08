@@ -90,14 +90,14 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <x-jet-input id="leaveDateFrom" name="leaveDateFrom" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                    <x-jet-input id="leaveDateFrom" name="leaveDateFrom" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
                                     <x-jet-label for="leaveDateFrom" value="{{ __('BEGIN (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
                             TO
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <x-jet-input id="leaveDateTo" name="leaveDateTo" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                    <x-jet-input id="leaveDateTo" name="leaveDateTo" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
                                     <x-jet-label for="leaveDateTo" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>

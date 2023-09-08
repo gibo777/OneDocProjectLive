@@ -17,7 +17,7 @@
                 {{ __('VIEW ALL EMPLOYEES') }}
     </x-slot>
     <div id="view_leaves">
-        <div class="w-full mx-auto py-2 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto pt-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -32,13 +32,13 @@
             <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
 
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                        <div id="filter_fields" class="col-md-12 py-1 gap-2">
+                        <div id="filter_fields" class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
                             <div class="row pb-1">
-                                <div class="col-sm-1 pl-1">
+                                <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
                                     <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
                                 </div>
 
-                                <div class="col-md-2 pl-1 mt-1">
+                                <div class="col-md-2">
                                     <!-- FILTER by Leave Type -->
                                     <div class="form-floating" id="divfilterEmpOffice">
                                         <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2 pl-1 mt-1">
+                                <div class="col-md-2">
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterEmpDepartment">
                                         <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -64,7 +64,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2 pl-1 mt-1">
+                                <div class="col-md-2">
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterEmpDepartment">
                                         <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -77,8 +77,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-5 nopadding text-right">
-                                    <x-jet-button  id="registerEmployee" class="btn btn-primary font-semibold text-xl thead mb-2">Register Employee</x-jet-button>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-2 py-2 text-center">
+                                    <x-jet-button  id="registerEmployee">Register Employee</x-jet-button>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +227,7 @@
                                     <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
                                         @foreach ($heads as $head)
-                                        <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->suffix,$head->middle_name]) }}</option>
+                                        <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
                                         @endforeach
                                     </select>
                                     <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
@@ -482,6 +484,7 @@ $(document).ready(function() {
             /*"columnDefs": [
               { width: '120px', targets: [0] }, 
             ],*/
+            "order": [], // Disable sorting for the entire table
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
       });

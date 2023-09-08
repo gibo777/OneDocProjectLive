@@ -2,56 +2,73 @@
 <style>
 
     @media print {
-        .datazzz{
-            text-align: center; font-size:15px; color:black;
-        }
-        @page {
-  size: A4;
-  margin: 11mm 17mm 17mm 17mm;
+            .datazzz{
+                text-align: center; font-size:15px; color:black;
+            }
+            @page {
+      size: A4;
+      margin: 11mm 17mm 17mm 17mm;
 
-  /* counter-reset: page !important; */
-  }
-  #printtable{
-    width: 100%;
-  }
-  #nodays{
-    width: 10% !important;
-  }
-   tr:nth-child(even) td {
-       background-color: #F0F0F0 !important;
-        -webkit-print-color-adjust: exact;
-   }
-   .head1{
-        text-align: center; font-size:24px; color:white;
-            /* background-color: #0000cc !important; */
-            /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
-        -webkit-print-color-adjust: exact;
-        }
-        .head2{
-            text-align: center; font-size:20px; color:white;
-            /* background-color: #0000ff !important; */
-            /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
-        -webkit-print-color-adjust: exact;
-        }
-        .head3{
-            text-align: center; font-size:17px;color: white;
-            /* background-color: #0080ff !important; */
-            /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
-        -webkit-print-color-adjust: exact;
-        }
+      /* counter-reset: page !important; */
+      }
+      #printtable{
+        width: 100%;
+      }
+      #nodays{
+        width: 10% !important;
+      }
+       tr:nth-child(even) td {
+           background-color: #F0F0F0 !important;
+            -webkit-print-color-adjust: exact;
+       }
+       .head1{
+            text-align: center; font-size:24px; color:white;
+                /* background-color: #0000cc !important; */
+                /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
+            -webkit-print-color-adjust: exact;
+            }
+            .head2{
+                text-align: center; font-size:20px; color:white;
+                /* background-color: #0000ff !important; */
+                /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
+            -webkit-print-color-adjust: exact;
+            }
+            .head3{
+                text-align: center; font-size:17px;color: white;
+                /* background-color: #0080ff !important; */
+                /*background: url(../img/backgrounds/blue-wave-banner.png) no-repeat !important;*/
+            -webkit-print-color-adjust: exact;
+            }
 
-    .dataTables_wrapper thead th {
-        padding: 0px 5px !important; /* Adjust the padding value as needed */
+        .dataTables_wrapper thead th {
+            padding: 0px 5px !important; /* Adjust the padding value as needed */
+        }
     }
-}
-</style>
-    <style type="text/css">
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
     }
     #dataViewLeaves thead th {
         text-align: center; /* Center-align the header text */
     }
+    /* Hide sorting arrows in DataTables */
+    .dataTables_wrapper .sorting:before,
+    .dataTables_wrapper .sorting_asc:before,
+    .dataTables_wrapper .sorting_desc:before {
+        display: none;
+    }
+
+
+    /* Custom CSS for inset shadow */
+    .inset-shadow {
+        /* For providing border to the element */
+        border: 1px #b8b8b8 solid;
+        /* For Padding */
+        padding: 1px;
+        /* Defining box-shadow property as inset */
+        box-shadow: 0px 0px 3px 3px #f5f5f5 inset;
+        background-color: #fcfcfc;
+    }
+
     </style>
 <x-app-layout>
 
@@ -82,17 +99,26 @@
 
             <div class="px-4 bg-white sm:p-3 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                        <div id="filter_fields" class="col-md-12 py-1 gap-2">
-                            <div class="row pb-1">
-                                <div class="col-sm-1 pl-1">
-                                    <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
-                                </div>
 
+                {{-- <div class="notification">
+                    <a href="{{ route('hr.management.memos') }}" class="btn btn-outline-primary btn-sm border-0 items-center">
+                      <span>
+                      <img class="img-icon" src="{{ asset('img/buttons/favpng_icon.png') }}">
+                      </span>
+                      <span id="nav-memo-counter" class="badge badge-primary badge-pill">Test</span>
+                    </a>
+                </div> --}}
+
+                        <div class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
+                            <div class="row pb-1" id="filterFields">
+                                <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
+                                    <x-jet-label for="filterFields" class="text-center" value="{{ __('FILTER') }}"/>
+                                </div>
                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <div class="col-md-2 p-0 mt-1" {{ (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') ? '' : 'hidden' }}>
+                                <div class="col-md-2 px-4 text-center mt-1" {{ (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') ? '' : 'hidden' }}>
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterDepartment">
-                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $dept)
                                             <option>{{ $dept->department }}</option>
@@ -103,10 +129,10 @@
                                 </div>
                                 @endif
 
-                                <div class="col-md-2 pl-1 mt-1">
+                                <div class="col-md-2 px-4 text-center mt-1">
                                     <!-- FILTER by Leave Type -->
                                     <div class="form-floating" id="div_filterLeaveType">
-                                        <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Leave Types</option>
                                             @foreach ($leave_types as $leave_type)
                                             <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
@@ -117,14 +143,14 @@
                                 </div>
 
 
-			                    <div class="col-md-4 pl-1">
+			                    <div class="col-md-4 px-3 text-center mt-1">
 			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
-			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
+			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    	to
-			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1" />
-				                    </div>
+			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
-                            </div>
+		                    </div>
+                        </div>
 
 
                               <!-- DIV_GRID4 -->

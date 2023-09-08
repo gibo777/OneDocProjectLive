@@ -289,7 +289,7 @@
                           <div class="dropdown dropend">
                               <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
                               <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                  <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >{{ __('e-Leave Form') }} </a>
+                                  <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >{{ __('E-Leave Form') }} </a>
                                   <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Leaves') }} </a>
                                   <a class="dropdown-item" href="{{ route('calendar') }}"  id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
                               </div>
@@ -298,8 +298,9 @@
                         @if (Auth::user()->role_type=='SUPER ADMIN')
                                   <div class="dropdown dropend">
                                       <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
+                                      @if(Auth::user()->id==1)
                                       <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                          <a class="dropdown-item" href="#">Sub-menu 1</a>
+                                          <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
                                           <a class="dropdown-item" href="#">Sub-menu 2</a>
                                           <div class="dropdown-divider"></div>
                                           <div class="dropdown dropend">
@@ -312,6 +313,7 @@
                                               </div>
                                           </div>
                                       </div>
+                                      @endif
                                   </div>
                           @endif
                           

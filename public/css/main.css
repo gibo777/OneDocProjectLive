@@ -368,11 +368,26 @@ input::placeholder {
      /*background-color: rgb(38 83 180 / var(--tw-bg-opacity));*/
      background-image: linear-gradient(rgb(7,71,191),rgb(32,108,206),rgb(7,71,191));
 }
+
 .hover\:bg-blue-700:hover {
     --tw-bg-opacity: 1;
     /*background-color: rgb(49 140 231 / var(--tw-bg-opacity));*/
      background-image: linear-gradient(rgb(49,140,231),rgb(32,108,206),rgb(49,140,231));
 }
+
+
+/* Custom CSS for inset shadow */
+.inset-shadow {
+    /* For providing border to the element */
+    border: 1px #b8b8b8 solid;
+    /* For Padding */
+    padding: 1px;
+    /* Defining box-shadow property as inset */
+    box-shadow: 0px 0px 3px 3px #f5f5f5 inset;
+    background-color: #fcfcfc;
+}
+
+
 /* BUTTONS */
  .btn3d {
      transition:all .08s linear;

@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+
 use App\Http\Controllers\LeaveFormController;
+use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\ViewLeavesController;
 use App\Http\Controllers\CalenderController;
 use App\Http\Controllers\TestController;
@@ -110,6 +112,10 @@ Route::get('/hris/view-leave/fetch_data', [ViewLeavesController::class, 'fetch_d
 // Route::post('/hris/viewleave', [LeaveFormController::class, 'update_leave']);
 
 
+/*======= REIMBURSEMENT =======*/
+
+Route::get('/reimbursement', [ReimbursementController::class, 'index'])->name('hris.reimbursement.reimbursement');
+Route::post('/reimbursement', [ReimbursementController::class, 'index'])->name('hris.reimbursement.reimbursement');
 
 
 /*======= PROCESSING - E-LEAVE begin =======*/

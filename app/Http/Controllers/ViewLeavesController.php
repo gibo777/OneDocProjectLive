@@ -54,7 +54,7 @@ class ViewLeavesController extends Controller
 	        /*if ($access_code==null) { 
 	        	$leaves = $leaves->where('L.employee_id','=', $employee_id);
 	        } */
-            if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
+            if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->id==1){
 	        	$leaves = $leaves->where('u.supervisor','=', $employee_id);
 	        	$leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
 	        } else { 
