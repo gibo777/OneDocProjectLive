@@ -54,11 +54,14 @@ class ViewLeavesController extends Controller
 	        /*if ($access_code==null) { 
 	        	$leaves = $leaves->where('L.employee_id','=', $employee_id);
 	        } */
-            if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->id==1){
-	        	$leaves = $leaves->where('u.supervisor','=', $employee_id);
-	        	$leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
-	        } else { 
-                $leaves = $leaves->where('L.employee_id','=', $employee_id);
+            
+            if(Auth::user()->id!=1) {
+                if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
+                    $leaves = $leaves->where('u.supervisor','=', $employee_id);
+                    $leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
+                } else { 
+                    $leaves = $leaves->where('L.employee_id','=', $employee_id);
+                }
             }
 	        $leaves = $leaves->where( function($query) {
 	        	return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
