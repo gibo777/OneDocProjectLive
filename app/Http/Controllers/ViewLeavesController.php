@@ -66,6 +66,7 @@ class ViewLeavesController extends Controller
 	        $leaves = $leaves->where( function($query) {
 	        	return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
 	        	});
+            $leaves = $leaves->orderBy('L.created_at');            
             $leaves = $leaves->orderBy('L.name');            
 	        $leaves = $leaves->orderBy('L.id');
             // $leaves = $leaves->paginate(5);
