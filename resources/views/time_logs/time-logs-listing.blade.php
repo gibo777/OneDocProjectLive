@@ -33,9 +33,45 @@
             <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
 
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                    <div class="mb-2">
-                        From <input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off"/> to <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                    </div>
+                        <div id="filterFields" class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
+                            <div class="row pb-1">
+                                <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
+                                    <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="divfilterEmpOffice">
+                                        <select name="filterTimeLogsOffice" id="filterTimeLogsOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Offices</option>
+                                            @foreach ($offices as $office)
+                                            <option>{{ $office->company_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterTimeLogsOffice" value="{{ __('OFFICE') }}" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="divfilterTimeLogsDept">
+                                        <select name="filterTimeLogsDept" id="filterTimeLogsDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                            <option value="">All Departments</option>
+                                            @foreach ($departments as $department)
+                                            <option value="{{ $department->department_code }}">{{ $department->department }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterTimeLogsDept" value="{{ __('DEPARTMENT') }}" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 px-3 text-center mt-1">
+                                    <x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
+                                    <input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+                                    to
+                                    <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+                                </div>
+                            </div>
+                        </div>
 
                             <div id="table_data">
                                 <!-- Name -->
@@ -45,7 +81,8 @@
                                             <tr class="dt-head-center">
                                                 <th>Name</th>
                                                 <th class="p-0">Emp. ID</th>
-                                                <th>Department</th>
+                                                <th>Office</th>
+                                                <th>Dept</th>
                                                 <th>Time-In</th>
                                                 <th>Time-Out</th>
                                                 <th>Supervisor</th>
@@ -57,6 +94,7 @@
                                                 <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}">
                                                     <td>{{ $employee->full_name }}</td>
                                                     <td class="p-0">{{ $employee->employee_id }}</td>
+                                                    <td>{{ $employee->office }}</td>
                                                     <td>{{ $employee->dept }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
@@ -109,7 +147,7 @@ $(document).ready(function() {
         // "order": [],
         "ordering": false,
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 5 // Set the default number of entries per page
+        "iDisplayLength": 5, // Set the default number of entries per page
 
     });
 
@@ -122,6 +160,50 @@ $(document).ready(function() {
         // Return the formatted date in the desired format (MM-DD-YYYY)
         return [month,day,year].join("/");
       }
+
+    /*$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+
+            var sD  = $('#filterTimeLogsDept').val();
+            var cD  = data[2]; // Department Column
+            
+            // Check if a department filter is selected
+            var departmentFilterActive = (sD != null && sD !== '');
+
+            // Apply both filters
+            if (!departmentFilterActive) {
+                return true; // No filters applied, show all rows
+            }
+            var departmentMatch = !departmentFilterActive || cD.includes(sD);
+
+            return departmentMatch;
+        
+    });*/
+
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+
+            var sTO  = $('#filterTimeLogsOffice').val();
+            var sTD = $('#filterTimeLogsDept').val();
+            var cTO  = data[2]; // Office Column
+            var cTD = data[3]; // Department Column
+            // alert(cTD); return false;
+            
+            // Check if a department filter is selected
+            var officeFilterActive = (sTO != null && sTO !== '');
+
+            // Check if a LeaveType filter is selected
+            var departmentFilterActive = (sTD != null && sTD !== '');
+
+            // Apply both filters
+            if (!officeFilterActive && !departmentFilterActive) {
+                return true; // No filters applied, show all rows
+            }
+            var officeMatch = !officeFilterActive || cTO.includes(sTO);
+            var departmentMatch = !departmentFilterActive || cTD.includes(sTD);
+
+            return officeMatch && departmentMatch;
+       
+        
+    });
 
 
     /* START - Date From and Date To Searching */
@@ -156,6 +238,14 @@ $(document).ready(function() {
         }
 
         return false; // Row does not match the search criteria
+    });
+
+
+    $('#filterTimeLogsOffice').on('keyup change', function() {
+        table.draw();
+    });
+    $('#filterTimeLogsDept').on('keyup change', function() {
+        table.draw();
     });
 
 

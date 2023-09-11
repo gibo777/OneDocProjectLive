@@ -169,9 +169,14 @@ class EmployeesController extends Controller
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
 
+            $offices = DB::table('offices')->get();
+            $departments = DB::table('departments')->get();
+
             return view('/time_logs/time-logs-listing', 
                 [
-                    'employees'=>$employees, 
+                    'employees'     => $employees, 
+                    'offices'       => $offices,
+                    'departments'   => $departments,
                 ]);
         } else {
             return redirect('/');
