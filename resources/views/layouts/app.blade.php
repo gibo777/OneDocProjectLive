@@ -91,8 +91,11 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                <div class="overflow-auto max-h-[500px]">
+                    {{ $slot }}
+                </div>
             </main>
+
         </div>
 
         @stack('modals')

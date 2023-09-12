@@ -17,7 +17,7 @@
                 {{ __('VIEW ALL EMPLOYEES') }}
     </x-slot>
     <div id="view_leaves">
-        <div class="w-full mx-auto pt-1 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto py-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -77,8 +77,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
-                                </div>
+                                <div class="col-md-3"></div>
                                 <div class="col-md-2 py-2 text-center">
                                     <x-jet-button  id="registerEmployee">Register Employee</x-jet-button>
                                 </div>
@@ -475,7 +474,18 @@
 
 <!-- =========================================== -->
 
+<div id="popup">
+  <p id="pop_content" class="text-justify px-2"></p>
+</div>
 
+<div id="dialog">
+  <p id="dialog_content" class="text-justify px-2"></p>
+</div>
+
+
+
+
+</x-app-layout>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -484,7 +494,7 @@ $(document).ready(function() {
             /*"columnDefs": [
               { width: '120px', targets: [0] }, 
             ],*/
-            "order": [], // Disable sorting for the entire table
+            "ordering": false,
             "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
             "iDisplayLength": 5 // Set the default number of entries per page
       });
@@ -680,16 +690,3 @@ $(document).ready(function() {
     });
 });
 </script>
-
-</x-app-layout>
-
-
-<div id="popup">
-  <p id="pop_content" class="text-justify px-2"></p>
-</div>
-
-<div id="dialog">
-  <p id="dialog_content" class="text-justify px-2"></p>
-</div>
-
-

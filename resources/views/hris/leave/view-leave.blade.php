@@ -51,11 +51,11 @@
         text-align: center; /* Center-align the header text */
     }
     /* Hide sorting arrows in DataTables */
-    .dataTables_wrapper .sorting:before,
+    /*.dataTables_wrapper .sorting:before,
     .dataTables_wrapper .sorting_asc:before,
     .dataTables_wrapper .sorting_desc:before {
         display: none;
-    }
+    }*/
 
 
     /* Custom CSS for inset shadow */
@@ -86,7 +86,7 @@
     </x-slot>
     <div id="view_leaves">
         {{-- <div class="max-w-8xl mx-auto py-2 sm:px-6 lg:px-8"> --}}
-        <div class="w-full mx-auto pt-1 sm:px-6 lg:px-8">
+        <div class="w-full mx-auto py-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -94,20 +94,11 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <form id="leave-form" action="{{ route('hris.leave.view-leave-details') }}" method="POST">
-            @csrf
+            {{-- <form id="leave-form" action="{{ route('hris.leave.view-leave-details') }}" method="POST">
+            @csrf --}}
 
             <div class="px-4 bg-white sm:p-3 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-
-                {{-- <div class="notification">
-                    <a href="{{ route('hr.management.memos') }}" class="btn btn-outline-primary btn-sm border-0 items-center">
-                      <span>
-                      <img class="img-icon" src="{{ asset('img/buttons/favpng_icon.png') }}">
-                      </span>
-                      <span id="nav-memo-counter" class="badge badge-primary badge-pill">Test</span>
-                    </a>
-                </div> --}}
 
                         <div class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
                             <div class="row pb-1" id="filterFields">
@@ -149,6 +140,11 @@
 			                    	to
 			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
+
+                                <div class="col-md-1"></div>
+                                <div class="col-md-2 py-3 text-center">
+                                    <x-jet-button  id="createNewLeave">Create New Leave</x-jet-button>
+                                </div>
 		                    </div>
                         </div>
 
@@ -170,7 +166,6 @@
                                     <table id="dataViewLeaves" class="table table-bordered table-striped sm:justify-center table-hover">
 
                                         <thead class="thead">
-
                                             <tr>
                                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                 <th>Name</th>
@@ -259,7 +254,7 @@
                     </div>
                 </div>
             </div>
-            </form>
+            {{-- </form> --}}
             <!-- FORM end -->
                 </div>
             </div>
@@ -705,9 +700,6 @@
 </div>
 
 
-</x-app-layout>
-
-
 <div id="popup">
   <p id="pop_content" class="text-justify px-2"></p>
 </div>
@@ -717,6 +709,9 @@
 </div>
 
 <x-jet-input id="hid_access_id" name="hid_access_id" value="{{ Auth::user()->access_code }}" type="text" hidden/>
+</x-app-layout>
+
+
 
 
 {{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
@@ -731,8 +726,9 @@ $(document).ready( function () {
     
     if (("{{ count($leaves) }}") == 0) { return false; }
     var tableLeaves = $('#dataViewLeaves').DataTable({
-            "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-            "iDisplayLength": 5 // Set the default number of entries per page
+        "ordering": false,
+        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 5 // Set the default number of entries per page
       });
 
 function formatDates(date) {
@@ -896,6 +892,10 @@ $('#filterLeaveType').on('keyup change', function() {
 	tableLeaves.draw(); 
 });
 
+/* Reroute to Leave Form */
+$(document).on('click','#createNewLeave', async function() {
+    window.location.href = "{{ route('hris.leave.eleave') }}";
+});
 
 /* Viewing Leave Details per Control Number - Gibs */
 $(document).on('dblclick','.view-leave',function(){

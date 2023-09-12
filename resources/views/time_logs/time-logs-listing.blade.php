@@ -12,6 +12,7 @@
     #dataTimeLogs thead th {
         text-align: center; /* Center-align the header text */
     }
+    
     </style>
 
     <x-slot name="header">
@@ -82,7 +83,7 @@
                                                 <th>Name</th>
                                                 <th class="p-0">Emp. ID</th>
                                                 <th>Office</th>
-                                                <th>Dept</th>
+                                                <th>Department</th>
                                                 <th>Time-In</th>
                                                 <th>Time-Out</th>
                                                 <th>Supervisor</th>

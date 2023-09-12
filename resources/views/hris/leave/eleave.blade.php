@@ -90,14 +90,14 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <x-jet-input id="leaveDateFrom" name="leaveDateFrom" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
+                                    <x-jet-input id="leaveDateFrom" name="leaveDateFrom" type="date" class="form-control date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
                                     <x-jet-label for="leaveDateFrom" value="{{ __('BEGIN (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
                             TO
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <x-jet-input id="leaveDateTo" name="leaveDateTo" type="text" class="form-control datepicker date-input" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
+                                    <x-jet-input id="leaveDateTo" name="leaveDateTo" type="date" class="form-control date-input" placeholder="mm/dd/yyyy" autocomplete="off"/>
                                     <x-jet-label for="leaveDateTo" value="{{ __('END (mm/dd/yyyy)') }}" class="w-full" />
                                 </div>
                             </div>
@@ -251,8 +251,6 @@
 </div>
     
 <x-jet-input id="holidates" type="hidden" value="{{ $holidays->implode('date', '|') }}"></x-jet-input>
-</x-app-layout>
-
 <div id="popup">
   <p id="pop_content" class="text-justify px-2"></p>
 </div>
@@ -260,3 +258,4 @@
 <div id="error_dialog">
   <p id="error_dialog_content" class="text-justify px-2"></p>
 </div>
+</x-app-layout>

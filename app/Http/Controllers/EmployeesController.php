@@ -54,15 +54,11 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();
 
-            $offices = DB::table('offices')->get();
-            
-            $departments = DB::table('departments')->get();
-
-            $leave_types = DB::table('leave_types')->get();
-
-            $holidays = DB::table('holidays')->get();
-
-            $employment_statuses = DB::table('employment_statuses')->get();
+            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
+            $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays = DB::table('holidays')->orderBy('holiday')->get();
+            $employment_statuses = DB::table('employment_statuses')->orderBy('employment_status')->get();
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
@@ -169,8 +165,8 @@ class EmployeesController extends Controller
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
 
-            $offices = DB::table('offices')->get();
-            $departments = DB::table('departments')->get();
+            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
 
             return view('/time_logs/time-logs-listing', 
                 [

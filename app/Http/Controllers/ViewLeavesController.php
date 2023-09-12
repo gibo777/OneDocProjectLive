@@ -49,6 +49,7 @@ class ViewLeavesController extends Controller
                 'd.department',
 	        	'd.department_code as dept',
 	        	'u.supervisor',
+                'L.created_at',
 	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
 	        	DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));
 	        /*if ($access_code==null) { 
@@ -66,15 +67,15 @@ class ViewLeavesController extends Controller
 	        $leaves = $leaves->where( function($query) {
 	        	return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
 	        	});
-            $leaves = $leaves->orderBy('L.created_at');            
-            $leaves = $leaves->orderBy('L.name');            
-	        $leaves = $leaves->orderBy('L.id');
+            $leaves = $leaves->orderBy('L.created_at','desc');            
+            // $leaves = $leaves->orderBy('L.name');            
+	        // $leaves = $leaves->orderBy('L.id');
             // $leaves = $leaves->paginate(5);
 	        $leaves = $leaves->get();
 
-            $departments = DB::table('departments')->get();
-            $leave_types = DB::table('leave_types')->get();
-            $holidays = DB::table('holidays')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
+            $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays = DB::table('holidays')->orderBy('holiday')->get();
 
 	        return view('hris.leave.view-leave', ['holidays'=>$holidays, 'leaves'=>$leaves, 'departments'=>$departments, 'leave_types'=>$leave_types]);
         } else {
@@ -180,6 +181,7 @@ class ViewLeavesController extends Controller
 	        	'L.is_head_approved',
 	        	'L.is_hr_approved',
                 'L.is_taken',
+                'L.is_cancelled',
                 DB::raw('(CASE 
                     WHEN L.leave_type="VL" THEN b.VL 
                     WHEN L.leave_type="SL" THEN b.SL
@@ -211,10 +213,6 @@ class ViewLeavesController extends Controller
     function update_leave (Request $request) {
     	if($request->ajax()){
             try {
-        		// return "Gilbert";
-        		// return var_dump($request->all());
-        		// return $request->leave_id;
-
         		$name             = $request->name;
         		$employee_number  = $request->employee_number;
         		$department       = $request->department;
@@ -227,8 +225,6 @@ class ViewLeavesController extends Controller
         		$date_to          = date('Y-m-d',strtotime($request->date_to));
         		$hid_no_days      = $request->hid_no_days;
         		$leave_id         = $request->leave_id;
-
-                // dd('Gilbert');
 
                 $data_array = array(
                             'date_applied'  => $date_applied,
@@ -368,16 +364,16 @@ class ViewLeavesController extends Controller
                 $date = date('Y-m-d H-i-s');
 
                 $data_array = array(
-                    'is_head_approved'    => 1,
-                    'head_name'    => Auth::user()->first_name.' '. Auth::user()->last_name,
-                    'date_approved_head'  => date('Y-m-d G-i-s')
+                    'leave_status'          => 'Head Approved',
+                    'is_head_approved'      => 1,
+                    'head_name'             => Auth::user()->first_name.' '. Auth::user()->last_name,
+                    'date_approved_head'    => date('Y-m-d G-i-s')
                 );
 
 
                 $update = DB::table('leaves');
                 $update = $update->where('id',$leave_id);
                 $update = $update->update($data_array);
-                // return $request->leaveID.'|'.$update;
 
                 
                 if ($update > 0) {
@@ -566,8 +562,6 @@ class ViewLeavesController extends Controller
     function yes_button_leave (Request $request) {
         if($request->ajax()){
             try {
-                // return "Action: ".$request->action."<br>Reason:".$request->reason;
-                // return var_dump($request->all());
                 $leave_id = $request->leaveID;
                 $action = $request->action;
                 $reason = $request->reason;
@@ -575,12 +569,14 @@ class ViewLeavesController extends Controller
 
                 if ($action=="Cancelled") {
                     $data_array = array(
+                        'leave_status'    => 'Cancelled',
                         'is_cancelled'    => 1,
                         'cancelled_by'    => Auth::user()->employee_id,
                         'date_cancelled'  => date('Y-m-d G-i-s')
                     );
                 } else if ($action=="Denied") {
                     $data_array = array(
+                        'leave_status' => 'Denied',
                         'is_denied'    => 1,
                         'denied_by'    => Auth::user()->employee_id,
                         'date_denied'  => date('Y-m-d G-i-s')
