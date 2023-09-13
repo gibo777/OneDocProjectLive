@@ -38,7 +38,7 @@ class FullCalenderController extends Controller
                   return $query->where ('is_denied','=', '0')->orWhereNull('is_denied');
                   });
 
-                $data = $data->get([ 'id', 
+                $data = $data->get([ 'id', 'leave_status',
                           DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ',
                           SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.',
                           ' (',leave_type,')') as title"), 

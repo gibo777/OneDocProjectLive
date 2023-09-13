@@ -41,7 +41,7 @@
                                 <div class="col-md-2">
                                     <!-- FILTER by Leave Type -->
                                     <div class="form-floating" id="divfilterEmpOffice">
-                                        <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Offices</option>
                                             @foreach ($offices as $office)
                                             <option>{{ $office->company_name }}</option>
@@ -54,7 +54,7 @@
                                 <div class="col-md-2">
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterEmpDepartment">
-                                        <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $dept)
                                             <option value="{{ $dept->department_code }}">{{ $dept->department }}</option>
@@ -67,7 +67,7 @@
                                 <div class="col-md-2">
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterEmpDepartment">
-                                        <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Statuses</option>
                                             @foreach ($employment_statuses as $estat)
                                             <option>{{ $estat->employment_status }}</option>

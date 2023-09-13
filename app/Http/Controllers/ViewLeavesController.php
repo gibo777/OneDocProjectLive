@@ -73,11 +73,19 @@ class ViewLeavesController extends Controller
             // $leaves = $leaves->paginate(5);
 	        $leaves = $leaves->get();
 
-            $departments = DB::table('departments')->orderBy('department')->get();
-            $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
-            $holidays = DB::table('holidays')->orderBy('holiday')->get();
+            $departments    = DB::table('departments')->orderBy('department')->get();
+            $leave_types    = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays       = DB::table('holidays')->orderBy('holiday')->get();
+            $leave_statuses = DB::table('leave_statuses')->orderBy('leave_status')->get();
 
-	        return view('hris.leave.view-leave', ['holidays'=>$holidays, 'leaves'=>$leaves, 'departments'=>$departments, 'leave_types'=>$leave_types]);
+	        return view('hris.leave.view-leave', 
+                [
+                    'holidays'      => $holidays, 
+                    'leaves'        => $leaves, 
+                    'departments'   => $departments, 
+                    'leave_types'   => $leave_types,
+                    'leave_statuses'=> $leave_statuses,
+                ]);
         } else {
             return redirect('/');
         }
@@ -86,9 +94,9 @@ class ViewLeavesController extends Controller
     function filter_leave(Request $request) {
         // dd($request);
 
-            $filter_search = $request->filter_search;
-            $filter_leave_type = $request->filter_leave_type;
-            $filter_department = $request->filter_department;
+            $filter_search      = $request->filter_search;
+            $filter_leave_type  = $request->filter_leave_type;
+            $filter_department  = $request->filter_department;
 
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
@@ -258,6 +266,7 @@ class ViewLeavesController extends Controller
             try {
                 $leave_id = $request->leaveID;
                 $data_array = array(
+                    'leave_status'  => 'Deleted',
                     'is_deleted'    => 1,
                     'deleted_by'    => Auth::user()->employee_id,
                     'date_deleted'  => date('Y-m-d G-i-s')
@@ -467,9 +476,10 @@ class ViewLeavesController extends Controller
                 $action = $request->action;
                 $reason = $request->reason;
                 $data_array = array(
-                    'is_taken'    => 1,
-                    'hr_name'    => Auth::user()->first_name.' '. Auth::user()->last_name,
-                    'date_taken'  => date('Y-m-d G-i-s')
+                    'leave_status'  => 'Taken',
+                    'is_taken'      => 1,
+                    'hr_name'       => Auth::user()->first_name.' '. Auth::user()->last_name,
+                    'date_taken'    => date('Y-m-d G-i-s')
                 );
 
                 $update = DB::table('leaves');

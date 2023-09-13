@@ -32,7 +32,7 @@
                 @csrf
 
 
-                <div class="px-4 py-5 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+                <div class="px-4 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                     <div class="grid grid-cols-5 gap-6 sm:justify-center">
                         <!-- Name -->
                         <div id="table_data" class="col-span-5 sm:col-span-5 sm:justify-center text-center scrollable">

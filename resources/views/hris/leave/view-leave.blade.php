@@ -102,9 +102,9 @@
 
                         <div class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
                             <div class="row pb-1" id="filterFields">
-                                <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
+                                {{-- <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
                                     <x-jet-label for="filterFields" class="text-center" value="{{ __('FILTER') }}"/>
-                                </div>
+                                </div> --}}
                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                 <div class="col-md-2 px-4 text-center mt-1" {{ (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') ? '' : 'hidden' }}>
                                         <!-- FILTER by Department -->
@@ -133,15 +133,30 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-2 px-4 text-center mt-1">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="div_filterLeaveType">
+                                        <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <option value="">All Leave Statuses</option>
+                                            @foreach ($leave_statuses as $leave_status)
+                                            <option>{{ $leave_status->leave_status }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterLeaveStatus" value="{{ __('LEAVE STATUS') }}" />
+                                    </div>
+                                </div>
 
-			                    <div class="col-md-4 px-3 text-center mt-1">
+
+			                    <div class="col-md-4 px-4 text-center mt-1">
 			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
 			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    	to
 			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
 
-                                <div class="col-md-1"></div>
+                                @if (Auth::user()->role_type!='ADMIN' && Auth::user()->role_type!='SUPER ADMIN')
+                                <div class="col-md-2"></div>
+                                @endif
                                 <div class="col-md-2 py-3 text-center">
                                     <x-jet-button  id="createNewLeave">Create New Leave</x-jet-button>
                                 </div>
@@ -205,9 +220,9 @@
                                                             id="{{ $leave->id }}"
                                                             value="{{ $leave->id }}"
                                                             title="Show History Leave #{{ $leave->leave_number }}"
-                                                            class="open_leave green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500"
+                                                            class="open_leave {{ ($leave->status=='Cancelled'||$leave->status=='Denied') ? 'red-color' : 'green-color' }} inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500"
                                                             >
-                                                            {{ $leave->status }}
+                                                            {{ strtoupper($leave->status) }}
                                                         </button></td>
                                                     @else
                                                     <td>{{ $leave->status }}</td>
@@ -423,7 +438,7 @@
                               <th>Date Applied</th>
                               <th>Begin Date</th>
                               <th>End Date</th>
-                              <th># of Days</th>
+                              <th># of Day/s</th>
                           </tr>
                       </thead>
                       <tbody class="data text-center" id="data">
@@ -774,8 +789,10 @@ function currentDate() {
 		if (aRT=='SUPER ADMIN' || aRT=='ADMIN') {
 		    var sD  = $('#filterDepartment').val();
 		    var sLT = $('#filterLeaveType').val();
+            var sLS = $('#filterLeaveStatus').val().toUpperCase();
 		    var cD  = data[1]; // Department Column
-		    var cLT = data[3]; // LeaveType Column
+            var cLT = data[3]; // Leave Type Column
+		    var cLS = data[8].toUpperCase(); // Leave Status Column
 		    
 		    // Check if a department filter is selected
 		    var departmentFilterActive = (sD != null && sD !== '');
@@ -783,14 +800,18 @@ function currentDate() {
 		    // Check if a LeaveType filter is selected
 		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
 
+            // Check if a LeaveType filter is selected
+            var leaveStatusFilterActive = (sLS != null && sLS !== '');
+
 		    // Apply both filters
-		    if (!departmentFilterActive && !leaveTypeFilterActive) {
+		    if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
 		        return true; // No filters applied, show all rows
 		    }
 		    var departmentMatch = !departmentFilterActive || cD.includes(sD);
-		    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+            var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+		    var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
 
-		    return departmentMatch && leaveTypeMatch;
+		    return departmentMatch && leaveTypeMatch && leaveStatusMatch;
 		} else {
 		    var sLT = $('#filterLeaveType').val();
 		    var cLT = data[1]; // LeaveType Column
@@ -888,8 +909,11 @@ $('#filterDepartment').on('keyup change', function() {
 });
 /* Filtering Leave Types - Gibs */
 $('#filterLeaveType').on('keyup change', function() { 
-
 	tableLeaves.draw(); 
+});
+/* Filtering Leave Statuses - Gibs */
+$('#filterLeaveStatus').on('keyup change', function() { 
+    tableLeaves.draw(); 
 });
 
 /* Reroute to Leave Form */
