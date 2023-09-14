@@ -117,132 +117,110 @@
              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
              }
          });
+
+
+        // alert(JSON.stringify(holidayEvents));
            
          var calendar = $('#calendar').fullCalendar({
-                             editable: true,
-                             events: SITEURL + "/fullcalender",
-                             displayEventTime: false,
-                             editable: true,
-                             weekMode: 'variable', // allow the number of weeks to change dynamically
-                             weekNumbers: false, // show week numbers
-                             fixedWeekCount: false,
-                             contentHeight: function() {
-                                // calculate the content height based on the number of weeks displayed
-                                var numWeeks = $('#calendar').fullCalendar('getView').end.diff(
-                                  $('#calendar').fullCalendar('getView').start, 'weeks'
-                                );
-                                return numWeeks * 100; // set the height to be 100 pixels per week
-                            },
-                             eventTextColor: '#fff',
-                             eventBackgroundColor: '#206CCE',
-                             eventRender: function (event, element, view) {
-                                 if (event.allDay === 'true') {
-                                         event.allDay = true;
-                                 } else {
-                                         event.allDay = false;
-                                 }
+                 events: SITEURL + "/fullcalender",
+                 displayEventTime: false,
+                 editable: true,
+                 weekMode: 'variable', // allow the number of weeks to change dynamically
+                 weekNumbers: false, // show week numbers
+                 fixedWeekCount: false,
+                 contentHeight: function() {
+                    // calculate the content height based on the number of weeks displayed
+                    var numWeeks = $('#calendar').fullCalendar('getView').end.diff(
+                      $('#calendar').fullCalendar('getView').start, 'weeks'
+                    );
+                    return numWeeks * 100; // set the height to be 100 pixels per week
+                },
+                 eventTextColor: '#fff',
+                 eventBackgroundColor: '#206CCE',
+                 eventRender: function (event, element, view) {
+                     if (event.allDay === 'true') {
+                             event.allDay = true;
+                     } else {
+                             event.allDay = false;
+                     }
+                 },
+                 // selectable: true,
+                 selectHelper: true,
+                 /*select: function (start, end, allDay) {
+                     var title = prompt('Event Title:');
+                     if (title) {
+                         var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
+                         var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
+                         $.ajax({
+                             url: SITEURL + "/fullcalenderAjax",
+                             data: {
+                                 title: title,
+                                 start: start,
+                                 end: end,
+                                 type: 'add'
                              },
-                             // selectable: true,
-                             selectHelper: true,
-                             select: function (start, end, allDay) {
-                                 /*var title = prompt('Event Title:');
-                                 if (title) {
-                                     var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
-                                     var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
-                                     $.ajax({
-                                         url: SITEURL + "/fullcalenderAjax",
-                                         data: {
-                                             title: title,
-                                             start: start,
-                                             end: end,
-                                             type: 'add'
-                                         },
-                                         type: "POST",
-                                         success: function (data) {
-                                             displayMessage("Event Created Successfully");
-           
-                                             calendar.fullCalendar('renderEvent',
-                                                 {
-                                                     id: data.id,
-                                                     title: title,
-                                                     start: start,
-                                                     end: end,
-                                                     allDay: allDay
-                                                 },true);
-           
-                                             calendar.fullCalendar('unselect');
-                                         }
-                                     });
-                                 }*/
-                             },
-                             eventDrop: function (event, delta) {
-                                 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
-                                 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
-           
-                                 $.ajax({
-                                     url: SITEURL + '/fullcalenderAjax',
-                                     data: {
-                                         title: event.title,
+                             type: "POST",
+                             success: function (data) {
+                                 displayMessage("Event Created Successfully");
+
+                                 calendar.fullCalendar('renderEvent',
+                                     {
+                                         id: data.id,
+                                         title: title,
                                          start: start,
                                          end: end,
-                                         id: event.id,
-                                         type: 'update'
-                                     },
-                                     type: "POST",
-                                     success: function (response) {
-                                         displayMessage("Event Updated Successfully");
-                                     }
-                                 });
-                             },
-                             eventClick: function (event) {
-                                // alert(event.id); return false;
-                                 // var deleteMsg = confirm("Do you really want to delete?");
-                                 // if (deleteMsg) {
-                                     $.ajax({
-                                         type: "POST",
-                                         url: SITEURL + '/fullcalenderAjax',
-                                         data: {
-                                                 id: event.id,
-                                                 type: 'view'
-                                         },
-                                         success: function (response) {
-                                            // prompt('',response);
-                                            $("#calendarLabel").html(('Control #'+ response['control_number']).toUpperCase());
-                                            $("#calendar_name").html(response['name']);
-                                            $("#calendar_employee_id").html(response['employee_id']);
-                                            $("#calendar_leave_type").html(response['leave_type']);
-                                            $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
-                                            $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
-                                            $("#no_of_days").html(response['no_of_days']),
-                                            $("#leave_status").html(response['leave_status']),
-                                            $("#modalCalendar").modal('show');
+                                         allDay: allDay
+                                     },true);
 
-                                            /*$("#dialog" ).dialog({
-                                                modal: true,
-                                                width: "auto",
-                                                height: "auto",
-                                                title: ("Leave #"+response['leave_number']+" of "+response['name']).toUpperCase(),
-                                                buttons: [
-                                                {
-                                                    id: "OK",
-                                                    text: "OK",
-                                                    click: function () {
-                                                        $(this).dialog('close');
-                                                        // location.reload();
-                                                    }
-                                                }
-                                                ]
-                                            });
-                                            $(".ui-dialog-titlebar").addClass('banner-blue');*/
-                                            // $(".ui-dialog-titlebar").hide();
-                                             // calendar.fullCalendar('removeEvents', event.id);
-                                             // displayMessage("Event Deleted Successfully");
-                                         }
-                                     });
-                                 // }
+                                 calendar.fullCalendar('unselect');
                              }
-          
                          });
+                     }
+                 },*/
+                 eventDrop: function (event, delta) {
+                     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
+                     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
+
+                     $.ajax({
+                         url: SITEURL + '/fullcalenderAjax',
+                         data: {
+                             title: event.title,
+                             start: start,
+                             end: end,
+                             id: event.id,
+                             type: 'update'
+                         },
+                         type: "POST",
+                         success: function (response) {
+                             displayMessage("Event Updated Successfully");
+                         }
+                     });
+                 },
+                 eventClick: function (event) {
+                         $.ajax({
+                             type: "POST",
+                             url: SITEURL + '/fullcalenderAjax',
+                             data: {
+                                     id: event.id,
+                                     type: 'view'
+                             },
+                             success: function (response) {
+                                // prompt('',JSON.stringify(response));
+                                $("#calendarLabel").html(('Control #'+ response['control_number']).toUpperCase());
+                                $("#calendar_name").html(response['name']);
+                                $("#calendar_employee_id").html(response['employee_id']);
+                                $("#calendar_leave_type").html(response['leave_type']);
+                                $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
+                                $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
+                                $("#no_of_days").html(response['no_of_days']),
+                                $("#leave_status").html(response['leave_status']),
+                                $("#modalCalendar").modal('show');
+
+                             }
+                         });
+                 }
+
+             });
           
          });
           

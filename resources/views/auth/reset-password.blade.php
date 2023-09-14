@@ -160,7 +160,7 @@
     } else {
 
     $('.passconfirm').empty();
-    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
+    $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password matched!');
 
 
     }
@@ -174,16 +174,11 @@
 
     }
         if ($('#password').val() != $('#password_confirmation').val()) {
-
-        $('.passconfirm').empty();
-        $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
-
-            } else {
-
-                $('.passconfirm').empty();
-        $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
-
-
+            $('.passconfirm').empty();
+            $('.passconfirm').append('<span><i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i></span>&nbsp; Password do not a match!');
+        } else {
+            $('.passconfirm').empty();
+            $('.passconfirm').append('<span><i class="fa fa-check-circle text-success" aria-hidden="true"></i></span>&nbsp; Password matched!');
         }
     });
     function checkStrength(password) {

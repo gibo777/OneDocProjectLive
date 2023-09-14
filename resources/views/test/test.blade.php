@@ -1,30 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remove "No file chosen" Box</title>
-    <!-- Include Bootstrap CSS (you can replace the link with your specific version) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/css/bootstrap.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js'></script>
     <style>
-        /* Hide the "No file chosen" box */
-        .custom-file-label::after {
-            content: none; /* Hide the content after the input field */
-        }
+        /* Add your CSS styles here for the table and events */
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <form>
-            <div class="mb-3">
-                <label for="customFile" class="form-label">Choose file</label>
-                <input type="file" class="form-control custom-file-input" id="customFile" hidden>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+    <table>
+        <tr>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <!-- Add more days of the week here -->
+        </tr>
+        <tr>
+            <!-- FullCalendar container for Sunday -->
+            <td>
+                <div id="sundayCalendar"></div>
+            </td>
+            <!-- FullCalendar container for Monday -->
+            <td>
+                <div id="mondayCalendar"></div>
+            </td>
+            <!-- FullCalendar container for Tuesday -->
+            <td>
+                <div id="tuesdayCalendar"></div>
+            </td>
+            <!-- Add more containers for other days -->
+        </tr>
+        <!-- Add more rows for additional weeks if needed -->
+    </table>
 
-    <!-- Include Bootstrap JS (if needed) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize FullCalendar for each day
+        $('#sundayCalendar').fullCalendar({
+            // Configure FullCalendar options for Sunday
+            // Add event sources and other options as needed
+        });
+
+        $('#mondayCalendar').fullCalendar({
+            // Configure FullCalendar options for Monday
+            // Add event sources and other options as needed
+        });
+
+        $('#tuesdayCalendar').fullCalendar({
+            // Configure FullCalendar options for Tuesday
+            // Add event sources and other options as needed
+        });
+
+        // Repeat the above code for other days of the week
+    </script>
 </body>
 </html>

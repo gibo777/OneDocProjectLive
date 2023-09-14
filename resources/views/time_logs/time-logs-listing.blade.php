@@ -58,7 +58,8 @@
                                         <select name="filterTimeLogsDept" id="filterTimeLogsDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $department)
-                                            <option value="{{ $department->department_code }}">{{ $department->department }}</option>
+                                            {{-- <option value="{{ $department->department_code }}">{{ $department->department }}</option> --}}
+                                            <option>{{ $department->department }}</option>
                                             @endforeach
                                         </select>
                                         <x-jet-label for="filterTimeLogsDept" value="{{ __('DEPARTMENT') }}" />
@@ -92,11 +93,12 @@
                                         </thead>
                                         <tbody class="data hover" id="viewEmployee">
                                             @forelse($employees as $employee)
-                                                <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}">
+                                                <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}"
+                                                     class="text-sm text-lg-lg">
                                                     <td>{{ $employee->full_name }}</td>
                                                     <td class="p-0">{{ $employee->employee_id }}</td>
                                                     <td>{{ $employee->office }}</td>
-                                                    <td>{{ $employee->dept }}</td>
+                                                    <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
                                                     <td>{{ $employee->head_name }}</td>
@@ -146,6 +148,9 @@ $(document).ready(function() {
             [0, 'asc'],
         ],*/
         // "order": [],
+        /*"columnDefs": [
+          { width: '170px', targets: [3] }, 
+        ],*/
         "ordering": false,
         "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 5, // Set the default number of entries per page
@@ -295,10 +300,10 @@ $(document).ready(function() {
         // alert($(this).attr('id')); return false;
 
 
-        // $('#dataLoad').css('display','flex');
-        // $('#dataLoad').css('position','absolute');
-        // $('#dataLoad').css('top','40%');
-        // $('#dataLoad').css('left','40%');
+        $('#dataLoad').css('display','flex');
+        $('#dataLoad').css('position','absolute');
+        $('#dataLoad').css('top','40%');
+        $('#dataLoad').css('left','40%');
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -352,6 +357,7 @@ $(document).ready(function() {
                         allowOutsideClick: false,
                         html: tDT
                     });
+                    $('#dataLoad').css('display','none');
             }
         });
     });

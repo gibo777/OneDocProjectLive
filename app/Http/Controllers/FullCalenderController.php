@@ -25,9 +25,24 @@ class FullCalenderController extends Controller
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
         {
           if($request->ajax()) {
-         
-                $data = Event::whereDate('date_from', '>=', $request->start)
-                         ->whereDate('date_to',   '<=', $request->end);
+
+              $holidayEvents = DB::table('holidays')
+                ->select(
+                    'id', 
+                    'holiday as title',
+                    'date as start',
+                    'date as end'
+                )
+                ->get()
+                ->map(function ($event) {
+                    // Add a custom property 'color' to the event object
+                    $event->color = 'red'; // You can set any color you prefer here
+                    return $event;
+                });
+
+                $data = DB::table('leaves')
+                        ->whereDate('date_from', '>=', $request->start)
+                        ->whereDate('date_to',   '<=', $request->end);
                 $data = $data->where( function($query) {
                   return $query->where ('is_deleted','=', '0')->orWhereNull('is_deleted');
                   });
@@ -38,14 +53,17 @@ class FullCalenderController extends Controller
                   return $query->where ('is_denied','=', '0')->orWhereNull('is_denied');
                   });
 
-                $data = $data->get([ 'id', 'leave_status',
+                $data = $data->get([ 'id', 
                           DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ',
                           SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.',
                           ' (',leave_type,')') as title"), 
                           'date_from as start', 'date_to as end']);
+         
+                // $combinedEvents = $holidayEvents->union($data);
+                $combinedEvents = $holidayEvents->concat($data);
 
     
-               return response()->json($data);
+               return response()->json($combinedEvents);
           }
             return view('/utilities/fullcalender');
         } else {

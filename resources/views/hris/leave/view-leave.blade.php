@@ -106,7 +106,7 @@
                                     <x-jet-label for="filterFields" class="text-center" value="{{ __('FILTER') }}"/>
                                 </div> --}}
                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <div class="col-md-2 px-4 text-center mt-1" {{ (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') ? '' : 'hidden' }}>
+                                <div class="col-md-2 px-4 text-center mt-1">
                                         <!-- FILTER by Department -->
                                     <div class="form-floating" id="divfilterDepartment">
                                         <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
@@ -200,7 +200,7 @@
                                         </thead>
                                         <tbody class="data hover" id="viewLeave">
                                             @forelse($leaves as $leave)
-                                                <tr class="view-leave" id="{{ $leave->id }}">
+                                                <tr class="view-leave text-sm text-lg-lg" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                     <td>{{ $leave->name }}</td>
                                                     {{-- <td>{{ $leave->employee_id }}</td> --}}
