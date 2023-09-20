@@ -62,7 +62,7 @@
                       <span>
                       <img class="img-icon" src="{{ asset('img/buttons/favpng_icon.png') }}">
                       </span>
-                      <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
+                      <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count.'3' }}</span>
                     </a>
                 </div> --}}
                 
@@ -318,6 +318,9 @@
                           @endif
                           
                       </div>
+                      {{-- @if ($notification_count>0)
+                      <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
+                      @endif --}}
                 </div>
 
                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')

@@ -109,6 +109,9 @@ class User extends Authenticatable
                 case 'NB':
                     $defaultPhoto='default-photo.png';
                     break;
+                default:
+                    $defaultPhoto='default-photo.png';
+                    break;
             }
 
             return asset('/storage/profile-photos/'.$defaultPhoto);
