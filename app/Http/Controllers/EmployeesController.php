@@ -64,7 +64,7 @@ class EmployeesController extends Controller
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
                 ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
                 // ->where('id','!=',Auth::user()->id)->orWhere('employee_id','2000-0001')
-                ->where('employee_id','2000-0001')
+                // ->where('employee_id','2000-0001')
                 ->where('id','!=',1)
                 ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();
