@@ -350,7 +350,7 @@ $(document).ready(function(){
         var weekends_count =  isWeekendandHolidays (datefrom,dateto);
         // alert ('gilbert'); return false;
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
-        if ($('#leave_type').val()=="SL"&& Date.parse(datefrom) > Date.now()){
+        /*if ($('#leave_type').val()=="SL"&& Date.parse(datefrom) > Date.now()){
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");
@@ -361,7 +361,7 @@ $(document).ready(function(){
 
               })
         }
-        else if ( Date.parse(dateto) < Date.parse(datefrom)) {
+        else*/ if ( Date.parse(dateto) < Date.parse(datefrom)) {
             // $("#range_notice").html("Invalid Date Range.");
             // $("#range_notice").css("color","#ff0800");
             $('#leaveDateFrom').val("");
