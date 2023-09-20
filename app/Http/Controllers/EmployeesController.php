@@ -92,7 +92,14 @@ class EmployeesController extends Controller
     
     public function getEmployeeInfo (Request $request){
         $empid = $request->id;
-        $getemployee = DB::table('users')->where('id',$empid)->first();
+        $getemployee = DB::table('users as u')
+            ->select(
+                'u.*', 
+                DB::raw("DATE_FORMAT(u.birthdate, '%m/%d/%Y') as birthday"),
+                'p.country_name')
+            ->leftJoin('provinces as p','u.country','=','p.country_code')
+            ->where('u.id',$empid)
+            ->first();
         $getLeaves = DB::table('leave_balances')->where('ref_id',$empid)->first();
 
         // return var_dump($getLeaves);

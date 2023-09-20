@@ -209,7 +209,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 nopadding my-1">
+                        {{-- <div class="col-md-12 nopadding my-1">
                                 <div class="form-floating">
                                     <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
@@ -219,9 +219,9 @@
                                     </select>
                                     <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
                                 </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-md-12 nopadding my-1">
+                        {{-- <div class="col-md-12 nopadding my-1">
                                 <div class="form-floating">
                                     <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                         <option value=""></option>
@@ -231,7 +231,7 @@
                                     </select>
                                     <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
                                 </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-12 nopadding my-1">
                             <div class="row">
@@ -253,48 +253,90 @@
                     </div>
 
                     <div class="col-md-9">
-                        <div class="row mt-1">
-                                <div class="col-md-4 px-1">
-                                    <div class="form-floating">
-                                        <x-jet-input id="last_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="last_name" disabled/>
-                                        <x-jet-label for="last_name" value="{{ __('Last Name') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="last_name" class="mt-2" />
-                                    </div>
-                                    {{-- <x-jet-field-required>field required</x-jet-field-required> --}}
+                        <div class="row my-1 pt-1 inset-shadow">
+                                <div class="col-md-6 px-1">
+                                        <x-jet-label id="fullName" class="w-full text-md" />
                                 </div>
-                                <div class="col-md-4 px-1">
-                                    <div class=" form-floating">
-                                        <x-jet-input id="first_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="first_name" disabled/>
-                                        <x-jet-label for="first_name" value="{{ __('First Name') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="first_name" class="mt-2" />
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="middle_name" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="middle_name" disabled/>
-                                        <x-jet-label for="middle_name" value="{{ __('Middle Name') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="middle_name" class="mt-2" />
-                                </div>
-                                <div class="col-md-1 form-floating px-1">
-                                        <x-jet-input id="suffix" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="suffix" disabled/>
-                                        <x-jet-label for="suffix" value="{{ __('Ext.') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="suffix" class="mt-2" />
-                                </div>
+                                {{-- <div class="col-md-6 px-1">
+                                        <x-jet-label id="employeeID" value="{{ __('Employee ID: ') }}" class="w-full" />
+                                </div> --}}
 
+                        </div>
+                        <div class="row my-1 pt-1 inset-shadow">
+                                <div class="col-md-7 px-1">
+                                        <x-jet-label id="homeAddress" class="w-full text-md" />
+                                </div>
+                                <div class="col-md-3 px-1">
+                                        <x-jet-label id="homeCountry" class="w-full text-md" />
+                                </div>
+                                <div class="col-md-2 px-1">
+                                        <x-jet-label id="homeZipCode" class="w-full text-md" />
+                                </div>
+                        </div>
+
+                        <div class="row my-1 pt-1 inset-shadow">
+                            <div class="col-md-4 px-1">
+                                    <x-jet-label id="email" class="w-full text-md" />
                             </div>
+                            <div class="col-md-4 px-1">
+                                    <x-jet-label id="contactNumber" class="w-full text-md" />
+                            </div>
+                            <div class="col-md-4 px-1">
+                                    <x-jet-label for="mobile_number" class="w-full text-md" />
+                            </div>
+                        </div>
 
-                            <div class="row pt-2">
-                                <div class="col-md-4 form-floating px-1">
-                                    <!-- Employee ID -->
-                                        <x-jet-input id="employee_id" type="text" class="form-control block w-full"/>
-                                        <x-jet-label for="employee_id" value="{{ __('Employee ID') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="employee_id" class="mt-2" />
-                                </div>
-                                <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="position" type="text" class="form-control block w-full" autocomplete="position"/>
-                                        <x-jet-label for="position" value="{{ __('Position') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="position" class="mt-2" />
-                                </div>
-                                <div class="col-md-4 form-floating px-1">
+                        <div class="row my-1 pt-1 inset-shadow">
+                            {{-- <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="height" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
+                                    <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="height" class="mt-2" />
+                            </div>
+                            <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="weight" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
+                                    <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="weight" class="mt-2" />
+                            </div> --}}
+                            <div class="col-md-1 px-1">
+                                    <x-jet-label id="gender" class="w-full text-md" />
+                            </div>
+                            <div class="col-md-2 px-1">
+                                    <x-jet-label id="civilStatus" class="w-full text-md" />
+                            </div>
+                        {{-- </div>
+
+                        <div class="row pt-2"> --}}
+                            <div class="col-md-3 px-1">
+                                    <x-jet-label id="nationality" class="w-full text-md" />
+                            </div>
+                            {{-- <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="religion" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="religion" disabled/>
+                                    <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="religion" class="mt-2" />
+                            </div> --}}
+                            <div class="col-md-2 px-1">
+                                    <x-jet-label id="birthDate" class="w-full text-md" />
+                            </div>
+                            <div class="col-md-4 px-1">
+                                    <x-jet-label id="birthPlace" class="w-full text-md" />
+                            </div>
+                        </div>
+
+
+                        <div class="row my-1 pt-1">
+                            <div class="col-md-4 px-1 my-1">
+                                    <div class="form-floating">
+                                        <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                            <option value=""></option>
+                                            @foreach ($offices as $office)
+                                            <option value="{{ $office->id }}">{{ $office->company_name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
+                                    </div>
+                            </div>
+                            <div class="col-md-4 px-1 my-1">
+                                    <div class="form-floating">
                                         <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value="">Select Department</option>
                                             @foreach ($departments as $dept)
@@ -304,10 +346,36 @@
                                         <x-jet-label for="department" value="{{ __('Department') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="department" class="mt-2" />
                                         <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" />
-                                </div>
+                                    </div>
                             </div>
+                            <div class="col-md-4 px-1 my-1">
+                                    <div class="form-floating">
+                                        <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                            <option value=""></option>
+                                            @foreach ($heads as $head)
+                                            <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
+                                    </div>
+                            </div>
+                        </div>
 
-                            <div class="row pt-2">
+                        <div class="row my-1 pt-1">
+                            <div class="col-md-4 form-floating px-1">
+                                <!-- Employee ID -->
+                                    <x-jet-input id="employee_id" type="text" class="form-control block w-full"/>
+                                    <x-jet-label for="employee_id" value="{{ __('Employee ID') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="employee_id" class="mt-2" />
+                            </div>
+                            <div class="col-md-8 form-floating px-1">
+                                    <x-jet-input id="position" type="text" class="form-control block w-full" autocomplete="position"/>
+                                    <x-jet-label for="position" value="{{ __('Position') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="position" class="mt-2" />
+                            </div>
+                        </div>
+
+                            {{-- <div class="row pt-2">
                                 <div class="col-md-4 form-floating px-1">
                                             <x-jet-input id="country" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Country" disabled/>
                                             <x-jet-label for="country" value="{{ __('Country') }}" class="text-black-50 w-full" />
@@ -342,74 +410,10 @@
                                         <x-jet-label for="zip_code" value="{{ __('Zip Code') }}" class="text-black-50 w-full" />
                                         <x-jet-input-error for="zip_code" class="mt-2" />
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class="row pt-2">
-                                <div class="col-md-4 form-floating px-1">
-                                    <!-- Email -->
-                                        <x-jet-input id="email" type="email" class="form-control block w-full border-1 shadow-none" disabled/>
-                                        <x-jet-label for="email" value="{{ __('Email') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="email" class="mt-2" />
-                                </div>
-                                <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="contact_number" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="contact_number" value="{{ __('Contact Number') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="contact_number" class="mt-2" />
-                                </div>
-                                <div class="col-md-4 form-floating px-1">
-                                        <x-jet-input id="mobile_number" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="mobile_number" value="{{ __('Mobile Number') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="mobile_number" class="mt-2" />
-                                </div>
-                            </div>
-
-                            <div class="row pt-2">
-                                {{-- <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="height" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="height" class="mt-2" />
-                                </div>
-                                <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="weight" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="weight" class="mt-2" />
-                                </div> --}}
-                                <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="gender" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="gender" disabled/>
-                                        <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="gender" class="mt-2" />
-                                </div>
-                                <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="civil_status" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="civil_status" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="civil_status" class="mt-2" />
-                                </div>
-                            {{-- </div>
-
-                            <div class="row pt-2"> --}}
-                                <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="nationality" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="Nationality" disabled/>
-                                        <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="nationality" class="mt-2" />
-                                </div>
-                                {{-- <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="religion" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="religion" disabled/>
-                                        <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="religion" class="mt-2" />
-                                </div> --}}
-                                <div class="col-md-2 form-floating px-1">
-                                        <x-jet-input id="birthdate" type="text" class="form-control datepicker block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="birthdate" value="{{ __('Birthdate') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="birthdate" class="mt-2" />
-                                </div>
-                                <div class="col-md-3 form-floating px-1">
-                                        <x-jet-input id="birth_place" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                        <x-jet-label for="birth_place" value="{{ __('Birth Place') }}" class="text-black-50 w-full" />
-                                        <x-jet-input-error for="birth_place" class="mt-2" />
-                                </div>
-                            </div>
                             @if (strpos(Auth::user()->department, 'ACCTG') || Auth::user()->id=1)
-                            <div class="row pt-2">
+                            <div class="row my-1 pt-1">
                                 <div class="col-md-2 form-floating px-1">
                                     <x-jet-input id="vacation_leaves" type="text" class="form-control block w-full" autocomplete="off"/>
                                     <x-jet-label for="vacation_leaves" value="{{ __('Vacation Leave') }}" class="text-black-50 text-sm-left w-full" />
@@ -598,25 +602,43 @@ $(document).ready(function() {
                 (getemployee.is_head==1) ? $('#isHead').prop('checked', true) : $('#isHead').prop('checked', false);
 
                 // alert(getemployee.weekly_schedule);
-                $("#last_name").val(getemployee.last_name);
-                $("#first_name").val(getemployee.first_name);
-                $("#middle_name").val(getemployee.middle_name);
-                $("#suffix").val(getemployee.suffix);
+
+                var labelElement = $("#fullName");
+                var fullName = [getemployee.last_name];
+                if (getemployee.suffix != null) {
+                  fullName.push(getemployee.suffix + ',');
+                } else {
+                  fullName.push(',');
+                }
+                fullName.push(getemployee.first_name, getemployee.middle_name);
+                labelElement.html("Name: " + fullName.join(' ').toUpperCase()+"");
+
+                var hAdd = (getemployee.home_address!=null) ? getemployee.home_address+',' : '' ;
+                var bAdd = (getemployee.barangay!=null) ? getemployee.barangay+',' : '' ;
+                var ctAdd = (getemployee.city!=null) ? getemployee.city+',' : '' ;
+                var pAdd = (getemployee.province!=null) ? getemployee.province+',' : '' ;
+                var cAdd = (getemployee.country_name!=null) ? getemployee.country_name : '' ;
+                var zipCode = (getemployee.zip_code!=null) ? getemployee.zip_code : '';
+                var contact = (getemployee.contact_number!=null) ? getemployee.contact_number : '';
+                var nationality = (getemployee.citizenship!=null) ? getemployee.citizenship.toUpperCase() : '';
+                var birthPlace = (getemployee.birth_place!=null) ? getemployee.birth_place.toUpperCase() : '';
+
+                $("#homeAddress").html("Address: "+ [hAdd, bAdd, ctAdd, pAdd].join(' '));
+                $("#homeCountry").html("Country: "+ cAdd);
+                $("#homeZipCode").html("ZIP: "+ zipCode);
 
                 $("#employee_id").val(getemployee.employee_id);
                 $("#position").val(getemployee.position);
                 $("#department").val(getemployee.department);
 
-                $("#country").val(getemployee.country);
-                $("#province").val(getemployee.province);
-                $("#city").val(getemployee.city);
+                $("#email").html("Email: "+getemployee.email);
+                $("#contactNumber").html("Contact Number: "+contact);
 
-                $("#barangay").val(getemployee.barangay);
-                $("#home_address").val(getemployee.home_address);
-                $("#zip_code").val(getemployee.zip_code);
-
-                $("#email").val(getemployee.email);
-                $("#contact_number").val(getemployee.contact_number);
+                $("#gender").html("Sex: "+getemployee.gender);
+                $("#civilStatus").html("Civil Status: "+getemployee.civil_status);
+                $("#nationality").html("Nationality: "+nationality);
+                $("#birthDate").html("Birthday: "+getemployee.birthday);
+                $("#birthPlace").html("Birthplace: "+birthPlace);
 
                 $('#vacation_leaves').val(getLeaves.VL ? getLeaves.VL : 0);
                 $('#sick_leaves').val(getLeaves.SL ? getLeaves.SL : 0);

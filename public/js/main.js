@@ -1574,7 +1574,7 @@ $(document).ready(function(){
 
     /* PROCESS E-LEAVE begin */
     $("#process_date_from").change(function() {
-        if ($(this).val()!="") {
+        if ($(this).val()!="" && $("#process_date_to").val()!="") {
             var pdto = new Date($(this).val());
             pdto.setDate(pdto.getDate()+14);
             var pdm = pdto.getMonth()+1; if (pdm<10) { pdm = "0"+pdm; }
@@ -1600,7 +1600,7 @@ $(document).ready(function(){
 
 
     $("#process_date_to").change(function() {
-        if ($(this).val()!="") {
+        if ($(this).val()!="" && $("#process_date_from").val()!="") {
             var dt_diff = (Date.parse($(this).val()) - Date.parse($("#process_date_from").val())) / (1000*3600*24) + 1;
             // alert( dt_diff );
             $("#btn_process").removeAttr('disabled');

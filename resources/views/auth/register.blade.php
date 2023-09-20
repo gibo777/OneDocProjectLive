@@ -7,7 +7,7 @@
 
         <!-- <x-jet-validation-errors class="mb-1" /> -->
 
-<div class="max-w-5xl mx-auto mt-5">
+<div class="max-w-5xl mx-auto mt-4">
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
