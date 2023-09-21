@@ -143,6 +143,7 @@
                      } else {
                              event.allDay = false;
                      }
+                     element.attr('title', event.title);
                  },
                  // selectable: true,
                  selectHelper: true,
