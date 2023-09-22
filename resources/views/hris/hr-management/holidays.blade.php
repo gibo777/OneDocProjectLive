@@ -229,8 +229,8 @@ $(document).ready(function() {
         columnDefs: [
           { width: '140px', targets: [0] }, 
         ],
-        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 5 // Set the default number of entries per page
+        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 15, // Set the default number of entries per page
     });
 
     $(document).on('dblclick','.view-holidays tr',async function(){

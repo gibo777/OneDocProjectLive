@@ -72,6 +72,11 @@
                                     to
                                     <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
                                 </div>
+                                <div class="col-md-3 px-3 text-right mt-1">
+                                    @if (Auth::user()->id==1)
+                                    <x-jet-button id="exportExcel" class="my-3">Export to Excel</x-jet-button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
 
@@ -152,8 +157,8 @@ $(document).ready(function() {
           { width: '170px', targets: [3] }, 
         ],*/
         "ordering": false,
-        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 5, // Set the default number of entries per page
+        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 15, // Set the default number of entries per page
 
     });
 
@@ -361,9 +366,24 @@ $(document).ready(function() {
             }
         });
     });
-                    
-   
-    
+
+    /* EXPORT TO EXCEL TIMELOGS */
+
+    $('#exportExcel').click(function() {
+        var blob = new Blob([$('#table_data').html()], { type: 'application/vnd.ms-excel' });
+        var url = window.URL.createObjectURL(blob);
+
+        // Create a download link
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.xls'; // Use .xls extension for Excel files
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    });
 
 });
 </script>
@@ -371,12 +391,5 @@ $(document).ready(function() {
 </x-app-layout>
 
 
-<div id="popup">
-  <p id="pop_content" class="text-justify px-2"></p>
-</div>
-
-<div id="dialog">
-  <p id="dialog_content" class="text-justify px-2"></p>
-</div>
 
 

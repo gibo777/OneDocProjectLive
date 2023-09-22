@@ -16,7 +16,7 @@
                 {{ __('DEPARTMENTS') }}
     </x-slot>
     <div id="view_departments">
-        <div class="max-w-5xl mx-auto py-8 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto py-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -179,13 +179,11 @@ $(document).ready(function() {
           { width: '40px', targets: [0] }, 
           { width: '180px', targets: [1] }, 
         ],
-        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 5 // Set the default number of entries per page
+        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 15, // Set the default number of entries per page
     });
 });
 </script>
-</x-app-layout>
-
 
 <div id="popup">
   <p id="pop_content" class="text-justify px-2"></p>
@@ -194,6 +192,9 @@ $(document).ready(function() {
 <div id="dialog">
   <p id="dialog_content" class="text-justify px-2"></p>
 </div>
+</x-app-layout>
+
+
 
 
 

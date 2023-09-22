@@ -495,12 +495,12 @@
 $(document).ready(function() {
 
     var tableEmployee = $('#dataViewEmployees').DataTable({
-            /*"columnDefs": [
-              { width: '120px', targets: [0] }, 
-            ],*/
-            "ordering": false,
-            "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-            "iDisplayLength": 5 // Set the default number of entries per page
+        /*"columnDefs": [
+          { width: '120px', targets: [0] }, 
+        ],*/
+        "ordering": false,
+        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 15, // Set the default number of entries per page
       });
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {

@@ -1,74 +1,67 @@
-​<h3 class="table-header font-weight-bold"> <u> User Management </u> </h3>
-<div class="Row" style="display: flex; justify-content: space-between;">
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
-    <div class="col-sm-6 ">
-        <button class="btn btn-secondary btn-lg" type="button" aria-pressed="true">  <a class="text-white" href="Add_User"> Add User </a></button>
-    </div>
-    <div class="col-sm-6 ">
+<x-app-layout>
 
-        <button type="button" class="btn btn-primary" id="btnExport" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" style="padding: 9px; margin-left: 78%;">Export Report
-        </button>
-    </div>
+<x-jet-button id="exportExcel" class="my-3">Export to Excel</x-jet-button>
+
+<div id="table-container">
+  <table id="exportTable">
+    <thead class="thead">
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>30</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Jane</td>
+        <td>25</td>
+        <td>jane@example.com</td>
+      </tr>
+      <tr>
+        <td>Doe</td>
+        <td>40</td>
+        <td>doe@example.com</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-body table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table table-sm table-hover my-0 mydatatable" id="mydatatable" style=" text-align:center">
-                        <thead class="text-center">
-                            <tr>
-                                <th>S.No</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Type</th>
-                                <th>Created Date</th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                int x = 1;
-                                @foreach (var item in Model)
-                                {
-                                    if (!@item.IsDelete)
-                                    {
-                                        <tr>
-                                            <td>@x</td>
-                                            <td>@item.Name</td>
-                                            <td>@item.Email</td>
-                                            <td>@item.Phone</td>
-                                            <td>@item.Type</td>
-                                            <td>@item.CreatedDate.ToShortDateString()</td>
 
-                                        </tr>
-                                        x++;
-                                    }
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<script src="https://code.jquery.com/jquery-3.6.3.js" ></script>
-<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#btnExport").click(function () {
-            let table = document.getElementsByTagName("table");
-            console.log(table);
-            debugger;
-            TableToExcel.convert(table[0], {
-                name: `UserManagement.xlsx`,
-                sheet: {
-                    name: 'Usermanagement'
-                }
-            });
-        });
-    });
+
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    // var table = $('#exportTable').DataTable();
+
+
+  // Event listener for button click
+  $('#exportExcel').click(function() {
+    var blob = new Blob([$('#table-container').html()], { type: 'application/vnd.ms-excel' });
+    var url = window.URL.createObjectURL(blob);
+
+    // Create a download link
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.xls'; // Use .xls extension for Excel files
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  });
+});
+
+
 </script>
+
+</x-app-layout>

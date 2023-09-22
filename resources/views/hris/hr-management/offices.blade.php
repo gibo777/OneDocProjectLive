@@ -237,8 +237,8 @@
           { width: '50px', targets: [3, 4] },
           // { width: '100px', targets: '_all' }
         ],
-        "lengthMenu": [ 5,10, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 5 // Set the default number of entries per page
+        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+        "iDisplayLength": 15, // Set the default number of entries per page
     });
 
 </script>
