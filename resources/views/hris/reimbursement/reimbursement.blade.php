@@ -189,6 +189,10 @@ const table = $('#dataLineItems').DataTable({
         "paging": false, // Disable pagination
         "bLengthChange": false, // Disable "Show entries" dropdown
         "bFilter": false, // Disable search input field
+        "language": {
+            // "info": "Displaying _START_ to _END_ of _TOTAL_ entries"
+            "info": ""
+        },
 });
  
 document.querySelector('#addRow').addEventListener('click', addNewRow);

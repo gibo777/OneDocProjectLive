@@ -234,4 +234,39 @@ class EmployeesController extends Controller
 
         return $employees;
     }
+
+    /**
+     * Timelogs Excel Report
+     *
+     * @return view to generate Excel File
+     * @author Gilbert L. Retiro
+     **/
+    public function timeLogsExcel (Request $request)
+    {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
+            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
+        {
+
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+                $employees = DB::select('CALL sp_timelogs_admins()');
+            } else {
+                $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+            }
+
+            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
+
+            return view('/reports/excel/timelogs-excel', 
+                [
+                    'employees'     => $employees, 
+                    'offices'       => $offices,
+                    'departments'   => $departments,
+                ]);
+        } else {
+            return redirect('/');
+        }
+    }
 }

@@ -12,6 +12,9 @@
     #dataTimeLogs thead th {
         text-align: center; /* Center-align the header text */
     }
+    .capitalize-first-letter {
+      text-transform: capitalize !important;
+    }
     
     </style>
 
@@ -72,9 +75,13 @@
                                     to
                                     <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
                                 </div>
-                                <div class="col-md-3 px-3 text-right mt-1">
-                                    @if (Auth::user()->id==1)
-                                    <x-jet-button id="exportExcel" class="my-3">Export to Excel</x-jet-button>
+                                <div class="col-md-3 px-3 text-right mt-1 ">
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
+                                    <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
+                                        <i class="fas fa-table"></i>
+                                        <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
+                                    </div>
+                                    {{-- <button id="exportExcel" class="my-3 py-3 fas fa-table bg-success d-inline-block p-2 rounded text-white capitalize-first-letter"> Export to Excel</button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -138,6 +145,7 @@
 </div>
 
 <!-- =========================================== -->
+
 
 
 
@@ -319,21 +327,6 @@ $(document).ready(function() {
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
-                // prompt('',data); return false;
-
-
-                    // $("#dataDetailedTimeLogs > tbody").empty();
-
-                    // for(var n=0; n<data.length; n++) {
-                    //     $("#dataDetailedTimeLogs > tbody:last-child")
-                    //     .append('<tr>');
-                    //     $("#dataDetailedTimeLogs > tbody:last-child")
-                    //     .append('<td><img src="'+data[n]['profile_photo_path']+'"></td>')
-                    //     .append('<td>'+data[n]['time_in']+'</td>')
-                    //     .append('<td>'+data[n]['time_out']+'</td>');
-                    // }
-                    // $("#detailedTimeLogsModal").modal('show');
-
                 let tDT = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
                           <thead class="thead">
                               <tr>
@@ -370,20 +363,43 @@ $(document).ready(function() {
     /* EXPORT TO EXCEL TIMELOGS */
 
     $('#exportExcel').click(function() {
-        var blob = new Blob([$('#table_data').html()], { type: 'application/vnd.ms-excel' });
-        var url = window.URL.createObjectURL(blob);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/timelogs-excel',
+            method: 'get',
+            data: {'id':$(this).attr('id')}, // prefer use serialize method
+            success:function(data){
 
-        // Create a download link
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'data.xls'; // Use .xls extension for Excel files
-        document.body.appendChild(a);
-        a.click();
+                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                var url = window.URL.createObjectURL(blob);
 
-        // Clean up
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+                // Create a download link
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        }); 
+        return false;
+
     });
+
+
+
+
+
+
+
+
 
 });
 </script>

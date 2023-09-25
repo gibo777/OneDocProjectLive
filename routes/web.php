@@ -256,3 +256,5 @@ Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('
 
 Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
 Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
+
+Route::get('/timelogs-excel',[EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');
