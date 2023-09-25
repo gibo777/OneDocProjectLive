@@ -18,7 +18,7 @@
                 <tr class="dt-head-center">
                     <th>Department</th>
                     <th>Name</th>
-                    <th>Staff Code</th>
+                    <th>Employee ID</th>
                     <th>Date</th>
                     <th>Week</th>
                     <th>Time-In</th>
