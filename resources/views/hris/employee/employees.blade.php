@@ -620,8 +620,10 @@ $(document).ready(function() {
                 var cAdd = (getemployee.country_name!=null) ? getemployee.country_name : '' ;
                 var zipCode = (getemployee.zip_code!=null) ? getemployee.zip_code : '';
                 var contact = (getemployee.contact_number!=null) ? getemployee.contact_number : '';
+                var civil_status = (getemployee.civil_status!=null) ? getemployee.civil_status.toUpperCase() : '';
                 var nationality = (getemployee.citizenship!=null) ? getemployee.citizenship.toUpperCase() : '';
                 var birthPlace = (getemployee.birth_place!=null) ? getemployee.birth_place.toUpperCase() : '';
+                var birthday = (getemployee.birthday!=null) ? getemployee.birthday : '';
 
                 $("#homeAddress").html("Address: "+ [hAdd, bAdd, ctAdd, pAdd].join(' '));
                 $("#homeCountry").html("Country: "+ cAdd);
@@ -635,9 +637,9 @@ $(document).ready(function() {
                 $("#contactNumber").html("Contact Number: "+contact);
 
                 $("#gender").html("Sex: "+getemployee.gender);
-                $("#civilStatus").html("Civil Status: "+getemployee.civil_status);
+                $("#civilStatus").html("Civil Status: "+civil_status);
                 $("#nationality").html("Nationality: "+nationality);
-                $("#birthDate").html("Birthday: "+getemployee.birthday);
+                $("#birthDate").html("Birthday: "+ birthday);
                 $("#birthPlace").html("Birthplace: "+birthPlace);
 
                 $('#vacation_leaves').val(getLeaves.VL ? getLeaves.VL : 0);
@@ -652,6 +654,10 @@ $(document).ready(function() {
                 $("#EmployeesModal").modal('show');
             }
         });
+    });
+
+    $(document).on('change click', '#isHead', async function() {
+        ($(this).is(":checked")) ?  $("#updateRoleType").val('ADMIN') : $("#updateRoleType").val('EMPLOYEE') ;
     });
                     
    

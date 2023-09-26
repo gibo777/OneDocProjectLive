@@ -75,7 +75,9 @@
                                     to
                                     <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
                                 </div>
-                                <div class="col-md-3 px-3 text-right mt-1 ">
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-2 pt-2 text-center mt-1 ">
                                     @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
