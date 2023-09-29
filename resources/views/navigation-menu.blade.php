@@ -30,6 +30,14 @@
     .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
         margin-left:-1px !important 
     }
+
+    .margin-left-cust {
+        left: -2 !important;
+    }
+
+    .margin-top-cust {
+        top: -2 !important;
+    }
 </style>
 
 
@@ -161,7 +169,7 @@
 
                     <!-- E-LEAVE -->
                     <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                        {{ __('E-LEAVE APPLICATION') }}
+                        {{ __('E-FORMS') }}
                     </div>
                     <div class="border-t border-gray-200" hidden>
                         <x-jet-responsive-nav-link href="{{ route('hris.leave.eleave') }}"  id="nav_eleave">
@@ -285,10 +293,10 @@
                       <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownEForms" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           E-FORMS
                       </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownEForms">
+                      <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownEForms">
                           <div class="dropdown dropend">
                               <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
-                              <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                   <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >{{ __('E-Leave Form') }} </a>
                                   <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Leaves') }} </a>
                                   <a class="dropdown-item" href="{{ route('calendar') }}"  id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
@@ -299,13 +307,13 @@
                                   <div class="dropdown dropend">
                                       <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
                                       @if(Auth::user()->id==1)
-                                      <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                      <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                           <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
                                           <a class="dropdown-item" href="#">Sub-menu 2</a>
                                           <div class="dropdown-divider"></div>
                                           <div class="dropdown dropend">
                                               <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub-menu 3</a>
-                                              <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                                   <a class="dropdown-item" href="#">Sub-menu 3.1</a>
                                                   <a class="dropdown-item" href="#">Sub-menu 3.2</a>
                                                   <div class="dropdown-divider"></div>
@@ -329,7 +337,7 @@
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownProcess" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         PROCESS
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownProcess">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownProcess">
                             <div class="dropdown dropend">
                               <a class="dropdown-item" href="{{ route('process.eleave') }}">Process e-Leave</a>
                             </div>
@@ -341,7 +349,7 @@
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         RECORDS MANAGEMENT
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
                               {{-- <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
                                   {{ __('View Employees') }}
@@ -349,7 +357,7 @@
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Employee Management </a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                         <a class="dropdown-item" href="{{ route('register') }}" >
                                             {{ __('User Registration') }}
                                         </a>
@@ -361,7 +369,7 @@
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Time Keeping </a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                         <a class="dropdown-item" href="{{ route('timelogslisting') }}">Time Logs</a>
                                   </div>
                               </div>
@@ -395,7 +403,7 @@
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('SET-UP') }}
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
                               {{-- <a class="dropdown-item" href="{{ route('register') }}" >
                                   {{ __('User Registration') }}

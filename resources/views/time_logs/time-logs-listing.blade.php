@@ -3,6 +3,26 @@
 
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <style type="text/css">
+    /* Hide the "Show" text and adjust layout for DataTables elements */
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+
+    /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 10px;
+        display: inline-block;
+    }
+    .dataTables_wrapper .dataTables_filter {
+        margin-right: 50px;
+    }
+
+    /* Add padding between "Showing [entries] info" and "Show entries" dropdown */
+    .dataTables_wrapper .dataTables_info::after {
+        content: "\00a0\00a0"; /* Add non-breaking spaces for spacing */
+    }
     .dataTables_wrapper thead th {
         padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
@@ -162,14 +182,14 @@ $(document).ready(function() {
             [4, 'desc'],
             [0, 'asc'],
         ],*/
-        // "order": [],
+        "order": [],
         /*"columnDefs": [
           { width: '170px', targets: [3] }, 
         ],*/
-        "ordering": false,
+        // "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
-
+        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
     });
 
     function formatDate(inputDate) {
@@ -376,13 +396,29 @@ $(document).ready(function() {
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
 
-                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                // var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                // var url = window.URL.createObjectURL(blob);
+
+                // // Create a download link
+                // var a = document.createElement('a');
+                // a.href = url;
+                // a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                // document.body.appendChild(a);
+                // a.click();
+
+                // // Clean up
+                // window.URL.revokeObjectURL(url);
+                // document.body.removeChild(a);
+                
+                /*====*/
+                var blob = new Blob([data], { type: 'text/csv' }); // Set the content type to 'text/csv'
+
                 var url = window.URL.createObjectURL(blob);
 
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                a.download = 'timelogs.csv'; // Use .csv extension for CSV files
                 document.body.appendChild(a);
                 a.click();
 

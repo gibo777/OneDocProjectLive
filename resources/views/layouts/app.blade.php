@@ -35,8 +35,8 @@
 
 
 {{-- BOOTSTRAP --}}
-<link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
-<script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.css') }}">
+<script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.js') }}"></script>
 
 
 {{-- MULTIPLE SELECT --}}

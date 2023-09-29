@@ -101,9 +101,9 @@ a {
 a:link {
   text-decoration: none;
 }
-a:hover {
+/*a:hover {
   font-weight: 600;
-}
+}*/
 /*
 Add the correct font weight in Edge and Safari.
 */
