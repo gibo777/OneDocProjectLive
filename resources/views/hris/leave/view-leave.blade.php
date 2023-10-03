@@ -68,7 +68,7 @@
         box-shadow: 0px 0px 3px 3px #f5f5f5 inset;
         background-color: #fcfcfc;
     }
-
+    
     </style>
 <x-app-layout>
 
@@ -285,7 +285,7 @@
 <div class="modal fade" id="myPrintModal" tabindex="-1" role="dialog" aria-labelledby="myPrintModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header banner-blue">
           <h4 class="modal-title text-white" id="myPrintModalLabel"></h4>
           <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
         </div>
@@ -416,7 +416,7 @@
 <div class="modal fade" id="modalHistory" tabindex="-1" role="dialog" aria-labelledby="leaveHistoryLabel" >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header banner-blue">
           <h4 class="modal-title text-lg text-white" id="leaveHistoryLabel">
               LEAVE HISTORY
           </h4>
@@ -460,7 +460,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header banner-blue">
         <h4 class="modal-title text-white" id="myModalLabel"></h4>
         <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
@@ -665,7 +665,7 @@
 <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header banner-blue">
         <h4 class="modal-title text-lg text-white" id="myModalLabel">CONFIRMATION</h4>
         <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>

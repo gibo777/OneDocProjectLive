@@ -49,7 +49,7 @@
                 <!-- MEMO PREVIEW -->
                 <div class="row justify-content-center col-md-8 bg-gray-200 border items-center justify-center border border-secondary rounded-left">
                     <!-- <iframe id="preview-memo" src="http://localhost:8000/view-pdf" class="col-md-12" width="100%" height="550"> -->
-                    <iframe id="preview-memo" src="" class="h-100 w-full" width="100%">
+                    <iframe id="preview-memo" src="https://www.africau.edu/images/default/sample.pdf" class="h-100 w-full" width="100%">
 
                     <!-- <iframe src="https://view.officeapps.live.com/op/view.aspx?src={{ asset('storage/memo-archives/helloWorld.docx') }}" width="100%" height="550"> -->
                     <!-- <iframe src="" width="100%" height="550"> -->
@@ -89,7 +89,7 @@
     </li>
     {{-- tab 3 | Family Background --}}
     <li class="nav-item mt-1 pl-5" role="presentation">
-        @if (Auth::user()->department == '1D-HR')
+        @if (Auth::user()->id == 1)
             <x-jet-button id="addMemo" data-toggle="tab" href="#add-memo-desktop">
                 {{ __('Add Memo') }}
             </x-jet-button>
@@ -688,6 +688,7 @@ $(document).ready(function(){
     });
 
     $('#preview_memo').on('click', function() {
+      alert('test'); return false;
               var files = $('#inputGroupFile02')[0].files;
               var file_extension = $('#inputGroupFile02').val().split('.').pop();
 

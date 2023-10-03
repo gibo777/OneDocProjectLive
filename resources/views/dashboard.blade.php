@@ -30,17 +30,17 @@
                         <ol>
                           <li>
                             <p>WHO WE ARE</p>
-                            <p class="h6">
+                            <p class="h6 text-justify">
                             One Document Corporation is focused on Information Technology-related project developments and technology-based solutions, on its decade of existence this 2021 is expanding its reach through program-based versatile integrated systems that accelerate progress for any business operations.
                             </p>
 
                             <p>Mission:</p>
-                            <p class="h6">
+                            <p class="h6 text-justify">
                             To have the entrepreneurial spirit in the continuous search for project opportunities, vigilant in growing from current businesses focused on our customers, and from new initiatives through ingenuity and reinvention, always committed to deliver dependable goods and services, locally and globally.
                             </p>
 
                             <p>Vision:</p>
-                            <p class="h6">
+                            <p class="h6 text-justify">
                             To be a recognized socially-responsible leader in productive and profitabletechnology-based project developments, committed to improve lives, here and/or abroad
                             </p>
                           </li>

@@ -635,7 +635,7 @@
 <div class="modal fade" id="modalTimeLogCam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header banner-blue">
             <h4 class="modal-title text-lg text-white">Capture Image for Timelog</h4>
             <button id="closeLogCamModal" type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" arial-label="Close"><span aria-hidden="true"></span></button>
         </div>

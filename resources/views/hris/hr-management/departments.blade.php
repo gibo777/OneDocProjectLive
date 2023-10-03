@@ -98,7 +98,7 @@
 <div class="modal fade" id="departmentAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header banner-blue">
         <h4 class="modal-title text-white fs-5" id="myModalLabel"></h4>
         <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
@@ -154,7 +154,7 @@
 <div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="modalErrorLabel" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header banner-blue">
             <h4 class="modal-title text-lg" id="modalErrorLabel">
                 ERROR
             </h4>
