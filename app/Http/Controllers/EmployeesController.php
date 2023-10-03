@@ -87,7 +87,6 @@ class EmployeesController extends Controller
                     'roleTypeUsers'=>$roleTypeUsers
                 ]);
         } else {
-            Session::flush();
             return redirect('/');
         }
     }
@@ -184,7 +183,6 @@ class EmployeesController extends Controller
                     'departments'   => $departments,
                 ]);
         } else {
-            Session::flush();
             return redirect('/');
         }
     }
