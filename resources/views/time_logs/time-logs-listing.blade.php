@@ -396,22 +396,22 @@ $(document).ready(function() {
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
 
-                // var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
-                // var url = window.URL.createObjectURL(blob);
+                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                var url = window.URL.createObjectURL(blob);
 
-                // // Create a download link
-                // var a = document.createElement('a');
-                // a.href = url;
-                // a.download = 'timelogs.xls'; // Use .xls extension for Excel files
-                // document.body.appendChild(a);
-                // a.click();
+                // Create a download link
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                document.body.appendChild(a);
+                a.click();
 
-                // // Clean up
-                // window.URL.revokeObjectURL(url);
-                // document.body.removeChild(a);
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
                 
                 /*====*/
-                var blob = new Blob([data], { type: 'text/csv' }); // Set the content type to 'text/csv'
+                /*var blob = new Blob([data], { type: 'text/csv' }); // Set the content type to 'text/csv'
 
                 var url = window.URL.createObjectURL(blob);
 
@@ -424,7 +424,7 @@ $(document).ready(function() {
 
                 // Clean up
                 window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
+                document.body.removeChild(a);*/
             }
         }); 
         return false;

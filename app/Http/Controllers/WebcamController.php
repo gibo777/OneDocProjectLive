@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
 use Storage;
+
+use Adrianorosa\GeoLocation\GeoLocation;
   
 class WebcamController extends Controller
 {
@@ -73,11 +75,17 @@ class WebcamController extends Controller
     function saveTimeLogs (Request $request) {
         // return $request->ip();
         try{
+            $ip = request()->server('SERVER_ADDR');
+            $details = GeoLocation::lookup($ip);
 
             $data = [
-                'employee_id' => Auth::user()->employee_id, 
-                'profile_photo_path' => $request->image,
-                'ip_address' => $request->ip(),
+                'employee_id'           => Auth::user()->employee_id, 
+                'profile_photo_path'    => $request->image,
+                'ip_address'            => $request->ip(),
+                'ip_address_server'     => $details->getIp(),
+                'office'                => Auth::user()->office,
+                'department'            => Auth::user()->department,
+                'supervisor'            => Auth::user()->supervisor,
                 // 'latitude' => ,
                 // 'longitude' => ,
                 // 'country_name' => ,
@@ -86,8 +94,8 @@ class WebcamController extends Controller
                 // 'region_code' => ,
                 // 'city_name' => ,
                 // 'zip_code' => ,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
+                'created_at'            => date('Y-m-d H:i:s'),
+                'updated_at'            => date('Y-m-d H:i:s')
             ];
 
             if ($request->logEvent=='TimeIn') {

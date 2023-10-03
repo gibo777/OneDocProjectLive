@@ -32,7 +32,7 @@
     }
 
     .margin-left-cust {
-        left: -2 !important;
+        left: -3 !important;
     }
 
     .margin-top-cust {

@@ -18,12 +18,12 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
@@ -206,6 +206,7 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         'A' => 
         array (
             'App\\' => 4,
+            'Adrianorosa\\GeoLocation\\' => 24,
         ),
     );
 
@@ -635,6 +636,10 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
+        'Adrianorosa\\GeoLocation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -673,6 +678,14 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
     );
 
     public static $classMap = array (
+        'Adrianorosa\\GeoLocation\\Console\\GeoLocationCommand' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/Console/GeoLocationCommand.php',
+        'Adrianorosa\\GeoLocation\\Contracts\\LookupInterface' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/Contracts/LookupInterface.php',
+        'Adrianorosa\\GeoLocation\\GeoLocation' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/GeoLocation.php',
+        'Adrianorosa\\GeoLocation\\GeoLocationDetails' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/GeoLocationDetails.php',
+        'Adrianorosa\\GeoLocation\\GeoLocationException' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/GeoLocationException.php',
+        'Adrianorosa\\GeoLocation\\GeoLocationManager' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/GeoLocationManager.php',
+        'Adrianorosa\\GeoLocation\\GeoLocationServiceProvider' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/GeoLocationServiceProvider.php',
+        'Adrianorosa\\GeoLocation\\Providers\\IpInfo' => __DIR__ . '/..' . '/adrianorosa/laravel-geolocation/src/Providers/IpInfo.php',
         'App\\Actions\\Fortify\\CreateNewUser' => __DIR__ . '/../..' . '/app/Actions/Fortify/CreateNewUser.php',
         'App\\Actions\\Fortify\\PasswordValidationRules' => __DIR__ . '/../..' . '/app/Actions/Fortify/PasswordValidationRules.php',
         'App\\Actions\\Fortify\\ResetUserPassword' => __DIR__ . '/../..' . '/app/Actions/Fortify/ResetUserPassword.php',

@@ -3,13 +3,22 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '096eb218118bed59cc2fa517b3e3065c32ec1785',
+        'reference' => '3a6221f793029485f17edc7e6537ad0527b4a574',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'adrianorosa/laravel-geolocation' => array(
+            'pretty_version' => 'v1.2.0',
+            'version' => '1.2.0.0',
+            'reference' => 'eab4560b28fa84cb0ced530269582f22944ce324',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../adrianorosa/laravel-geolocation',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'bacon/bacon-qr-code' => array(
             'pretty_version' => '2.0.7',
             'version' => '2.0.7.0',
@@ -484,7 +493,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '096eb218118bed59cc2fa517b3e3065c32ec1785',
+            'reference' => '3a6221f793029485f17edc7e6537ad0527b4a574',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
