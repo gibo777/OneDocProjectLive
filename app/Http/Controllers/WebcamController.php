@@ -75,8 +75,8 @@ class WebcamController extends Controller
     function saveTimeLogs (Request $request) {
         // return $request->ip();
         try{
-            $ip = request()->server('SERVER_ADDR');
-            $details = GeoLocation::lookup($ip);
+            // $ip = request()->server('SERVER_ADDR');
+            // $details = GeoLocation::lookup($ip);
 
             $data = [
                 'employee_id'           => Auth::user()->employee_id, 
