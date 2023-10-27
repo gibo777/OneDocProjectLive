@@ -31,6 +31,7 @@ class ViewLeavesController extends Controller
             // return $employee_id = Auth::user()->employee_id; die();
 
 	        $leaves = DB::table('leaves as L');
+            $leaves = $leaves->leftJoin('offices as o', 'L.office', '=', 'o.id');
 	        $leaves = $leaves->leftJoin('departments as d', 'L.department', '=', 'd.department_code');
 	        $leaves = $leaves->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id');
             $leaves = $leaves->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id');
@@ -46,6 +47,7 @@ class ViewLeavesController extends Controller
 	        	'L.date_applied',
 	        	'L.date_from', 'L.date_to',
 	        	'L.no_of_days', 
+                'o.company_name',
                 'd.department',
 	        	'd.department_code as dept',
 	        	'u.supervisor',
@@ -751,6 +753,62 @@ class ViewLeavesController extends Controller
 		        ->paginate(5);
 		        return view('hris.leave.view-leave', ['leaves'=>$leaves])->render();
 	     }
+    }
+
+    function leavesExcel (Request $request) {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
+            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
+            {
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+            // return $employee_id = Auth::user()->employee_id; die();
+
+            $excelData = DB::table('leaves as L')
+            ->leftJoin('departments as d', 'L.department', '=', 'd.department_code')
+            ->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id')
+            ->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id')
+            ->select(
+                'L.id',
+                'L.leave_number',
+                'L.control_number',
+                'L.name',
+                /*'L.first_name',
+                'L.last_name',*/
+                'L.employee_id',
+                'L.leave_type',
+                'L.date_applied',
+                'L.date_from', 'L.date_to',
+                'L.no_of_days', 
+                'd.department',
+                'd.department_code as dept',
+                'u.supervisor',
+                'L.created_at',
+                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+                DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));
+            
+            if(Auth::user()->id!=1) {
+                if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
+                    $leaves = $leaves->where('u.supervisor','=', $employee_id);
+                    $leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
+                } else { 
+                    $leaves = $leaves->where('L.employee_id','=', $employee_id);
+                }
+            }
+            $leaves = $leaves->where( function($query) {
+                return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
+                });
+            $leaves = $leaves->orderBy('L.created_at','desc');
+            $leaves = $leaves->get();
+
+            return view('/reports/excel/timelogs-excel', 
+                [
+                    'employees'     => $employees, 
+                    'offices'       => $offices,
+                    'departments'   => $departments,
+                ]);
+        } else {
+            return redirect('/');
+        }
     }
 
 }

@@ -151,6 +151,7 @@ class LeaveFormController extends Controller
                     'leave_number' => $new_leave_number, 
                     'name' => Auth::user()->last_name.' '.Auth::user()->suffix.', '.Auth::user()->first_name.' '.Auth::user()->middle_name,
                     'employee_id' => Auth::user()->employee_id,
+                    'office' => Auth::user()->office,
                     'department' => Auth::user()->department,
                     'date_applied' => date('Y-m-d H:i:s'),
                     'leave_type' => $inputData['leave_type'],
