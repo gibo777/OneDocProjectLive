@@ -164,7 +164,7 @@
 			                    </div>
 
                                 <div class="col-md-2 pt-2 text-center mt-1 ">
-                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
                                         <span id="exportExcelLeaves" class="font-weight-bold">Export to Excel</span>
@@ -943,7 +943,7 @@ $('#filterLeaveStatus').on('keyup change', function() {
             }
         });
         $.ajax({
-            url: '/timelogs-excel',
+            url: '/leaves-excel',
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
@@ -954,7 +954,7 @@ $('#filterLeaveStatus').on('keyup change', function() {
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                a.download = 'leaves.xls'; // Use .xls extension for Excel files
                 document.body.appendChild(a);
                 a.click();
 
