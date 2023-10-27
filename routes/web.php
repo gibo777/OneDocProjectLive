@@ -112,6 +112,9 @@ Route::get('/hris/view-leave/fetch_data', [ViewLeavesController::class, 'fetch_d
 // Route::post('/hris/viewleave', [LeaveFormController::class, 'update_leave']);
 
 
+Route::get('/leaves-excel',[ViewLeavesController::class, 'leavesExcel'])->name('leaves.excel');
+
+
 /*======= REIMBURSEMENT =======*/
 
 Route::get('/reimbursement', [ReimbursementController::class, 'index'])->name('hris.reimbursement.reimbursement');

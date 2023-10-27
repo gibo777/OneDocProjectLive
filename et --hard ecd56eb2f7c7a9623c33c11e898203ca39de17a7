@@ -1,0 +1,576 @@
+[33mcommit 1a762350f6b6c58664b151c8f2b870de373633ab[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Oct 23 13:39:33 2023 +0800
+
+    QR Code Feature Added
+
+[33mcommit ecd56eb2f7c7a9623c33c11e898203ca39de17a7[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Oct 4 09:21:31 2023 +0800
+
+    Timelogs Office, Department, Supervisor in DB
+
+[33mcommit 12ff2dea8466dfc2a9bc72e17fab886cc4840226[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Oct 3 18:00:25 2023 +0800
+
+    Enhancement
+
+[33mcommit fa55ea16bcc565e678ee25503b7e36d2f62764dc[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Oct 3 17:58:01 2023 +0800
+
+    Enhancement of UI
+
+[33mcommit 3c75f1f03989992e7bb1d31a7fd9db226c43094b[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Oct 3 15:38:28 2023 +0800
+
+    Enhancement
+
+[33mcommit 940e3759cc9db84205ea479592dfefc390072f14[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Oct 3 11:41:47 2023 +0800
+
+    Added Geolocation Plugins for future use
+
+[33mcommit 3a6221f793029485f17edc7e6537ad0527b4a574[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Sep 29 14:33:53 2023 +0800
+
+    Enhance Navigation and Pagination
+
+[33mcommit c900450bb049cb5cb69315491b784aee98fea5c0[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Sep 26 16:52:28 2023 +0800
+
+    Auto Admin/Employee
+
+[33mcommit 700d8fba441ca9df904569e71775dbdf86ed314a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Sep 25 16:46:36 2023 +0800
+
+    Added Timelogs Export to Excel
+
+[33mcommit 032071aa9e1eadc37273b56442e2ee0c42cdeab4[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Sep 25 16:43:45 2023 +0800
+
+    Added Timelogs Export to Excel
+
+[33mcommit ac15b24abaac31a77889a87b971802d5ba3558e4[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Sep 22 17:12:10 2023 +0800
+
+    Added Export to Excel
+
+[33mcommit cc03975cc064f3164c662a78b4989cb12ae374c2[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Sep 21 13:25:01 2023 +0800
+
+    Added Tooltips/Title for Fullcalendar Events
+
+[33mcommit 8c61daf248f96a2e709bfd1d19c3eaf100a1d99a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Sep 21 07:45:57 2023 +0800
+
+    Removed Invalid Date for Sick Leave
+
+[33mcommit 096eb218118bed59cc2fa517b3e3065c32ec1785[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Sep 20 15:03:50 2023 +0800
+
+    GUI Enhancement
+
+[33mcommit d883a117bdcc79e1b1f3d00383c3a6952ce8f0f0[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Sep 20 15:02:13 2023 +0800
+
+    GUI Enhancement
+
+[33mcommit 5bf1acd2c4315b1b42473d3861924072fc274bde[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Sep 20 09:30:19 2023 +0800
+
+    Update View Employee Details
+
+[33mcommit b5d41f27c4f36de19f8a7c45efea7b8dd2aecd84[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Sep 14 09:16:14 2023 +0800
+
+    Added loading in Timelogs | Added Holidays in Fullcalendar
+
+[33mcommit 5a5287529740d928577583033ca2d2cbc9a5e99d[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Sep 13 13:46:19 2023 +0800
+
+    Additional Filtering for Leaves
+
+[33mcommit 2f51c5f3a95c7f43787b7c213da3479bb5d93b9a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Sep 12 18:06:04 2023 +0800
+
+    Leave Status and Other Enhancements
+
+[33mcommit 0e07156009d7d9e7bb3b4f29daebab195571507a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Sep 11 14:11:41 2023 +0800
+
+    Additional Filtering for Time Logs
+
+[33mcommit 7460ed16e08916e3b2de72a5b2e506a457ebb095[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Sep 8 16:40:08 2023 +0800
+
+    Sorting
+
+[33mcommit 8988fc585573c85d61a2bf582019ef569afaf4bc[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Sep 8 16:36:59 2023 +0800
+
+    Additional Restrictions
+
+[33mcommit 5220c51aeb62e766c5b2aaf16a70d785e0c4d7f3[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Sep 8 16:16:06 2023 +0800
+
+    Enhancement of Filterings and Datatables
+
+[33mcommit c1e1887f3ad81eb4ea6b5fc77072f33effd61d6d[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Sep 4 16:15:08 2023 +0800
+
+    Additional Filterin for Employee Viewing and Added Register Employee Button
+
+[33mcommit 3d413650069a1dc8388b035e25ffa50e91c064c1[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Sep 4 11:28:55 2023 +0800
+
+    Added Office in Updating Employee
+
+[33mcommit 6fafc9b62dbd59a2c5164e609675943f1a234cac[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 31 16:25:40 2023 +0800
+
+    GUI Enhancements
+
+[33mcommit abec66e96c2b7242ca713e7681e27e74af08b104[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 30 17:48:57 2023 +0800
+
+    Filtering with Restrictions
+
+[33mcommit afb3436ccc067e0b589664edc1ce08c93636b311[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 30 09:19:48 2023 +0800
+
+    Sort Time Logs
+
+[33mcommit 11eb753f246fae3d4db61fce63c85532ea276b07[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 29 14:05:52 2023 +0800
+
+    Filtering
+
+[33mcommit 1aae9b94606a1a970aca3245e0f6a3c77a0c609d[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 29 11:34:29 2023 +0800
+
+    View Leaves Filtering
+
+[33mcommit 871cbdefd14e256d346217718c0b6f629828050f[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 24 13:29:46 2023 +0800
+
+    Enhanced Timelogs Detailed Viewing
+
+[33mcommit cdd32266dcdeb435bef6dbae98b5a90a8b22fbad[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 24 13:25:19 2023 +0800
+
+    Enhanced Timelogs Detailed Viewing
+
+[33mcommit 5f3fd339208da479afc2816c50a706fe6a06b169[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 24 11:36:17 2023 +0800
+
+    Restrictions for E-Leave Buttons
+
+[33mcommit ce9def98d0573975d5951e28ba3488875e0b3909[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 24 09:50:36 2023 +0800
+
+    TimeLogs Sorting
+
+[33mcommit 68e1eebc1d2bb51c99b5d37677ebb33063116da4[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 23 17:16:19 2023 +0800
+
+    Detailed Timelogs
+
+[33mcommit bf4d7f43ae232adc53a79684de1554cb72ed5154[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 22 09:48:55 2023 +0800
+
+    Timelogs detailed
+
+[33mcommit b8e0dedd635f68c1c2e3af053fb6fcbe61af6185[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 22 09:46:14 2023 +0800
+
+    Timelogs detailed
+
+[33mcommit 9f7372a4035d432332577ca7c2e3cac655104a2a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Aug 18 11:18:29 2023 +0800
+
+    Tabledata Headers adjustment
+
+[33mcommit a6872cd253b74856be01095a494127d352d24bad[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 17 13:26:05 2023 +0800
+
+    Time Logs table
+
+[33mcommit 60fbf3f441fe9e4f7af47f0935991e62e69f62bb[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 17 13:15:00 2023 +0800
+
+    Added Restrictions for Accounting
+
+[33mcommit 35c25a6e70a9ecdcb1e66441165cdf21c715fecc[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Aug 17 13:13:19 2023 +0800
+
+    Added Restrictions for Accounting
+
+[33mcommit e3efcd1a4c530aec77433dc94fe6d237325aff8a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 16 16:33:15 2023 +0800
+
+    Updated SP for Timelogs Restrictions
+
+[33mcommit 4872b4cbefad348f0890c0d434a2b9b5817c3e92[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 16 16:19:51 2023 +0800
+
+    Updated SP for Timelogs Restrictions
+
+[33mcommit c11f3e6443793a31a0c354cdc23a5f6ace9f7bc3[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 16 12:51:02 2023 +0800
+
+    Employee Reference
+
+[33mcommit ff0f6ac3eef71455fe06a65e59f3068cb2e79ece[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 15 15:41:47 2023 +0800
+
+    Update Timelogs Module
+
+[33mcommit 37917fbbcbf429332fcf7724d52a302afe5fdfff[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Aug 11 15:09:14 2023 +0800
+
+    Datatables Upgrade and Time Logs Continue
+
+[33mcommit 572914bd7431f4f962b5cf493fa3afa5b8565f27[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 9 14:32:18 2023 +0800
+
+    Debugging
+
+[33mcommit 3ed1db403ac3a5ac22d5fa377445045fbe681e15[m
+Merge: e8fe54fff bb5c3ccbe
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 9 11:28:08 2023 +0800
+
+    Merge branch 'main' of https://github.com/gibo777/OneDocProjectLive
+
+[33mcommit e8fe54fff2d12654f188c4f60c368fe0d85cae4d[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 9 11:23:18 2023 +0800
+
+    Nav, Timelog
+
+[33mcommit bb5c3ccbeefeb7d9022b49423918c11d005335db[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 8 10:31:14 2023 +0800
+
+    Restrictions for TimeLogs
+
+[33mcommit d777a51aa60ab58960051dd367356af7f40fe36b[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 8 10:21:21 2023 +0800
+
+    Timekeeping-TimeLogs w/ Filtering Date Range
+
+[33mcommit 1e3e448abe0f9a8e05ee0fedceade0836c7ac6c0[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 2 16:50:43 2023 +0800
+
+    Navigation Menu Enhancement
+
+[33mcommit fbee39dd18255068b30cc8267f281a14463dedbf[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 2 11:45:44 2023 +0800
+
+    Role Type Restrictions
+
+[33mcommit 2f379418e57c1242949ee487b89c402de16f948f[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 2 11:21:29 2023 +0800
+
+    Role Type Restrictions
+
+[33mcommit f03dfd07a28612f19781727a362e87e263269b24[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 2 11:04:31 2023 +0800
+
+    Role Type Restrictions
+
+[33mcommit cbf81b181d78d8791b8a581a08b6cf234fb2d6c5[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Aug 2 10:55:36 2023 +0800
+
+    Leave Update and other enhancement
+
+[33mcommit 2a83cd4c938ec2c926a9a82bc1a38b45aacd7c11[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 1 16:29:09 2023 +0800
+
+    UI Enhancement
+
+[33mcommit 605b7d98dc52a3eb20001bb5fa0f2445f7434611[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 1 14:36:08 2023 +0800
+
+    Removed required Employee Number
+
+[33mcommit 6a958f9c484fe71b3537fecfecce16f3bdc37baa[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 1 11:45:59 2023 +0800
+
+    Temporarily removed required for Employee ID in Registration
+
+[33mcommit e69d10ba303d175f79adca2ed97444341bc2b447[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Aug 1 11:43:57 2023 +0800
+
+    Temporarily removed required for Employee ID in Registration
+
+[33mcommit 52b0b70b6ef0a73e7974718bc620e37416f0f11c[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Jul 31 16:06:54 2023 +0800
+
+    View Employee Update
+
+[33mcommit f42161d625c76150be9b4036809ac58c37c4ab5a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Jul 31 14:14:25 2023 +0800
+
+    Employee ID
+
+[33mcommit 082922ca579f1f9eddc0f18f08641b77c13eed79[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 18 11:36:46 2023 +0800
+
+    Set Head
+
+[33mcommit 605ce509ed59fc65d7f82bcf32f3327ae492cb89[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Jul 14 16:47:53 2023 +0800
+
+    Employee Role Type Dropdown
+
+[33mcommit 1ac6d51fcb2423260d3b90bd3b828478b03242d5[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Jul 14 15:43:51 2023 +0800
+
+    View Employee Head and Role Type debugging
+
+[33mcommit 8d692f9d6a5373706fbc68ccd680dac3db10582a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri Jul 14 13:10:02 2023 +0800
+
+    Employee Listing
+
+[33mcommit 8753e9d2f46524e0a50c91f3268a2055c0f0a430[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Jul 12 09:35:35 2023 +0800
+
+    Datatable Adjustment for Office
+
+[33mcommit 7d58171385db2663f4a63e0a9c842b4d4768efc4[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 17:43:20 2023 +0800
+
+    Time-Out Event
+
+[33mcommit 34eef58013afbcbb1c368bdee53bf9f66fe2538e[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 16:59:42 2023 +0800
+
+    Update for Deopartment Listing
+
+[33mcommit 5d060643b92a7be98366274e0273e83cabfe2520[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 16:52:55 2023 +0800
+
+    Update for Time-In/Time-Out
+
+[33mcommit c53b1775979333281785cd85c8b7bd54ac3efdc0[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 16:31:41 2023 +0800
+
+    Update for Time-In/Time-Out
+
+[33mcommit f3f23937afcdb162ba91da948b3ba74b07196d5a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 16:30:16 2023 +0800
+
+    Update for Time-In/Time-Out
+
+[33mcommit f3e8d203279f697891cfdd82f048beaf4bc6d459[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 15:14:50 2023 +0800
+
+    Update for Employees Listing
+
+[33mcommit 8e62cf74e4b4fff67323df4cedfe1d5d369cd9a6[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 11 15:07:51 2023 +0800
+
+    Update for Employees Listing
+
+[33mcommit 8171361a9724ef2b972007872f82f966d6e48eaf[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Jul 4 14:31:16 2023 +0800
+
+    Camera with Time-In/Time-Out
+
+[33mcommit ee37222e479944cbed5871845cebb444ecab1309[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed May 17 16:30:56 2023 +0800
+
+    Update provinces
+
+[33mcommit 7fa2a8b9801ffe43cd10325ab8d287d0e9da0172[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue May 16 15:03:51 2023 +0800
+
+    redirect
+
+[33mcommit eba7cbb8f263295dc8ce67552ea528f519b14300[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue May 16 14:49:03 2023 +0800
+
+    env
+
+[33mcommit e8b06ec501b0d8869f147986a4beb8c76f882ac6[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue May 16 11:19:45 2023 +0800
+
+    Datatable update for View Leave
+
+[33mcommit 1fd8595df338c29eed71aa0d656c1ed00a741819[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri May 5 17:11:12 2023 +0800
+
+    Updates for Full Calendar
+
+[33mcommit f7d6ddb438cd1a0b2e6eed0510a9d06b2e9fbf3a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri May 5 10:55:39 2023 +0800
+
+    Changed Head Dropdown
+
+[33mcommit b6df83ff92f71fc8c6e03ccf841810397e9bde9a[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Fri May 5 10:06:28 2023 +0800
+
+    Updates for Audit
+
+[33mcommit 38bf651b23c541bd81a9f2e0d3e207e2f8331fce[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Apr 24 16:14:38 2023 +0800
+
+    Update for Leave Others
+
+[33mcommit ed2b967cc7454c161ab2b91667b149e7c916ecb2[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Apr 24 15:42:54 2023 +0800
+
+    Update for Leave Status
+
+[33mcommit 31959dbdd08a32fe74a9edd09fc1dae1ff84653e[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Mon Apr 24 15:01:08 2023 +0800
+
+    Update for Leave Types
+
+[33mcommit 99890ab03cc574c18571edafd76cb8d76e2154bf[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Apr 19 17:12:04 2023 +0800
+
+    Updates for Profile Photo
+
+[33mcommit 4c1396e062b32d8516eecc4b128f1a6c8a48fdc1[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Apr 19 17:07:53 2023 +0800
+
+    Updates for Fullcalendar
+
+[33mcommit ffbf5143f9b38ba372db5ac287e1c4ab2f8d5ad2[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Apr 19 15:40:47 2023 +0800
+
+    Updates for Leave Form and Leave Calendar
+
+[33mcommit 8711e3de83e7cdb204a455bbd078da5bed20f282[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Apr 19 11:24:01 2023 +0800
+
+    Updates for Leave Form and Leave Calendar
+
+[33mcommit b2120bf40fd94ef3952e35b0413727d02a36baa6[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Apr 19 11:05:16 2023 +0800
+
+    Update Personnel Data
+
+[33mcommit e584465256e8d2446fc821a7f3f8d0a4fbf4d9a2[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Tue Apr 18 17:40:23 2023 +0800
+
+    Updates
+
+[33mcommit b1e15cfe39a3badb13bf5373080fc17c3f60f2fd[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Apr 13 09:38:21 2023 +0800
+
+    Update on Reset Password
+
+[33mcommit ce1d18a778cd257c9715b7b968a35cea4c940af6[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Thu Apr 13 09:21:57 2023 +0800
+
+    Updates for smtp
+
+[33mcommit ac5c4f3ef046c2bb438b6acf5cc2b05a9957040e[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Mar 29 11:47:31 2023 +0800
+
+    Removed notification checkboxes
+
+[33mcommit c2b660ce2b855a8fef0a41a058ec022f05eda4fa[m
+Author: gibo777 <103085126+gibo777@users.noreply.github.com>
+Date:   Wed Mar 29 11:38:33 2023 +0800
+
+    Removed notification checkboxes
+
+[33mcommit cf612898ef5e1c2f51d87346479ce46aa7442ea1[m
+Author: gibo777 <glretiro.1doc@gmail.com>
+Date:   Wed Mar 29 10:28:33 2023 +0800
+
+    Updated repo

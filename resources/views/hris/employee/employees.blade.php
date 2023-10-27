@@ -117,7 +117,7 @@
                                                             value="{{ $employee->id }}"
                                                             title="View {{ $employee->employee_id }}"
                                                             class="open_leave fa fa-edit green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500 focus:outline-none transition hover"
-                                                            >
+                                                             >
                                                             {{ __('View') }}
                                                         </button>
                                                         <!-- <button id="delete-{{ $employee->id }}"
@@ -324,7 +324,7 @@
 
 
                         <div class="row my-1 pt-1">
-                            <div class="col-md-4 px-1 my-1">
+                            <div class="col-md-3 px-1 my-1">
                                     <div class="form-floating">
                                         <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value=""></option>
@@ -335,7 +335,7 @@
                                         <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
                                     </div>
                             </div>
-                            <div class="col-md-4 px-1 my-1">
+                            <div class="col-md-5 px-1 my-1">
                                     <div class="form-floating">
                                         <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value="">Select Department</option>

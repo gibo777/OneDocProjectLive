@@ -56,6 +56,15 @@
     .dataTables_wrapper .sorting_desc:before {
         display: none;
     }*/
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+    .dataTables_wrapper thead th {
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
 
 
     /* Custom CSS for inset shadow */
@@ -102,77 +111,86 @@
 
                         <div class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
                             <div class="row pb-1" id="filterFields">
-                                {{-- <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
-                                    <x-jet-label for="filterFields" class="text-center" value="{{ __('FILTER') }}"/>
-                                </div> --}}
-                                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <div class="col-md-2 px-4 text-center mt-1">
+
+                                <div class="col-md-5 text-center mt-1">
+                                    <div class="row mx-1">
+                                        @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                         <!-- FILTER by Department -->
-                                    <div class="form-floating" id="divfilterDepartment">
-                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Departments</option>
-                                            @foreach ($departments as $dept)
-                                            <option>{{ $dept->department }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <div class="form-floating" id="divfilterDepartment">
+                                                <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Departments</option>
+                                                    @foreach ($departments as $dept)
+                                                    <option>{{ $dept->department }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <!-- FILTER by Leave Type -->
+                                            <div class="form-floating" id="div_filterLeaveType">
+                                                <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Leave Types</option>
+                                                    @foreach ($leave_types as $leave_type)
+                                                    <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <x-jet-label for="filterLeaveType" value="{{ __('LEAVE TYPE') }}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <!-- FILTER by Leave Type -->
+                                            <div class="form-floating" id="div_filterLeaveType">
+                                                <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Leave Statuses</option>
+                                                    @foreach ($leave_statuses as $leave_status)
+                                                    <option>{{ $leave_status->leave_status }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <x-jet-label for="filterLeaveStatus" value="{{ __('LEAVE STATUS') }}" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                @endif
 
-                                <div class="col-md-2 px-4 text-center mt-1">
-                                    <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="div_filterLeaveType">
-                                        <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Leave Types</option>
-                                            @foreach ($leave_types as $leave_type)
-                                            <option value="{{ $leave_type->leave_type }}">{{ $leave_type->leave_type_name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-jet-label for="filterLeaveType" value="{{ __('LEAVE TYPE') }}" />
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2 px-4 text-center mt-1">
-                                    <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="div_filterLeaveType">
-                                        <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Leave Statuses</option>
-                                            @foreach ($leave_statuses as $leave_status)
-                                            <option>{{ $leave_status->leave_status }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-jet-label for="filterLeaveStatus" value="{{ __('LEAVE STATUS') }}" />
-                                    </div>
-                                </div>
-
-
-			                    <div class="col-md-4 px-4 text-center mt-1">
+			                    <div class="col-md-3 px-1 text-center mt-1">
 			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
 			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    	to
 			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
 
-                                @if (Auth::user()->role_type!='ADMIN' && Auth::user()->role_type!='SUPER ADMIN')
+                                <div class="col-md-2 pt-2 text-center mt-1 ">
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
+                                    <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
+                                        <i class="fas fa-table"></i>
+                                        <span id="exportExcelLeaves" class="font-weight-bold">Export to Excel</span>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                {{-- @if (Auth::user()->role_type!='ADMIN' && Auth::user()->role_type!='SUPER ADMIN')
                                 <div class="col-md-2"></div>
-                                @endif
-                                <div class="col-md-2 py-3 text-center">
-                                    <x-jet-button  id="createNewLeave">Create New Leave</x-jet-button>
+                                @endif --}}
+                                <div class="col-md-2 px-1 py-3 text-center">
+                                    <x-jet-button  id="createNewLeave" >Create New Leave</x-jet-button>
                                 </div>
 		                    </div>
                         </div>
 
 
-                              <!-- DIV_GRID4 -->
-                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
-                            </div>
-                              <!-- DIV_GRID5 -->
-                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
-                            </div>
-                             <!-- DIV_GRID6 -->
-                             <div class="col-span-8 sm:col-span-1 " id="div_grid6">
-                            </div>
+                        {{-- <!-- DIV_GRID4 -->
+                        <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
+                        </div>
+                        <!-- DIV_GRID5 -->
+                        <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
+                        </div>
+                        <!-- DIV_GRID6 -->
+                        <div class="col-span-8 sm:col-span-1 " id="div_grid6">
+                        </div> --}}
                         </div>
 
                             <div id="table_data">
@@ -185,6 +203,7 @@
                                                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                 <th>Name</th>
                                                 {{-- <th>Emp. No.</th> --}}
+                                                <th>Office</th>
                                                 <th>Department</th>
                                                 @endif
                                                 <th>Control#</th>
@@ -204,6 +223,7 @@
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                                     <td>{{ $leave->name }}</td>
                                                     {{-- <td>{{ $leave->employee_id }}</td> --}}
+                                                    <td>{{ $leave->company_name }}</td>
                                                     <td>{{ $leave->department }}</td>
                                                     @endif
                                                     <td>{{ $leave->control_number }}</td>
@@ -744,6 +764,7 @@ $(document).ready( function () {
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
+        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
       });
 
 function formatDates(date) {
@@ -790,9 +811,9 @@ function currentDate() {
 		    var sD  = $('#filterDepartment').val();
 		    var sLT = $('#filterLeaveType').val();
             var sLS = $('#filterLeaveStatus').val().toUpperCase();
-		    var cD  = data[1]; // Department Column
-            var cLT = data[3]; // Leave Type Column
-		    var cLS = data[8].toUpperCase(); // Leave Status Column
+		    var cD  = data[2]; // Department Column
+            var cLT = data[4]; // Leave Type Column
+		    var cLS = data[9].toUpperCase(); // Leave Status Column
 		    
 		    // Check if a department filter is selected
 		    var departmentFilterActive = (sD != null && sD !== '');
@@ -814,7 +835,7 @@ function currentDate() {
 		    return departmentMatch && leaveTypeMatch && leaveStatusMatch;
 		} else {
 		    var sLT = $('#filterLeaveType').val();
-		    var cLT = data[1]; // LeaveType Column
+		    var cLT = data[2]; // LeaveType Column
 		    
 		    // Check if a LeaveType filter is selected
 		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
@@ -845,8 +866,8 @@ function currentDate() {
         dateTo.setHours(23, 59, 59, 999);
 
         // Get the time-in and time-out values from columns 3 and 4
-        var searchTimeIn = data[4];
-        var searchTimeOut = data[5];
+        var searchTimeIn = data[5];
+        var searchTimeOut = data[6];
 
         // Convert time-in and time-out strings to Date objects (if applicable)
         var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
@@ -877,7 +898,6 @@ function currentDate() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Invalid Date Range',
-                    // text: '',
                 }).then(function() {
                     $(this).val('');
                 });
@@ -895,7 +915,6 @@ function currentDate() {
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Date Range',
-                // text: '',
             });
         }
         tableLeaves.draw();
@@ -915,6 +934,38 @@ $('#filterLeaveType').on('keyup change', function() {
 $('#filterLeaveStatus').on('keyup change', function() { 
     tableLeaves.draw(); 
 });
+
+/* EXPORT TO EXCEL TIMELOGS */
+    $('#exportExcelLeaves').click(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/timelogs-excel',
+            method: 'get',
+            data: {'id':$(this).attr('id')}, // prefer use serialize method
+            success:function(data){
+
+                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                var url = window.URL.createObjectURL(blob);
+
+                // Create a download link
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        }); 
+        return false;
+
+    });
 
 /* Reroute to Leave Form */
 $(document).on('click','#createNewLeave', async function() {
