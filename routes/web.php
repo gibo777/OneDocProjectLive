@@ -112,8 +112,6 @@ Route::get('/hris/view-leave/fetch_data', [ViewLeavesController::class, 'fetch_d
 // Route::post('/hris/viewleave', [LeaveFormController::class, 'update_leave']);
 
 
-Route::get('/leaves-excel',[ViewLeavesController::class, 'leavesExcel'])->name('leaves.excel');
-
 
 /*======= REIMBURSEMENT =======*/
 
@@ -219,11 +217,14 @@ Route::post('/uploadFile', [PageController::class, 'uploadFile'])->name('uploadF
 
 Route::get('/convert-image-to-pdf', [PDFController::class, 'convertImagesToPDF']);
 
-
 /* Route for Personal data sheet */
 Route::get('/user/profile/pds/{emp_id}', [PersonalDataSheetController::class,'personaldatasheet']);
 /* Route for Leave Form */
 Route::get('/hris/view-leave/form-leave/{leave_id}', [LeaveFormController::class,'leaveform']);
+
+/* Export to Excel */
+Route::get('/leaves-excel',[ViewLeavesController::class, 'leavesExcel'])->name('leaves.excel');
+Route::get('/timelogs-excel',[EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');
 
 
 /* ===== MAIL ======*/
@@ -259,5 +260,3 @@ Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('
 
 Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
 Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
-
-Route::get('/timelogs-excel',[EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');

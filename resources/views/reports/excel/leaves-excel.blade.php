@@ -1,6 +1,6 @@
 
 
-<link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}"> --}}
 
 <style type="text/css">
 #dataTimeLogs thead th {
@@ -23,33 +23,45 @@
                     <th>Control Number</th>
                     <th>Leave Type</th>
                     <th>Others</th>
-
                     <th>Begin Date</th>
                     <th>End Date</th>
                     <th>Number of Day/s</th>
                     <th>Reason</th>
                     <th>Supervisor</th>
+                    <th>Date Applied</th>
                     <th>Status</th>
                 </tr>
             </thead>
-            <tbody class="data hover" id="viewEmployee">
-                {{-- @forelse($employees as $employee)
-                    <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}"
-                         class="text-sm text-lg-lg">
-                        <td>{{ strtoupper($employee->department) }}</td>
-                        <td>{{ $employee->full_name }}</td>
-                        <td>{{ strtoupper($employee->employee_id) }}</td>
+            <tbody>
+                @forelse($leavesData as $data)
+                    <tr class="text-sm text-lg-lg">
+                        <td>{{ $data->name }}</td>
+                        <td>{{ $data->employee_id }}</td>
+                        <td>{{ $data->office }}</td>
+                        <td>{{ $data->department }}</td>
+                        <td>{{ $data->control_number }}</td>
+                        <td>{{ $data->leave_type }}</td>
+                        <td>{{ $data->others }}</td>
+                        <td>{{ $data->date_from }}</td>
+                        <td>{{ $data->date_to }}</td>
+                        <td>{{ $data->no_of_days }}</td>
+                        <td>{{ $data->reason }}</td>
+                        <td>{{ $data->head_name }}</td>
+                        <td>{{ $data->date_applied }}</td>
+                        <td>{{ $data->status }}</td>
+                        {{-- <td>{{ $data->full_name }}</td>
+                        <td>{{ strtoupper($data->employee_id) }}</td>
                         <td>{{ $employee->time_in ? date('m/d/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('l',strtotime($employee->time_in)) : date('l',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('m/d/Y H:i:s',strtotime($employee->time_in)) : '' }}</td>
                         <td>{{ $employee->time_out ? date('m/d/Y H:i:s',strtotime($employee->time_out)) : '' }}</td>
-                        <td></td>
+                        <td></td> --}}
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">There are no time logs.</td>
+                        <td colspan="14" class="text-center">There are no time logs.</td>
                     </tr>
-                @endforelse --}}
+                @endforelse
             </tbody>
         </table>
     </div>
