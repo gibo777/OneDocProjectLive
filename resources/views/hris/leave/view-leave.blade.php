@@ -1036,11 +1036,8 @@ $(document).on('dblclick','.view-leave',function(){
             $("#employee_number").text(data[0]['employee_id']);
             $("#hid_dept").val(data[0]['department']);
             $("#department").text(data[0]['dept']);
-            if (data[0]['status']=="Pending") {
-                $("#date_applied").text(currentDate());
-            } else {
-                $("#date_applied").text(formatDates(data[0]['date_applied']));
-            }
+            $("#date_applied").text(formatDates(data[0]['date_applied']));
+            
             $("#leave_type").val(data[0]['leave_type']);
             if (data[0]['leave_type']=="Others") {
                 $("#div_others").attr('hidden',false);
@@ -1141,7 +1138,7 @@ $(document).on('dblclick','.view-leave',function(){
 
 
     $("#date_from").change(function(){
-        alert($("#reason").val()); return false;
+        // alert($("#reason").val()); return false;
         $("#number_of_days").html('');
         $("#date_from").val()=='' ? $("#date_to").val($(this).val()) : $("#date_to").val();
         /*leaveValidation(

@@ -27,13 +27,24 @@ class LeaveFormController extends Controller
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL) && (Auth::user()->supervisor!=null) )
         {
             $holidays = DB::table('holidays')
-                        ->where( function($query) {
-                          return $query->where('holiday_office','')->orWhereNull('holiday_office')->orWhere('holiday_office',Auth::user()->office);
-                        })->get();
-            $departments = DB::table('departments')->get();
-            $leave_types = DB::table('leave_types');
-            (Auth::user()->gender=='F') ? $leave_types=$leave_types->where('leave_type','!=', 'PL') : $leave_types=$leave_types->where('leave_type','!=', 'ML');
-            $leave_types =$leave_types->get();
+            ->where( function($query) {
+              return $query->where('holiday_office','')->orWhereNull('holiday_office')->orWhere('holiday_office',Auth::user()->office);
+            })->get();
+
+            $department = DB::table('departments')
+            ->select(
+                'department',
+                // DB::raw("DATE_FORMAT(NOW(), '%m/%d/%Y') as curDate")
+                DB::raw("DATE_FORMAT(NOW(), '%Y-%m-%d') as curDate")
+
+            )
+            ->where('department_code',Auth::user()->department)
+            ->first();
+
+            $leaveTypes = DB::table('leave_types');
+            (Auth::user()->gender=='F') ? $leaveTypes=$leaveTypes->where('leave_type','!=', 'PL') : $leaveTypes=$leaveTypes->where('leave_type','!=', 'ML');
+            $leaveTypes =$leaveTypes->get();
+
             $leave_credits = DB::table('leave_balances')
             ->select(
               DB::raw('(CASE WHEN VL is not null THEN VL ELSE 0 END) as VL'),
@@ -48,8 +59,8 @@ class LeaveFormController extends Controller
             return view('hris.leave.eleave', 
               [
                 'holidays'=>$holidays, 
-                'departments'=>$departments, 
-                'leave_types'=>$leave_types,
+                'department'=>$department,
+                'leaveTypes'=>$leaveTypes,
                 'leave_credits'=>$leave_credits
               ]);
         } else {
@@ -87,15 +98,17 @@ class LeaveFormController extends Controller
     public function submit_leave(Request $request)
     {
         $rules = [
-            'name' => 'required',
-            'employee_number' => 'required',
-            'hid_dept' => 'required',
-            'leave_type' => 'required',
+            // 'name' => 'required',
+            // 'employeeNumber' => 'required',
+            // 'hid_dept' => 'required',
+            'leaveType' => 'required',
             'reason' => 'required',
-            'date_applied' => 'required',
+            // 'date_applied' => 'required',
             'leaveDateFrom' => 'required',
-            'leaveDateTo' => 'required'
+            'leaveDateTo' => $request->isHalfDay ? '':'required'
         ];
+
+        // return var_dump($request->input());
 
         $validator = Validator::make($request->all(),$rules);
 
@@ -106,13 +119,12 @@ class LeaveFormController extends Controller
             ->withErrors($validator);
         }
         else{
-          // return "gibs 2";
+            // return "gibs 2";
             $inputData = $request->input();
             try{
-                // return $data['employee_number'];
                 $insert_increment = DB::table('leaves')
                 ->select('leave_number')
-                ->where('employee_id','=',$inputData['employee_number'])
+                ->where('employee_id','=',Auth::user()->employee_id)
                 ->orderBy('leave_number','desc')->first();
                 
                 if ($insert_increment==NULL) {
@@ -122,8 +134,8 @@ class LeaveFormController extends Controller
                 }
                 // return $new_leave_number;
 
-                $date = strtotime($inputData['date_applied'].date('G:i:s'));
-                $dateapplied =  date('Y-m-d H:i:s', $date);
+                // $date = strtotime($inputData['date_applied'].date('G:i:s'));
+                // $dateapplied =  date('Y-m-d H:i:s', $date);
 
 
 
@@ -146,6 +158,7 @@ class LeaveFormController extends Controller
                 $insert->save();*/
 
 
+                // return $request->isHalfDay ? date('Y-m-d',strtotime($inputData['leaveDateFrom'])) : date('Y-m-d',strtotime($inputData['leaveDateTo'])) ;
 
                 $data = [
                     'leave_number' => $new_leave_number, 
@@ -153,19 +166,18 @@ class LeaveFormController extends Controller
                     'employee_id' => Auth::user()->employee_id,
                     'office' => Auth::user()->office,
                     'department' => Auth::user()->department,
-                    'date_applied' => date('Y-m-d H:i:s'),
-                    'leave_type' => $inputData['leave_type'],
+                    'date_applied' => DB::raw('NOW()'),
+                    'leave_type' => $inputData['leaveType'],
                     'reason' => $inputData['reason'],
                     'date_from'=>date('Y-m-d',strtotime($inputData['leaveDateFrom'])),
-                    'date_to'=>date('Y-m-d',strtotime($inputData['leaveDateTo'])),
+                    'date_to'=> $request->isHalfDay ? date('Y-m-d',strtotime($inputData['leaveDateFrom'])) : date('Y-m-d',strtotime($inputData['leaveDateTo'])),
                     'no_of_days' => $inputData['hid_no_days'],
                     'ip_address' => $request->ip(),
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s')
+                    'created_at' => DB::raw('NOW()'),
+                    'updated_at' => DB::raw('NOW()')
                 ];
 
-                // return var_dump($data);
-                if ($inputData['leave_type']=='Others') {
+                if ($inputData['leaveType']=='Others') {
                     $data['others'] = $inputData['others_leave'];
                 }
                 // return var_dump($data);
@@ -184,14 +196,16 @@ class LeaveFormController extends Controller
      *
      * @param  \App\Models\LeaveForm  $insertForm
      * @return \Illuminate\Http\Response
+     * @author Gilbert Retiro
      */
     public function show_balance(Request $request)
     {
-        $emp_id = $request->emp_id;
+        // return var_dump($request->input());
+        $employeeId = $request->employeeId;
         $type = $request->type;
         // return response()->json($emp_id);
 
-            $leaves_balances = DB::table('leave_balances')->where('employee_id','=',$emp_id)->get();
+            $leaves_balances = DB::table('leave_balances')->where('employee_id','=',$employeeId)->get();
             switch ($type) {
                 case 'VL': return $leaves_balances[0]->VL; break;
                 case 'SL': return $leaves_balances[0]->SL; break;
