@@ -182,7 +182,26 @@ class LeaveFormController extends Controller
                 }
                 // return var_dump($data);
                 $insertId = DB::table('leaves')->insertGetId($data);
-                $newLeave = DB::table('leaves')->where('id',$insertId)->first();
+
+                $newLeave = DB::table('leaves as l')
+                ->leftJoin('departments as d','l.department','d.department_code')
+                ->select(
+                    'l.control_number',
+                    'l.name',
+                    'l.employee_id',
+                    'd.department',
+                    DB::raw("DATE_FORMAT(l.date_applied, '%m/%d/%Y %h:%i %p') as date_applied"),
+                    'l.leave_type',
+                    DB::raw("DATE_FORMAT(l.date_from, '%m/%d/%Y') as date_from"),
+                    DB::raw("DATE_FORMAT(l.date_to, '%m/%d/%Y') as date_to"),
+                    'l.no_of_days',
+                    'l.reason'
+                )
+                ->where('l.id',$insertId)->first();
+
+
+
+
                 // dd($insert->toSql());
                 return response(['isSuccess' => true,'message'=>'Leave application submitted!','newLeave'=>$newLeave]);
             } catch(Exception $e){

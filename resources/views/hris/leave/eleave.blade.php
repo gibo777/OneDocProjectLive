@@ -656,26 +656,28 @@ $(document).ready(function(){
                         });
 
                         Swal.fire({
-                            width: '640px',
+                            // width: '640px',
                             scrollbarPadding: false,
                             html: 
-                            `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
-                              <thead class="thead">
-                                  <tr class='text-center'>
-                                      <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
-                                  </tr>
-                              </thead>
-                              <tbody class="data text-center" id="data">
-                                <tr> <td>Name:</td> <td>`           +newLeave.name+`</td> </tr>
-                                <tr> <td>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
-                                <tr> <td>Department:</td> <td>`     +newLeave.department+`</td> </tr>
-                                <tr> <td>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
-                                <tr> <td>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
-                                <tr> <td>Date Covered:</td> <td>`   +newLeave.date_from+`-`+newLeave.date_to+`</td> </tr>
-                                <tr> <td>Number of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
-                                <tr> <td>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
-                              </tbody>
-                          </table>
+                            `<div class="table-responsive">
+                                <table id="leaveSummary" class="table table-bordered data-table sm:justify-center table-hover">
+                                <thead class="thead">
+                                    <tr class='text-center'>
+                                        <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="data text-center" id="data">
+                                    <tr> <td class='text-right col-4'>Name:</td> <td>`           +newLeave.name+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Department:</td> <td>`     +newLeave.department+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
+                                    <tr> <td class='text-right'># of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
+                                    <tr> <td class='text-right'>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
+                                </tbody>
+                                </table>
+                            </div>
                             `,
                         }).then(function(){
                             $('#PreviewModal').modal('hide');
