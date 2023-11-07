@@ -181,9 +181,10 @@ class LeaveFormController extends Controller
                     $data['others'] = $inputData['others_leave'];
                 }
                 // return var_dump($data);
-                $insert = DB::table('leaves')->insert($data);
+                $insertId = DB::table('leaves')->insertGetId($data);
+                $newLeave = DB::table('leaves')->where('id',$insertId)->first();
                 // dd($insert->toSql());
-                return response(['isSuccess' => true,'message'=>'Leave application submitted!']);
+                return response(['isSuccess' => true,'message'=>'Leave application submitted!','newLeave'=>$newLeave]);
             } catch(Exception $e){
                 return response(['isSuccess'=>false,'message'=>$e]);
             }

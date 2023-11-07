@@ -321,6 +321,7 @@ $(document).ready(function(){
         var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
         var weekends_count =  isWeekendandHolidays(datefrom,dateto);
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
+        // alert('test'); return false;
 
         /*if ($('#leaveType').val()=="SL"&& Date.parse(datefrom) > Date.now()){
             $('#leaveDateFrom').val("");
@@ -525,36 +526,31 @@ $(document).ready(function(){
             $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
+        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && (priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
+            $('#hid_no_days').val("");
 
-        if ($('#leaveType').val()=="SL" || $('#leaveType').val()=="EL") {
-            return true;
-        } else {
-            if (priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") {
-                $('#leaveDateFrom').val("");
-                $('#leaveDateTo').val("");
-                $('#hid_no_days').val("");
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'INVALID',
-                    text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
-                  });
-            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'INVALID',
+                text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
+              });
         }
 
-        leaveValidation(
+        leaveValidation (
             $(this).val(),
             $("#leaveDateTo").val(),
             $("#leaveType").val()
             );
-        /*submitLeaveValidation (
+        submitLeaveValidation (
             $("#leaveType").val(),
             $("#others_leave").val(),
             $(this).val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
-            );*/
+            );
     });
 
 
@@ -651,56 +647,53 @@ $(document).ready(function(){
                 success:function(data){
                     // prompt('', data); return false;
                     console.log(data);
-                    const {isSuccess,message} = data;
-                        /*isSuccess ?
-                            (Livewire.emit('refetchAcc'),
-                            Swal.fire({
-                                icon:'success',
-                                title:'Success',
-                                text:message
-                            }))
-                        :
-                            Swal.fire({
-                                icon:'error',
-                                title:'Error',
-                                text:JSON.stringify(message)
-                            })*/
-                // prompt('',isSuccess); return false;
+                    const {isSuccess,message,newLeave} = data;
 
-                if (isSuccess==true) {
-                    var notificationslev = [];
-                    $("input:checkbox[name='leave_notification[]']:checked").each(function(){
-                        notificationslev.push($(this).val());
-                    });
-
-                    // $('#modaltitle').text("#" +$('#employeeNumber').val()+" Preview Leave Form");
-                    $('#nameofemp').text("Name: "+$('#name').text());
-                    $('#employeenumofemp').text("Employee #: "+$('#employeeNumber').text());
-                    $('#departmentofemp').text("Department: "+$('#department').text());
-                    $('#dateappliedofemp').text("Date Applied: "+$('#date_applied').text());
-                    $('#leavetypeofemp').text("Leave Type: "+$('#leaveType').val());
-                    $('#datecoveredofemp').text("Date Covered: "+$('#leaveDateFrom').val()+" TO " +$('#leaveDateTo').val() );
-                    // $('#notificationofleaveofemp').text("Notification of Leave: "+notificationslev);
-                    $('#reasonofemp').text("Reason: "+$('#reason').val());
-                    $('#PreviewModal').modal('show');
-                    
-                        $('#truesubmitleave').click(function(){
-                            $('#PreviewModal').modal('hide');
-                             Swal.fire(
-                            'LEAVE FORM successfully submitted!',
-                            '',
-                            'success'
-                          )
-                          $('.swal2-confirm').click(function(){
-                            window.location = window.location.origin+"/hris/view-leave";
-                          });
+                    if (isSuccess==true) {
+                        var notificationslev = [];
+                        $("input:checkbox[name='leave_notification[]']:checked").each(function(){
+                            notificationslev.push($(this).val());
                         });
+
+                        Swal.fire({
+                            width: '640px',
+                            scrollbarPadding: false,
+                            html: 
+                            `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
+                              <thead class="thead">
+                                  <tr class='text-center'>
+                                      <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="data text-center" id="data">
+                                <tr> <td>Name:</td> <td>`           +newLeave.name+`</td> </tr>
+                                <tr> <td>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
+                                <tr> <td>Department:</td> <td>`     +newLeave.department+`</td> </tr>
+                                <tr> <td>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
+                                <tr> <td>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
+                                <tr> <td>Date Covered:</td> <td>`   +newLeave.date_from+`-`+newLeave.date_to+`</td> </tr>
+                                <tr> <td>Number of Day/s:</td> <td>`+newLeave.reason+`</td> </tr>
+                                <tr> <td>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
+                              </tbody>
+                          </table>
+                            `,
+                        }).then(function(){
+                            $('#PreviewModal').modal('hide');
+                                 Swal.fire(
+                                'LEAVE FORM successfully submitted!',
+                                '',
+                                'success'
+                              ).then(function(){
+                                window.location = window.location.origin+"/hris/view-leave";
+                              });
+                        });
+
                     } else {
                         Swal.fire({
-                                icon:'error',
-                                title:'Error',
-                                text:JSON.stringify(message)
-                            })
+                            icon:'error',
+                            title:'Error',
+                            text:JSON.stringify(message)
+                        })
                     }
                 }
             });
