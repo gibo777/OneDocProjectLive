@@ -672,7 +672,7 @@ $(document).ready(function(){
                                 <tr> <td>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
                                 <tr> <td>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
                                 <tr> <td>Date Covered:</td> <td>`   +newLeave.date_from+`-`+newLeave.date_to+`</td> </tr>
-                                <tr> <td>Number of Day/s:</td> <td>`+newLeave.reason+`</td> </tr>
+                                <tr> <td>Number of Day/s:</td> <td>`+newLeave.number_of_days+`</td> </tr>
                                 <tr> <td>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
                               </tbody>
                           </table>
