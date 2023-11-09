@@ -602,7 +602,7 @@
 
 
                         <div class="row my-1 pt-1">
-                            <div class="col-md-4 px-1 my-1">
+                            <div class="col-md-3 px-1 my-1">
                                     <div class="form-floating">
                                         <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value=""></option>
@@ -627,7 +627,7 @@
 <?php endif; ?>
                                     </div>
                             </div>
-                            <div class="col-md-4 px-1 my-1">
+                            <div class="col-md-5 px-1 my-1">
                                     <div class="form-floating">
                                         <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                             <option value="">Select Department</option>

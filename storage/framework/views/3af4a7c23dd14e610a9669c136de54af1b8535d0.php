@@ -56,6 +56,15 @@
     .dataTables_wrapper .sorting_desc:before {
         display: none;
     }*/
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+    .dataTables_wrapper thead th {
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
 
 
     /* Custom CSS for inset shadow */
@@ -113,18 +122,20 @@
 
                         <div class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
                             <div class="row pb-1" id="filterFields">
-                                
-                                <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
-                                <div class="col-md-2 px-4 text-center mt-1">
+
+                                <div class="col-md-5 text-center mt-1">
+                                    <div class="row mx-1">
+                                        <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
                                         <!-- FILTER by Department -->
-                                    <div class="form-floating" id="divfilterDepartment">
-                                        <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Departments</option>
-                                            <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <option><?php echo e($dept->department); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <div class="form-floating" id="divfilterDepartment">
+                                                <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Departments</option>
+                                                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option><?php echo e($dept->department); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'filterDepartment','value' => ''.e(__('DEPARTMENT')).'']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -139,20 +150,20 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
 
-                                <div class="col-md-2 px-4 text-center mt-1">
-                                    <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="div_filterLeaveType">
-                                        <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Leave Types</option>
-                                            <?php $__currentLoopData = $leave_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <option value="<?php echo e($leave_type->leave_type); ?>"><?php echo e($leave_type->leave_type_name); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <!-- FILTER by Leave Type -->
+                                            <div class="form-floating" id="div_filterLeaveType">
+                                                <select name="filterLeaveType" id="filterLeaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Leave Types</option>
+                                                    <?php $__currentLoopData = $leave_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($leave_type->leave_type); ?>"><?php echo e($leave_type->leave_type_name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'filterLeaveType','value' => ''.e(__('LEAVE TYPE')).'']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -167,19 +178,18 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-2 px-4 text-center mt-1">
-                                    <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="div_filterLeaveType">
-                                        <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                            <option value="">All Leave Statuses</option>
-                                            <?php $__currentLoopData = $leave_statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave_status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <option><?php echo e($leave_status->leave_status); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 px-1 text-center mt-1">
+                                            <!-- FILTER by Leave Type -->
+                                            <div class="form-floating" id="div_filterLeaveType">
+                                                <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                                    <option value="">All Leave Statuses</option>
+                                                    <?php $__currentLoopData = $leave_statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave_status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option><?php echo e($leave_status->leave_status); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'filterLeaveStatus','value' => ''.e(__('LEAVE STATUS')).'']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -194,11 +204,12 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-
-			                    <div class="col-md-4 px-4 text-center mt-1">
+			                    <div class="col-md-3 px-1 text-center mt-1">
 			                    	<?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['class' => 'py-0 my-0','value' => ''.e(__('Search Dates')).'']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
@@ -219,10 +230,17 @@
 			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
 
-                                <?php if(Auth::user()->role_type!='ADMIN' && Auth::user()->role_type!='SUPER ADMIN'): ?>
-                                <div class="col-md-2"></div>
-                                <?php endif; ?>
-                                <div class="col-md-2 py-3 text-center">
+                                <div class="col-md-2 pt-2 text-center mt-1 ">
+                                    <?php if(Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58): ?>
+                                    <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
+                                        <i class="fas fa-table"></i>
+                                        <span id="exportExcelLeaves" class="font-weight-bold">Export to Excel</span>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                
+                                <div class="col-md-2 px-1 py-3 text-center">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.button','data' => ['id' => 'createNewLeave']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-button'); ?>
@@ -242,15 +260,7 @@
                         </div>
 
 
-                              <!-- DIV_GRID4 -->
-                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
-                            </div>
-                              <!-- DIV_GRID5 -->
-                              <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
-                            </div>
-                             <!-- DIV_GRID6 -->
-                             <div class="col-span-8 sm:col-span-1 " id="div_grid6">
-                            </div>
+                        
                         </div>
 
                             <div id="table_data">
@@ -263,6 +273,7 @@
                                                 <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
                                                 <th>Name</th>
                                                 
+                                                <th>Office</th>
                                                 <th>Department</th>
                                                 <?php endif; ?>
                                                 <th>Control#</th>
@@ -282,6 +293,7 @@
                                                     <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
                                                     <td><?php echo e($leave->name); ?></td>
                                                     
+                                                    <td><?php echo e($leave->company_name); ?></td>
                                                     <td><?php echo e($leave->department); ?></td>
                                                     <?php endif; ?>
                                                     <td><?php echo e($leave->control_number); ?></td>
@@ -1325,6 +1337,7 @@ $(document).ready( function () {
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
+        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
       });
 
 function formatDates(date) {
@@ -1371,9 +1384,9 @@ function currentDate() {
 		    var sD  = $('#filterDepartment').val();
 		    var sLT = $('#filterLeaveType').val();
             var sLS = $('#filterLeaveStatus').val().toUpperCase();
-		    var cD  = data[1]; // Department Column
-            var cLT = data[3]; // Leave Type Column
-		    var cLS = data[8].toUpperCase(); // Leave Status Column
+		    var cD  = data[2]; // Department Column
+            var cLT = data[4]; // Leave Type Column
+		    var cLS = data[9].toUpperCase(); // Leave Status Column
 		    
 		    // Check if a department filter is selected
 		    var departmentFilterActive = (sD != null && sD !== '');
@@ -1395,7 +1408,7 @@ function currentDate() {
 		    return departmentMatch && leaveTypeMatch && leaveStatusMatch;
 		} else {
 		    var sLT = $('#filterLeaveType').val();
-		    var cLT = data[1]; // LeaveType Column
+		    var cLT = data[2]; // LeaveType Column
 		    
 		    // Check if a LeaveType filter is selected
 		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
@@ -1426,8 +1439,8 @@ function currentDate() {
         dateTo.setHours(23, 59, 59, 999);
 
         // Get the time-in and time-out values from columns 3 and 4
-        var searchTimeIn = data[4];
-        var searchTimeOut = data[5];
+        var searchTimeIn = data[5];
+        var searchTimeOut = data[6];
 
         // Convert time-in and time-out strings to Date objects (if applicable)
         var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
@@ -1458,7 +1471,6 @@ function currentDate() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Invalid Date Range',
-                    // text: '',
                 }).then(function() {
                     $(this).val('');
                 });
@@ -1476,7 +1488,6 @@ function currentDate() {
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Date Range',
-                // text: '',
             });
         }
         tableLeaves.draw();
@@ -1496,6 +1507,38 @@ $('#filterLeaveType').on('keyup change', function() {
 $('#filterLeaveStatus').on('keyup change', function() { 
     tableLeaves.draw(); 
 });
+
+/* EXPORT TO EXCEL TIMELOGS */
+    $('#exportExcelLeaves').click(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/leaves-excel',
+            method: 'get',
+            data: {'id':$(this).attr('id')}, // prefer use serialize method
+            success:function(data){
+
+                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                var url = window.URL.createObjectURL(blob);
+
+                // Create a download link
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'leaves.xls'; // Use .xls extension for Excel files
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        }); 
+        return false;
+
+    });
 
 /* Reroute to Leave Form */
 $(document).on('click','#createNewLeave', async function() {
@@ -1566,11 +1609,8 @@ $(document).on('dblclick','.view-leave',function(){
             $("#employee_number").text(data[0]['employee_id']);
             $("#hid_dept").val(data[0]['department']);
             $("#department").text(data[0]['dept']);
-            if (data[0]['status']=="Pending") {
-                $("#date_applied").text(currentDate());
-            } else {
-                $("#date_applied").text(formatDates(data[0]['date_applied']));
-            }
+            $("#date_applied").text(formatDates(data[0]['date_applied']));
+            
             $("#leave_type").val(data[0]['leave_type']);
             if (data[0]['leave_type']=="Others") {
                 $("#div_others").attr('hidden',false);
@@ -1671,7 +1711,7 @@ $(document).on('dblclick','.view-leave',function(){
 
 
     $("#date_from").change(function(){
-        alert($("#reason").val()); return false;
+        // alert($("#reason").val()); return false;
         $("#number_of_days").html('');
         $("#date_from").val()=='' ? $("#date_to").val($(this).val()) : $("#date_to").val();
         /*leaveValidation(

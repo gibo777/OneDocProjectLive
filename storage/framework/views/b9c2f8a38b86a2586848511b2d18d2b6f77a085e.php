@@ -29,26 +29,9 @@
 
 
             <div class="px-5 pt-3 bg-white sm:p-6 shadow <?php echo e(isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md'); ?>">
-                <div class="row">
-                    <div class="col-md-4 p-1">
-                        <!-- Name -->
-                        <div class="form-floating">
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'name','name' => 'name','type' => 'text','class' => 'form-control border-0 bg-white shadow-none mt-1 block w-full','value' => ''.e(join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name])).'','placeholder' => 'NAME','readonly' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'name','name' => 'name','type' => 'text','class' => 'form-control border-0 bg-white shadow-none mt-1 block w-full','value' => ''.e(join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name])).'','placeholder' => 'NAME','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                <div class="row inset-shadow rounded">
+                    <div class="col-md-4 pt-1">
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'name','value' => ''.e(__('NAME')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -63,94 +46,28 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'name','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input-error'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'name','class' => 'mt-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                        </div>
+                        <h6 id="name"><?php echo e(join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name])); ?></h6>
                     </div>
-                    <div class="col-md-3 p-1">
-                        <!-- Employee Number -->
-                        <div class="form-floating">
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'employee_number','name' => 'employee_number','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block w-full','value' => ''.e(Auth::user()->employee_id).'','placeholder' => 'EMPLOYEE NUMBER','readonly' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'employee_number','name' => 'employee_number','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block w-full','value' => ''.e(Auth::user()->employee_id).'','placeholder' => 'EMPLOYEE NUMBER','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'employee_number','value' => ''.e(__('EMPLOYEE NUMBER')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+                    <div class="col-md-2 pt-1">
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'employeeNumber','value' => ''.e(__('EMPLOYEE #')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'employee_number','value' => ''.e(__('EMPLOYEE NUMBER')).'','class' => 'w-full']); ?>
+<?php $component->withAttributes(['for' => 'employeeNumber','value' => ''.e(__('EMPLOYEE #')).'','class' => 'w-full']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'employee_number','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input-error'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'employee_number','class' => 'mt-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                        </div>
+                        <h6 id="employeeNumber"><?php echo e(Auth::user()->employee_id); ?></h6>
                     </div>
-                    <div class="col-md-3 p-1">
-                        <!-- Department -->
-                        <div class="form-floating">
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'department','name' => 'department','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block w-full','value' => ''.e(Auth::user()->department).'','readonly' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'department','name' => 'department','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block w-full','value' => ''.e(Auth::user()->department).'','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?> 
-
-                            
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                    <div class="col-md-4 pt-1">
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'department','value' => ''.e(__('DEPARTMENT')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -165,7 +82,8 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                        <h6 id="department"><?php echo e($department->department); ?></h6>
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'hid_dept','name' => 'hid_dept','type' => 'hidden','value' => ''.e(Auth::user()->department).'']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-input'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -180,27 +98,9 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                        </div>
                     </div>
-                    <div class="col-md-2 p-1">
-                        <!-- Date Applied -->
-                        <div class="form-floating">
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'date_applied','name' => 'date_applied','value' => ''.e(date('m/d/Y')).'','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block date-input','placeholder' => 'DATE APPLIED','readonly' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'date_applied','name' => 'date_applied','value' => ''.e(date('m/d/Y')).'','type' => 'text','class' => 'form-control mt-1 border-0 bg-white shadow-none block date-input','placeholder' => 'DATE APPLIED','readonly' => true]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                    <div class="col-md-2 pt-1">
+                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'date_applied','value' => ''.e(__('DATE APPLIED')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -215,59 +115,34 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'date_applied','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input-error'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'date_applied','class' => 'mt-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                        </div>
+                        <h6 id="date_applied"><?php echo e(date('m/d/Y')); ?></h6>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4 p-1">
+                    <div class="col-md-2 p-1">
                         <!--  Leave Type -->
                         <div class="form-floating">
-                            <select name="leave_type" id="leave_type" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" placeholder="LEAVE TYPE">
-                                <option value="">Select Leave Type</option>
-                                    <?php $__currentLoopData = $leave_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($leave_type->leave_type); ?>"><?php echo e($leave_type->leave_type_name); ?></option>
+                            <select name="leaveType" id="leaveType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" placeholder="LEAVE TYPE">
+                                <option value=""></option>
+                                    <?php $__currentLoopData = $leaveTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leaveType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($leaveType->leave_type); ?>"><?php echo e($leaveType->leave_type_name); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
+                            
+                            <label for="leaveType" class="font-weight-bold">
+                                LEAVE TYPE<span class="text-danger"> *</span>
+                            </label>
+
                             <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'leave_type','value' => ''.e(__('LEAVE TYPE')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'leave_type','value' => ''.e(__('LEAVE TYPE')).'','class' => 'w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'leave_type','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'leaveType','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-input-error'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'leave_type','class' => 'mt-2']); ?>
+<?php $component->withAttributes(['for' => 'leaveType','class' => 'mt-2']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
@@ -309,6 +184,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-2 p-1 text-center my-3">
+                            <label class="half-day hover"><?php echo e(__('Halfday?')); ?></label>
+                            <input id="isHalfDay" name="isHalfDay" type="checkbox" class="hover" />
+                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'isHalfDay','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-input-error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'isHalfDay','class' => 'mt-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                    </div>
                     <div class="col-md-8 mt-2">
                         <div class="row">
                             <div class="col-md-4">
@@ -328,24 +222,13 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'leaveDateFrom','value' => ''.e(__('BEGIN (mm/dd/yyyy)')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'leaveDateFrom','value' => ''.e(__('BEGIN (mm/dd/yyyy)')).'','class' => 'w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
+                                    
+                                    <label for="leaveDateFrom" class="font-weight-bold text-secondary w-full">
+                                        BEGIN DATE<span class="text-danger"> *</span>
+                                    </label>
                                 </div>
                             </div>
-                            TO
+                            <div class="col-md-1">TO</div>
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -363,21 +246,10 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'leaveDateTo','value' => ''.e(__('END (mm/dd/yyyy)')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'leaveDateTo','value' => ''.e(__('END (mm/dd/yyyy)')).'','class' => 'w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
+                                    
+                                    <label for="leaveDateTo" class="font-weight-bold text-secondary w-full">
+                                        END DATE<span class="text-danger"> *</span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -442,21 +314,10 @@
 
                             <div class="form-floating col-md-6 p-1">
                                 <textarea id="reason" name="reason" class="form-control block w-full" placeholder="REASON" /></textarea>
-                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'reason','value' => ''.e(__('REASON')).'','class' => 'w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'reason','value' => ''.e(__('REASON')).'','class' => 'w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
+                                
+                                <label for="reason" class="font-weight-bold text-secondary text-center w-full">
+                                    <h6>REASON<span class="text-danger"> *</span></h6>
+                                </label>
                                 <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'reason','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-input-error'); ?>
@@ -503,8 +364,9 @@
                         </div>
                         <div class="row text-left">
                             <!-- INSTRUCTIONS -->
-                            <div class="col-md-12 sm:col-span-5 sm:justify-center">
+                            <div class="col-md-12 sm:col-span-5 sm:justify-center text-justify">
                                 INSTRUCTIONS:
+                                <h6>
                                 <ol>
                                     <li>
                                         1. Application for leave of absence must be filed at the latest, 
@@ -514,7 +376,16 @@
                                     <li>
                                         2. Application for sick leave of more than two (2) consecutive days must be supported by a medical certificate.
                                     </li>
+                                    <li>
+                                        3. A Half-day leave should be filed separately.
+                                    </li>
                                 </ol>
+                                <ol>
+                                    <li>
+                                        <span class="text-danger">*</span> Required field/s
+                                    </li>
+                                </ol>
+                                </h6>
                             </div>
                         </div>
                     </div>
@@ -597,14 +468,14 @@
                 <div class="row">
                     <div class="flex items-center justify-center px-4 py-3 sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
                         <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.button','data' => ['id' => 'submit_leave','name' => 'submit_leave','disabled' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.button','data' => ['id' => 'submitLeave','name' => 'submitLeave','disabled' => true]] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'submit_leave','name' => 'submit_leave','disabled' => true]); ?>
+<?php $component->withAttributes(['id' => 'submitLeave','name' => 'submitLeave','disabled' => true]); ?>
                             <?php echo e(__('SUBMIT LEAVE FORM')); ?>
 
                          <?php echo $__env->renderComponent(); ?>
@@ -794,6 +665,456 @@
 <div id="error_dialog">
   <p id="error_dialog_content" class="text-justify px-2"></p>
 </div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    function currentDate() {
+        var d = new Date(),
+            month = d.getMonth()+1,
+            day = d.getDate();
+
+        var current_date =
+            (month<10 ? '0' : '') + month + '/' +
+            (day<10 ? '0' : '') + day
+            + '/' + d.getFullYear()
+            ;
+        return current_date;
+    }
+
+    function isWeekendandHolidays(datefrom, dateto) {
+        var holidays = $("#holidates").val().split("|");
+        var schedules = $("#hid_schedule").val().split("|");
+        var dayoffs = [];
+        // alert(holidays.length); return false;
+        var d1 = new Date(datefrom),
+            d2 = new Date(dateto),
+            isWeekend = false;
+        var count = 0;
+
+        while (d1 <= d2) {
+            var day = d1.getDay();
+            var dday = d1.getDate(),
+                dmonth = d1.getMonth()+1,
+                dyear = d1.getFullYear();
+                if (dmonth<10) { dmonth = "0"+dmonth; }
+                if (dday<10) { dday = "0"+dday; }
+            var ddate1 = dyear+ "-" +dmonth +"-"+ dday;
+
+            for (var h=0; h<holidays.length; h++) {
+                if (ddate1 == holidays[h]) {
+                    count++;
+                }
+            }
+            for (var d=0; d<7; d++) {
+                if(jQuery.inArray(d.toString(), schedules) === -1) {
+                    if (day==d) {
+                        count++;
+                    }
+                }
+            }
+            // alert(count);
+            // }
+            d1.setDate(d1.getDate() + 1);
+        }
+        return count;
+        // return false;
+    }
+
+    function leaveValidation (datefrom, dateto, leavetype="") {
+        // alert("Date From: " + datefrom + "\n Date To: " + dateto + "\n Leave Type:" + leavetype);
+        var div_upload = $("#div_upload");
+        var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
+        var weekends_count =  isWeekendandHolidays(datefrom,dateto);
+        var number_of_days = parseInt(date_range) - parseInt(weekends_count);
+        // alert('test'); return false;
+
+        /*if ($('#leaveType').val()=="SL"&& Date.parse(datefrom) > Date.now()){
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
+            $('#hid_no_days').val("");
+            Swal.fire({
+                icon: 'error',
+                title: 'INVALID DATE FOR SICK LEAVE',
+                text: '',
+
+              })
+        }
+        else*/ if ( Date.parse(dateto) < Date.parse(datefrom)) {
+            // $("#range_notice").html("Invalid Date Range.");
+            // $("#range_notice").css("color","#ff0800");
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
+            $('#hid_no_days').val("");
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Date Range',
+                text: '',
+
+              })
+
+        } else {
+
+            $("#range_notice").html("");
+            // $("#number_of_days").html(number_of_days);
+            if (isNaN(number_of_days) == false) {
+                if (number_of_days>0 && $('#isHalfDay').is(':checked')) {
+                    $("#hid_no_days").val(0.5);
+                } else {
+                    $("#hid_no_days").val(number_of_days);
+                }
+            }
+
+            if (parseInt(number_of_days) >=3) {
+                $("#hid_no_days").css('color','#FF0000');
+            } else {
+                $("#hid_no_days").css('color','#008000');
+            }
+
+            if (leavetype=="SL" && dateto != "" && datefrom != "" && parseInt(number_of_days) >=3) {
+                $("#div_upload").attr('hidden',false);
+                $("#div_upload").show();
+                $("#div_upload").focus();
+            } else {
+                $("#div_upload").hide();
+            }
+        }
+
+        // return alert("Current Date: " + output + "\nDate From: " + datefrom + "\nDate To: " + dateto);
+    }
+
+
+    function priorLeaveValidation (datefrom, dateto, leavetype="") {
+        var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
+        var weekends_count =  isWeekendandHolidays ($("#leaveDateFrom").val(),$("#leaveDateTo").val());
+        var number_of_days = (parseInt(date_range) - parseInt(weekends_count)) - 1;
+
+        return parseInt(number_of_days);
+    }
+
+    function leaveBalance () {
+        // alert($("#employeeNumber").val());
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: window.location.origin+'/hris/eleave/balance',
+                method: 'get',
+                data: { 'employeeId': "<?php echo e(Auth::user()->employee_id); ?>", 'type': $("#leaveType").val() }, // prefer use serialize method
+                success:function(data){
+                    // prompt('',data); return false;
+                    $("#td_balance").html(data);
+
+                }
+            });
+            return false;
+    }
+
+    function submitLeaveValidation (leaveType='',others_leave='', leaveDateFrom='', leaveDateTo='',reason='') {
+
+        var empty_fields=0;
+        if (leaveType=="Others") {
+            if ($.trim(others_leave)=="") {
+                empty_fields++;
+            }
+        }
+        if (leaveType=="") { empty_fields++; }
+        if (leaveDateFrom=="") { empty_fields++; }
+        if (leaveDateTo=="") { empty_fields++; }
+        // if (notification==0) { empty_fields++; }
+        if ($.trim(reason)=="") { empty_fields++; }
+
+        if (empty_fields>0) {
+            $("#submitLeave").attr('disabled',true);
+        } else {
+            $("#submitLeave").removeAttr('disabled');
+        }
+    }
+
+
+    $(document).on('click', '.half-day', function() {
+        $('#isHalfDay').is(':checked') ? $('#isHalfDay').prop('checked',false) : $('#isHalfDay').prop('checked',true);
+        $('#isHalfDay').is(':checked') ? $('#leaveDateTo').prop('disabled', true) : $('#leaveDateTo').prop('disabled', false);
+        if ($('#isHalfDay').is(':checked')) {
+            $("#leaveDateTo").val($("#leaveDateFrom").val());
+        }
+        leaveValidation(
+            $('#leaveDateFrom').val(),
+            $('#leaveDateTo').val(),
+            $('#leaveType').val()
+        );
+    });
+    $(document).on('change', '#isHalfDay', function() {
+        $(this).is(':checked') ? $('#leaveDateTo').prop('disabled', true) : $('#leaveDateTo').prop('disabled', false);
+        if ($('#isHalfDay').is(':checked')) {
+            $("#leaveDateTo").val($("#leaveDateFrom").val());
+        }
+        leaveValidation(
+            $('#leaveDateFrom').val(),
+            $('#leaveDateTo').val(),
+            $('#leaveType').val()
+        );
+    });
+
+
+    $(document).on('change','#leaveType', function(){
+        // $(this).removeClass('empty');
+        leaveValidation(
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
+            $(this).val()
+        );
+
+        if ($(this).val()=="Others") {
+            // alert('gilbert'); return false;
+            $("#div_others").show();
+            $("#div_others").removeAttr('hidden');
+            $("#others_leave").removeAttr('hidden');
+            $("#others_leave").focus();
+        } else {
+            $("#div_others").hide();
+        }
+
+        leaveBalance(); // This will show current Leave Balance/s
+
+        if ($(this).val()=="SL" || $(this).val()=="EL") {
+            return true;
+        } else {
+            // alert(priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val())); return false;
+            if (priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
+                $('#leaveDateFrom').val("");
+                $('#leaveDateTo').val("");
+                $('#hid_no_days').val("");
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'INVALID',
+                    text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
+                  });
+            }
+        }
+        submitLeaveValidation (
+            $(this).val(),
+            $("#others_leave").val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
+            // $("input[name='leave_notification[]']:checked").length,
+            $("#reason").val()
+            );
+    });
+
+    $(document).on('keyup','#others_leave',function () {
+        /*if ($.trim($(this).val())=="") {
+            $(this).addClass('empty');
+        } else {
+            $(this).removeClass('empty');
+        }*/
+        submitLeaveValidation (
+            $("#leaveType").val(),
+            $(this).val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
+            // $("input[name='leave_notification[]']:checked").length,
+            $("#reason").val()
+            );
+    });
+
+
+    $(document).on('change','#leaveDateFrom',function(){
+
+        $("#number_of_days").html('');
+        if ($('#isHalfDay').is(':checked')) {
+            $("#leaveDateTo").val($(this).val());
+        } else {
+            $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
+        }
+
+        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && (priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+            $('#leaveDateFrom').val("");
+            $('#leaveDateTo').val("");
+            $('#hid_no_days').val("");
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'INVALID',
+                text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
+              });
+        }
+
+        leaveValidation (
+            $(this).val(),
+            $("#leaveDateTo").val(),
+            $("#leaveType").val()
+            );
+        submitLeaveValidation (
+            $("#leaveType").val(),
+            $("#others_leave").val(),
+            $(this).val(),
+            $("#leaveDateTo").val(),
+            // $("input[name='leave_notification[]']:checked").length,
+            $("#reason").val()
+            );
+    });
+
+
+    $(document).on('change','#leaveDateTo',function(){
+        $("#number_of_days").html('');
+        leaveValidation(
+            $("#leaveDateFrom").val(),
+            $(this).val(),
+            $("#leaveType").val()
+            );
+        submitLeaveValidation (
+            $("#leaveType").val(),
+            $("#others_leave").val(),
+            $("#leaveDateFrom").val(),
+            $(this).val(),
+            // $("input[name='leave_notification[]']:checked").length,
+            $("#reason").val()
+            );
+    });
+
+    $(document).on('keyup','#reason',function () {
+        submitLeaveValidation (
+            $("#leaveType").val(),
+            $("others_leave").val(),
+            $("#leaveDateFrom").val(),
+            $("#leaveDateTo").val(),
+            // $("input[name='leave_notification[]']:checked").length,
+            $(this).val()
+            );
+    });
+
+    /* SUBMIT LEAVE FORM begin*/
+    $(document).on('click','#submitLeave',function (){
+        var empty_fields=0;
+        if ($("#leaveType").val()==""){
+            $("#leaveType").addClass('empty');
+            empty_fields++;
+        } else {
+            $("#leaveType").removeClass('empty');
+            if ($("#leaveType").val()=="Others") {
+                if ($.trim($("#others_leave").val())=="") {
+                    $("#others_leave").addClass('empty');
+                    empty_fields++;
+                } else {
+                    $("#others_leave").removeClass('empty');
+                }
+            }
+        }
+
+        if ($("#leaveDateFrom").val()=="") {
+            $("#leaveDateFrom").addClass('empty');
+            empty_fields++;
+        } else {
+            $("#leaveDateFrom").removeClass('empty');
+        }
+
+        if ($("#leaveDateTo").val()=="") {
+            $("#leaveDateTo").addClass('empty');
+            empty_fields++;
+        } else {
+            $("#leaveDateTo").removeClass('empty');
+        }
+
+        if ($.trim($("#reason").val())=="") {
+            $("#reason").addClass('empty');
+            empty_fields++;
+        } else {
+            $("#reason").removeClass('empty');
+        }
+
+        /*Swal.fire({
+            title: empty_fields,
+        }); return false;*/
+        // alert(empty_fields); return false;
+
+        if (empty_fields>0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'NOTIFICATION',
+                text: 'Kindly fill-up all required fields',
+
+              });
+        } else {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/hris/eleave',
+                method: 'post',
+                data: $('#leave-form').serialize(), // prefer use serialize method
+                success:function(data){
+                    // prompt('', data); return false;
+                    console.log(data);
+                    const {isSuccess,message,newLeave} = data;
+
+                    if (isSuccess==true) {
+                        var notificationslev = [];
+                        $("input:checkbox[name='leave_notification[]']:checked").each(function(){
+                            notificationslev.push($(this).val());
+                        });
+
+                        Swal.fire({
+                            // width: '640px',
+                            scrollbarPadding: false,
+                            html: 
+                            `<div class="table-responsive">
+                                <table id="leaveSummary" class="table table-bordered data-table sm:justify-center table-hover">
+                                <thead class="thead">
+                                    <tr class='text-center'>
+                                        <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="data text-center" id="data">
+                                    <tr> <td class='text-right col-4'>Name:</td> <td>`           +newLeave.name+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Department:</td> <td>`     +newLeave.department+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
+                                    <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
+                                    <tr> <td class='text-right'># of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
+                                    <tr> <td class='text-right'>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                            `,
+                        }).then(function(){
+                            $('#PreviewModal').modal('hide');
+                                 Swal.fire(
+                                'LEAVE FORM successfully submitted!',
+                                '',
+                                'success'
+                              ).then(function(){
+                                window.location = window.location.origin+"/hris/view-leave";
+                              });
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon:'error',
+                            title:'Error',
+                            text:JSON.stringify(message)
+                        })
+                    }
+                }
+            });
+        }
+        return false;
+    });
+    /* SUBMIT LEAVE FORM end*/
+});
+
+
+
+</script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginal8e2ce59650f81721f93fef32250174d77c3531da)): ?>

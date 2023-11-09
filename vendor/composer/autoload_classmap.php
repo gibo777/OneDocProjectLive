@@ -50,6 +50,7 @@ return array(
     'App\\Http\\Controllers\\PersonnelDataController' => $baseDir . '/app/Http/Controllers/PersonnelDataController.php',
     'App\\Http\\Controllers\\ProcessController' => $baseDir . '/app/Http/Controllers/ProcessController.php',
     'App\\Http\\Controllers\\PusherNotificationController' => $baseDir . '/app/Http/Controllers/PusherNotificationController.php',
+    'App\\Http\\Controllers\\QRCodeController' => $baseDir . '/app/Http/Controllers/QRCodeController.php',
     'App\\Http\\Controllers\\ReimbursementController' => $baseDir . '/app/Http/Controllers/ReimbursementController.php',
     'App\\Http\\Controllers\\TestController' => $baseDir . '/app/Http/Controllers/TestController.php',
     'App\\Http\\Controllers\\ViewLeavesController' => $baseDir . '/app/Http/Controllers/ViewLeavesController.php',
