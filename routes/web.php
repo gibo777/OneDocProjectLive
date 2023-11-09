@@ -29,6 +29,8 @@ use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\PusherNotificationController;
 
 use App\Http\Controllers\WebcamController;
+use App\Http\Controllers\QRCodeController;
+
 
 use App\Http\Controllers\PersonalDataSheetController;
 
@@ -202,6 +204,10 @@ Route::get('webcam-capture', [WebcamController::class, 'index'])->name('webcam-c
 Route::post('webcam', [WebcamController::class, 'store'])->name('webcam.capture');
 
 
+/* QR CODE */
+Route::get('/qr-code', [QRCodeController::class, 'index'])->name('qr-code');
+Route::get('/qr-code-link/{qrLink}', [QRCodeController::class, 'qrCodeProfile'])->name('qr-code-profile');
+Route::get('/download-multiple-qrcodes', [QRCodeController::class, 'downloadMultipleQRCodes']);
 
 /*======= REPORTS =======*/
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);

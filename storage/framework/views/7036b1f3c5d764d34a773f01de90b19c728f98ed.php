@@ -164,7 +164,7 @@
                                 <div class="col-md-1">
                                 </div>
                                 <div class="col-md-2 pt-2 text-center mt-1 ">
-                                    <?php if(Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18): ?>
+                                    <?php if(Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58): ?>
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
                                         <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
@@ -448,7 +448,6 @@ $(document).ready(function() {
     });
 
     /* EXPORT TO EXCEL TIMELOGS */
-
     $('#exportExcel').click(function() {
         $.ajaxSetup({
             headers: {

@@ -727,6 +727,7 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         'App\\Http\\Controllers\\PersonnelDataController' => __DIR__ . '/../..' . '/app/Http/Controllers/PersonnelDataController.php',
         'App\\Http\\Controllers\\ProcessController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProcessController.php',
         'App\\Http\\Controllers\\PusherNotificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/PusherNotificationController.php',
+        'App\\Http\\Controllers\\QRCodeController' => __DIR__ . '/../..' . '/app/Http/Controllers/QRCodeController.php',
         'App\\Http\\Controllers\\ReimbursementController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReimbursementController.php',
         'App\\Http\\Controllers\\TestController' => __DIR__ . '/../..' . '/app/Http/Controllers/TestController.php',
         'App\\Http\\Controllers\\ViewLeavesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ViewLeavesController.php',

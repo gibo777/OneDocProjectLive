@@ -36,8 +36,8 @@
 
 
 
-<link rel="stylesheet" href="<?php echo e(asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css')); ?>">
-<script type="text/javascript" src="<?php echo e(asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js')); ?>"></script>
+<link rel="stylesheet" href="<?php echo e(asset('/bootstrap-5.0.2-dist/css/bootstrap.css')); ?>">
+<script type="text/javascript" src="<?php echo e(asset('/bootstrap-5.0.2-dist/js/bootstrap.js')); ?>"></script>
 
 
 
@@ -95,15 +95,15 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('navigation-menu')->html();
-} elseif ($_instance->childHasBeenRendered('Yo9ZQXy')) {
-    $componentId = $_instance->getRenderedChildComponentId('Yo9ZQXy');
-    $componentTag = $_instance->getRenderedChildComponentTagName('Yo9ZQXy');
+} elseif ($_instance->childHasBeenRendered('snRsqQa')) {
+    $componentId = $_instance->getRenderedChildComponentId('snRsqQa');
+    $componentTag = $_instance->getRenderedChildComponentTagName('snRsqQa');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('Yo9ZQXy');
+    $_instance->preserveRenderedChild('snRsqQa');
 } else {
     $response = \Livewire\Livewire::mount('navigation-menu');
     $html = $response->html();
-    $_instance->logRenderedChild('Yo9ZQXy', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('snRsqQa', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -121,9 +121,12 @@ echo $html;
 
             <!-- Page Content -->
             <main>
-                <?php echo e($slot); ?>
+                <div class="overflow-auto max-h-[500px]">
+                    <?php echo e($slot); ?>
 
+                </div>
             </main>
+
         </div>
 
         <?php echo $__env->yieldPushContent('modals'); ?>

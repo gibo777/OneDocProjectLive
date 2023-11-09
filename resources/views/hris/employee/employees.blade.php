@@ -3,6 +3,18 @@
 
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
     <style type="text/css">
+        
+    /* Hide the "Show" text and adjust layout for DataTables elements */
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+    /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 10px;
+        display: inline-block;
+    }
     .dataTables_wrapper thead th {
         padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
@@ -12,6 +24,7 @@
     #dataViewEmployees thead th {
         text-align: center; /* Center-align the header text */
     }
+
     </style>
     <x-slot name="header">
                 {{ __('VIEW ALL EMPLOYEES') }}
@@ -57,7 +70,7 @@
                                         <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $dept)
-                                            <option value="{{ $dept->department_code }}">{{ $dept->department }}</option>
+                                            <option >{{ $dept->department }}</option>
                                             @endforeach
                                         </select>
                                         <x-jet-label for="filterEmpDepartment" value="{{ __('DEPARTMENT') }}" />
@@ -77,9 +90,19 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3"></div>
-                                <div class="col-md-2 py-2 text-center">
-                                    <x-jet-button  id="registerEmployee">Register Employee</x-jet-button>
+                                <div class="col-md-2 mt-2 text-center">
+                                    @if(Auth::user()->id==1)
+                                    <x-jet-button id="downloadQR" name="downloadQR" value="Scan QR">
+                                        <i class="fa-solid fa-qrcode pr-2"></i>
+                                        Download QR
+                                    </x-jet-button>
+                                    @endif
+                                </div>
+                                <div class="col-md-3 py-2 text-center">
+                                    <x-jet-button  id="registerEmployee">
+                                        <i class="fa-solid fa-user-plus pr-2"></i>
+                                        Register Employee
+                                    </x-jet-button>
                                 </div>
                             </div>
                         </div>
@@ -103,12 +126,21 @@
                                         <tbody class="data hover" id="viewEmployee">
                                             @forelse($employees as $employee)
                                                 <tr id="{{ $employee->id }}">
+                                                    @if (url('/')=='http://localhost')
+                                                    <td>xxx, xxx x.</td>
+                                                    @else
                                                     <td>{{ join(' ',[$employee->last_name.' '.$employee->suffix.',',$employee->first_name,$employee->middle_name]) }}</td>
+                                                    @endif
                                                     <td>{{ $employee->employee_id}}</td>
                                                     <td>{{ $employee->company_name }}</td>
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->position }}</td>
+
+                                                    @if (url('/')=='http://localhost')
+                                                    <td>xxx, xxx x.</td>
+                                                    @else
                                                     <td>{{ $employee->head_name }}</td>
+                                                    @endif
                                                     {{-- <td>{{ $employee->role_type }}</td> --}}
                                                     <td>{{ $employee->employment_status }}</td>
                                                     {{-- <td id="action_buttons">
@@ -117,7 +149,7 @@
                                                             value="{{ $employee->id }}"
                                                             title="View {{ $employee->employee_id }}"
                                                             class="open_leave fa fa-edit green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500 focus:outline-none transition hover"
-                                                             >
+                                                            >
                                                             {{ __('View') }}
                                                         </button>
                                                         <!-- <button id="delete-{{ $employee->id }}"
@@ -161,7 +193,7 @@
   <div class="modal fade" id="EmployeesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl mt-2" role="document">
       <div class="modal-content">
-        <div class="modal-header banner-blue">
+        <div class="modal-header custom-modal-header banner-blue">
           <h5 class="modal-title text-white fs-5" id="EmployeesModalLabel">EMPLOYEE DETAILS</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -174,64 +206,11 @@
                         <div class="flex justify-center my-1 w-100">
                             <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover">
                         </div>
-                        <!-- EMPLOYEE STATUS -->
-                        <div class="col-md-12 nopadding my-1">
-                                <div class="form-floating">
-                                    <select name="employment_status" id="employment_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                        <option value=""></option>
-                                        @foreach ($employment_statuses as $key=>$employment_status)
-                                        <option value="{{ $employment_status->employment_status }}">{{ $employment_status->employment_status }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="employment_status" value="{{ __('Employment Status') }}" class="text-black-50 w-full" />
-                                </div>
+
+                        <div class="row my-1 mx-3 border-1">
+                            <div id="qrCode" class="flex justify-content-center pt-2"></div>
+                            {{-- <a href="#" id="download-link" download="qrcode.png" class="mt-2 text-center hover">Download QR Code</a> --}}
                         </div>
-
-                        <div class="col-md-12 nopadding my-1">
-                            <div class="row">
-                                <div class="col-md-6 form-floating">
-                                    <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
-                                    <x-jet-label for="date_hired" value="{{ __('Date Started') }}" class="pl-4 text-black-50 w-full" />
-                                    <x-jet-input-error for="date_hired" class="mt-2" />
-                                </div>
-                                  <div class="col-md-6 text-left align-items-center w-full nopadding">
-                                    <x-jet-label for="weekly_schedule" value="{{ __('Weekly Schedule') }}" class="nopadding"/>
-                                    <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
-                                        <option value="0">Sunday</option>
-                                        <option value="1" >Monday</option>
-                                        <option value="2" >Tuesday</option>
-                                        <option value="3" >Wednesday</option>
-                                        <option value="4" >Thursday</option>
-                                        <option value="5" >Friday</option>
-                                        <option value="6" >Saturday</option>
-                                    </select>
-                                  </div>
-                            </div>
-                        </div>
-
-                        {{-- <div class="col-md-12 nopadding my-1">
-                                <div class="form-floating">
-                                    <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
-                                        <option value=""></option>
-                                        @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
-                                </div>
-                        </div> --}}
-
-                        {{-- <div class="col-md-12 nopadding my-1">
-                                <div class="form-floating">
-                                    <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
-                                        <option value=""></option>
-                                        @foreach ($heads as $head)
-                                        <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
-                                </div>
-                        </div> --}}
 
                         <div class="col-md-12 nopadding my-1">
                             <div class="row">
@@ -257,10 +236,6 @@
                                 <div class="col-md-6 px-1">
                                         <x-jet-label id="fullName" class="w-full text-md" />
                                 </div>
-                                {{-- <div class="col-md-6 px-1">
-                                        <x-jet-label id="employeeID" value="{{ __('Employee ID: ') }}" class="w-full" />
-                                </div> --}}
-
                         </div>
                         <div class="row my-1 pt-1 inset-shadow">
                                 <div class="col-md-7 px-1">
@@ -287,33 +262,15 @@
                         </div>
 
                         <div class="row my-1 pt-1 inset-shadow">
-                            {{-- <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="height" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                    <x-jet-label for="height" value="{{ __('Height') }}" class="text-black-50 w-full" />
-                                    <x-jet-input-error for="height" class="mt-2" />
-                            </div>
-                            <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="weight" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="off" disabled/>
-                                    <x-jet-label for="weight" value="{{ __('Weight') }}" class="text-black-50 w-full" />
-                                    <x-jet-input-error for="weight" class="mt-2" />
-                            </div> --}}
                             <div class="col-md-1 px-1">
                                     <x-jet-label id="gender" class="w-full text-md" />
                             </div>
                             <div class="col-md-2 px-1">
                                     <x-jet-label id="civilStatus" class="w-full text-md" />
                             </div>
-                        {{-- </div>
-
-                        <div class="row pt-2"> --}}
                             <div class="col-md-3 px-1">
                                     <x-jet-label id="nationality" class="w-full text-md" />
                             </div>
-                            {{-- <div class="col-md-3 form-floating px-1">
-                                    <x-jet-input id="religion" type="text" class="form-control block w-full border-1 shadow-none" autocomplete="religion" disabled/>
-                                    <x-jet-label for="relgion" value="{{ __('Religion') }}" class="text-black-50 w-full" />
-                                    <x-jet-input-error for="religion" class="mt-2" />
-                            </div> --}}
                             <div class="col-md-2 px-1">
                                     <x-jet-label id="birthDate" class="w-full text-md" />
                             </div>
@@ -358,6 +315,47 @@
                                         </select>
                                         <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
                                     </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row my-1 pt-1">
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                    <x-jet-label for="date_hired" value="{{ __('Date Started') }}" class="pl-4 text-black-50 w-full" />
+                                    <x-jet-input-error for="date_hired" class="mt-2" />
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <select name="employment_status" id="employment_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
+                                        <option value=""></option>
+                                        @foreach ($employment_statuses as $key=>$employment_status)
+                                        <option value="{{ $employment_status->employment_status }}">{{ $employment_status->employment_status }}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-jet-label for="employment_status" value="{{ __('Employment Status') }}" class="text-black-50 w-full" />
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <x-jet-input id="dateRegularized" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                    <x-jet-label for="date_hired" value="{{ __('Date Regularized') }}" class="pl-4 text-black-50 w-full" />
+                                    <x-jet-input-error for="date_hired" class="mt-2" />
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-left align-items-center w-full nopadding">
+                                <x-jet-label for="weekly_schedule" value="{{ __('Weekly Schedule') }}" class="nopadding"/>
+                                <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
+                                    <option value="0">Sunday</option>
+                                    <option value="1" >Monday</option>
+                                    <option value="2" >Tuesday</option>
+                                    <option value="3" >Wednesday</option>
+                                    <option value="4" >Thursday</option>
+                                    <option value="5" >Friday</option>
+                                    <option value="6" >Saturday</option>
+                                </select>
                             </div>
                         </div>
 
@@ -469,7 +467,7 @@
       </div>
     </div>
   </div>
-
+{{-- <a id="downloadLink" href="/storage/qrcodes/qr_codes.zip" download hidden></a> --}}
 <!-- =========================================== -->
 <!-- Load Data -->
 <div id="dataLoad" style="display: none">
@@ -501,6 +499,7 @@ $(document).ready(function() {
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
+        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
       });
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
@@ -544,6 +543,29 @@ $(document).ready(function() {
         tableEmployee.draw(); 
     });
 
+
+
+    /* Download QR Code */
+    $(document).on('click', '#downloadQR', async function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/download-multiple-qrcodes',
+            method: 'get',
+            // data: {'qrLink':''}, // prefer use serialize method
+            success:function(link){
+                Swal.fire({ 
+                    icon: "success",
+                    html: "QR download successful!", 
+                });
+            }
+        });
+    });
+
     /* Reroute to User/Employee Registration */
     $(document).on('click','#registerEmployee', async function() {
         window.location.href = "{{ route('register') }}";
@@ -567,11 +589,32 @@ $(document).ready(function() {
             success:function(data){
                 $('#dataLoad').css('display','none');
 
-                const {getemployee,getLeaves} = data;
+                const {getemployee,getLeaves,qrCodeLink} = data;
                 var imgProfilePhotoLocation = '';
                 var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
                 var valDateHired = (getemployee.date_hired!=null) ? [dh[1],dh[2],dh[0]].join('/') : '';
                 var sched = getemployee.weekly_schedule.split('|');
+
+                var labelElement = $("#fullName");
+                var fullName = [getemployee.last_name];
+                if (getemployee.suffix != null) {
+                  fullName.push(getemployee.suffix + ',');
+                } else {
+                  fullName.push(',');
+                }
+
+                $("#qrCode").html(`<img src="{{ asset('img/misc/loading-blue-circle.gif')}}"/>`);
+                // $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+                $.ajax({
+                    url: '/qr-code',
+                    method: 'get',
+                    data: {'id':getemployee.id},
+                    success:function(qrCode){
+                        // prompt('',qrCode);
+                        $("#qrCode").html(qrCode);
+                    }
+                });
+                
 
                 $("#update_weekly_schedule").val(sched);
                 $("#update_weekly_schedule").multiselect("refresh");
@@ -591,6 +634,8 @@ $(document).ready(function() {
                     }
                 }
                 $("#imgProfile").attr('src',imgProfilePhotoLocation);
+                // $("#qrcode").html(qrCodeLink.qr_code_link);
+
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
                 // $("input[name='weekly_schedule']").val(1);
@@ -603,13 +648,6 @@ $(document).ready(function() {
 
                 // alert(getemployee.weekly_schedule);
 
-                var labelElement = $("#fullName");
-                var fullName = [getemployee.last_name];
-                if (getemployee.suffix != null) {
-                  fullName.push(getemployee.suffix + ',');
-                } else {
-                  fullName.push(',');
-                }
                 fullName.push(getemployee.first_name, getemployee.middle_name);
                 labelElement.html("Name: " + fullName.join(' ').toUpperCase()+"");
 

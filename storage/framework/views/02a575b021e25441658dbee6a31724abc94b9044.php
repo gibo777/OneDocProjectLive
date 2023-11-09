@@ -30,9 +30,15 @@
     .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
         margin-left:-1px !important 
     }
+
+    .margin-left-cust {
+        left: -3 !important;
+    }
+
+    .margin-top-cust {
+        top: -2 !important;
+    }
 </style>
-
-
 
 
 <nav id="nav_header" x-data="{ open: false }" class="bg-white border-b border-gray-100">
@@ -208,7 +214,7 @@
 
                     <!-- E-LEAVE -->
                     <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                        <?php echo e(__('E-LEAVE APPLICATION')); ?>
+                        <?php echo e(__('E-FORMS')); ?>
 
                     </div>
                     <div class="border-t border-gray-200" hidden>
@@ -221,7 +227,7 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['href' => ''.e(route('hris.leave.eleave')).'','id' => 'nav_eleave']); ?>
-                            <?php echo e(__('e-Leave Form')); ?>
+                            <?php echo e(__('E-Leave Form')); ?>
 
                          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -265,6 +271,12 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?> -->
+                    </div>
+                    <div>
+                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="<?php echo e(route('timelogslisting')); ?>"  id="nav_time_logs">
+                            <?php echo e(__('TIME-LOGS')); ?>
+
+                        </a>
                     </div>
 
                     
@@ -400,11 +412,11 @@
                       <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownEForms" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           E-FORMS
                       </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownEForms">
+                      <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownEForms">
                           <div class="dropdown dropend">
-                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">e-Leave</a>
-                              <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                  <a class="dropdown-item" href="<?php echo e(route('hris.leave.eleave')); ?>" id="dNavEleave" ><?php echo e(__('e-Leave Form')); ?> </a>
+                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
+                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                  <a class="dropdown-item" href="<?php echo e(route('hris.leave.eleave')); ?>" id="dNavEleave" ><?php echo e(__('E-Leave Form')); ?> </a>
                                   <a class="dropdown-item" href="<?php echo e(route('hris.leave.view-leave')); ?>"  id="nav_view_leaves"><?php echo e(__('View Leaves')); ?> </a>
                                   <a class="dropdown-item" href="<?php echo e(route('calendar')); ?>"  id="nav_leaves_calendar"><?php echo e(__('Leaves Calendar')); ?> </a>
                               </div>
@@ -413,13 +425,14 @@
                         <?php if(Auth::user()->role_type=='SUPER ADMIN'): ?>
                                   <div class="dropdown dropend">
                                       <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
-                                      <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
-                                          <a class="dropdown-item" href="#">Sub-menu 1</a>
+                                      <?php if(Auth::user()->id==1): ?>
+                                      <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                          <a class="dropdown-item" href="<?php echo e(route('hris.reimbursement.reimbursement')); ?>">Reimbursement Form</a>
                                           <a class="dropdown-item" href="#">Sub-menu 2</a>
                                           <div class="dropdown-divider"></div>
                                           <div class="dropdown dropend">
                                               <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub-menu 3</a>
-                                              <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                                   <a class="dropdown-item" href="#">Sub-menu 3.1</a>
                                                   <a class="dropdown-item" href="#">Sub-menu 3.2</a>
                                                   <div class="dropdown-divider"></div>
@@ -427,10 +440,12 @@
                                               </div>
                                           </div>
                                       </div>
+                                      <?php endif; ?>
                                   </div>
                           <?php endif; ?>
                           
                       </div>
+                      
                 </div>
 
                 <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
@@ -439,7 +454,7 @@
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownProcess" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         PROCESS
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownProcess">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownProcess">
                             <div class="dropdown dropend">
                               <a class="dropdown-item" href="<?php echo e(route('process.eleave')); ?>">Process e-Leave</a>
                             </div>
@@ -451,13 +466,13 @@
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         RECORDS MANAGEMENT
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
                               
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Employee Management </a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                         <a class="dropdown-item" href="<?php echo e(route('register')); ?>" >
                                             <?php echo e(__('User Registration')); ?>
 
@@ -471,7 +486,7 @@
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Time Keeping </a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdown-layouts">
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                         <a class="dropdown-item" href="<?php echo e(route('timelogslisting')); ?>">Time Logs</a>
                                   </div>
                               </div>
@@ -481,7 +496,7 @@
                     </div>
                 <?php else: ?>
                     <div class="dropdown mt-3 mx-1">
-                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="<?php echo e(route('timelogslisting')); ?>" id="nav_home" >TIME LOGS</a>
+                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="<?php echo e(route('timelogslisting')); ?>" id="nav_home" >TIME-LOGS</a>
                     </div>
                 <?php endif; ?>
 
@@ -495,7 +510,7 @@
                         <?php echo e(__('SET-UP')); ?>
 
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
                               
                               <a class="dropdown-item" href="<?php echo e(route('hr.management.offices')); ?>">
@@ -628,7 +643,7 @@
 <div class="modal fade" id="modalTimeLogCam" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header banner-blue">
             <h4 class="modal-title text-lg text-white">Capture Image for Timelog</h4>
             <button id="closeLogCamModal" type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" arial-label="Close"><span aria-hidden="true"></span></button>
         </div>
