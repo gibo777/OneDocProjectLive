@@ -133,7 +133,7 @@ Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.manage
 Route::get('/getemployees',[EmployeesController::class,'getEmployeeInfo']);
 Route::post('/updateemployees',[EmployeesController::class,'updateEmployee']);
 
-
+Route::get('/verify-duplicate',[EmployeesController::class,'verifyDuplicate'])->name('verify.duplicate');
 
 
 

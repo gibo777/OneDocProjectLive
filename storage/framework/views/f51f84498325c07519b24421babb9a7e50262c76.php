@@ -39,13 +39,17 @@
 						                <td><?php echo e($qrProfile->position); ?></td>
 						            </tr>
 						            <tr id="<?php echo e($qrProfile->id); ?>">
+						            	<td class="thead">Department</td>
+						                <td><?php echo e($qrProfile->department); ?></td>
+						            </tr>
+						            <tr id="<?php echo e($qrProfile->id); ?>">
 						            	<td class="thead">Date Hired</td>
 						                
 						                <td><?php echo e($qrProfile->date_hired); ?></td>
 						            </tr>
 						            <tr id="<?php echo e($qrProfile->id); ?>">
 						            	<td class="thead">Status</td>
-						                <td><?php echo e($qrProfile->employment_status); ?></td>
+						                <td><?php echo e(($qrProfile->employment_status=='NO LONGER CONNECTED') ? $qrProfile->employment_status : 'ACTIVE'); ?></td>
 						            </tr>
 						    </tbody>
 						</table>
