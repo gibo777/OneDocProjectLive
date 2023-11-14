@@ -11,6 +11,18 @@
 
     <link rel="shortcut icon" href="<?php echo e(asset('img/all/onedoc-favicon.png')); ?>">
     <style type="text/css">
+        
+    /* Hide the "Show" text and adjust layout for DataTables elements */
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+    /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 10px;
+        display: inline-block;
+    }
     .dataTables_wrapper thead th {
         padding: 1px 5px !important; /* Adjust the padding value as needed */
     }
@@ -20,6 +32,7 @@
     #dataViewEmployees thead th {
         text-align: center; /* Center-align the header text */
     }
+
     </style>
      <?php $__env->slot('header', null, []); ?> 
                 <?php echo e(__('VIEW ALL EMPLOYEES')); ?>
@@ -95,7 +108,7 @@
                                         <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <option value="<?php echo e($dept->department_code); ?>"><?php echo e($dept->department); ?></option>
+                                            <option ><?php echo e($dept->department); ?></option>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
                                         <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -143,8 +156,28 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3"></div>
-                                <div class="col-md-2 py-2 text-center">
+                                <div class="col-md-2 mt-2 text-center">
+                                    <?php if(Auth::user()->id==1): ?>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.button','data' => ['id' => 'downloadQR','name' => 'downloadQR','value' => 'Scan QR']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'downloadQR','name' => 'downloadQR','value' => 'Scan QR']); ?>
+                                        <i class="fa-solid fa-qrcode pr-2"></i>
+                                        Download QR
+                                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-md-3 py-2 text-center">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.button','data' => ['id' => 'registerEmployee']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-button'); ?>
@@ -153,7 +186,10 @@
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'registerEmployee']); ?>Register Employee <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['id' => 'registerEmployee']); ?>
+                                        <i class="fa-solid fa-user-plus pr-2"></i>
+                                        Register Employee
+                                     <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
@@ -182,12 +218,21 @@
                                         <tbody class="data hover" id="viewEmployee">
                                             <?php $__empty_1 = true; $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                 <tr id="<?php echo e($employee->id); ?>">
+                                                    <?php if(url('/')=='http://localhost'): ?>
+                                                    <td>xxx, xxx x.</td>
+                                                    <?php else: ?>
                                                     <td><?php echo e(join(' ',[$employee->last_name.' '.$employee->suffix.',',$employee->first_name,$employee->middle_name])); ?></td>
+                                                    <?php endif; ?>
                                                     <td><?php echo e($employee->employee_id); ?></td>
                                                     <td><?php echo e($employee->company_name); ?></td>
                                                     <td><?php echo e($employee->department); ?></td>
                                                     <td><?php echo e($employee->position); ?></td>
+
+                                                    <?php if(url('/')=='http://localhost'): ?>
+                                                    <td>xxx, xxx x.</td>
+                                                    <?php else: ?>
                                                     <td><?php echo e($employee->head_name); ?></td>
+                                                    <?php endif; ?>
                                                     
                                                     <td><?php echo e($employee->employment_status); ?></td>
                                                     
@@ -224,7 +269,7 @@
   <div class="modal fade" id="EmployeesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl mt-2" role="document">
       <div class="modal-content">
-        <div class="modal-header banner-blue">
+        <div class="modal-header custom-modal-header banner-blue">
           <h5 class="modal-title text-white fs-5" id="EmployeesModalLabel">EMPLOYEE DETAILS</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -237,114 +282,11 @@
                         <div class="flex justify-center my-1 w-100">
                             <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover">
                         </div>
-                        <!-- EMPLOYEE STATUS -->
-                        <div class="col-md-12 nopadding my-1">
-                                <div class="form-floating">
-                                    <select name="employment_status" id="employment_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
-                                        <option value=""></option>
-                                        <?php $__currentLoopData = $employment_statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$employment_status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($employment_status->employment_status); ?>"><?php echo e($employment_status->employment_status); ?></option>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </select>
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'employment_status','value' => ''.e(__('Employment Status')).'','class' => 'text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'employment_status','value' => ''.e(__('Employment Status')).'','class' => 'text-black-50 w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                                </div>
+
+                        <div class="row my-1 mx-3 border-1">
+                            <div id="qrCode" class="flex justify-content-center pt-2"></div>
+                            
                         </div>
-
-                        <div class="col-md-12 nopadding my-1">
-                            <div class="row">
-                                <div class="col-md-6 form-floating">
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'date_hired','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'date_hired','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'date_hired','value' => ''.e(__('Date Started')).'','class' => 'pl-4 text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'date_hired','value' => ''.e(__('Date Started')).'','class' => 'pl-4 text-black-50 w-full']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'date_hired','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-input-error'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'date_hired','class' => 'mt-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                                </div>
-                                  <div class="col-md-6 text-left align-items-center w-full nopadding">
-                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'weekly_schedule','value' => ''.e(__('Weekly Schedule')).'','class' => 'nopadding']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('jet-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'weekly_schedule','value' => ''.e(__('Weekly Schedule')).'','class' => 'nopadding']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
-                                    <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
-                                        <option value="0">Sunday</option>
-                                        <option value="1" >Monday</option>
-                                        <option value="2" >Tuesday</option>
-                                        <option value="3" >Wednesday</option>
-                                        <option value="4" >Thursday</option>
-                                        <option value="5" >Friday</option>
-                                        <option value="6" >Saturday</option>
-                                    </select>
-                                  </div>
-                            </div>
-                        </div>
-
-                        
-
-                        
 
                         <div class="col-md-12 nopadding my-1">
                             <div class="row">
@@ -398,8 +340,6 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                                 </div>
-                                
-
                         </div>
                         <div class="row my-1 pt-1 inset-shadow">
                                 <div class="col-md-7 px-1">
@@ -510,7 +450,6 @@
                         </div>
 
                         <div class="row my-1 pt-1 inset-shadow">
-                            
                             <div class="col-md-1 px-1">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['id' => 'gender','class' => 'w-full text-md']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
@@ -545,7 +484,6 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                             </div>
-                        
                             <div class="col-md-3 px-1">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['id' => 'nationality','class' => 'w-full text-md']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
@@ -563,7 +501,6 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                             </div>
-                            
                             <div class="col-md-2 px-1">
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['id' => 'birthDate','class' => 'w-full text-md']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
@@ -706,6 +643,159 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                                     </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row my-1 pt-1">
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'date_hired','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-input'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'date_hired','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'date_hired','value' => ''.e(__('Date Started')).'','class' => 'pl-4 text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'date_hired','value' => ''.e(__('Date Started')).'','class' => 'pl-4 text-black-50 w-full']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'date_hired','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-input-error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'date_hired','class' => 'mt-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <select name="employment_status" id="employment_status" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full" required>
+                                        <option value=""></option>
+                                        <?php $__currentLoopData = $employment_statuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$employment_status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($employment_status->employment_status); ?>"><?php echo e($employment_status->employment_status); ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </select>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'employment_status','value' => ''.e(__('Employment Status')).'','class' => 'text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'employment_status','value' => ''.e(__('Employment Status')).'','class' => 'text-black-50 w-full']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1 my-1">
+                                <div class="form-floating">
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input','data' => ['id' => 'dateRegularized','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-input'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'dateRegularized','type' => 'text','class' => 'form-control datepicker block w-full','placeholder' => 'mm/dd/yyyy','autocomplete' => 'off']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'date_hired','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'date_hired','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'date_hired','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-input-error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'date_hired','class' => 'mt-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-left align-items-center w-full nopadding">
+                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'weekly_schedule','value' => ''.e(__('Weekly Schedule')).'','class' => 'nopadding']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('jet-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'weekly_schedule','value' => ''.e(__('Weekly Schedule')).'','class' => 'nopadding']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                <select id="update_weekly_schedule" name="update_weekly_schedule" multiple class="w-full" required>
+                                    <option value="0">Sunday</option>
+                                    <option value="1" >Monday</option>
+                                    <option value="2" >Tuesday</option>
+                                    <option value="3" >Wednesday</option>
+                                    <option value="4" >Thursday</option>
+                                    <option value="5" >Friday</option>
+                                    <option value="6" >Saturday</option>
+                                </select>
                             </div>
                         </div>
 
@@ -1165,6 +1255,7 @@ $(document).ready(function() {
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
+        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
       });
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
@@ -1208,6 +1299,29 @@ $(document).ready(function() {
         tableEmployee.draw(); 
     });
 
+
+
+    /* Download QR Code */
+    $(document).on('click', '#downloadQR', async function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/download-multiple-qrcodes',
+            method: 'get',
+            // data: {'qrLink':''}, // prefer use serialize method
+            success:function(link){
+                Swal.fire({ 
+                    icon: "success",
+                    html: "QR download successful!", 
+                });
+            }
+        });
+    });
+
     /* Reroute to User/Employee Registration */
     $(document).on('click','#registerEmployee', async function() {
         window.location.href = "<?php echo e(route('register')); ?>";
@@ -1231,11 +1345,32 @@ $(document).ready(function() {
             success:function(data){
                 $('#dataLoad').css('display','none');
 
-                const {getemployee,getLeaves} = data;
+                const {getemployee,getLeaves,qrCodeLink} = data;
                 var imgProfilePhotoLocation = '';
                 var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
                 var valDateHired = (getemployee.date_hired!=null) ? [dh[1],dh[2],dh[0]].join('/') : '';
                 var sched = getemployee.weekly_schedule.split('|');
+
+                var labelElement = $("#fullName");
+                var fullName = [getemployee.last_name];
+                if (getemployee.suffix != null) {
+                  fullName.push(getemployee.suffix + ',');
+                } else {
+                  fullName.push(',');
+                }
+
+                $("#qrCode").html(`<img src="<?php echo e(asset('img/misc/loading-blue-circle.gif')); ?>"/>`);
+                // $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+                $.ajax({
+                    url: '/qr-code',
+                    method: 'get',
+                    data: {'id':getemployee.id},
+                    success:function(qrCode){
+                        // prompt('',qrCode);
+                        $("#qrCode").html(qrCode);
+                    }
+                });
+                
 
                 $("#update_weekly_schedule").val(sched);
                 $("#update_weekly_schedule").multiselect("refresh");
@@ -1255,6 +1390,8 @@ $(document).ready(function() {
                     }
                 }
                 $("#imgProfile").attr('src',imgProfilePhotoLocation);
+                // $("#qrcode").html(qrCodeLink.qr_code_link);
+
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
                 // $("input[name='weekly_schedule']").val(1);
@@ -1267,13 +1404,6 @@ $(document).ready(function() {
 
                 // alert(getemployee.weekly_schedule);
 
-                var labelElement = $("#fullName");
-                var fullName = [getemployee.last_name];
-                if (getemployee.suffix != null) {
-                  fullName.push(getemployee.suffix + ',');
-                } else {
-                  fullName.push(',');
-                }
                 fullName.push(getemployee.first_name, getemployee.middle_name);
                 labelElement.html("Name: " + fullName.join(' ').toUpperCase()+"");
 
