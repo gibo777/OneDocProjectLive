@@ -38,13 +38,17 @@
 						                <td>{{ $qrProfile->position}}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
+						            	<td class="thead">Department</td>
+						                <td>{{ $qrProfile->department }}</td>
+						            </tr>
+						            <tr id="{{ $qrProfile->id }}">
 						            	<td class="thead">Date Hired</td>
 						                {{-- <td>{{ date("m-d-Y",strtotime($qrProfile->date_hired)) }}</td> --}}
 						                <td>{{ $qrProfile->date_hired }}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
 						            	<td class="thead">Status</td>
-						                <td>{{ $qrProfile->employment_status }}</td>
+						                <td>{{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? $qrProfile->employment_status : 'ACTIVE'}}</td>
 						            </tr>
 						    </tbody>
 						</table>

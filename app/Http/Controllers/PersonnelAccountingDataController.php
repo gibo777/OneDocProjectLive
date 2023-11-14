@@ -70,14 +70,5 @@ class PersonnelAccountingDataController extends Controller
 		}catch(\Throwable $e){
 			return response(['isSuccess' => false, 'message'=>$e]);
 		}
-	
-
-
-		
-		
-
-
-			
-		
 	}
 }

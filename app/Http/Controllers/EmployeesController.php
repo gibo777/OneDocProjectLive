@@ -19,6 +19,7 @@ class EmployeesController extends Controller
      * Display listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * @author Gilbert L. Retiro
      */
     public function index() {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
@@ -58,7 +59,7 @@ class EmployeesController extends Controller
             $departments = DB::table('departments')->orderBy('department')->get();
             $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
             $holidays = DB::table('holidays')->orderBy('holiday')->get();
-            $employment_statuses = DB::table('employment_statuses')->orderBy('employment_status')->get();
+            $employment_statuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
@@ -107,6 +108,36 @@ class EmployeesController extends Controller
 
         return response()->json(['getemployee'=>$getemployee,'getLeaves' => $getLeaves]);
         // return var_dump(response()->json($getemployee));
+    }
+
+    
+
+
+    /**
+     * Verify Duplicate Email, Employee ID, etc.
+     *
+     * @return isSuccess, message
+     * @author Gilbert L. Retiro
+     **/
+    public function verifyDuplicate (Request $request)
+    {
+        try{
+            $selectEmpId = DB::table('users')->where('employee_id',$request->employeeId)->first();
+            $selectEmail = DB::table('users')->where('email',$request->email)->first();
+
+            $selectEmpId ? $dupEmpId = true : $dupEmpId = false;
+            $selectEmail ? $dupEmail = true : $dupEmail = false;
+
+            ($selectEmpId || $selectEmail) ? $duplicate = true : $duplicate = false;
+            ($selectEmpId || $selectEmail) ? $message = '<h4>Duplicate</h4>' : $message = '';
+            ($selectEmpId) ? $message = $message . 'Employee Number: '.$selectEmpId->employee_id.'<br>' : null;
+            ($selectEmail) ? $message = $message . 'Email: '.$selectEmail->email : null;
+
+
+            return response(['isError' => true, 'isDuplicate'=>$duplicate, 'message'=>$message]);
+        } catch(\Error $e){
+            return response(['isError'=>false, 'isDuplicate'=>false, 'message'=>$e]);
+        }
     }
 
     /**
