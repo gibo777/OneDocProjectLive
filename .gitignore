@@ -14,4 +14,9 @@ yarn-error.log
 /resources/views/test
 /app/Http/Controllers/TestController.php
 .gitignore
+<<<<<<< HEAD
 /storage
+=======
+/storage/framework
+/storage/views
+>>>>>>> cfb66fe1b0f0f8972434fe8027ac4d01c251dbed
