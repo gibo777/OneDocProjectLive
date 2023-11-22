@@ -37,6 +37,9 @@ use App\Http\Controllers\PersonalDataSheetController;
 
 use App\Http\Controllers\PersonnelAccountingDataController;
 
+/* CRON / SCHEDULER */
+use App\Http\Controllers\CronController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -266,3 +269,6 @@ Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('
 
 Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
 Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
+
+/*======= CRON / SCHEDULER =====*/
+Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');

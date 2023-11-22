@@ -53,6 +53,10 @@ class FullCalenderController extends Controller
                   return $query->where ('is_denied','=', '0')->orWhereNull('is_denied');
                   });
 
+                if (Auth::user()->id != 1) {
+                  $data = $data->where('employee_id', '!=', '7777-7777');
+                }
+
                 $data = $data->get([ 'id', 
                           DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ',
                           SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.',
