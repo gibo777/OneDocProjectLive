@@ -341,8 +341,8 @@
                             <div class="col-md-3 px-1 my-1">
                                 <div class="form-floating">
                                     <x-jet-input id="dateRegularized" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
-                                    <x-jet-label for="date_hired" value="{{ __('Date Regularized') }}" class="pl-4 text-black-50 w-full" />
-                                    <x-jet-input-error for="date_hired" class="mt-2" />
+                                    <x-jet-label for="dateRegularized" value="{{ __('Date Regularized') }}" class="pl-4 text-black-50 w-full" />
+                                    <x-jet-input-error for="dateRegularized" class="mt-2" />
                                 </div>
                             </div>
                             <div class="col-md-3 text-left align-items-center w-full nopadding">
@@ -638,6 +638,7 @@ $(document).ready(function() {
 
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
+                $("#dateRegularized").val( getemployee.date_regularized );
                 // $("input[name='weekly_schedule']").val(1);
                 $("#office").val(getemployee.office);
                 $("#supervisor").val(getemployee.supervisor);
@@ -707,6 +708,7 @@ $(document).ready(function() {
             'id' : $(this).attr('id'),
             'employment_status': $("#employment_status").val(),
             'date_hired': $("#date_hired").val(),
+            'dateRegularized': $("#dateRegularized").val(),
             'update_weekly_schedule': $("#update_weekly_schedule").val(),
             'office': $("#office").val(),
             'supervisor': $("#supervisor").val(),

@@ -47,7 +47,10 @@ class EmployeesController extends Controller
                 DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
                 'o.company_name',
             );
-            $employees = $employees->where('u.id','!=',1);
+
+            if (Auth::user()->id != 1) {
+                $employees = $employees->where('u.id','!=',1);
+            }
             $employees = $employees->where( function($query) {
                 return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
                 });
@@ -98,6 +101,7 @@ class EmployeesController extends Controller
             ->select(
                 'u.*', 
                 DB::raw("DATE_FORMAT(u.birthdate, '%m/%d/%Y') as birthday"),
+                DB::raw("DATE_FORMAT(u.date_regularized, '%m/%d/%Y') as date_regularized"),
                 'p.country_name')
             ->leftJoin('provinces as p','u.country','=','p.country_code')
             ->where('u.id',$empid)
@@ -162,7 +166,10 @@ class EmployeesController extends Controller
                 'supervisor' => $request->supervisor,
                 'role_type'=> $request->roleType,
                 'is_head'=>$request->is_head,
+                'date_regularized'=>date('Y-m-d',strtotime($request->dateRegularized))
             );
+
+            // return var_dump($data_array);
             $leaves = [
                 'VL'=>$request->vl,
                 'SL'=>$request->sl,
