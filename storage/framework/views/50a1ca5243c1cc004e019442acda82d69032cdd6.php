@@ -660,31 +660,41 @@
     </div>
 </div>
 
-    <script type="text/javascript">
-       $(".multi-select").multiselect({
-            numberDisplayed:1
-              // Bootstrap 5 compatibility
-        });
+<script type="text/javascript">
+   $(".multi-select").multiselect({
+        numberDisplayed:1
+          // Bootstrap 5 compatibility
+    });
 
-        // $(document).ready(function() {
-        //     $("#btnsubmit").click(function() {
-        //         alert("heyyy"); return false;
-        //     });
-        // });
-        // alert($(window).width());
-        /*if ($(window).width() <= 460) {
-            $("#companyLogo").removeClass('w-33');
-        } else {
-            $("#companyLogo").addClass('w-33');
-        }*/
-        /*if(window.matchMedia("(max-width: 767px)").matches){
-            // The viewport is less than 768 pixels wide
-            $("#companyLogo").addClass('w-33');
-        } else{
-            // The viewport is at least 768 pixels wide
-            $("#companyLogo").removeClass('w-33');
-        }*/
-    </script>
+$(document).ready(function() {
+    $("#btnsubmit").click(function() {
+         $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/verify-duplicate',
+            method: 'get',
+            data: {
+                'employeeId': $('#employee_id').val(),
+                'email': $('#email').val()
+            },
+            success:function(data){
+                const {isError,isDuplicate,message} = data;
+                if (isDuplicate) {
+                    Swal.fire({ 
+                        icon: "error",
+                        html: message, 
+                    });
+                    return false;
+                } else { return true;}
+            }
+        });
+    });
+});
+
+</script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginal8e2ce59650f81721f93fef32250174d77c3531da)): ?>
