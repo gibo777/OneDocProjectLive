@@ -740,14 +740,14 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'date_hired','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.label','data' => ['for' => 'dateRegularized','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'date_hired','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']); ?>
+<?php $component->withAttributes(['for' => 'dateRegularized','value' => ''.e(__('Date Regularized')).'','class' => 'pl-4 text-black-50 w-full']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
@@ -755,14 +755,14 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
                                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'date_hired','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'jetstream::components.input-error','data' => ['for' => 'dateRegularized','class' => 'mt-2']] + (isset($attributes) ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('jet-input-error'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'date_hired','class' => 'mt-2']); ?>
+<?php $component->withAttributes(['for' => 'dateRegularized','class' => 'mt-2']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
@@ -1394,6 +1394,7 @@ $(document).ready(function() {
 
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
+                $("#dateRegularized").val( getemployee.date_regularized );
                 // $("input[name='weekly_schedule']").val(1);
                 $("#office").val(getemployee.office);
                 $("#supervisor").val(getemployee.supervisor);
@@ -1463,6 +1464,7 @@ $(document).ready(function() {
             'id' : $(this).attr('id'),
             'employment_status': $("#employment_status").val(),
             'date_hired': $("#date_hired").val(),
+            'dateRegularized': $("#dateRegularized").val(),
             'update_weekly_schedule': $("#update_weekly_schedule").val(),
             'office': $("#office").val(),
             'supervisor': $("#supervisor").val(),
