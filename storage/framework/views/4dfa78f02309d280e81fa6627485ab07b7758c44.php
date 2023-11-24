@@ -880,8 +880,9 @@ $(document).ready(function(){
         }
 
         leaveBalance(); // This will show current Leave Balance/s
+        alert($(this).val().toUpperCase());
 
-        if ($(this).val()=="SL" || $(this).val()=="EL") {
+        if ($(this).val()=="SL" || $(this).val()=="EL" || $(this).val().toUpperCase()=="OTHERS") {
             return true;
         } else {
             // alert(priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val())); return false;
@@ -933,7 +934,7 @@ $(document).ready(function(){
             $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
-        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && (priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation('<?php echo e($department->curDate); ?>',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");

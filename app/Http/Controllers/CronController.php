@@ -40,7 +40,20 @@ class CronController extends Controller
     	$string = '';
     	foreach ($select as $key => $value) {
     		$selectVL = DB::table('leave_balances')->where('ref_id',$value->id)->first();
-    		$string = $string."Month: ".date('m',strtotime($value->server_date))."<br>ID: ".$selectVL->id."";
+
+    		// return (date('m',strtotime($value->server_date))-date('m',strtotime($value->date_regularized)));
+
+    		$string = $string."Date Today: ".date('m/d/Y',strtotime($value->server_date))."<br>"."Date Regularized: ".date('m/d/Y',strtotime($value->date_regularized))."<br>";
+    		$string = $string."ID: ".$selectVL->id."<br>"."Month: ".date('m',strtotime($value->server_date))."<br>";
+    		$string = $string."Month Regularized: ".date('m',strtotime($value->date_regularized))."<br>Name: ".$value->name."<br>";
+
+    		
+    		if ( date('Y',strtotime($value->server_date))>=date('Y',strtotime($value->date_regularized)) 
+    			&& (date('m',strtotime($value->server_date))-date('m',strtotime($value->date_regularized)))>0 ) {
+    		$string = $string."Monthly VL Added: 0.8333<br>";
+    		}
+
+    		$string = $string."-------<br>";
     	}
 
     	return $string;
