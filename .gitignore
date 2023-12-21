@@ -13,7 +13,5 @@ yarn-error.log
 .env
 /resources/views/test
 /app/Http/Controllers/TestController.php
-.gitignore
-
 /storage
 
