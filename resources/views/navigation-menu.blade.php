@@ -27,8 +27,8 @@
       transform: none !important;
     }
 
-    .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
-        margin-left:-1px !important 
+    .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend {
+        margin-left:-1px !important
     }
 
     .margin-left-cust {
@@ -73,7 +73,7 @@
                       <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count.'3' }}</span>
                     </a>
                 </div> --}}
-                
+
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                     <x-jet-dropdown-clickable align="right" width="48">
@@ -85,11 +85,11 @@
                                     @if(Auth::user()->profile_photo_path!=NULL)
                                         <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}" />
                                     @else
-                                        @if (Auth::user()->gender=='F') 
+                                        @if (Auth::user()->gender=='F')
                                         <img class="h-8 w-8 rounded-full object-cover" src="{{ asset('/storage/profile-photos/default-female.png')  }}"  alt="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}" />
-                                        @elseif (Auth::user()->gender=='M') 
+                                        @elseif (Auth::user()->gender=='M')
                                         <img class="h-8 w-8 rounded-full object-cover" src="{{ asset('/storage/profile-photos/default-formal-male.png')  }}"  alt="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}" />
-                                        @else 
+                                        @else
                                         <img class="h-8 w-8 rounded-full object-cover" src="{{ asset('/storage/profile-photos/default-photo.png')  }}"  alt="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}" />
                                         @endif
                                     @endif
@@ -106,7 +106,7 @@
                                     </button>
                                 </span>
                             @endif
-                                    
+
                         </x-slot>
 
 
@@ -324,7 +324,7 @@
                                       @endif
                                   </div>
                           @endif
-                          
+
                       </div>
                       {{-- @if ($notification_count>0)
                       <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
@@ -465,7 +465,7 @@
                       <div class="dropdown dropend">
                           <a class="dropdown-item" href="{{ route('process.eleave') }}" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Process e-Leave</a>
                       </div>
-                      
+
                     </div>
                 </div> --}}
 
@@ -499,7 +499,7 @@
                     </x-jet-dropdown>
                 </div> --}}
                 <!-- E-LEAVE MENU end  -->
-                
+
                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                 <!-- PROCESS start-->
                 {{-- <div class="ml-3 mt-3 relative">
@@ -670,7 +670,7 @@
                 </div>
                 {{-- <div class="row">
                     <div class="col-md-12 text-center">
-                        <x-jet-button id="saveTempPhoto">{{ __('Ok') }} 
+                        <x-jet-button id="saveTempPhoto">{{ __('Ok') }}
                         </x-jet-button>
                     </div>
                 </div> --}}
@@ -732,7 +732,7 @@ $(document).ready(function(){
 
                   });
                 return false;
-            } 
+            }
         // }
     });
 
