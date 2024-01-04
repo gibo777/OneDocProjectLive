@@ -33,6 +33,7 @@ class NavigationMenu extends Component
         foreach ($counts as $count) {
             $counter = $counter + $count->memo_count;
         }
+// return Auth::user()->id;
         $timeCount = DB::table('time_logs')->where('employee_id', Auth::user()->employee_id)->orderBy('id','desc')->count();
         $timeLogs = DB::table('time_logs')->where('employee_id', Auth::user()->employee_id)->orderBy('id','desc')->first();
         if ($timeCount>0) {
