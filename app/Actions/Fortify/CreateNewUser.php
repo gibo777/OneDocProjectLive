@@ -91,33 +91,39 @@ class CreateNewUser implements CreatesNewUsers
     protected function createTeam(User $user)
     {
         // dd($user->employee_id);
-        /*$insert = new PersonnelAccountingData;
+        $insert = new PersonnelAccountingData;
+        $insert->ref_id = $user->id;
         $insert->employee_id = $user->employee_id;
         $insert->created_by = Auth::user()->employee_id;
         $insert->updated_by = Auth::user()->employee_id;
         $insert->save();
 
         $insert = new PersonnelFamilyBackground;
+        $insert->ref_id = $user->id;
         $insert->employee_id = $user->employee_id;
         $insert->created_by = Auth::user()->employee_id;
         $insert->updated_by = Auth::user()->employee_id;
         $insert->save();
 
         $insert = new PersonnelEducationalBackground;
+        $insert->ref_id = $user->id;
         $insert->employee_id = $user->employee_id;
         $insert->created_by = Auth::user()->employee_id;
         $insert->updated_by = Auth::user()->employee_id;
         $insert->save();
 
         $insert = new PersonnelEmploymentHistory;
+        $insert->ref_id = $user->id;
         $insert->employee_id = $user->employee_id;
         $insert->created_by = Auth::user()->employee_id;
         $insert->updated_by = Auth::user()->employee_id;
         $insert->save();
 
         $insert = new LeaveBalances;
+        $insert->ref_id = $user->id;
+        $insert->year = Carbon::now()->format('Y');
         $insert->employee_id = $user->employee_id;
-        $insert->save();*/
+        $insert->save();
 
         $user->ownedTeams()->save(Team::forceCreate([
             'user_id' => $user->id,

@@ -9,31 +9,34 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+<!-- Fonts -->
+{{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
-        <!-- <link rel="stylesheet" href="{{ asset('/font-awesome/css/font-awesome.min.css') }}"> -->
-        <!-- font awesome  -->
-        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" /> -->
+<!-- Styles -->
+<link rel="stylesheet" href="{{ mix('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/main.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('/font-awesome/css/font-awesome.min.css') }}"> -->
+<!-- font awesome  -->
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" /> -->
 
-        <link rel="stylesheet" href="{{ asset('/fontawesome-6.2.0/css/all.css') }}">
+<link rel="stylesheet" href="{{ asset('/fontawesome-6.2.0/css/all.css') }}">
 
+<!-- Scripts -->
+<script src="{{ mix('js/app.js') }}" defer></script>
 
+{{-- <script src="{{ asset('/js/jquery.backstretch.js') }}"></script> --}}
+{{-- <script src="{{ asset('/js/jquery.backstretch.min.js') }}"></script> --}}
 
-        <!-- Scripts -->
-        <script src="{{ mix('js/app.js') }}" defer></script>
-        
-        <script src="{{ asset('/js/jquery.backstretch.js') }}"></script>
-        <script src="{{ asset('/js/jquery.backstretch.min.js') }}"></script>
+{{-- <script src="{{ asset('/js/jquery-1.11.1.min.js') }}"></script> --}}
+<script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}">
+{{-- <script src="{{ asset('/bootstrap/js/bootstrap.min.js') }}"></script> --}}
 
-        <script src="{{ asset('/js/jquery-1.11.1.min.js') }}"></script>
-        <link rel="stylesheet" href="{{ asset('/css/bootstrap.min.css') }}">
-        <script src="{{ asset('/bootstrap/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('/js/jquery.backstretch.min.js') }}"></script>
-        <script src="{{ asset('/js/scripts.js') }}"></script>
+{{-- BOOTSTRAP --}}
+{{-- <link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.css') }}"> --}}
+<script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.js') }}"></script>
+<script src="{{ asset('/js/jquery.backstretch.min.js') }}"></script>
+<script src="{{ asset('/js/scripts.js') }}"></script>
 
     </head>
     <body>

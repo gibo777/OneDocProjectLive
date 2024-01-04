@@ -4,13 +4,13 @@ jQuery(document).ready(function() {
     /*
         Fullscreen background
     */
-    $.backstretch([
+    /*$.backstretch([
                     "img/backgrounds/2.jpg"
                   , "img/backgrounds/3.jpg"
                   , "img/backgrounds/1.jpg"
                   , "img/backgrounds/5.jpg"
 	              , "img/backgrounds/4.jpg"
-	             ], {duration: 3000, fade: 750});
+	             ], {duration: 3000, fade: 750});*/
     
     /*
         Form validation

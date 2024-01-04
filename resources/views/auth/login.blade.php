@@ -20,12 +20,12 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <div>
+            <div class="text-left">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
                 <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="off" />
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 text-left">
                 <x-jet-label for="password" value="{{ __('Password') }}" />
                 <div class="input-group mb-3">
                   <input name="password" type="password" value="" class="input form-control " id="password" placeholder="Password" required="true" aria-label="password" aria-describedby="basic-addon1" autocomplete="current-password"/>
@@ -98,12 +98,12 @@
           // return false;
         });
 
-        $(document).on('keyup keydown hover click mouseenter mouseover', function(){
+        /*$(document).on('keyup keydown hover click mouseenter mouseover', function(){
         $("#audio-button").click();
         });
         $("#audio-button").click(function() {
         $("#audio-background")[0].play(); return false;
-        });
+        });*/
     });
 </script>
 

@@ -31,7 +31,6 @@
 <link rel="stylesheet" href="<?php echo e(asset('/jquery-ui-1.13.1.custom/jquery-ui.min.css')); ?>">
 
 <script type="text/javascript" src="<?php echo e(asset('/js/jquery.min-3.6.0.js')); ?>"></script>
-
 <script type="text/javascript" src="<?php echo e(asset('/js/jquery-3.6.0.min.js')); ?>"></script>
 
 
@@ -95,15 +94,15 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('navigation-menu')->html();
-} elseif ($_instance->childHasBeenRendered('snRsqQa')) {
-    $componentId = $_instance->getRenderedChildComponentId('snRsqQa');
-    $componentTag = $_instance->getRenderedChildComponentTagName('snRsqQa');
+} elseif ($_instance->childHasBeenRendered('oJx8NqK')) {
+    $componentId = $_instance->getRenderedChildComponentId('oJx8NqK');
+    $componentTag = $_instance->getRenderedChildComponentTagName('oJx8NqK');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('snRsqQa');
+    $_instance->preserveRenderedChild('oJx8NqK');
 } else {
     $response = \Livewire\Livewire::mount('navigation-menu');
     $html = $response->html();
-    $_instance->logRenderedChild('snRsqQa', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('oJx8NqK', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

@@ -39,21 +39,47 @@ class CronController extends Controller
 
     	$string = '';
     	foreach ($select as $key => $value) {
-    		$selectVL = DB::table('leave_balances')->where('ref_id',$value->id)->first();
+            // Check Current Date vs Date Regularized (if 0 to 3years, 3years to 6years, and 6years up)
+            // Check if already added monthly leave credits for VL, SL, and EL
+            // Calculate VL, SL, and EL based on the Year/s of Service
+            // (0 to 3 years)
+            // VL = 10/12 per month, 
+            // SL = 10/12 * month/s remaining until December, 
+            // EL = 5/12 * month/s remaining until December)
+            // Check the Regularized Day then check the current server month
 
-    		// return (date('m',strtotime($value->server_date))-date('m',strtotime($value->date_regularized)));
 
-    		$string = $string."Date Today: ".date('m/d/Y',strtotime($value->server_date))."<br>"."Date Regularized: ".date('m/d/Y',strtotime($value->date_regularized))."<br>";
-    		$string = $string."ID: ".$selectVL->id."<br>"."Month: ".date('m',strtotime($value->server_date))."<br>";
-    		$string = $string."Month Regularized: ".date('m',strtotime($value->date_regularized))."<br>Name: ".$value->name."<br>";
+$regularDate = Carbon::parse($value->date_regularized); 
+$serverDate = Carbon::parse($value->server_date); 
+$diff = $regularDate->diffInYears($serverDate);
 
-    		
-    		if ( date('Y',strtotime($value->server_date))>=date('Y',strtotime($value->date_regularized)) 
-    			&& (date('m',strtotime($value->server_date))-date('m',strtotime($value->date_regularized)))>0 ) {
-    		$string = $string."Monthly VL Added: 0.8333<br>";
-    		}
+$string .= "Date Regularized: " . $regularDate->format('M d, Y') . "<br>";
+$string .= "Server Date: " . $serverDate->format('M d, Y') . "<br>";
+$string .= "Month: " . $serverDate->format('m') . "<br>";
+$string .= "Year: " . $serverDate->format('Y') . "<br>";
+$string .= "Employee ID: " . $value->employee_id . "<br><br>";
+$string .= "Difference in Years: " . $diff . "<br>";
 
-    		$string = $string."-------<br>";
+switch ($diff) {
+    case $diff > 6:
+        $string .= "More than 6 years";
+        $string .= "VL Credit Added: ". number_format((15/12),4);
+        break;
+
+    case $diff >= 3 && $diff < 6:
+        $string .= "More than 3 years to 6 years";
+        $string .= "VL Credit Added: ". number_format((12/12),4);
+        break;
+
+    default:
+        $string .= "Below 3 years<br>";
+        $string .= "VL Credit Added: ". number_format((10/12),4);
+        break;
+}
+
+$string .= "<br>==============================<br>";
+
+            /*==============================*/
     	}
 
     	return $string;

@@ -9,31 +9,34 @@
 
         <title><?php echo e(config('app.name', 'Laravel')); ?></title>
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
-        <!-- Styles -->
-        <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
-        <link rel="stylesheet" href="<?php echo e(asset('css/main.css')); ?>">
-        <!-- <link rel="stylesheet" href="<?php echo e(asset('/font-awesome/css/font-awesome.min.css')); ?>"> -->
-        <!-- font awesome  -->
-        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" /> -->
-
-        <link rel="stylesheet" href="<?php echo e(asset('/fontawesome-6.2.0/css/all.css')); ?>">
+<!-- Fonts -->
 
 
+<!-- Styles -->
+<link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
+<link rel="stylesheet" href="<?php echo e(asset('css/main.css')); ?>">
+<!-- <link rel="stylesheet" href="<?php echo e(asset('/font-awesome/css/font-awesome.min.css')); ?>"> -->
+<!-- font awesome  -->
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" /> -->
 
-        <!-- Scripts -->
-        <script src="<?php echo e(mix('js/app.js')); ?>" defer></script>
-        
-        <script src="<?php echo e(asset('/js/jquery.backstretch.js')); ?>"></script>
-        <script src="<?php echo e(asset('/js/jquery.backstretch.min.js')); ?>"></script>
+<link rel="stylesheet" href="<?php echo e(asset('/fontawesome-6.2.0/css/all.css')); ?>">
 
-        <script src="<?php echo e(asset('/js/jquery-1.11.1.min.js')); ?>"></script>
-        <link rel="stylesheet" href="<?php echo e(asset('/css/bootstrap.min.css')); ?>">
-        <script src="<?php echo e(asset('/bootstrap/js/bootstrap.min.js')); ?>"></script>
-        <script src="<?php echo e(asset('/js/jquery.backstretch.min.js')); ?>"></script>
-        <script src="<?php echo e(asset('/js/scripts.js')); ?>"></script>
+<!-- Scripts -->
+<script src="<?php echo e(mix('js/app.js')); ?>" defer></script>
+
+
+
+
+
+<script type="text/javascript" src="<?php echo e(asset('/js/jquery-3.6.0.min.js')); ?>"></script>
+<link rel="stylesheet" href="<?php echo e(asset('/css/bootstrap.min.css')); ?>">
+
+
+
+
+<script type="text/javascript" src="<?php echo e(asset('/bootstrap-5.0.2-dist/js/bootstrap.js')); ?>"></script>
+<script src="<?php echo e(asset('/js/jquery.backstretch.min.js')); ?>"></script>
+<script src="<?php echo e(asset('/js/scripts.js')); ?>"></script>
 
     </head>
     <body>
