@@ -784,9 +784,9 @@ $(document).ready(function(){
                         '',
                         'success'
                       )
-                      $('.swal2-confirm').click(function(){
+                      /*$('.swal2-confirm').click(function(){
                         location.reload();
-                      })
+                      })*/
                     // $("#dialog_content").html("Approved by Head.");
                     // $("#dialog" ).dialog({
                     //     modal: true,
