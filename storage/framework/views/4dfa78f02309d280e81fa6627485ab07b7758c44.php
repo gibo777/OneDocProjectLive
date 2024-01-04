@@ -880,7 +880,6 @@ $(document).ready(function(){
         }
 
         leaveBalance(); // This will show current Leave Balance/s
-        alert($(this).val().toUpperCase());
 
         if ($(this).val()=="SL" || $(this).val()=="EL" || $(this).val().toUpperCase()=="OTHERS") {
             return true;

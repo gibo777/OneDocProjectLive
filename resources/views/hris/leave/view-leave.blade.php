@@ -221,7 +221,11 @@
                                             @forelse($leaves as $leave)
                                                 <tr class="view-leave text-sm text-lg-lg" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                                    <td>{{ $leave->name }}</td>
+                                                    @if (url('/')=='http://localhost')
+                                                        <td>xxx, xxx x.</td>
+                                                    @else
+                                                        <td>{{ $leave->name }}</td>
+                                                    @endif
                                                     {{-- <td>{{ $leave->employee_id }}</td> --}}
                                                     <td>{{ $leave->company_name }}</td>
                                                     <td>{{ $leave->department }}</td>

@@ -40,8 +40,6 @@ class ViewLeavesController extends Controller
 	        	'L.leave_number',
                 'L.control_number',
                 'L.name',
-                /*'L.first_name',
-	        	'L.last_name',*/
 	        	'L.employee_id',
 	        	'L.leave_type',
 	        	'L.date_applied',
@@ -54,10 +52,7 @@ class ViewLeavesController extends Controller
                 'L.created_at',
 	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
 	        	DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));
-	        /*if ($access_code==null) { 
-	        	$leaves = $leaves->where('L.employee_id','=', $employee_id);
-	        } */
-            
+	        
             if(Auth::user()->id!=1) {
                 if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
                     $leaves = $leaves->where('u.supervisor','=', $employee_id);
@@ -74,6 +69,8 @@ class ViewLeavesController extends Controller
 	        // $leaves = $leaves->orderBy('L.id');
             // $leaves = $leaves->paginate(5);
 	        $leaves = $leaves->get();
+
+            // $leaves = DB::select('CALL sp_viewleaves()');
 
             $departments    = DB::table('departments')->orderBy('department')->get();
             $leave_types    = DB::table('leave_types')->orderBy('leave_type_name')->get();

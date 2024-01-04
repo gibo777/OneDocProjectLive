@@ -47,12 +47,12 @@ class LeaveFormController extends Controller
 
             $leave_credits = DB::table('leave_balances')
             ->select(
-              DB::raw('(CASE WHEN VL is not null THEN VL ELSE 0 END) as VL'),
-              DB::raw('(CASE WHEN SL is not null THEN SL ELSE 0 END) as SL'),
-              DB::raw('(CASE WHEN ML is not null THEN ML ELSE 0 END) as ML'),
-              DB::raw('(CASE WHEN PL is not null THEN PL ELSE 0 END) as PL'),
-              DB::raw('(CASE WHEN EL is not null THEN EL ELSE 0 END) as EL'),
-              DB::raw('(CASE WHEN others is not null THEN others ELSE 0 END) as others')
+              DB::raw('FORMAT((CASE WHEN VL is not null THEN VL ELSE 0 END),2) as VL'),
+              DB::raw('FORMAT((CASE WHEN SL is not null THEN SL ELSE 0 END),2) as SL'),
+              DB::raw('FORMAT((CASE WHEN ML is not null THEN ML ELSE 0 END),2) as ML'),
+              DB::raw('FORMAT((CASE WHEN PL is not null THEN PL ELSE 0 END),2) as PL'),
+              DB::raw('FORMAT((CASE WHEN EL is not null THEN EL ELSE 0 END),2) as EL'),
+              DB::raw('FORMAT((CASE WHEN others is not null THEN others ELSE 0 END),2) as others')
             )
             ->where('employee_id',Auth::user()->employee_id)->get();
 
@@ -227,12 +227,12 @@ class LeaveFormController extends Controller
 
             $leaves_balances = DB::table('leave_balances')->where('employee_id','=',$employeeId)->get();
             switch ($type) {
-                case 'VL': return $leaves_balances[0]->VL; break;
-                case 'SL': return $leaves_balances[0]->SL; break;
-                case 'ML': return $leaves_balances[0]->ML; break;
-                case 'PL': return $leaves_balances[0]->PL; break;
-                case 'EL': return $leaves_balances[0]->EL; break;
-                case 'Others': return $leaves_balances[0]->others; break;
+                case 'VL': return number_format($leaves_balances[0]->VL,2); break;
+                case 'SL': return number_format($leaves_balances[0]->SL,2); break;
+                case 'ML': return number_format($leaves_balances[0]->ML,2); break;
+                case 'PL': return number_format($leaves_balances[0]->PL,2); break;
+                case 'EL': return number_format($leaves_balances[0]->EL,2); break;
+                case 'Others': return number_format($leaves_balances[0]->others,2); break;
                 default: 
                     # code...
                     break;

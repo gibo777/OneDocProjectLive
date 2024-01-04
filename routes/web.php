@@ -138,6 +138,8 @@ Route::post('/updateemployees',[EmployeesController::class,'updateEmployee']);
 
 Route::get('/verify-duplicate',[EmployeesController::class,'verifyDuplicate'])->name('verify.duplicate');
 
+Route::get('/employee-benefits', [EmployeesController::class, 'employeeBenefits'])->name('employee-benefits');
+
 
 
 

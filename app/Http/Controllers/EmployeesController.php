@@ -307,4 +307,83 @@ class EmployeesController extends Controller
             return redirect('/');
         }
     }
+
+    /**
+     * Display listing of the Employee Benefits.
+     *
+     * @return \Illuminate\Http\Response
+     * @author Gilbert L. Retiro
+     */
+    public function employeeBenefits () {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
+        {
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+
+            $employees = DB::table('users as u');
+            $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
+            $employees = $employees->leftJoin('offices as o', 'u.office', '=', 'o.id');
+            $employees = $employees->select(
+                'u.id',
+                'u.first_name',
+                'u.middle_name',
+                'u.last_name',
+                'u.suffix',
+                'u.employee_id',
+                'u.department as dept',
+                'd.department',
+                'u.position',
+                'u.role_type',
+                'u.employment_status',
+                'u.supervisor',
+                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+                'o.company_name',
+            );
+
+            if (Auth::user()->id != 1) {
+                $employees = $employees->where('u.id','!=',1);
+            }
+            $employees = $employees->where( function($query) {
+                return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
+                });
+            $employees = $employees->orderBy('u.last_name');
+            $employees = $employees->orderBy('u.first_name');
+            $employees = $employees->get();
+
+            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
+            $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays = DB::table('holidays')->orderBy('holiday')->get();
+            $employment_statuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
+
+            $heads = DB::table('users')
+                ->select('employee_id','last_name','first_name','middle_name','suffix')
+                ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
+                // ->where('id','!=',Auth::user()->id)->orWhere('employee_id','2000-0001')
+                // ->where('employee_id','2000-0001')
+                ->where('id','!=',1)
+                ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
+                ->get();
+
+            $roleTypeUsers = DB::table('role_type_users')
+                ->select('role_type')
+                ->where('is_deleted', NULL)
+                ->orWhere('is_deleted',0)
+                ->get();
+
+            return view('/hris/employee/employee-benefits', 
+                [
+                    'holidays'=>$holidays, 
+                    'employees'=>$employees, 
+                    'offices'=>$offices,
+                    'departments'=>$departments,
+                    'leave_types'=>$leave_types, 
+                    'employment_statuses'=>$employment_statuses,
+                    'heads'=>$heads,
+                    'roleTypeUsers'=>$roleTypeUsers
+                ]);
+        } else {
+            return redirect('/');
+        }
+    }
 }

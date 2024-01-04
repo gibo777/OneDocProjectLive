@@ -417,6 +417,9 @@
                               <a class="dropdown-item" href="{{ route('hr.management.holidays') }}">
                                   {{ __('Holidays') }}
                               </a>
+                              <a class="dropdown-item" href="{{ route('employee-benefits') }}">
+                                  {{ __('Benefits') }}
+                              </a>
                             </div>
                         </div>
                     </div>
@@ -696,33 +699,27 @@ $(document).ready(function(){
     let has_supervisor = "{{ Auth::user()->supervisor }}";
     let role_type = "{{ Auth::user()->role_type }}";
 
-    Pusher.logToConsole = true;
-
+    /*Pusher.logToConsole = true;
     var pusher = new Pusher('264cb3116052cba73db3', {
       cluster: 'us2',
       forceTLS: true
     });
-
     var channel = pusher.subscribe('my-channel');
     channel.bind("my-event", function(data) {
-      // alert(data);
-      // alert(JSON.stringify(data));
       $.ajaxSetup({
           headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
       $.ajax({
-          // url: window.location.origin+'/file-preview-memo',
           url: "{{ route('counts_pusher') }}",
           method: 'get',
           data: JSON.stringify(data), // prefer use serialize method
           success:function(data){
             $("#nav-memo-counter").text(data.memo_counts);
-            // alert('Hey Gibs');
           }
       });
-    }); 
+    }); */
 
 
     $("#dNavEleave").on('click', function(e){

@@ -1,2 +1,0 @@
-<a <?php echo e($attributes->merge(['class' => 'block px-4 mt-1 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition'])); ?>><?php echo e($slot); ?></a>
-<?php /**PATH C:\xampp\htdocs\OneDocProjectLive_10232023\OneDocProjectLive\resources\views/vendor/jetstream/components/dropdown-link.blade.php ENDPATH**/ ?>

@@ -20,7 +20,7 @@
 </audio>
 
 
-    <div class="max-w-7xl mx-auto py-3 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto pt-1 sm:px-6 lg:px-8">
         <div class="px-2 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
            <div class="row px-3">
                 <div class="col-md-5 pt-5">

@@ -30,7 +30,6 @@
 <link rel="stylesheet" href="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.css') }}">
 
 <script type="text/javascript" src="{{ asset('/js/jquery.min-3.6.0.js') }}"></script>
-
 <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script>
 
 

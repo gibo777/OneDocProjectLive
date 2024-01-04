@@ -291,7 +291,11 @@
                                             <?php $__empty_1 = true; $__currentLoopData = $leaves; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $leave): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                 <tr class="view-leave text-sm text-lg-lg" id="<?php echo e($leave->id); ?>">
                                                     <?php if(Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'): ?>
-                                                    <td><?php echo e($leave->name); ?></td>
+                                                    <?php if(url('/')=='http://localhost'): ?>
+                                                        <td>xxx, xxx x.</td>
+                                                    <?php else: ?>
+                                                        <td><?php echo e($leave->name); ?></td>
+                                                    <?php endif; ?>
                                                     
                                                     <td><?php echo e($leave->company_name); ?></td>
                                                     <td><?php echo e($leave->department); ?></td>
