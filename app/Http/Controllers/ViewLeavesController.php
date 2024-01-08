@@ -53,7 +53,7 @@ class ViewLeavesController extends Controller
 	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
 	        	DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));
 	        
-            if(Auth::user()->id!=1) {
+            if(Auth::user()->id!=1 && Auth::user()->department!='1D-HR') {
                 if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
                     $leaves = $leaves->where('u.supervisor','=', $employee_id);
                     $leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
@@ -754,7 +754,7 @@ class ViewLeavesController extends Controller
 
     function leavesExcel (Request $request) {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
-            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->id==124 || Auth::user()->id==126) )
+            && (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') )
             {
             $leavesData = DB::table('leaves as L')
             ->leftJoin('offices as o', 'L.office', '=', 'o.id')
