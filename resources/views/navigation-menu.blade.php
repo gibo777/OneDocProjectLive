@@ -807,6 +807,7 @@ $(document).ready(function() {
 
   // Function to capture an image
   function captureImage() {
+    // alert('test'); return false;
 
     if (stream !== null) {
       // Pause the video playback
@@ -845,6 +846,7 @@ $(document).ready(function() {
             method: 'post',
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
+                // Swal.fire({ html: data}); return false;
                 if (data.isSuccess==true) {
                   // Display a success message using Swal
                   Swal.fire({

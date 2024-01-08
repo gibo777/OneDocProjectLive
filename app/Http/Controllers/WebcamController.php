@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 use Adrianorosa\GeoLocation\GeoLocation;
   
@@ -77,10 +78,24 @@ class WebcamController extends Controller
         try{
             // $ip = request()->server('SERVER_ADDR');
             // $details = GeoLocation::lookup($ip);
+            $storagePath = public_path('storage/timelogs');
+
+            if (!File::isDirectory($storagePath)) {
+                File::makeDirectory($storagePath, 0755, true);
+            }
+
+            $fileName = Auth::user()->id.'_'.substr(md5(uniqid('', true)), 0, 12);
+            $file = $fileName.'.txt';
+            
+            $image = $request->image;
+            $uploadStorage=Storage::disk('public')->put( '/timelogs/'.$file,$image);
+
+
 
             $data = [
                 'employee_id'           => Auth::user()->employee_id, 
-                'profile_photo_path'    => $request->image,
+                // 'profile_photo_path'    => $request->image,
+                'image_path'            => $fileName,
                 'ip_address'            => $request->ip(),
                 // 'ip_address_server'     => $details->getIp(),
                 'office'                => Auth::user()->office,

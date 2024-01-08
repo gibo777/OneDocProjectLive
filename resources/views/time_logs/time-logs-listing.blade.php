@@ -350,34 +350,55 @@ $(document).ready(function() {
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
                 let tDT = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
-                          <thead class="thead">
-                              <tr>
-                                  <th>Photo</th>
-                                  <th>Time-In</th>
-                                  <th>Time-Out</th>
-                              </tr>
-                          </thead>
-                          <tbody class="data text-center" id="data">`;
+                    <thead class="thead">
+                        <tr>
+                            <th>Photo</th>
+                            <th>Time-In</th>
+                            <th>Time-Out</th>
+                        </tr>
+                    </thead>
+                    <tbody class="data text-center" id="data">`;
 
+                function fetchAndAppendContent(n) {
+                    var basePath = '{{ asset('storage/timelogs') }}';
+                    var imagePath = data[n]['image_path'];
+                    var fullFilePath = basePath + '/' + imagePath + '.txt';
 
-                    for(var n=0; n<data.length; n++) {
-                    tDT += `<tr>
-                                <td><img width="124px" src="`+data[n]['profile_photo_path']+
-                                `"</img></td><td>`+data[n]['time_in']+`</td><td>`+data[n]['time_out']+`</td>`;
-                    }
+                    // Fetch the content of the text file
+                    fetch(fullFilePath)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to fetch file");
+                            }
+                            return response.text();
+                        })
+                        .then(fileContent => {
+                            // Append the updated table row to the table body
+                            tDT += `<tr>
+                                        <td><img width="124px" src="${fileContent}" /></td>
+                                        <td>${data[n]['time_in']}</td>
+                                        <td>${data[n]['time_out']}</td>
+                                    </tr>`;
+                            document.getElementById('data').innerHTML = tDT;
+                        })
+                        .catch(error => {
+                            console.error("Error reading the file:", error);
+                        });
+                }
 
-                    tDT +=`</tbody>
-                      </table>`;
+                for (var n = 0; n < data.length; n++) {
+                    fetchAndAppendContent(n);
+                }
 
-
-                    Swal.fire({
-                        // icon: 'success',
-                        // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
-                        // text: '',
-                        allowOutsideClick: false,
-                        html: tDT
-                    });
-                    $('#dataLoad').css('display','none');
+                tDT += `</tbody></table>`;
+                Swal.fire({
+                    // icon: 'success',
+                    // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
+                    // text: '',
+                    allowOutsideClick: false,
+                    html: tDT
+                });
+                $('#dataLoad').css('display','none');
             }
         });
     });
