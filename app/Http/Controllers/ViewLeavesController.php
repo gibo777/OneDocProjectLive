@@ -754,7 +754,7 @@ class ViewLeavesController extends Controller
 
     function leavesExcel (Request $request) {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
-            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
+            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->id==124 || Auth::user()->id==126) )
             {
             $leavesData = DB::table('leaves as L')
             ->leftJoin('offices as o', 'L.office', '=', 'o.id')
