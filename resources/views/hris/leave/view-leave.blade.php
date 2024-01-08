@@ -164,7 +164,7 @@
 			                    </div>
 
                                 <div class="col-md-2 pt-2 text-center mt-1 ">
-                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58 || Auth::user()->id==124 || Auth::user()->id==126)
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
                                         <span id="exportExcelLeaves" class="font-weight-bold">Export to Excel</span>
