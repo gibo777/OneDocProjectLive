@@ -39,7 +39,7 @@
 <script src="{{ asset('/js/scripts.js') }}"></script>
 
     </head>
-    <body>
+    <body class="bg-gray-100">
         @if(isset($header))
             <header id="module_header" class="bg-white shadow banner-blue font-white-bold hover">
                 <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
