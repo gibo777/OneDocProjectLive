@@ -2253,4 +2253,5 @@
 #51 C:\\xampp\\htdocs\\OneDocProjectLive\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
 #52 C:\\xampp\\htdocs\\OneDocProjectLive\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #53 {main}
+
 "} 

@@ -349,55 +349,69 @@ $(document).ready(function() {
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
-                let tDT = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
-                    <thead class="thead">
-                        <tr>
-                            <th>Photo</th>
-                            <th>Time-In</th>
-                            <th>Time-Out</th>
-                        </tr>
-                    </thead>
-                    <tbody class="data text-center" id="data">`;
+                let tableStructure = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
+                        <thead class="thead">
+                            <tr>
+                                <th>Photo</th>
+                                <th>Time-In</th>
+                                <th>Time-Out</th>
+                            </tr>
+                        </thead>
+                        <tbody class="data text-center" id="data">`;
 
-                function fetchAndAppendContent(n) {
-                    var basePath = '{{ asset('storage/timelogs') }}';
-                    var imagePath = data[n]['image_path'];
-                    var fullFilePath = basePath + '/' + imagePath + '.txt';
+                // Function to fetch content and return a promise
+                function fetchContent(n) {
+                    return new Promise((resolve, reject) => {
+                        var basePath = '{{ asset('storage/timelogs') }}';
+                        var imagePath = data[n]['image_path'];
+                        var fullFilePath = basePath + '/' + imagePath + '.txt';
 
-                    // Fetch the content of the text file
-                    fetch(fullFilePath)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error("Failed to fetch file");
-                            }
-                            return response.text();
-                        })
-                        .then(fileContent => {
-                            // Append the updated table row to the table body
-                            tDT += `<tr>
-                                        <td><img width="124px" src="${fileContent}" /></td>
-                                        <td>${data[n]['time_in']}</td>
-                                        <td>${data[n]['time_out']}</td>
-                                    </tr>`;
-                            document.getElementById('data').innerHTML = tDT;
-                        })
-                        .catch(error => {
-                            console.error("Error reading the file:", error);
+                        fetch(fullFilePath)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Failed to fetch file");
+                                }
+                                return response.text();
+                            })
+                            .then(fileContent => {
+                                resolve(`<tr>
+                                            <td><img width="124px" src="${fileContent}" /></td>
+                                            <td>${data[n]['time_in']}</td>
+                                            <td>${data[n]['time_out']}</td>
+                                        </tr>`);
+                            })
+                            .catch(error => {
+                                console.error("Error reading the file:", error);
+                                reject(error);
+                            });
+                    });
+                }
+
+                // Array to store promises
+                let promises = [];
+
+                // Loop through data and create promises
+                for (let n = 0; n < data.length; n++) {
+                    promises.push(fetchContent(n));
+                }
+
+                // Wait for all promises to resolve
+                Promise.all(promises)
+                    .then(rows => {
+                        // Append the rows to the table structure
+                        tableStructure += rows.join('');
+                        tableStructure += `</tbody></table>`;
+
+                        // Show the table using Swal.fire
+                        Swal.fire({
+                            allowOutsideClick: false,
+                            html: tableStructure
                         });
-                }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching content:", error);
+                    });
 
-                for (var n = 0; n < data.length; n++) {
-                    fetchAndAppendContent(n);
-                }
-
-                tDT += `</tbody></table>`;
-                Swal.fire({
-                    // icon: 'success',
-                    // title: (data[0]['f_time_in']!=null) ? data[0]['f_time_in'] : data[0]['f_time_out'],
-                    // text: '',
-                    allowOutsideClick: false,
-                    html: tDT
-                });
                 $('#dataLoad').css('display','none');
             }
         });
