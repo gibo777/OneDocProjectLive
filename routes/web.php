@@ -268,6 +268,7 @@ Route::get('/decrypt', function () {
 /*======= TIME LOGS =======*/
 Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
 Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
+Route::get('/create-image-path', [WebcamController::class, 'createNewImagePath'])->name('create.image.path');
 
 Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
 Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');

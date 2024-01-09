@@ -127,4 +127,105 @@ class WebcamController extends Controller
             return response(['isSuccess'=>false,'message'=>$e]);
         }
     }
+
+    function createNewImagePath () {
+        try{
+            // $storagePath = public_path('storage/timelogs');
+
+            // if (!File::isDirectory($storagePath)) {
+            //     File::makeDirectory($storagePath, 0755, true);
+            // }
+
+            // $userTimeLogs = DB::table('time_logs as t')
+            // ->select('u.id as uID','t.','t.profile_photo_path')
+            // ->leftJoin('users as u','t.employee_id','=','u.employee_id')
+            // ->where('t.image_path', null)
+            // ->orWhere('t.image_path','')->take(100)->get();
+
+            // foreach ($userTimeLogs as $value) {
+            //     $fileName = $value->uID.'_'.substr(md5(uniqid('', true)), 0, 12);
+            //     $file = $fileName.'.txt';
+
+            //     echo "[ ID: $value->uID ] [ File Name: $fileName] ";
+            //     echo "[ File Name: ".$fileName." ] [ File: ".$file." ] ";
+
+            //     $updateImagePath = DB::table('time_logs')
+            //     ->where('id',$value->id)
+            //     ->update(['image_path' => $fileName]);
+
+            //     if ($updateImagePath) {
+            //         $image = $value->profile_photo_path;
+            //         $uploadStorage=Storage::disk('public')->put( '/timelogs/'.$file,$image);
+            //     echo "[ Status: Success ]<br>=====<br>";
+            //     }
+
+            // }
+
+            /*===========*/
+            $storagePath = public_path('storage/timelogs');
+
+            if (!File::isDirectory($storagePath)) {
+                File::makeDirectory($storagePath, 0755, true);
+            }
+
+            $batchSize = 500; // You can adjust this value based on your needs
+
+            DB::table('time_logs as t')
+                ->select('u.id as uID', 't.id', 't.profile_photo_path')
+                ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
+                ->where(function ($query) {
+                    $query->where('t.image_path', null)
+                          ->orWhere('t.image_path', '');
+                })
+                ->orderBy('t.id')
+                ->chunk($batchSize, function ($userTimeLogs) use ($storagePath) {
+                    foreach ($userTimeLogs as $value) {
+                        $fileName = $value->uID . '_' . substr(md5(uniqid('', true)), 0, 12);
+                        $file = $fileName . '.txt';
+
+                        echo "[ ID: $value->uID ] [ File Name: $fileName] ";
+                        echo "[ File Name: ".$fileName." ] [ File: ".$file." ] ";
+
+                        $updateImagePath = DB::table('time_logs')
+                            ->where('id', $value->id)
+                            ->update(['image_path' => $fileName]);
+
+                        if ($updateImagePath) {
+                            $image = $value->profile_photo_path;
+                            $uploadStorage = Storage::disk('public')->put('/timelogs/' . $file, $image);
+                            echo "[ Status: Success ]<br>=====<br>";
+                        }
+                    }
+                });
+
+
+
+
+
+            // $data = [
+            //     'employee_id'           => Auth::user()->employee_id, 
+            //     'image_path'            => $fileName,
+            //     'ip_address'            => $request->ip(),
+            //     'office'                => Auth::user()->office,
+            //     'department'            => Auth::user()->department,
+            //     'supervisor'            => Auth::user()->supervisor,
+            //     'created_at'            => date('Y-m-d H:i:s'),
+            //     'updated_at'            => date('Y-m-d H:i:s')
+            // ];
+
+            // if ($request->logEvent=='TimeIn') {
+            //     $data['time_in'] = date('Y-m-d H:i:s');
+            // } else {
+            //     $data['time_out'] = date('Y-m-d H:i:s');
+            // }
+            // // return var_dump($data);
+            // DB::table('time_logs')->insert($data);
+
+            // return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
+
+
+        }catch(\Error $e){
+            return response(['isSuccess'=>false,'message'=>$e]);
+        }
+    }
 }

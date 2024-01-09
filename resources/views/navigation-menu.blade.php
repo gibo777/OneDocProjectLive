@@ -813,14 +813,23 @@ $(document).ready(function() {
       // Pause the video playback
       video.pause();
 
-      // Draw the current video frame onto the canvas
-      var context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Assuming 'video' is the video element and 'canvas' is the canvas element
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
 
-      // Convert the canvas image to a data URL
-      var dataURL = canvas.toDataURL('image/png');
+        // Set the desired width and height for the resized image
+        var targetWidth = 300; // Adjust this value as needed
+        var targetHeight = 200; // Adjust this value as needed
+
+        // Set the canvas dimensions to the target dimensions
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Draw the current video frame onto the canvas with the resized dimensions
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, targetWidth, targetHeight);
+
+        // Convert the canvas image to a data URL with a desired quality (e.g., 0.8)
+        var dataURL = canvas.toDataURL('image/jpeg', 0.8);
 
 
       // Display the captured image using Swal
