@@ -168,7 +168,7 @@ class WebcamController extends Controller
                 File::makeDirectory($storagePath, 0755, true);
             }
 
-            $batchSize = 500; // You can adjust this value based on your needs
+            $batchSize = 100; // You can adjust this value based on your needs
 
             DB::table('time_logs as t')
                 ->select('u.id as uID', 't.id', 't.profile_photo_path')
@@ -177,7 +177,7 @@ class WebcamController extends Controller
                     $query->where('t.image_path', null)
                           ->orWhere('t.image_path', '');
                 })
-                ->orderBy('t.id')
+                ->orderBy('t.id')->take(500)
                 ->chunk($batchSize, function ($userTimeLogs) use ($storagePath) {
                     foreach ($userTimeLogs as $value) {
                         $fileName = $value->uID . '_' . substr(md5(uniqid('', true)), 0, 12);
@@ -192,7 +192,48 @@ class WebcamController extends Controller
 
                         if ($updateImagePath) {
                             $image = $value->profile_photo_path;
-                            $uploadStorage = Storage::disk('public')->put('/timelogs/' . $file, $image);
+
+
+// Assuming $base64Image contains your base64-encoded image string
+$base64Image = $value->profile_photo_path;
+
+// Extract the image data
+list($type, $data) = explode(';', $base64Image);
+list(, $data) = explode(',', $data);
+
+// Decode the base64 image data
+$decodedImage = base64_decode($data);
+
+// Set the percentage for resizing
+$percentage = 50; // 50% of the original dimensions
+
+// Create a new image from the decoded data
+$sourceImage = imagecreatefromstring($decodedImage);
+
+// Get the original dimensions
+$sourceWidth = imagesx($sourceImage);
+$sourceHeight = imagesy($sourceImage);
+
+// Calculate the new dimensions based on the percentage
+$targetWidth = $sourceWidth * ($percentage / 100);
+$targetHeight = $sourceHeight * ($percentage / 100);
+
+// Create a new image with the new dimensions
+$resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+// Resize the image
+imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
+
+// Output the resized image as base64
+ob_start();
+imagejpeg($resizedImage, null, 80);
+$resizedImageData = ob_get_clean();
+$resizedBase64Image = 'data:image/jpeg;base64,' . base64_encode($resizedImageData);
+
+// Now $resizedBase64Image contains the resized image in base64 format
+// echo $resizedBase64Image;
+
+                            $uploadStorage = Storage::disk('public')->put('/timelogs/' . $file, $resizedBase64Image);
                             echo "[ Status: Success ]<br>=====<br>";
                         }
                     }
