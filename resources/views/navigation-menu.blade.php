@@ -810,30 +810,30 @@ $(document).ready(function() {
     // alert('test'); return false;
 
     if (stream !== null) {
-      // Pause the video playback
-      video.pause();
+        // Pause the video playback
+        video.pause();
 
-// Assuming 'video' is the video element and 'canvas' is the canvas element
-var canvas = document.createElement('canvas');
-var context = canvas.getContext('2d');
+        // Assuming 'video' is the video element and 'canvas' is the canvas element
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
 
-// Set the desired percentage for the resized image
-var percentageWidth = 50; // Adjust this value as needed
-var percentageHeight = 50; // Adjust this value as needed
+        // Set the desired percentage for the resized image
+        var percentageWidth = 50; // Adjust this value as needed
+        var percentageHeight = 50; // Adjust this value as needed
 
-// Calculate the target dimensions based on the percentages
-var targetWidth = (percentageWidth / 100) * video.videoWidth;
-var targetHeight = (percentageHeight / 100) * video.videoHeight;
+        // Calculate the target dimensions based on the percentages
+        var targetWidth = (percentageWidth / 100) * video.videoWidth;
+        var targetHeight = (percentageHeight / 100) * video.videoHeight;
 
-// Set the canvas dimensions to the target dimensions
-canvas.width = targetWidth;
-canvas.height = targetHeight;
+        // Set the canvas dimensions to the target dimensions
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
 
-// Draw the current video frame onto the canvas with the resized dimensions
-context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, targetWidth, targetHeight);
+        // Draw the current video frame onto the canvas with the resized dimensions
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, targetWidth, targetHeight);
 
-// Convert the canvas image to a data URL with a desired quality (e.g., 0.8)
-var dataURL = canvas.toDataURL('image/jpeg', 0.8);
+        // Convert the canvas image to a data URL with a desired quality (e.g., 0.8)
+        var dataURL = canvas.toDataURL('image/jpeg', 0.8);
 
 
 
