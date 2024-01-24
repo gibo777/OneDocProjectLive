@@ -48,6 +48,23 @@ class AuthenticatedSessionController extends Controller
         return app(LoginViewResponse::class);
     }
 
+    public function authLogin (Request $request)
+    {
+        $authLogins = New LoginRequest();
+        $authData = $authLogins->authCheckLogin($request->email, $request->password);
+        return $authData;
+    }
+
+    public function loginConsent (Request $request) {
+        $consent = New LoginRequest();
+        return $consent->verifyConsent($request->email);
+    }
+
+    public function storeLoginConsent(Request $request) {
+        $storeConsent = New LoginRequest();
+        return $storeConsent->saveConsent($request->email, $request->password);
+    }
+
     /**
      * Attempt to authenticate a new session.
      *

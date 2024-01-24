@@ -14,6 +14,8 @@
 
 <!-- Styles -->
 <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+<script src="{{ asset('/sweetalert/js/sweetalert.js') }}"></script>
+<link href="{{ asset('/sweetalert/css/sweetalert.css') }}" rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 <!-- <link rel="stylesheet" href="{{ asset('/font-awesome/css/font-awesome.min.css') }}"> -->
 <!-- font awesome  -->

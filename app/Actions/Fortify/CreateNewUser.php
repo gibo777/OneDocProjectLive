@@ -34,6 +34,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         // dd($input);
         $token = Str::random(80);
+        $randomString = Str::random(128);
 
         Validator::make($input, [
             'first_name'    => ['required', 'string', 'max:255'],
@@ -47,7 +48,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms'         => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return DB::transaction(function () use ($input,$token) {
+        return DB::transaction(function () use ($input,$token,$randomString) {
 
         $insertFields = [
                 'first_name'    => strtoupper($input['first_name']),
@@ -70,6 +71,7 @@ class CreateNewUser implements CreatesNewUsers
                 'role_type' => $input['role_type'],
 
                 'remember_token' => $token,
+                'qr_code_link' => $randomString,
                 'expires_at' => Carbon::now()->addHour(),
                 'created_by' => Auth::user()->employee_id,
                 // 'password' => Hash::make($input['password']),

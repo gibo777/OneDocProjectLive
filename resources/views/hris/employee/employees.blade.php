@@ -698,6 +698,10 @@ $(document).ready(function() {
     $(document).on('change click', '#isHead', async function() {
         ($(this).is(":checked")) ?  $("#updateRoleType").val('ADMIN') : $("#updateRoleType").val('EMPLOYEE') ;
     });
+
+    $(document).on('change', '#updateRoleType', async function() {
+        ($(this).val()=='ADMIN' || $(this).val()=='SUPER ADMIN') ? $('#isHead').prop("checked", true) : $('#isHead').prop("checked", false);
+    });
                     
    
     /* Button to update Employee details */

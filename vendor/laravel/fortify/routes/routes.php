@@ -28,6 +28,18 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
         Route::get('/login', [AuthenticatedSessionController::class, 'create'])
             ->middleware(['guest:'.config('fortify.guard')])
             ->name('login');
+
+        Route::get('/login-auth', [AuthenticatedSessionController::class, 'authLogin'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('login.auth');
+
+        Route::get('/login-consent', [AuthenticatedSessionController::class, 'loginConsent'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('login.consent');
+
+        Route::post('/login-consent', [AuthenticatedSessionController::class, 'storeLoginConsent'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('login.consent');
     }
 
     $limiter = config('fortify.limiters.login');

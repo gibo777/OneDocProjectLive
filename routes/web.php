@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Controllers\LeaveFormController;
+use App\Http\Controllers\OvertimesController;
 use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\ViewLeavesController;
+
 use App\Http\Controllers\CalenderController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ProcessController;
@@ -116,6 +118,9 @@ Route::get('/hris/view-history',[ViewLeavesController::class,'view_leave_history
 Route::get('/hris/view-leave/fetch_data', [ViewLeavesController::class, 'fetch_data']);
 // Route::post('/hris/viewleave', [LeaveFormController::class, 'update_leave']);
 
+/*======= OVERTIME ======*/
+Route::get('/hris/overtime', [OvertimesController::class, 'index'])->name('hris.overtime');
+// Route::post('/hris/overtime', [OvertimesController::class, 'submit_overtime']);
 
 
 /*======= REIMBURSEMENT =======*/

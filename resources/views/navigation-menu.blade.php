@@ -163,7 +163,7 @@
             <!-- navigation menu here -->
         </div>
 
-        <!-- Responsive Settings Options -->
+        <!-- Responsive Settings Options for Mobile View -->
         <div class="pt-1 pb-1 border-t border-gray-200">
             <div class="mt-3 space-y-1">
 
@@ -275,7 +275,7 @@
     <!-- Responsive Settings Options end -->
 
 
-    <!-- Primary Navigation Menu -->
+    <!-- Primary Navigation Menu for Desktop View -->
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex justify-between p-1">
@@ -303,26 +303,33 @@
                               </div>
                           </div>
 
-                        @if (Auth::user()->role_type=='SUPER ADMIN')
-                                  <div class="dropdown dropend">
-                                      <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
-                                      @if(Auth::user()->id==1)
-                                      <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                          <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
-                                          <a class="dropdown-item" href="#">Sub-menu 2</a>
-                                          <div class="dropdown-divider"></div>
-                                          <div class="dropdown dropend">
-                                              <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub-menu 3</a>
-                                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                                  <a class="dropdown-item" href="#">Sub-menu 3.1</a>
-                                                  <a class="dropdown-item" href="#">Sub-menu 3.2</a>
-                                                  <div class="dropdown-divider"></div>
-                                                  <a class="dropdown-item" href="#">Sub-menu 3.3</a>
-                                              </div>
+                        @if (Auth::user()->id==1)
+                              <div class="dropdown dropend">
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                      <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavEleave" >{{ __('Overtime Form') }} </a>
+                                      <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                                  </div>
+                              </div>
+                              <div class="dropdown dropend">
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
+                                  @if(Auth::user()->id==1)
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                      <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
+                                      <a class="dropdown-item" href="#">Sub-menu 2</a>
+                                      <div class="dropdown-divider"></div>
+                                      <div class="dropdown dropend">
+                                          <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub-menu 3</a>
+                                          <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                              <a class="dropdown-item" href="#">Sub-menu 3.1</a>
+                                              <a class="dropdown-item" href="#">Sub-menu 3.2</a>
+                                              <div class="dropdown-divider"></div>
+                                              <a class="dropdown-item" href="#">Sub-menu 3.3</a>
                                           </div>
                                       </div>
-                                      @endif
                                   </div>
+                                  @endif
+                              </div>
                           @endif
 
                       </div>

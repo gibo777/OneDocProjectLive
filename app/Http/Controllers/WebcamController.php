@@ -130,38 +130,6 @@ class WebcamController extends Controller
 
     function createNewImagePath () {
         try{
-            // $storagePath = public_path('storage/timelogs');
-
-            // if (!File::isDirectory($storagePath)) {
-            //     File::makeDirectory($storagePath, 0755, true);
-            // }
-
-            // $userTimeLogs = DB::table('time_logs as t')
-            // ->select('u.id as uID','t.','t.profile_photo_path')
-            // ->leftJoin('users as u','t.employee_id','=','u.employee_id')
-            // ->where('t.image_path', null)
-            // ->orWhere('t.image_path','')->take(100)->get();
-
-            // foreach ($userTimeLogs as $value) {
-            //     $fileName = $value->uID.'_'.substr(md5(uniqid('', true)), 0, 12);
-            //     $file = $fileName.'.txt';
-
-            //     echo "[ ID: $value->uID ] [ File Name: $fileName] ";
-            //     echo "[ File Name: ".$fileName." ] [ File: ".$file." ] ";
-
-            //     $updateImagePath = DB::table('time_logs')
-            //     ->where('id',$value->id)
-            //     ->update(['image_path' => $fileName]);
-
-            //     if ($updateImagePath) {
-            //         $image = $value->profile_photo_path;
-            //         $uploadStorage=Storage::disk('public')->put( '/timelogs/'.$file,$image);
-            //     echo "[ Status: Success ]<br>=====<br>";
-            //     }
-
-            // }
-
-            /*===========*/
             $storagePath = public_path('storage/timelogs');
 
             if (!File::isDirectory($storagePath)) {
@@ -194,44 +162,44 @@ class WebcamController extends Controller
                             $image = $value->profile_photo_path;
 
 
-// Assuming $base64Image contains your base64-encoded image string
-$base64Image = $value->profile_photo_path;
+                            // Assuming $base64Image contains your base64-encoded image string
+                            $base64Image = $value->profile_photo_path;
 
-// Extract the image data
-list($type, $data) = explode(';', $base64Image);
-list(, $data) = explode(',', $data);
+                            // Extract the image data
+                            list($type, $data) = explode(';', $base64Image);
+                            list(, $data) = explode(',', $data);
 
-// Decode the base64 image data
-$decodedImage = base64_decode($data);
+                            // Decode the base64 image data
+                            $decodedImage = base64_decode($data);
 
-// Set the percentage for resizing
-$percentage = 50; // 50% of the original dimensions
+                            // Set the percentage for resizing
+                            $percentage = 50; // 50% of the original dimensions
 
-// Create a new image from the decoded data
-$sourceImage = imagecreatefromstring($decodedImage);
+                            // Create a new image from the decoded data
+                            $sourceImage = imagecreatefromstring($decodedImage);
 
-// Get the original dimensions
-$sourceWidth = imagesx($sourceImage);
-$sourceHeight = imagesy($sourceImage);
+                            // Get the original dimensions
+                            $sourceWidth = imagesx($sourceImage);
+                            $sourceHeight = imagesy($sourceImage);
 
-// Calculate the new dimensions based on the percentage
-$targetWidth = $sourceWidth * ($percentage / 100);
-$targetHeight = $sourceHeight * ($percentage / 100);
+                            // Calculate the new dimensions based on the percentage
+                            $targetWidth = $sourceWidth * ($percentage / 100);
+                            $targetHeight = $sourceHeight * ($percentage / 100);
 
-// Create a new image with the new dimensions
-$resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+                            // Create a new image with the new dimensions
+                            $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
-// Resize the image
-imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
+                            // Resize the image
+                            imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
 
-// Output the resized image as base64
-ob_start();
-imagejpeg($resizedImage, null, 80);
-$resizedImageData = ob_get_clean();
-$resizedBase64Image = 'data:image/jpeg;base64,' . base64_encode($resizedImageData);
+                            // Output the resized image as base64
+                            ob_start();
+                            imagejpeg($resizedImage, null, 80);
+                            $resizedImageData = ob_get_clean();
+                            $resizedBase64Image = 'data:image/jpeg;base64,' . base64_encode($resizedImageData);
 
-// Now $resizedBase64Image contains the resized image in base64 format
-// echo $resizedBase64Image;
+                            // Now $resizedBase64Image contains the resized image in base64 format
+                            // echo $resizedBase64Image;
 
                             $uploadStorage = Storage::disk('public')->put('/timelogs/' . $file, $resizedBase64Image);
                             echo "[ Status: Success ]<br>=====<br>";
@@ -239,32 +207,7 @@ $resizedBase64Image = 'data:image/jpeg;base64,' . base64_encode($resizedImageDat
                     }
                 });
 
-
-
-
-
-            // $data = [
-            //     'employee_id'           => Auth::user()->employee_id, 
-            //     'image_path'            => $fileName,
-            //     'ip_address'            => $request->ip(),
-            //     'office'                => Auth::user()->office,
-            //     'department'            => Auth::user()->department,
-            //     'supervisor'            => Auth::user()->supervisor,
-            //     'created_at'            => date('Y-m-d H:i:s'),
-            //     'updated_at'            => date('Y-m-d H:i:s')
-            // ];
-
-            // if ($request->logEvent=='TimeIn') {
-            //     $data['time_in'] = date('Y-m-d H:i:s');
-            // } else {
-            //     $data['time_out'] = date('Y-m-d H:i:s');
-            // }
-            // // return var_dump($data);
-            // DB::table('time_logs')->insert($data);
-
-            // return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
-
-
+            return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
         }catch(\Error $e){
             return response(['isSuccess'=>false,'message'=>$e]);
         }

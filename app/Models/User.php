@@ -43,6 +43,7 @@ class User extends Authenticatable
         'email', 
         'password',
         'remember_token',
+        'qr_code_link',
         'expires_at',
         'created_by',
     ];

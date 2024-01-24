@@ -1,6 +1,31 @@
 <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
-
 <x-guest-layout>
+<style type="text/css">
+    /* Default style for SweetAlert */
+    /*.swal2-popup {
+      width: 62% !important;
+    }*/
+
+    /* Media query for mobile devices */
+    @media (max-width: 767px) {
+      .swal2-popup {
+        width: 100% !important;
+      }
+    }
+    .custom-title-class {
+      font-size: 18px; /* Adjust the font size as needed */
+    }
+    .text-xs {
+      font-size: 0.75rem; /* Adjust the font size as needed */
+    }
+    td {
+      text-transform: none !important;
+    }
+    .swal2-popup {
+      height: 100% !important;
+    }
+</style>
+
     <x-jet-authentication-card>
         <x-slot name="logo">
         </x-slot>
@@ -17,7 +42,7 @@
                 {{ session('status') }}
             </div>
         @endif
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" id="loginForm" action="{{ route('login') }}">
             @csrf
 
             <div class="text-left">
@@ -59,7 +84,7 @@
             </div>
 
             <div class="flex items-center justify-center mt-2">
-                <x-jet-button class="w-full">
+                <x-jet-button class="w-full" id="btnLogin">
                     {{ __('Log in') }}
                 </x-jet-button>
             </div>
@@ -98,12 +123,111 @@
           // return false;
         });
 
-        /*$(document).on('keyup keydown hover click mouseenter mouseover', function(){
-        $("#audio-button").click();
+        $(document).on('click', '#btnLogin', function() {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: '/login-auth',
+                method: 'get',
+                data: { 'email': $('#email').val(), 'password': $('#password').val() }, // prefer use serialize method
+                success:function(auth){
+                    if (auth.isSuccess) {
+                        $.ajax({
+                            url: '/login-consent',
+                            method: 'get',
+                            data: { 'email': $('#email').val() }, // prefer use serialize method
+                            success:function(count){
+                                if (count==0) {
+                                    loginConsentForm ($('#email').val(), $('#password').val());
+                                } else {
+                                    $('#loginForm').submit();
+                                }
+                            }
+                        });
+                    } else {
+                        Swal.fire({ icon: 'error', title: auth.message });
+                    }
+                }
+            });
+            return false;
         });
-        $("#audio-button").click(function() {
-        $("#audio-background")[0].play(); return false;
-        });*/
+
+
+
+        function loginConsentForm (email, password) {
+            var originalWidth = $('.swal2-popup').css('width');
+            var originalHeight = $('.swal2-popup').css('height');
+            var loginConsentForm = `@include('auth/login-consent')`;
+
+            Swal.fire({
+                title: 'Employee Portal Login Consent',
+                customClass: {
+                    title: 'custom-title-class',
+                },
+                html: loginConsentForm,
+                width: '62%',
+                // icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Login',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                    // Check the state of the checkbox
+                    if ($('#loginCheckbox').prop('checked')) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $.ajax({
+                            url: '/login-consent',
+                            method: 'post',
+                            data: { 'email': email , 'password': password }, // prefer use serialize method
+                            success:function(data){
+                                if (data.isSuccess==false) 
+                                {
+                                    Swal.fire({
+                                        title: 'Notification',
+                                        icon: 'error',
+                                        text: data.message,
+                                    }).then((childResult) => {
+                                        if (childResult.isConfirmed) {
+                                            Swal.close();
+                                        }
+                                    });
+                                } else { $('#loginForm').submit(); }
+                            }
+                        }); return false;
+                        // User confirmed login, proceed with the form submission
+                        
+                    } else {
+                        // User did not confirm login
+                        Swal.showValidationMessage('Please confirm your login');
+                        return false;
+                    }
+                }
+            }).then((result) => {
+                // Handling additional actions after the modal is closed (if needed)
+                if (result.dismiss === Swal.DismissReason.cancel) {
+                    // User clicked "Cancel" or closed the modal
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'Login cancelled',
+                        icon: 'info',
+                        customClass: {
+                            title: 'custom-title-class',
+                        },
+                        width: originalWidth, // Set the original width
+                        height: originalHeight, // Set the original height
+                    });
+                }
+            });
+        }
     });
 </script>
 

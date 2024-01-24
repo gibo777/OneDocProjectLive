@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class TestController extends Controller
@@ -22,6 +23,15 @@ class TestController extends Controller
 	}*/
     //
     function test_view (Request $request) {
+
+    	$select = DB::table('users')->where('qr_code_link','')->orWhereNull('qr_code_link')->get();
+    	
+        return $randomString = Str::random(128);
+
+
+    	$select = DB::table('users')->where('qr_code_link','')->orWhereNull('qr_code_link')->get();
+
+    	return var_dump($select);
 
             $months = [
                 'January',
