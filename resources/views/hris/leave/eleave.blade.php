@@ -22,7 +22,16 @@
                 <div class="row inset-shadow rounded">
                     <div class="col-md-4 pt-1">
                         <x-jet-label for="name" value="{{ __('NAME') }}" class="w-full" />
-                        <h6 id="name">{{ join(' ',[Auth::user()->last_name.',',Auth::user()->first_name,Auth::user()->middle_name]) }}</h6>
+                        <h6 id="name">
+                            {{ join(' ',
+                                [
+                                    Auth::user()->last_name.',',
+                                    Auth::user()->first_name,
+                                    empty(Auth::user()->suffix) ? '' : Auth::user()->suffix . '',
+                                    Auth::user()->middle_name
+                                ]) 
+                            }}
+                        </h6>
                     </div>
                     <div class="col-md-2 pt-1">
                         <x-jet-label for="employeeNumber" value="{{ __('EMPLOYEE #') }}" class="w-full" />

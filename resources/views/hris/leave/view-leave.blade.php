@@ -196,7 +196,7 @@
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
-                                    <table id="dataViewLeaves" class="table table-bordered table-striped sm:justify-center table-hover">
+                                    <table id="dataViewOvertimes" class="table table-bordered table-striped sm:justify-center table-hover">
 
                                         <thead class="thead">
                                             <tr>
@@ -764,7 +764,7 @@
 $(document).ready( function () {
     
     if (("{{ count($leaves) }}") == 0) { return false; }
-    var tableLeaves = $('#dataViewLeaves').DataTable({
+    var tableLeaves = $('#dataViewOvertimes').DataTable({
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
