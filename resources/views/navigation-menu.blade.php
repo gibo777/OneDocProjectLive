@@ -303,14 +303,23 @@
                               </div>
                           </div>
 
-                        @if (Auth::user()->id==1)
+                        @if (Auth::user()->id==1 || Auth::user()->id==2)
                               <div class="dropdown dropend">
-                                  <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                      <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavEleave" >{{ __('Overtime Form') }} </a>
-                                      <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                                      <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavOvertime" >{{ __('Overtime Form') }} </a>
+                                      <a class="dropdown-item" href="{{ route('hris.view-overtime') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
                                   </div>
                               </div>
+
+                              <div class="dropdown dropend">
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="submenuWFH" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH Setup</a>
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                      <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavWFH" >{{ __('WFH Form') }} </a>
+                                      <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_wfh">{{ __('View WFH') }} </a>
+                                  </div>
+                              </div>
+
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
                                   @if(Auth::user()->id==1)

@@ -15,7 +15,7 @@ yarn-error.log
 /app/Http/Controllers/TestController.php
 /storage/
 /storage/**
-/storage/logs/laravel.log
+storage/logs/laravel.log
 /storage/framework/**
 /storage/framework/cache/data/**
 storage/framework/views/
