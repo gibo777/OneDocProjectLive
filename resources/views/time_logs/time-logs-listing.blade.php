@@ -430,7 +430,7 @@ $(document).ready(function() {
             data: {'id':$(this).attr('id')}, // prefer use serialize method
             success:function(data){
 
-                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                var blob = new Blob([data], { type: 'application/octet-stream' });
                 var url = window.URL.createObjectURL(blob);
 
                 // Create a download link

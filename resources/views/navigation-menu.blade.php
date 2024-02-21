@@ -303,7 +303,7 @@
                               </div>
                           </div>
 
-                        @if (Auth::user()->id==1 || Auth::user()->id==2)
+                        @if (Auth::user()->id==1)
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
