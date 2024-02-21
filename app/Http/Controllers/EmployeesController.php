@@ -155,18 +155,19 @@ class EmployeesController extends Controller
         // return var_dump($request->input());
         try{
             $data_array = array(
-                'employee_id' => $request->employee_id,
-                'position' => $request->position,
-                'department' => $request->department,
+                'employee_id'       => $request->employee_id,
+                'biometrics_id'     => $request->bioId,
+                'position'          => $request->position,
+                'department'        => $request->department,
                 
                 'employment_status' => $request->employment_status,
-                'date_hired' => date('Y-m-d',strtotime($request->date_hired)),
-                'weekly_schedule' => join('|',$request->update_weekly_schedule),
-                'office' => $request->office,
-                'supervisor' => $request->supervisor,
-                'role_type'=> $request->roleType,
-                'is_head'=>$request->is_head,
-                'date_regularized'=>date('Y-m-d',strtotime($request->dateRegularized))
+                'date_hired'        => date('Y-m-d',strtotime($request->date_hired)),
+                'weekly_schedule'   => join('|',$request->update_weekly_schedule),
+                'office'            => $request->office,
+                'supervisor'        => $request->supervisor,
+                'role_type'         => $request->roleType,
+                'is_head'           => $request->is_head,
+                'date_regularized'  => date('Y-m-d',strtotime($request->dateRegularized))
             );
 
             // return var_dump($data_array);
@@ -290,7 +291,7 @@ class EmployeesController extends Controller
             $employee_id = Auth::user()->employee_id;
 
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
-                $employees = DB::select('CALL sp_timelogs_admins()');
+                $employees = DB::select('CALL sp_generated_timelogs_summary()');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
