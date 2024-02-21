@@ -436,7 +436,7 @@ $(document).ready(function() {
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'timelogs.xls'; // Use .xls extension for Excel files
+                a.download = 'SVV_V3.xlsx'; // Use .xls extension for Excel files
                 document.body.appendChild(a);
                 a.click();
 
@@ -444,21 +444,6 @@ $(document).ready(function() {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
                 
-                /*====*/
-                /*var blob = new Blob([data], { type: 'text/csv' }); // Set the content type to 'text/csv'
-
-                var url = window.URL.createObjectURL(blob);
-
-                // Create a download link
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = 'timelogs.csv'; // Use .csv extension for CSV files
-                document.body.appendChild(a);
-                a.click();
-
-                // Clean up
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);*/
             }
         }); 
         return false;

@@ -18,13 +18,14 @@
                 <tr class="dt-head-center">
                     <th>Department</th>
                     <th>Name</th>
-                    <th>Employee ID</th>
+                    <th>Staff Code</th>
+                    {{-- <th>Employee ID</th> --}}
                     <th>Date</th>
                     <th>Week</th>
                     <th>Time-In</th>
                     <th>Time-Out</th>
                     <th>Total Work Time</th>
-                    {{-- <th>Status</th> --}}
+                    <th>Employee ID</th>
                 </tr>
             </thead>
             <tbody class="data hover" id="viewEmployee">
@@ -33,12 +34,14 @@
                          class="text-sm text-lg-lg">
                         <td>{{ strtoupper($employee->department) }}</td>
                         <td>{{ $employee->full_name }}</td>
-                        <td>{{ strtoupper($employee->employee_id) }}</td>
+                        <td>{{ str_pad(strval($employee->biometrics_id), 8, "0", STR_PAD_LEFT) }}</td>
+                        {{-- <td>{{ strtoupper($employee->employee_id) }}</td> --}}
                         <td>{{ $employee->time_in ? date('m/d/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('l',strtotime($employee->time_in)) : date('l',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('m/d/Y H:i:s',strtotime($employee->time_in)) : '' }}</td>
                         <td>{{ $employee->time_out ? date('m/d/Y H:i:s',strtotime($employee->time_out)) : '' }}</td>
                         <td></td>
+                        <td>{{ strtoupper($employee->employee_id) }}</td>
                     </tr>
                 @empty
                     <tr>

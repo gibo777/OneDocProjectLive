@@ -193,7 +193,7 @@
   <div class="modal fade" id="EmployeesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl mt-2" role="document">
       <div class="modal-content">
-        <div class="modal-header custom-modal-header banner-blue">
+        <div class="modal-header custom-modal-header banner-blue py-2">
           <h5 class="modal-title text-white fs-5" id="EmployeesModalLabel">EMPLOYEE DETAILS</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -360,13 +360,18 @@
                         </div>
 
                         <div class="row my-1 pt-1">
-                            <div class="col-md-4 form-floating px-1">
+                            <div class="col-md-3 form-floating px-1">
                                 <!-- Employee ID -->
                                     <x-jet-input id="employee_id" type="text" class="form-control block w-full"/>
                                     <x-jet-label for="employee_id" value="{{ __('Employee ID') }}" class="text-black-50 w-full" />
                                     <x-jet-input-error for="employee_id" class="mt-2" />
                             </div>
-                            <div class="col-md-8 form-floating px-1">
+                            <div class="col-md-3 form-floating px-1">
+                                    <x-jet-input id="bioId" type="number" class="form-control block w-full" autocomplete="bio_id" min="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
+                                    <x-jet-label for="bioId" value="{{ __('Biometrics ID') }}" class="text-black-50 w-full" />
+                                    <x-jet-input-error for="bioId" class="mt-2" />
+                            </div>
+                            <div class="col-md-6 form-floating px-1">
                                     <x-jet-input id="position" type="text" class="form-control block w-full" autocomplete="position"/>
                                     <x-jet-label for="position" value="{{ __('Position') }}" class="text-black-50 w-full" />
                                     <x-jet-input-error for="position" class="mt-2" />
@@ -669,6 +674,7 @@ $(document).ready(function() {
                 $("#homeZipCode").html("ZIP: "+ zipCode);
 
                 $("#employee_id").val(getemployee.employee_id);
+                $("#bioId").val(getemployee.biometrics_id);
                 $("#position").val(getemployee.position);
                 $("#department").val(getemployee.department);
 
@@ -718,6 +724,7 @@ $(document).ready(function() {
             'supervisor': $("#supervisor").val(),
             'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),
             'employee_id' : $("#employee_id").val(), 
+            'bioId' : $("#bioId").val(), 
             'position' : $("#position").val(),
             'department' : $("#department").val(),
             'vl': $('#vacation_leaves').val(),
