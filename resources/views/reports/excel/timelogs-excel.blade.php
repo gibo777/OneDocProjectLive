@@ -22,26 +22,26 @@
                     {{-- <th>Employee ID</th> --}}
                     <th>Date</th>
                     <th>Week</th>
-                    <th>Time-In</th>
-                    <th>Time-Out</th>
+                    <th>Time1</th>
+                    <th>Time2</th>
                     <th>Total Work Time</th>
-                    <th>Employee ID</th>
+                    {{-- <th>Employee ID</th> --}}
                 </tr>
             </thead>
             <tbody class="data hover" id="viewEmployee">
                 @forelse($employees as $employee)
                     <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}"
                          class="text-sm text-lg-lg">
-                        <td>{{ strtoupper($employee->department) }}</td>
+                        <td>{{ strtoupper($employee->dept) }}</td>
                         <td>{{ $employee->full_name }}</td>
                         <td>{{ str_pad(strval($employee->biometrics_id), 8, "0", STR_PAD_LEFT) }}</td>
                         {{-- <td>{{ strtoupper($employee->employee_id) }}</td> --}}
-                        <td>{{ $employee->time_in ? date('m/d/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
+                        <td>{{ $employee->time_in ? date('d/m/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('l',strtotime($employee->time_in)) : date('l',strtotime($employee->time_out)) }}</td>
-                        <td>{{ $employee->time_in ? date('m/d/Y H:i:s',strtotime($employee->time_in)) : '' }}</td>
-                        <td>{{ $employee->time_out ? date('m/d/Y H:i:s',strtotime($employee->time_out)) : '' }}</td>
+                        <td>{{ $employee->time_in ? date('H:i:s',strtotime($employee->time_in)) : '' }}</td>
+                        <td>{{ $employee->time_out ? date('H:i:s',strtotime($employee->time_out)) : '' }}</td>
                         <td></td>
-                        <td>{{ strtoupper($employee->employee_id) }}</td>
+                        {{-- <td>{{ strtoupper($employee->employee_id) }}</td> --}}
                     </tr>
                 @empty
                     <tr>
