@@ -8,7 +8,7 @@
             {{ __('PROCESSING E-LEAVE APPLICATION') }}
     </x-slot>
 
-    <div class="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto py-12 sm:px-6 lg:px-8">
         <div class="px-4 py-5 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
            
             <form id="process-leave" method="POST" action="{{ route('process.eleave') }}">
@@ -16,11 +16,11 @@
                     <!-- CUT-OFF DATE -->
                     <div class="col-span-5 sm:col-span-5" id="div_date_covered">
                             <x-jet-label for="processDateFrom" value="{{ __('CUT-OFF DATE') }}" class="font-semibold text-xl"/>
-                            <x-jet-input id="processDateFrom" name="processDateFrom" type="text" wire:model.defer="state.processDateFrom" class="date-input datepicker" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                            <x-jet-input id="processDateFrom" name="processDateFrom" type="date" wire:model.defer="state.processDateFrom" {{-- class="date-input datepicker"  --}}placeholder="mm/dd/yyyy" autocomplete="off"/>
 
                             <label class="font-semibold text-gray-800 leading-tight">TO</label>
 
-                            <x-jet-input id="processDateTo" name="processDateTo" type="text" wire:model.defer="state.processDateTo" class="date-input datepicker" placeholder="mm/dd/yyyy" autocomplete="off" readonly/>
+                            <x-jet-input id="processDateTo" name="processDateTo" type="date" wire:model.defer="state.processDateTo" {{-- class="date-input datepicker" --}} placeholder="mm/dd/yyyy" autocomplete="off"/>
                             <x-jet-input-error for="processDateFrom" class="mt-2" />
                             <x-jet-input-error for="processDateTo" class="mt-2" />
                     </div>
@@ -67,7 +67,8 @@ $(document).ready(function(){
             var pdd = pdto.getDate(); if (pdd<10) { pdd = "0"+pdd; }
 
             if($(this).val().length>=10) {
-                $("#processDateTo").val([pdm,pdd,pdto.getFullYear()].join('/'));
+                $("#processDateTo").val([pdto.getFullYear(),pdm,pdd].join('-'));
+                // $("#processDateTo").val([pdm,pdd,pdto.getFullYear()].join('/'));
                 // $("#processDateTo").removeAttr('disabled');
                 // alert($("#processDateTo").val());
                 $("#btnProcessEleave").removeAttr('disabled');
@@ -84,9 +85,10 @@ $(document).ready(function(){
                 }).then(function() {
                     $("#processDateFrom").val('');
                     $("#processDateTo").val('');
+                    $("#btnProcessEleave").prop('disabled',true);
                 });
             } else {
-                $("#btnProcessEleave").removeAttr('disabled');
+                $("#btnProcessEleave").prop('disabled',false);
             }
         }
     });
@@ -105,7 +107,23 @@ $(document).ready(function(){
         if ($(this).val()!="" && $("#processDateFrom").val()!="") {
             var dt_diff = (Date.parse($(this).val()) - Date.parse($("#processDateFrom").val())) / (1000*3600*24) + 1;
             // alert( dt_diff );
-            $("#btnProcessEleave").removeAttr('disabled');
+
+            var dateFrom = new Date($('#processDateFrom').val());
+            var dateTo = new Date($(this).val());
+
+            if( dateTo < dateFrom ) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Date Range',
+                    // text: '',
+                }).then(function() {
+                    // $("#processDateFrom").val('');
+                    $("#processDateTo").val('');
+                    $("#btnProcessEleave").prop('disabled',true);
+                });
+            } else {
+                $("#btnProcessEleave").prop('disabled',false);
+            }
         }
     });
 
@@ -123,8 +141,8 @@ $(document).ready(function(){
             method: 'get',
             data: $("#process-leave").serialize(), // prefer use serialize method
             success:function(id){
-                // prompt('',id); return false;
-                if (id.length==0) {
+                // Swal.fire({ html: id }); return false;
+                if (id.length<=0) {
                     $("#processing_bar").html("NOTHING TO PROCESS").width("100%");
                 } else {
                     /*alert(id.length); return false;

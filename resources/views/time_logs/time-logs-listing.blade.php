@@ -25,13 +25,12 @@
     }
     .dataTables_wrapper thead th {
         padding: 1px 5px !important; /* Adjust the padding value as needed */
+        text-align: center !important;
     }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
     }
-    #dataTimeLogs thead th {
-        text-align: center; /* Center-align the header text */
-    }
+    
     .capitalize-first-letter {
       text-transform: capitalize !important;
     }
@@ -65,40 +64,41 @@
                                 <div class="col-md-2">
                                     <!-- FILTER by Leave Type -->
                                     <div class="form-floating" id="divfilterEmpOffice">
-                                        <select name="filterTimeLogsOffice" id="filterTimeLogsOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                        <select name="fTLOffice" id="fTLOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                             <option value="">All Offices</option>
                                             @foreach ($offices as $office)
                                             <option>{{ $office->company_name }}</option>
                                             @endforeach
                                         </select>
-                                        <x-jet-label for="filterTimeLogsOffice" value="{{ __('OFFICE') }}" />
+                                        <x-jet-label for="fTLOffice" value="{{ __('OFFICE') }}" />
                                     </div>
                                 </div>
 
                                 <div class="col-md-2">
                                     <!-- FILTER by Leave Type -->
-                                    <div class="form-floating" id="divfilterTimeLogsDept">
-                                        <select name="filterTimeLogsDept" id="filterTimeLogsDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+                                    <div class="form-floating" id="divfTLDept">
+                                        <select name="fTLDept" id="fTLDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
                                             <option value="">All Departments</option>
                                             @foreach ($departments as $department)
                                             {{-- <option value="{{ $department->department_code }}">{{ $department->department }}</option> --}}
                                             <option>{{ $department->department }}</option>
                                             @endforeach
                                         </select>
-                                        <x-jet-label for="filterTimeLogsDept" value="{{ __('DEPARTMENT') }}" />
+                                        <x-jet-label for="fTLDept" value="{{ __('DEPARTMENT') }}" />
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 px-3 text-center mt-1">
                                     <x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
-                                    <input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+                                    <input type="date" id="fTLdtFrom" name="fTLdtFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
                                     to
-                                    <input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+                                    <input type="date" id="fTLdtTo" name="fTLdtTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
                                 </div>
                                 <div class="col-md-1">
                                 </div>
                                 <div class="col-md-2 pt-2 text-center mt-1 ">
-                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
+                                    {{-- @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58) --}}
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
                                         <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
@@ -213,7 +213,7 @@ $(document).ready(function() {
 
     /*$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-            var sD  = $('#filterTimeLogsDept').val();
+            var sD  = $('#fTLDept').val();
             var cD  = data[2]; // Department Column
             
             // Check if a department filter is selected
@@ -231,8 +231,8 @@ $(document).ready(function() {
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-            var sTO  = $('#filterTimeLogsOffice').val();
-            var sTD = $('#filterTimeLogsDept').val();
+            var sTO  = $('#fTLOffice').val();
+            var sTD = $('#fTLDept').val();
             var cTO  = data[2]; // Office Column
             var cTD = data[3]; // Department Column
             // alert(cTD); return false;
@@ -258,8 +258,8 @@ $(document).ready(function() {
 
     /* START - Date From and Date To Searching */
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var searchDateFrom = $('#dateFrom').val();
-        var searchDateTo = $('#dateTo').val();
+        var searchDateFrom = $('#fTLdtFrom').val();
+        var searchDateTo = $('#fTLdtTo').val();
 
         // Convert search date strings to Date objects
         var dateFrom = new Date(searchDateFrom);
@@ -291,21 +291,21 @@ $(document).ready(function() {
     });
 
 
-    $('#filterTimeLogsOffice').on('keyup change', function() {
+    $('#fTLOffice').on('keyup change', function() {
         table.draw();
     });
-    $('#filterTimeLogsDept').on('keyup change', function() {
+    $('#fTLDept').on('keyup change', function() {
         table.draw();
     });
 
 
     /* Triggers Date From Searching of Time-In/Time-Out */
-    $('#dateFrom').on('keyup change', function() {
-        if ($('#dateTo').val()=='' || $('#dateTo').val()==null) {
-            $('#dateTo').val($(this).val());
+    $('#fTLdtFrom').on('keyup change', function() {
+        if ($('#fTLdtTo').val()=='' || $('#fTLdtTo').val()==null) {
+            $('#fTLdtTo').val($(this).val());
         } else {
             var dateFrom = new Date($(this).val());
-            var dateTo = new Date($('#dateTo').val());
+            var dateTo = new Date($('#fTLdtTo').val());
             if( dateTo < dateFrom ) {
                 Swal.fire({
                     icon: 'error',
@@ -320,11 +320,11 @@ $(document).ready(function() {
     });
 
     /* Triggers Date To Searching of Time-In/Time-Out */
-    $('#dateTo').on('keyup change', function() {
-        var dateFrom = new Date($('#dateFrom').val());
+    $('#fTLdtTo').on('keyup change', function() {
+        var dateFrom = new Date($('#fTLdtFrom').val());
         var dateTo = new Date($(this).val());
         if( dateTo < dateFrom ) {
-            $(this).val($('#dateFrom').val());
+            $(this).val($('#fTLdtFrom').val());
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Date Range',
@@ -436,11 +436,20 @@ $(document).ready(function() {
         $.ajax({
             url: '/timelogs-excel',
             method: 'get',
-            data: {'id': $(this).attr('id')},
+            data: {
+                'id'        : `{{ Auth::user()->id }}`,
+                'office'    : $('#fTLOffice').val(),
+                'department': $('#fTLDept').val(),
+                'timeIn'    : $('#fTLdtFrom').val(),
+                'timeOut'   : $('#fTLdtTo').val()
+            },
             success: function(html) {
                 // Create a temporary div to hold the table HTML
                 var tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
+
+                // Get the value of hidCurrentDate
+                var currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
 
                 // Extract data from the table
                 var data = [];
@@ -472,7 +481,7 @@ $(document).ready(function() {
                 xmlContent += ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n';
                 xmlContent += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n';
                 xmlContent += ' xmlns:html="http://www.w3.org/TR/REC-html40">\n';
-                xmlContent += '<Worksheet ss:Name="Sheet1">\n';
+                xmlContent += '<Worksheet ss:Name="Timelogs">\n';
                 xmlContent += '<Table>\n';
                 
                 // Add headers
@@ -480,6 +489,7 @@ $(document).ready(function() {
                 headers.forEach(function(header) {
                     xmlContent += '<Cell><Data ss:Type="String">' + header + '</Data></Cell>\n';
                 });
+
                 xmlContent += '</Row>\n';
                 
                 // Add data rows
@@ -499,10 +509,12 @@ $(document).ready(function() {
                 var blob = new Blob([xmlContent], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
 
+                var filename = `1DOC_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
+
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'SVV_V3.xlsx'; // Use .xlsx extension for Excel files
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
 
@@ -512,7 +524,6 @@ $(document).ready(function() {
             }
         });
         return false;
-
     });
 
 

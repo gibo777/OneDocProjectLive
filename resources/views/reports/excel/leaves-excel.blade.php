@@ -1,7 +1,4 @@
 
-
-{{-- <link rel="stylesheet" href="{{ asset('/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}"> --}}
-
 <style type="text/css">
 #dataTimeLogs thead th {
     text-align: center; /* Center-align the header text */
@@ -9,9 +6,9 @@
 
 </style>
 
-
-<div id="table_data">
+<div id="leavesDataExcel">
     <!-- Name -->
+    <x-jet-input id="hidCurrentDate" value="{{ $currentDate }}" hidden></x-jet-input>
     <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
         <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover">
             <thead class="thead">
@@ -49,13 +46,6 @@
                         <td>{{ $data->head_name }}</td>
                         <td>{{ $data->date_applied }}</td>
                         <td>{{ $data->status }}</td>
-                        {{-- <td>{{ $data->full_name }}</td>
-                        <td>{{ strtoupper($data->employee_id) }}</td>
-                        <td>{{ $employee->time_in ? date('m/d/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
-                        <td>{{ $employee->time_in ? date('l',strtotime($employee->time_in)) : date('l',strtotime($employee->time_out)) }}</td>
-                        <td>{{ $employee->time_in ? date('m/d/Y H:i:s',strtotime($employee->time_in)) : '' }}</td>
-                        <td>{{ $employee->time_out ? date('m/d/Y H:i:s',strtotime($employee->time_out)) : '' }}</td>
-                        <td></td> --}}
                     </tr>
                 @empty
                     <tr>

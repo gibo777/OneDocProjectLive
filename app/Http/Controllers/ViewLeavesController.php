@@ -51,7 +51,9 @@ class ViewLeavesController extends Controller
 	        	'u.supervisor',
                 'L.created_at',
 	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
-	        	DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'));
+	        	/*DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status')*/
+                DB::raw('L.leave_status as status')
+            );
 	        
             if(Auth::user()->id!=1 && Auth::user()->department!='1D-HR') {
                 if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
@@ -756,6 +758,9 @@ class ViewLeavesController extends Controller
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
             && (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') )
             {
+            $currentDate = Carbon::now('Asia/Manila');
+            $formattedDateTime = $currentDate->format('YmdHis');
+
             $leavesData = DB::table('leaves as L')
             ->leftJoin('offices as o', 'L.office', '=', 'o.id')
             ->leftJoin('departments as d', 'L.department', '=', 'd.department_code')
@@ -781,11 +786,16 @@ class ViewLeavesController extends Controller
                 DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
                 DB::raw("DATE_FORMAT(L.date_applied, '%m-%d-%Y %h:%i %p') as date_applied"),
                 'L.leave_status as status')
+            ->where('u.id','!=',1)
             ->orderBy('L.name')
             ->orderBy('L.id')
             ->get();
 
-            return view('/reports/excel/leaves-excel', [ 'leavesData' => $leavesData, ]);
+            return view('/reports/excel/leaves-excel', 
+                [ 
+                    'leavesData'    => $leavesData,
+                    'currentDate'   => $formattedDateTime
+                ]);
         } else {
             return redirect('/');
         }

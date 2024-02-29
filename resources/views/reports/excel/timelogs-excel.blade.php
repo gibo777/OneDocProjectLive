@@ -11,6 +11,7 @@
 
 
 <div id="table_data">
+    <x-jet-input id="hidCurrentDate" value="{{ $currentDate }}" hidden></x-jet-input>
     <!-- Name -->
     <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
         <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover">
@@ -34,7 +35,8 @@
                          class="text-sm text-lg-lg">
                         <td>{{ strtoupper($employee->dept) }}</td>
                         <td>{{ $employee->full_name }}</td>
-                        <td>{{ str_pad(strval($employee->biometrics_id), 8, "0", STR_PAD_LEFT) }}</td>
+                        <td>{{ $employee->biometrics_id }}</td>
+                        {{-- <td>{{ str_pad(strval($employee->biometrics_id), 8, "0", STR_PAD_LEFT) }}</td> --}}
                         {{-- <td>{{ strtoupper($employee->employee_id) }}</td> --}}
                         <td>{{ $employee->time_in ? date('d/m/Y',strtotime($employee->time_in)) : date('m/d/Y',strtotime($employee->time_out)) }}</td>
                         <td>{{ $employee->time_in ? date('l',strtotime($employee->time_in)) : date('l',strtotime($employee->time_out)) }}</td>

@@ -212,7 +212,11 @@
                                         <tbody class="data hover" id="viewLeave">
                                             @forelse($viewOTS as $viewOT)
                                                 <tr class="view-overtime text-sm text-lg-lg" id="{{ $viewOT->id }}">
-                                                    <td>{{ $viewOT->name }}</td>
+                                                    @if (url('/')=='http://localhost')
+                                                        <td>xxx, xxx x.</td>
+                                                    @else
+                                                        <td>{{ $viewOT->name }}</td>
+                                                    @endif
                                                     <td>{{ $viewOT->office }}</td>
                                                     <td>{{ $viewOT->department }}</td>
                                                     <td>{{ $viewOT->ot_control_number }}</td>

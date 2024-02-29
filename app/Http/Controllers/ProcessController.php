@@ -25,7 +25,8 @@ class ProcessController extends Controller
         }
     }
 
-    public function process_leave_count (Request $request) {
+    public function processLeaveCount (Request $request) {
+        // return $request->processDateFrom.' | '.$request->processDateTo;
         // return date('Y-m-d', strtotime('-1 day',strtotime($request->process_date_from)));
         $leaves = DB::table('leaves as L');
         $leaves = $leaves->select(
@@ -44,31 +45,32 @@ class ProcessController extends Controller
         $leaves = $leaves->where( function($query) {
             return $query->where ('L.is_deleted','=', 0)->orWhereNull('L.is_deleted');
         });
-        $leaves = $leaves->whereBetween('L.date_to', [date('Y-m-d', strtotime('-1 day',strtotime($request->process_date_from))), date('Y-m-d',strtotime($request->process_date_to))] );
+        // $leaves = $leaves->whereBetween('L.date_to', [date('Y-m-d', strtotime('-1 day',strtotime($request->process_date_from))), date('Y-m-d',strtotime($request->process_date_to))] );
+        $leaves = $leaves->whereBetween('L.date_to', [date('Y-m-d', strtotime('-1 day',strtotime($request->processDateFrom))), date('Y-m-d',strtotime($request->processDateTo))] );
         $leaves = $leaves->get();
-        
         return $leaves;
     }
 
-    public function processing_leave (Request $request) {
-        // return var_dump($request);
-        // return $request->id;
+    public function processingLeave (Request $request) {
         if($request->ajax()) {
             try {
-                // return 1;
                 $leave_id = $request->id;
-                $action = "Taken";
-                $reason = "Processed Leave";
+                $action = "Processed";
+                $reason = "Taken";
+                // $reason = "Processed Leave";
 
                 $data_array = array(
-                    'is_taken'    => 1,
-                    'hr_name'    => Auth::user()->first_name.' '. Auth::user()->last_name,
-                    'date_taken'  => date('Y-m-d G-i-s')
+                    'leave_status'  => $action,
+                    'is_taken'      => 1,
+                    'hr_name'       => Auth::user()->first_name.' '. Auth::user()->last_name,
+                    // 'date_taken'    => DB::raw('NOW()')
+                    'date_taken'    => date('Y-m-d G-i-s')
                 );
 
                 $update = DB::table('leaves');
                 $update = $update->where('id',$leave_id);
                 $update = $update->update($data_array);
+
                 if ($update > 0) {
                     $history = DB::table('leave_history')
                     ->insertUsing([

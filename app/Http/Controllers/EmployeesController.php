@@ -283,18 +283,30 @@ class EmployeesController extends Controller
      **/
     public function timeLogsExcel (Request $request)
     {
+        // return var_dump($request->input());
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
             && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
         {
-
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
+            $currentDate = Carbon::now('Asia/Manila');
+            $formattedDateTime = $currentDate->format('YmdHis');
 
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
-                $employees = DB::select('CALL sp_generated_timelogs_summary()');
+                $employees = DB::select('CALL sp_generated_timelogs_summary(?, ?, ?, ?, ?)', [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                    // date('Y-m-d', strtotime($request->timeIn)), // Format the date as 'Y-m-d'
+                    // date('Y-m-d', strtotime($request->timeOut)) // Format the date as 'Y-m-d'
+                ]);
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
+
+            // return var_dump($employees);
 
             $offices = DB::table('offices')->orderBy('company_name')->get();
             $departments = DB::table('departments')->orderBy('department')->get();
@@ -304,6 +316,7 @@ class EmployeesController extends Controller
                     'employees'     => $employees, 
                     'offices'       => $offices,
                     'departments'   => $departments,
+                    'currentDate'   => $formattedDateTime
                 ]);
         } else {
             return redirect('/');

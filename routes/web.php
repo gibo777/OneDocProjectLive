@@ -136,8 +136,8 @@ Route::post('/reimbursement', [ReimbursementController::class, 'index'])->name('
 
 /*======= PROCESSING - E-LEAVE begin =======*/
 Route::get('/process-eleave', [ProcessController::class,'show_process'])->name('process.eleave');
-Route::get('/view-processing-leave', [ProcessController::class,'process_leave_count']);
-Route::post('/processing-leave', [ProcessController::class,'processing_leave']);
+Route::get('/view-processing-leave', [ProcessController::class,'processLeaveCount']);
+Route::post('/processing-leave', [ProcessController::class,'processingLeave']);
 
 
 /*======= HR MANAGMENT =======*/

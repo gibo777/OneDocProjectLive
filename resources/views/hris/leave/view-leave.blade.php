@@ -60,12 +60,12 @@
         padding-left: 15px;
     }
     .dataTables_wrapper thead th {
-        padding: 1px 5px !important; /* Adjust the padding value as needed */
+        padding: 1px 5px !important;
+        text-align: center !important;
     }
     .dataTables_length select {
         width: 60px; /* Adjust the width as needed */
     }
-
 
     /* Custom CSS for inset shadow */
     .inset-shadow {
@@ -236,7 +236,12 @@
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_from)) }}</td>
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_to)) }}</td>
                                                     <td>{{ $leave->no_of_days }}</td>
-                                                    <td>{{ $leave->head_name }}</td>
+
+                                                    @if (url('/')=='http://localhost')
+                                                        <td>xxx, xxx x.</td>
+                                                    @else
+                                                        <td>{{ $leave->head_name }}</td>
+                                                    @endif
 
                                                     @if ($leave->status!="Pending")
                                                     <td id="status_view" class="open_history">
@@ -950,15 +955,21 @@ $('#filterLeaveStatus').on('keyup change', function() {
             url: '/leaves-excel',
             method: 'get',
             data: {'id':$(this).attr('id')}, // prefer use serialize method
-            success:function(data){
+            success:function(html){
+                var tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
 
-                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                // Get the value of hidCurrentDate
+                var currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
+                var filename = `Leaves_${currentDateValue}.xlsx`;
+
+                var blob = new Blob([html], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
 
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'leaves.xls'; // Use .xls extension for Excel files
+                a.download = filename; // Use .xls extension for Excel files
                 document.body.appendChild(a);
                 a.click();
 
