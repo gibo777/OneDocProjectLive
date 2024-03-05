@@ -303,7 +303,7 @@
                               </div>
                           </div>
 
-                        @if (Auth::user()->id==1)
+                        @if (Auth::user()->id==1 || Auth::user()->id==2 || Auth::user()->id==58)
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
@@ -389,6 +389,20 @@
                                         <a class="dropdown-item" href="{{ route('timelogslisting') }}">Time Logs</a>
                                   </div>
                               </div>
+                              @if (Auth::user()->id==1 || Auth::user()->id==2)
+                              <div class="dropdown dropend">
+                                  <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Employee Clearance </a>
+                                  <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                        <a class="dropdown-item" href="{{ route('clearance.form') }}" >
+                                            {{ __('Employee Clearance Form') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
+                                            {{ __('View Clearances') }}
+                                        </a>
+                                  </div>
+                              </div>
+                              @endif
                               {{-- <a class="dropdown-item" href="{{ route('hr.management.memos') }}">
                                   {{ __('Memo') }}
                               </a> --}}
@@ -401,16 +415,6 @@
                     </div>
                 @endif
 
-                {{-- <div class="dropdown mt-3 mx-1">
-                    <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    TIME KEEPING
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <div class="dropdown dropend">
-                          <a class="dropdown-item" href="{{ route('timelogslisting') }}">Time Logs</a>
-                        </div>
-                    </div>
-                </div> --}}
 
 
                 @if (Auth::user()->role_type=='SUPER ADMIN')

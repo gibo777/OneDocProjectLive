@@ -74,18 +74,18 @@ class ViewLeavesController extends Controller
 
             // $leaves = DB::select('CALL sp_viewleaves()');
 
-            $departments    = DB::table('departments')->orderBy('department')->get();
-            $leave_types    = DB::table('leave_types')->orderBy('leave_type_name')->get();
-            $holidays       = DB::table('holidays')->orderBy('holiday')->get();
-            $leave_statuses = DB::table('leave_statuses')->orderBy('leave_status')->get();
+            $departments        = DB::table('departments')->orderBy('department')->get();
+            $leave_types        = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays           = DB::table('holidays')->orderBy('holiday')->get();
+            $request_statuses   = DB::table('request_statuses')->orderBy('request_status')->get();
 
 	        return view('hris.leave.view-leave', 
                 [
-                    'holidays'      => $holidays, 
-                    'leaves'        => $leaves, 
-                    'departments'   => $departments, 
-                    'leave_types'   => $leave_types,
-                    'leave_statuses'=> $leave_statuses,
+                    'holidays'          => $holidays, 
+                    'leaves'            => $leaves, 
+                    'departments'       => $departments, 
+                    'leave_types'       => $leave_types,
+                    'request_statuses'  => $request_statuses,
                 ]);
         } else {
             return redirect('/');

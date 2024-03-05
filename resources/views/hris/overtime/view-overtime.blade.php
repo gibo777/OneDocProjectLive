@@ -116,39 +116,39 @@
                                         @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
                                         <!-- FILTER by Department -->
                                         <div class="col-md-4 px-1 text-center mt-1">
-                                            <div class="form-floating" id="divfilterDepartment">
-                                                <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <div class="form-floating" id="divFOtOffice">
+                                                <select name="fOtOffice" id="fOtOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                                     <option value="">All Officess</option>
-                                                    {{-- @foreach ($departments as $dept)
-                                                    <option>{{ $dept->department }}</option>
-                                                    @endforeach --}}
+                                                    @foreach ($offices as $office)
+                                                    <option>{{ $office->company_name }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <x-jet-label for="filterDepartment" value="{{ __('OFFICE') }}" />
+                                                <x-jet-label for="fOtOffice" value="{{ __('OFFICE') }}" />
                                             </div>
                                         </div>
                                         <div class="col-md-4 px-1 text-center mt-1">
-                                            <div class="form-floating" id="divfilterDepartment">
-                                                <select name="filterDepartment" id="filterDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <div class="form-floating" id="divFDepartment">
+                                                <select name="fOtDept" id="fOtDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                                     <option value="">All Departments</option>
-                                                    {{-- @foreach ($departments as $dept)
+                                                    @foreach ($departments as $dept)
                                                     <option>{{ $dept->department }}</option>
-                                                    @endforeach --}}
+                                                    @endforeach
                                                 </select>
-                                                <x-jet-label for="filterDepartment" value="{{ __('DEPARTMENT') }}" />
+                                                <x-jet-label for="fOtDept" value="{{ __('DEPARTMENT') }}" />
                                             </div>
                                         </div>
                                         @endif
 
                                         <div class="col-md-4 px-1 text-center mt-1">
                                             <!-- FILTER by Leave Type -->
-                                            <div class="form-floating" id="div_filterLeaveType">
-                                                <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <div class="form-floating" id="divFReqStatus">
+                                                <select name="fReqStatus" id="fReqStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                                     <option value="">All Overtime Statuses</option>
-                                                    {{-- @foreach ($leave_statuses as $leave_status)
-                                                    <option>{{ $leave_status->leave_status }}</option>
-                                                    @endforeach --}}
+                                                    @foreach ($request_statuses as $request_status)
+                                                    <option>{{ $request_status->request_status }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <x-jet-label for="filterLeaveStatus" value="{{ __('OVERTIME STATUS') }}" />
+                                                <x-jet-label for="fReqStatus" value="{{ __('OVERTIME STATUS') }}" />
                                             </div>
                                         </div>
                                     </div>
@@ -156,9 +156,9 @@
 
 			                    <div class="col-md-3 px-1 text-center mt-1">
 			                    	<x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
-			                    	<input type="date" id="dateFrom" name="dateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+			                    	<input type="date" id="fOtDateFrom" name="fOtDateFrom" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    	to
-			                    	<input type="date" id="dateTo" name="dateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
+			                    	<input type="date" id="fOtDateTo" name="fOtDateTo" type="text" placeholder="mm/dd/yyyy" autocomplete="off" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1" />
 			                    </div>
 
                                 <div class="col-md-4 pt-2 item-right text-center mt-1 ">
@@ -180,17 +180,7 @@
                         </div>
 
 
-                        {{-- <!-- DIV_GRID4 -->
-                        <div class="col-span-8 sm:col-span-1 hidden" id="div_grid4">
                         </div>
-                        <!-- DIV_GRID5 -->
-                        <div class="col-span-8 sm:col-span-1 hidden" id="div_grid5">
-                        </div>
-                        <!-- DIV_GRID6 -->
-                        <div class="col-span-8 sm:col-span-1 " id="div_grid6">
-                        </div> --}}
-                        </div>
-
                             <div id="table_data">
                                 <!-- Name -->
                                 <div class="col-span-8 sm:col-span-7 sm:justify-center scrollable">
@@ -438,145 +428,118 @@
 
 $(document).ready( function () {
     
-    if (("{{ count($viewOTS) }}") == 0) { return false; }
-    var tableLeaves = $('#dataViewOvertimes').DataTable({
-        "ordering": false,
-        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 15, // Set the default number of entries per page
-        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
-      });
+var tableLeaves = $('#dataViewOvertimes').DataTable({
+    "ordering": false,
+    "lengthMenu": [5, 10, 15, 25, 50, 75, 100], // Customize the options in the dropdown
+    "iDisplayLength": 15, // Set the default number of entries per page
+    "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
+    "initComplete": function () {
+        // Custom search function
+        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+            var sO = $('#fOtOffice').val();
+            var sD = $('#fOtDept').val();
+            var sS = $('#fReqStatus').val().toUpperCase();
 
+            var cO = data[1]; // Office Column
+            var cD = data[2]; // Department Column
+            var cS = data[8].toUpperCase(); // Status Column
 
-	$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            // Check if an office filter is selected
+            var fOfficeActive = (sO != null && sO !== '');
+            // Check if a department filter is selected
+            var fDeptActive = (sD != null && sD !== '');
+            // Check if a request status filter is selected
+            var fReqStatusActive = (sS != null && sS !== '');
 
-		const aRT = "{{ Auth::user()->role_type }}";
-		if (aRT=='SUPER ADMIN' || aRT=='ADMIN') {
-		    var sD  = $('#filterDepartment').val();
-		    var sLT = $('#filterLeaveType').val();
-            var sLS = $('#filterLeaveStatus').val().toUpperCase();
-		    var cD  = data[2]; // Department Column
-            var cLT = data[4]; // Leave Type Column
-		    var cLS = data[9].toUpperCase(); // Leave Status Column
-		    
-		    // Check if a department filter is selected
-		    var departmentFilterActive = (sD != null && sD !== '');
+            // Apply filters
+            if (!fOfficeActive && !fDeptActive && !fReqStatusActive) {
+                return true; // No filters applied, show all rows
+            }
 
-		    // Check if a LeaveType filter is selected
-		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+            var officeMatch = !fOfficeActive || cO.includes(sO);
+            var deptMatch = !fDeptActive || cD.includes(sD);
+            var statusMatch = !fReqStatusActive || cS.includes(sS);
 
-            // Check if a LeaveType filter is selected
-            var leaveStatusFilterActive = (sLS != null && sLS !== '');
+            return officeMatch && deptMatch && statusMatch;
+        });
 
-		    // Apply both filters
-		    if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
-		        return true; // No filters applied, show all rows
-		    }
-		    var departmentMatch = !departmentFilterActive || cD.includes(sD);
-            var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
-		    var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
+        // Apply the search
+        $('#fOtOffice, #fOtDept, #fReqStatus').on('change', function () {
+            tableLeaves.draw();
+        });
 
-		    return departmentMatch && leaveTypeMatch && leaveStatusMatch;
-		} else {
-		    var sLT = $('#filterLeaveType').val();
-		    var cLT = data[2]; // LeaveType Column
-		    
-		    // Check if a LeaveType filter is selected
-		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+        /* START - Date From and Date To Searching */
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var searchDateFrom = $('#fOtDateFrom').val();
+            var searchDateTo = $('#fOtDateTo').val();
 
-		    // Apply both filters
-		    if (!leaveTypeFilterActive) {
-		        return true; // No filters applied, show all rows
-		    }
-		    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+            // Convert search date strings to Date objects
+            var dateFrom = new Date(searchDateFrom);
+            var dateTo = new Date(searchDateTo);
 
-		    return leaveTypeMatch;
-		}
-	    
-	});
+            // Set the time to the start and end of the selected days
+            dateFrom.setHours(0, 0, 0, 0);
+            dateTo.setHours(23, 59, 59, 999);
 
+            // Get the time-in and time-out values from columns 3 and 4
+            var searchBeginDate = data[5];
+            var searchEndDate = data[6];
 
-    /* START - Date From and Date To Searching */
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var searchDateFrom = $('#dateFrom').val();
-        var searchDateTo = $('#dateTo').val();
+            // Convert time-in and time-out strings to Date objects (if applicable)
+            var timeIn = searchBeginDate ? new Date(searchBeginDate) : null;
+            var timeOut = searchEndDate ? new Date(searchEndDate) : null;
 
-        // Convert search date strings to Date objects
-        var dateFrom = new Date(searchDateFrom);
-        var dateTo = new Date(searchDateTo);
+            // Check if the row's time-in or time-out falls within the selected date range
+            if (
+                (!searchDateFrom || !searchDateTo) || // No date range selected
+                (!timeIn && !timeOut) || // No time values available
+                (timeIn >= dateFrom && timeIn <= dateTo) ||
+                (timeOut >= dateFrom && timeOut <= dateTo)
+            ) {
+                return true; // Row matches the search criteria
+            }
 
-        // Set the time to the start and end of the selected days
-        dateFrom.setHours(0, 0, 0, 0);
-        dateTo.setHours(23, 59, 59, 999);
+            return false; // Row does not match the search criteria
+        });
 
-        // Get the time-in and time-out values from columns 3 and 4
-        var searchTimeIn = data[5];
-        var searchTimeOut = data[6];
+        /* Triggers Date From Searching of Time-In/Time-Out */
+        $('#fOtDateFrom').on('keyup change', function() {
+            if ($('#fOtDateTo').val()=='' || $('#fOtDateTo').val()==null) {
+                $('#fOtDateTo').val($(this).val());
+            } else {
+                var dateFrom = new Date($(this).val());
+                var dateTo = new Date($('#fOtDateTo').val());
+                if( dateTo < dateFrom ) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Date Range',
+                    }).then(function() {
+                        $(this).val('');
+                    });
+                }
+            }
+            tableLeaves.draw();
+        });
 
-        // Convert time-in and time-out strings to Date objects (if applicable)
-        var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
-        var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
-
-        // Check if the row's time-in or time-out falls within the selected date range
-        if (
-            (!searchDateFrom || !searchDateTo) || // No date range selected
-            (!timeIn && !timeOut) || // No time values available
-            (timeIn >= dateFrom && timeIn <= dateTo) ||
-            (timeOut >= dateFrom && timeOut <= dateTo)
-        ) {
-            return true; // Row matches the search criteria
-        }
-
-        return false; // Row does not match the search criteria
-    });
-
-
-    /* Triggers Date From Searching of Time-In/Time-Out */
-    $('#dateFrom').on('keyup change', function() {
-        if ($('#dateTo').val()=='' || $('#dateTo').val()==null) {
-            $('#dateTo').val($(this).val());
-        } else {
-            var dateFrom = new Date($(this).val());
-            var dateTo = new Date($('#dateTo').val());
+        /* Triggers Date To Searching of Time-In/Time-Out */
+        $('#fOtDateTo').on('keyup change', function() {
+            var dateFrom = new Date($('#fOtDateFrom').val());
+            var dateTo = new Date($(this).val());
             if( dateTo < dateFrom ) {
+                $(this).val($('#fOtDateFrom').val());
                 Swal.fire({
                     icon: 'error',
                     title: 'Invalid Date Range',
-                }).then(function() {
-                    $(this).val('');
                 });
             }
-        }
-        tableLeaves.draw();
-    });
+            tableLeaves.draw();
+        });
+        /* END - Date From and Date To Searching */
 
-    /* Triggers Date To Searching of Time-In/Time-Out */
-    $('#dateTo').on('keyup change', function() {
-        var dateFrom = new Date($('#dateFrom').val());
-        var dateTo = new Date($(this).val());
-        if( dateTo < dateFrom ) {
-            $(this).val($('#dateFrom').val());
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid Date Range',
-            });
-        }
-        tableLeaves.draw();
-    });
-    /* END - Date From and Date To Searching */
+    }
+});
 
 
-/* Filtering Departments - Gibs */
-$('#filterDepartment').on('keyup change', function() { 
-	tableLeaves.draw(); 
-});
-/* Filtering Leave Types - Gibs */
-$('#filterLeaveType').on('keyup change', function() { 
-	tableLeaves.draw(); 
-});
-/* Filtering Leave Statuses - Gibs */
-$('#filterLeaveStatus').on('keyup change', function() { 
-    tableLeaves.draw(); 
-});
 
 /* EXPORT TO EXCEL TIMELOGS */
     $('#exportExcelOvertimes').click(function() {

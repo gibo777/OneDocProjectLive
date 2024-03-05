@@ -8,7 +8,7 @@
             {{ __('PROCESSING E-LEAVE APPLICATION') }}
     </x-slot>
 
-    <div class="max-w-6xl mx-auto py-12 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto py-12 sm:px-6 lg:px-8">
         <div class="px-4 py-5 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
            
             <form id="process-leave" method="POST" action="{{ route('process.eleave') }}">

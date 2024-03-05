@@ -766,6 +766,7 @@ class ComposerStaticInit572b8e4c1b533777a25cb26db94ad342
         'App\\Http\\Requests\\UpdateCountriesRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateCountriesRequest.php',
         'App\\Http\\Requests\\UpdateOfficesRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateOfficesRequest.php',
         'App\\Mail\\SendMail' => __DIR__ . '/../..' . '/app/Mail/SendMail.php',
+        'App\\Models\\Clearances' => __DIR__ . '/../..' . '/app/Models/Clearances.php',
         'App\\Models\\Countries' => __DIR__ . '/../..' . '/app/Models/Countries.php',
         'App\\Models\\CrudEvents' => __DIR__ . '/../..' . '/app/Models/CrudEvents.php',
         'App\\Models\\Departments' => __DIR__ . '/../..' . '/app/Models/Departments.php',

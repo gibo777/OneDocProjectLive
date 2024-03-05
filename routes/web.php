@@ -14,8 +14,12 @@ use App\Http\Controllers\ProcessController;
 
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
+use App\Http\Controllers\ClearancesController;
+
 use App\Http\Controllers\OfficesController;
 use App\Http\Controllers\HRMemoController;
+
+
 
 use App\Http\Controllers\CountriesController;
 
@@ -23,7 +27,6 @@ use App\Http\Controllers\FullCalenderController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FileController;
-
 use App\Http\Controllers\PageController;
 
 use App\Http\Controllers\CKEditorController;
@@ -33,10 +36,7 @@ use App\Http\Controllers\PusherNotificationController;
 use App\Http\Controllers\WebcamController;
 use App\Http\Controllers\QRCodeController;
 
-
 use App\Http\Controllers\PersonalDataSheetController;
-
-
 use App\Http\Controllers\PersonnelAccountingDataController;
 
 /* CRON / SCHEDULER */
@@ -129,7 +129,6 @@ Route::post('/hris/approve-overtime', [OvertimesController::class, 'approveOvert
 
 
 /*======= REIMBURSEMENT =======*/
-
 Route::get('/reimbursement', [ReimbursementController::class, 'index'])->name('hris.reimbursement.reimbursement');
 Route::post('/reimbursement', [ReimbursementController::class, 'index'])->name('hris.reimbursement.reimbursement');
 
@@ -140,18 +139,20 @@ Route::get('/view-processing-leave', [ProcessController::class,'processLeaveCoun
 Route::post('/processing-leave', [ProcessController::class,'processingLeave']);
 
 
-/*======= HR MANAGMENT =======*/
+/*======= RECORDS MANAGEMENT =======*/
 /* EMPLOYEES */
 Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
 Route::get('/getemployees',[EmployeesController::class,'getEmployeeInfo']);
 Route::post('/updateemployees',[EmployeesController::class,'updateEmployee']);
-
 Route::get('/verify-duplicate',[EmployeesController::class,'verifyDuplicate'])->name('verify.duplicate');
-
 Route::get('/employee-benefits', [EmployeesController::class, 'employeeBenefits'])->name('employee-benefits');
 
 
+/* CLEARANCE */
+Route::get('/clearance-form', [ClearancesController::class, 'index'])->name('clearance.form');
 
+
+/* ======= SETUP ======*/
 
 /* HOLIDAYS */
 Route::get('/holidays', [HRManagementController::class, 'view_holidays'])->name('hr.management.holidays');

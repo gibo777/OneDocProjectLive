@@ -146,8 +146,8 @@
                                             <div class="form-floating" id="div_filterLeaveType">
                                                 <select name="filterLeaveStatus" id="filterLeaveStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
                                                     <option value="">All Leave Statuses</option>
-                                                    @foreach ($leave_statuses as $leave_status)
-                                                    <option>{{ $leave_status->leave_status }}</option>
+                                                    @foreach ($request_statuses as $request_status)
+                                                    <option>{{ $request_status->request_status }}</option>
                                                     @endforeach
                                                 </select>
                                                 <x-jet-label for="filterLeaveStatus" value="{{ __('LEAVE STATUS') }}" />

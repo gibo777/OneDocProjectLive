@@ -37,7 +37,7 @@ class NavigationMenu extends Component
         $timeCount = DB::table('time_logs')
         ->where('employee_id', Auth::user()->employee_id)
         ->whereNotNull('time_in')
-        ->whereDate('time_in', DB::raw('CURDATE()'))
+        // ->whereDate('time_in', DB::raw('CURDATE()'))
         ->orderBy('id','desc')->count();
 
         $timeLogs = DB::table('time_logs')

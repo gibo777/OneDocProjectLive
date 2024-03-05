@@ -79,6 +79,7 @@ return array(
     'App\\Http\\Requests\\UpdateCountriesRequest' => $baseDir . '/app/Http/Requests/UpdateCountriesRequest.php',
     'App\\Http\\Requests\\UpdateOfficesRequest' => $baseDir . '/app/Http/Requests/UpdateOfficesRequest.php',
     'App\\Mail\\SendMail' => $baseDir . '/app/Mail/SendMail.php',
+    'App\\Models\\Clearances' => $baseDir . '/app/Models/Clearances.php',
     'App\\Models\\Countries' => $baseDir . '/app/Models/Countries.php',
     'App\\Models\\CrudEvents' => $baseDir . '/app/Models/CrudEvents.php',
     'App\\Models\\Departments' => $baseDir . '/app/Models/Departments.php',

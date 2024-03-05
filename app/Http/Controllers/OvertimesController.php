@@ -156,9 +156,15 @@ class OvertimesController extends Controller
             $viewOTS = $viewOTS->orderBy('ot.ot_date_from','desc');
             $viewOTS = $viewOTS->get();
             // return var_dump($otUser);
+            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $departments = DB::table('departments')->orderBy('department')->get();
+            $request_statuses   = DB::table('request_statuses')->orderBy('request_status')->get();
 
             return view('hris.overtime.view-overtime',[
-                'viewOTS'=>$viewOTS, 
+                'viewOTS'           => $viewOTS, 
+                'offices'           => $offices,
+                'departments'       => $departments,
+                'request_statuses'  => $request_statuses 
               ]);
         } else {
             return redirect('/');
