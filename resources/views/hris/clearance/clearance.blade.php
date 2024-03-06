@@ -1,11 +1,32 @@
 <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
 
 <x-app-layout>
-<style type="text/css">
-    th,td {
-      text-transform: none !important;
+
+    <style type="text/css">
+        
+    /* Hide the "Show" text and adjust layout for DataTables elements */
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
     }
-</style>
+    /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 10px;
+        display: inline-block;
+    }
+    .dataTables_wrapper thead th {
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #tableItemClearance thead th {
+        text-align: center; /* Center-align the header text */
+        padding: 0;
+    }
+
+    </style>
 
     <x-slot name="header">
             {{ __('EMPLOYEE CLEARANCE FORM') }}
@@ -92,58 +113,27 @@
                     <div class="col-md-4 pt-1"></div>
                 </div>
 
-                {{-- <div class="row">
-                    <div class="col-md-4 mt-2 py-0 px-1">
-                        <div class="form-floating">
-                            <x-jet-input id="otLocation" type="text" name="otLocation" class="form-control" />
-                            <label for="otLocation" class="font-weight-bold w-full">
-                                OT LOCATION (Actual Location) <span class="text-danger"> *</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mt-2 align-center inset-shadow px-3">
-                        <div class="row">
-                            <div class="col-md-6 p-0">
-                                <div class="form-floating text-center">
-                                    <x-jet-input id="otDateFrom" name="otDateFrom" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                                    <label for="otDateFrom" class="font-weight-bold text-secondary">
-                                        OT Begin Date<span class="text-danger"> *</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 p-0">
-                                <div class="form-floating text-center">
-                                    <x-jet-input id="otTimeFrom" name="otTimeFrom" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                                    <label for="otDateFrom" class="font-weight-bold text-secondary">
-                                        OT Begin Time<span class="text-danger"> *</span>
-                                    </label>
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col-md-12 mt-2 py-0 px-1">
 
-                        </div>
-                    </div>
-                    <div class="col-md-4 mt-2 align-center inset-shadow px-3">
-                        <div class="row">
-                            <div class="col-md-6 p-0">
-                                <div class="form-floating text-center">
-                                    <x-jet-input id="otDateTo" name="otDateTo" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                                    <label for="otDateTo" class="font-weight-bold text-secondary">
-                                        OT End Date<span class="text-danger"> *</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 p-0">
-                                <div class="form-floating text-center">
-                                    <x-jet-input id="otTimeTo" name="otTimeTo" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
-                                    <label for="otDateTo" class="font-weight-bold text-secondary">
-                                        OT End Time<span class="text-danger"> *</span>
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
+                            <table id="tableItemClearance" class="table table-bordered table-striped sm:justify-center table-hover">
+                                <thead>
+                                    <tr class="">
+                                        <th>Department</th>
+                                        <th>Returned</th>
+                                        <th>Confirmation Signature</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
 
+                                <tbody class="data hover" id="itemClearance">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div> --}}
+                    
+                </div>
 
                 {{-- <div class="row">
                     <div class="col-md-6 form-floating text-center w-full p-0 mt-2">
