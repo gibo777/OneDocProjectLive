@@ -24,7 +24,7 @@ Application verification and approval.</p>
 <tbody class="h7">
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Last Name, First Name, Middle Name, Ext. (Extension), Uploaded Photo, Birthdate, Birth Place
 </td>
 <td>Personal</td>
@@ -32,7 +32,7 @@ Last Name, First Name, Middle Name, Ext. (Extension), Uploaded Photo, Birthdate,
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Employee ID Number
 </td>
 <td>Personal</td>
@@ -40,7 +40,7 @@ Employee ID Number
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Department
 </td>
 <td>Personal</td>
@@ -48,7 +48,7 @@ Department
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Position
 </td>
 <td>Personal</td>
@@ -56,7 +56,7 @@ Position
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Country, Province, City/Municipality, Barangay, House No./Street, Zip Code
 </td>
 <td>Personal</td>
@@ -64,7 +64,7 @@ Country, Province, City/Municipality, Barangay, House No./Street, Zip Code
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Email
 </td>
 <td>Personal</td>
@@ -72,7 +72,7 @@ Email
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Contact Number, Mobile Number
 </td>
 <td>Personal</td>
@@ -80,7 +80,7 @@ Contact Number, Mobile Number
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Sex
 </td>
 <td>Personal</td>
@@ -88,7 +88,7 @@ Sex
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Civil Status
 </td>
 <td>Personal</td>
@@ -96,7 +96,7 @@ Civil Status
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Nationality
 </td>
 <td>Personal</td>
@@ -104,7 +104,7 @@ Nationality
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Employment Status, Date Started
 </td>
 <td>Personal</td>
@@ -112,7 +112,7 @@ Employment Status, Date Started
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Leaves: Vacation Leaves, Sick Leaves, Maternity Leaves, Paternity Leaves, Emergency Leaves, Other Leaves
 </td>
 <td>Accounting</td>
@@ -120,7 +120,7 @@ Leaves: Vacation Leaves, Sick Leaves, Maternity Leaves, Paternity Leaves, Emerge
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 SSS Number, PHIC Number, Pag-Ibig Number, TIN Number
 </td>
 <td>Accounting</td>
@@ -128,7 +128,7 @@ SSS Number, PHIC Number, Pag-Ibig Number, TIN Number
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 List of Dependent(s)
 </td>
 <td>Accounting</td>
@@ -136,7 +136,7 @@ List of Dependent(s)
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Health Card Number
 </td>
 <td>Accounting</td>
@@ -144,7 +144,7 @@ Health Card Number
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Driver’s License
 </td>
 <td>Accounting</td>
@@ -152,7 +152,7 @@ Driver’s License
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 Passport Number, Expiration Date
 </td>
 <td>Accounting</td>
@@ -160,7 +160,7 @@ Passport Number, Expiration Date
 </tr>
 
 <tr>
-<td>
+<td class="text-left pl-2">
 PRC Number
 </td>
 <td>Accounting</td>

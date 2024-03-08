@@ -396,8 +396,6 @@ $(document).ready(function(){
     }
 
     function leaveBalance () {
-        // alert($("#employeeNumber").val());
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -417,21 +415,19 @@ $(document).ready(function(){
     }
 
     function submitLeaveValidation (leaveType='',others_leave='', leaveDateFrom='', leaveDateTo='',reason='') {
+        var empty_fields = 0;
 
-        var empty_fields=0;
-        if (leaveType=="Others") {
-            if ($.trim(others_leave)=="") {
-                empty_fields++;
-            }
+        if (leaveType == "Others" && $.trim(others_leave) == "") {
+            empty_fields++;
         }
-        if (leaveType=="") { empty_fields++; }
-        if (leaveDateFrom=="") { empty_fields++; }
-        if (leaveDateTo=="") { empty_fields++; }
-        // if (notification==0) { empty_fields++; }
-        if ($.trim(reason)=="") { empty_fields++; }
 
-        if (empty_fields>0) {
-            $("#submitLeave").attr('disabled',true);
+        if (leaveType == "") { empty_fields++; }
+        if (leaveDateFrom == "") { empty_fields++; }
+        if (leaveDateTo == "") { empty_fields++; }
+        if ($.trim(reason) == "") { empty_fields++; }
+
+        if (empty_fields > 0) {
+            $("#submitLeave").attr('disabled', true);
         } else {
             $("#submitLeave").removeAttr('disabled');
         }
@@ -475,17 +471,17 @@ $(document).ready(function(){
             // alert('gilbert'); return false;
             $("#div_others").show();
             $("#div_others").removeAttr('hidden');
+            $("#others_leave").val('');
             $("#others_leave").removeAttr('hidden');
             $("#others_leave").focus();
+            $("#submitLeave").attr('disabled', true);
         } else {
             $("#div_others").hide();
         }
 
         leaveBalance(); // This will show current Leave Balance/s
 
-        if ($(this).val()=="SL" || $(this).val()=="EL" || $(this).val().toUpperCase()=="OTHERS") {
-            return true;
-        } else {
+        if ($(this).val()!="SL" || $(this).val()!="EL" || $(this).val().toUpperCase()=="OTHERS") {
             // alert(priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val())); return false;
             if (priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
                 $('#leaveDateFrom').val("");
@@ -583,7 +579,7 @@ $(document).ready(function(){
     $(document).on('keyup','#reason',function () {
         submitLeaveValidation (
             $("#leaveType").val(),
-            $("others_leave").val(),
+            $("#others_leave").val(),
             $("#leaveDateFrom").val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,

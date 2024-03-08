@@ -428,6 +428,7 @@ $(document).ready(function() {
 
     /* EXPORT TO EXCEL TIMELOGS */
     $('#exportExcel').click(function() {
+        // Swal.fire({ html: $('#fTLOffice').val() }); return false;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -443,34 +444,87 @@ $(document).ready(function() {
                 'timeIn'    : $('#fTLdtFrom').val(),
                 'timeOut'   : $('#fTLdtTo').val()
             },
-            success: function(html) {
-                // Create a temporary div to hold the table HTML
-                var tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
+            success: function(response) {
 
-                // Get the value of hidCurrentDate
-                var currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
+                // Extracting data from the SQL response JSON
+                const { tlSummary, tlDetailed, currentDate } = response;
+                var currentDateValue = currentDate;
 
-                // Extract data from the table
-                var data = [];
-                var headers = [];
-                var rows = tempDiv.querySelectorAll('tbody tr');
-                
-                // Extract headers
-                tempDiv.querySelectorAll('thead th').forEach(function(th) {
-                    headers.push(th.textContent.trim());
-                });
-                
-                // Push headers as the first row of data
-                data.push(headers);
-                
-                // Extract table data
-                rows.forEach(function(row) {
-                    var rowData = [];
-                    row.querySelectorAll('td').forEach(function(cell) {
-                        rowData.push(cell.textContent.trim());
+                /* Columns for Summary Timelogs */
+                var columnMappings1 = {
+                    'department': 'Department',
+                    'full_name': 'Name',
+                    'biometrics_id': 'Staff Code',
+                    'tdate': 'Date',
+                    'tweeks': 'Week',
+                    'time_in': 'Time1',
+                    'time_out': 'Time2'
+                };
+
+                // Define the columns you want to include in the Excel XML content
+                var selectedColumns1 = [
+                    'department',
+                    'full_name',
+                    'biometrics_id',
+                    'tdate',
+                    'tweeks',
+                    'time_in',
+                    'time_out'
+                ];
+
+
+                /* Columns for Detailed Timelogs */
+                var columnMappings2 = {
+                    'full_name': 'Name',
+                    'biometrics_id': 'Staff Code',
+                    'employee_id': 'Employee ID',
+                    'tdate': 'Date',
+                    'tweeks': 'Week',
+                    'time_in': 'Time-In',
+                    'time_out': 'Time-Out',
+                    'head_name': 'Supervisor',
+                    'office': 'Office',
+                    'department': 'Department'
+                };
+
+                // Define the columns you want to include in the Excel XML content
+                var selectedColumns2 = [
+                    'full_name',
+                    'biometrics_id',
+                    'employee_id',
+                    'tdate',
+                    'tweeks',
+                    'time_in',
+                    'time_out',
+                    'head_name',
+                    'office',
+                    'department',
+                ];
+
+                // Extract data for Excel XML content
+                var data1 = [];
+                var data2 = [];
+
+                // Push headers as the first row of data for Timelogs Summary
+                data1.push(selectedColumns1.map(column => columnMappings1[column]));
+                // Extract table data for Timelogs Summary
+                tlSummary.forEach(function (employee) {
+                    var rowData = selectedColumns1.map(column => {
+                        var value = employee[column];
+                        return (value !== null && value !== undefined) ? value : '';
                     });
-                    data.push(rowData);
+                    data1.push(rowData);
+                });
+
+                // Push headers as the first row of data for Detailed Timelogs
+                data2.push(selectedColumns2.map(column2 => columnMappings2[column2]));
+                // Extract table data for Detailed Timelogs
+                tlDetailed.forEach(function (employee2) {
+                    var rowData2 = selectedColumns2.map(column2 => {
+                        var value2 = employee2[column2];
+                        return (value2 !== null && value2 !== undefined) ? value2 : '';
+                    });
+                    data2.push(rowData2);
                 });
 
                 // Create Excel XML content
@@ -481,28 +535,61 @@ $(document).ready(function() {
                 xmlContent += ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n';
                 xmlContent += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n';
                 xmlContent += ' xmlns:html="http://www.w3.org/TR/REC-html40">\n';
-                xmlContent += '<Worksheet ss:Name="Timelogs">\n';
-                xmlContent += '<Table>\n';
-                
-                // Add headers
-                xmlContent += '<Row>\n';
-                headers.forEach(function(header) {
-                    xmlContent += '<Cell><Data ss:Type="String">' + header + '</Data></Cell>\n';
-                });
 
+                //======= Sheet 1 - Timelogs Summary =======//
+                xmlContent += '<Worksheet ss:Name="Timelogs Summary">\n';
+                xmlContent += '<Table>\n';
+
+                // Add headers for Timelogs Summary
+                xmlContent += '<Row>\n';
+                selectedColumns1.forEach(function (column) {
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings1[column]}</Data></Cell>\n`;
+                });
                 xmlContent += '</Row>\n';
-                
-                // Add data rows
-                data.slice(1).forEach(function(row) {
+
+                // Add data rows for Timelogs Summary
+                data1.slice(1).forEach(function (row) {
                     xmlContent += '<Row>\n';
-                    row.forEach(function(cell) {
+                    row.forEach(function (cell) {
+                        cell = cell.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
                         xmlContent += '<Cell><Data ss:Type="String">' + cell + '</Data></Cell>\n';
                     });
                     xmlContent += '</Row>\n';
                 });
-                
+
                 xmlContent += '</Table>\n';
                 xmlContent += '</Worksheet>\n';
+
+                //======= Sheet 2 - Detailed Timelogs =======//
+                xmlContent += '<Worksheet ss:Name="Detailed Timelogs">\n';
+                xmlContent += '<Table>\n';
+                // Add headers for Detailed Timelogs
+                xmlContent += '<Row>\n';
+                selectedColumns2.forEach(function (column2) {
+                    xmlContent += '<Cell><Data ss:Type="String">' + columnMappings2[column2] + '</Data></Cell>\n';
+                });
+                xmlContent += '</Row>\n';
+
+
+                // Swal.fire({ html: data2 }); return false;
+                // Add data rows for Detailed Timelogs
+                data2.slice(1).forEach(function(row2) {
+                    xmlContent += '<Row>\n';
+                    row2.forEach(function(cell2) {
+                        cell2 = cell2.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
+                        xmlContent += '<Cell><Data ss:Type="String">' + cell2 + '</Data></Cell>\n';
+                    });
+                    xmlContent += '</Row>\n';
+                });
+                xmlContent += '</Table>\n';
+                xmlContent += '</Worksheet>\n';
+
                 xmlContent += '</Workbook>';
 
                 // Create a blob from the XML content
@@ -521,10 +608,13 @@ $(document).ready(function() {
                 // Clean up
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
+
+
             }
         });
         return false;
     });
+
 
 
 

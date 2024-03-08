@@ -62,7 +62,7 @@ class EmployeesController extends Controller
             $departments = DB::table('departments')->orderBy('department')->get();
             $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
             $holidays = DB::table('holidays')->orderBy('holiday')->get();
-            $employment_statuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
+            $empStatuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
@@ -86,7 +86,7 @@ class EmployeesController extends Controller
                     'offices'=>$offices,
                     'departments'=>$departments,
                     'leave_types'=>$leave_types, 
-                    'employment_statuses'=>$employment_statuses,
+                    'employment_statuses'=>$empStatuses,
                     'heads'=>$heads,
                     'roleTypeUsers'=>$roleTypeUsers
                 ]);
@@ -239,38 +239,40 @@ class EmployeesController extends Controller
         $employeeId = $data[0];
         $searchDate = $data[1];
 
-        $employees = DB::table('time_logs as t')
-            ->select(
-                'u.first_name',
-                'u.middle_name',
-                'u.last_name',
-                DB::raw("CONCAT(u.last_name, ', ', u.first_name, ' ', u.middle_name) as full_name"),
-                'u.suffix',
-                'u.employee_id',
-                'u.department as dept',
-                'd.department',
-                // 't.profile_photo_path',
-                't.image_path',
-                DB::raw("(CASE WHEN t.time_in IS NOT NULL THEN DATE_FORMAT(t.time_in, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_in"),
-                DB::raw("(CASE WHEN t.time_out IS NOT NULL THEN DATE_FORMAT(t.time_out, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_out"),
-                DB::raw("DATE_FORMAT(t.time_in, '%Y-%m-%d') as f_time_in"),
-                DB::raw("DATE_FORMAT(t.time_out, '%Y-%m-%d') as f_time_out"),
-                'u.supervisor',
-                DB::raw("(SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE employee_id = u.supervisor) as head_name")
-            )
-            ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
-            ->leftJoin('departments as d', 'u.department', '=', 'd.department_code')
-            ->where('t.employee_id', $employeeId)
-            ->where(function ($query) use ($searchDate) {
-                $query->whereBetween(DB::raw('DATE(t.time_in)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"])
-                    ->orWhereBetween(DB::raw('DATE(t.time_out)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"]);
-            })
-            ->where(function ($query) {
-                $query->where('u.is_deleted', 0)
-                    ->orWhereNull('u.is_deleted');
-            })
-            ->orderBy('t.created_at', 'desc')
-            ->get();
+        $employees = DB::select(DB::raw("CALL sp_timelogs_detailed('$employeeId','$searchDate')"));
+
+        // $employees = DB::table('time_logs as t')
+        //     ->select(
+        //         'u.first_name',
+        //         'u.middle_name',
+        //         'u.last_name',
+        //         DB::raw("CONCAT(u.last_name, ', ', u.first_name, ' ', u.middle_name) as full_name"),
+        //         'u.suffix',
+        //         'u.employee_id',
+        //         'u.department as dept',
+        //         'd.department',
+        //         // 't.profile_photo_path',
+        //         't.image_path',
+        //         DB::raw("(CASE WHEN t.time_in IS NOT NULL THEN DATE_FORMAT(t.time_in, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_in"),
+        //         DB::raw("(CASE WHEN t.time_out IS NOT NULL THEN DATE_FORMAT(t.time_out, '%Y-%m-%d %h:%i %p') ELSE '' END) as time_out"),
+        //         DB::raw("DATE_FORMAT(t.time_in, '%Y-%m-%d') as f_time_in"),
+        //         DB::raw("DATE_FORMAT(t.time_out, '%Y-%m-%d') as f_time_out"),
+        //         'u.supervisor',
+        //         DB::raw("(SELECT CONCAT(first_name, ' ', last_name) FROM users WHERE employee_id = u.supervisor) as head_name")
+        //     )
+        //     ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
+        //     ->leftJoin('departments as d', 'u.department', '=', 'd.department_code')
+        //     ->where('t.employee_id', $employeeId)
+        //     ->where(function ($query) use ($searchDate) {
+        //         $query->whereBetween(DB::raw('DATE(t.time_in)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"])
+        //             ->orWhereBetween(DB::raw('DATE(t.time_out)'), ["$searchDate 00:00:00", "$searchDate 23:59:59"]);
+        //     })
+        //     ->where(function ($query) {
+        //         $query->where('u.is_deleted', 0)
+        //             ->orWhereNull('u.is_deleted');
+        //     })
+        //     ->orderBy('t.created_at', 'desc')
+        //     ->get();
 
         return $employees;
     }
@@ -293,7 +295,7 @@ class EmployeesController extends Controller
             $formattedDateTime = $currentDate->format('YmdHis');
 
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
-                $employees = DB::select('CALL sp_generated_timelogs_summary(?, ?, ?, ?, ?)', [
+                $tlSummary = DB::select("CALL sp_generated_timelogs_summary(?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
                     $request->department,
@@ -302,22 +304,36 @@ class EmployeesController extends Controller
                     // date('Y-m-d', strtotime($request->timeIn)), // Format the date as 'Y-m-d'
                     // date('Y-m-d', strtotime($request->timeOut)) // Format the date as 'Y-m-d'
                 ]);
+
+                $tlDetailed = DB::select("CALL sp_generated_timelogs_detailed(?, ?, ?, ?, ?)", [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                ]);
+                
             } else {
-                $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+                $tlSummary = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
 
-            // return var_dump($employees);
 
-            $offices = DB::table('offices')->orderBy('company_name')->get();
-            $departments = DB::table('departments')->orderBy('department')->get();
+            return response()->json([
+                'tlSummary'=>$tlSummary, 
+                'tlDetailed'=>$tlDetailed, 
+                'currentDate'=>$formattedDateTime
+            ]);
 
-            return view('/reports/excel/timelogs-excel', 
-                [
-                    'employees'     => $employees, 
-                    'offices'       => $offices,
-                    'departments'   => $departments,
-                    'currentDate'   => $formattedDateTime
-                ]);
+            // $offices = DB::table('offices')->orderBy('company_name')->get();
+            // $departments = DB::table('departments')->orderBy('department')->get();
+
+            // return view('/reports/excel/timelogs-excel', 
+            //     [
+            //         'employees'     => $employees, 
+            //         'offices'       => $offices,
+            //         'departments'   => $departments,
+            //         'currentDate'   => $formattedDateTime
+            //     ]);
         } else {
             return redirect('/');
         }
@@ -365,11 +381,11 @@ class EmployeesController extends Controller
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();
 
-            $offices = DB::table('offices')->orderBy('company_name')->get();
+            $offices     = DB::table('offices')->orderBy('company_name')->get();
             $departments = DB::table('departments')->orderBy('department')->get();
             $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
-            $holidays = DB::table('holidays')->orderBy('holiday')->get();
-            $employment_statuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
+            $holidays    = DB::table('holidays')->orderBy('holiday')->get();
+            $empStatuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
@@ -393,7 +409,7 @@ class EmployeesController extends Controller
                     'offices'=>$offices,
                     'departments'=>$departments,
                     'leave_types'=>$leave_types, 
-                    'employment_statuses'=>$employment_statuses,
+                    'employment_statuses'=>$empStatuses,
                     'heads'=>$heads,
                     'roleTypeUsers'=>$roleTypeUsers
                 ]);
