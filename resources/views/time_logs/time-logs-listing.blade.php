@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-md-2 pt-2 text-center mt-1 ">
                                     {{-- @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58) --}}
-                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18)
+                                    @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
                                     <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                         <i class="fas fa-table"></i>
                                         <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
@@ -540,7 +540,7 @@ $(document).ready(function() {
                 xmlContent += '<Worksheet ss:Name="Timelogs Summary">\n';
                 xmlContent += '<Table>\n';
 
-                // Add headers for Timelogs Summary
+                //==== Add headers for Timelogs Summary ====//
                 xmlContent += '<Row>\n';
                 selectedColumns1.forEach(function (column) {
                     xmlContent += `<Cell><Data ss:Type="String">${columnMappings1[column]}</Data></Cell>\n`;
@@ -555,7 +555,7 @@ $(document).ready(function() {
                         .replace(/&/g, '&amp;')
                         .replace(/'/g, '&apos;')
                         .replace(/"/g, '&quot;');
-                        xmlContent += '<Cell><Data ss:Type="String">' + cell + '</Data></Cell>\n';
+                        xmlContent += `<Cell><Data ss:Type="String">${cell}</Data></Cell>\n`;
                     });
                     xmlContent += '</Row>\n';
                 });
@@ -569,7 +569,7 @@ $(document).ready(function() {
                 // Add headers for Detailed Timelogs
                 xmlContent += '<Row>\n';
                 selectedColumns2.forEach(function (column2) {
-                    xmlContent += '<Cell><Data ss:Type="String">' + columnMappings2[column2] + '</Data></Cell>\n';
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings2[column2]}</Data></Cell>\n`;
                 });
                 xmlContent += '</Row>\n';
 
@@ -583,7 +583,7 @@ $(document).ready(function() {
                         .replace(/&/g, '&amp;')
                         .replace(/'/g, '&apos;')
                         .replace(/"/g, '&quot;');
-                        xmlContent += '<Cell><Data ss:Type="String">' + cell2 + '</Data></Cell>\n';
+                        xmlContent += `<Cell><Data ss:Type="String">${cell2}</Data></Cell>\n`;
                     });
                     xmlContent += '</Row>\n';
                 });
