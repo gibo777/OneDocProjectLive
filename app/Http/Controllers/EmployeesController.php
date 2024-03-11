@@ -28,35 +28,41 @@ class EmployeesController extends Controller
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
-            $employees = DB::table('users as u');
-            $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
-            $employees = $employees->leftJoin('offices as o', 'u.office', '=', 'o.id');
-            $employees = $employees->select(
-                'u.id',
-                'u.first_name',
-                'u.middle_name',
-                'u.last_name',
-                'u.suffix',
-                'u.employee_id',
-                'u.department as dept',
-                'd.department',
-                'u.position',
-                'u.role_type',
-                'u.employment_status',
-                'u.supervisor',
-                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
-                'o.company_name',
-            );
-
+            $employees = DB::table('v_employees');
             if (Auth::user()->id != 1) {
-                $employees = $employees->where('u.id','!=',1);
+                $employees = $employees->where('id','!=',1);
             }
-            $employees = $employees->where( function($query) {
-                return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
-                });
-            $employees = $employees->orderBy('u.last_name');
-            $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();
+
+            // $employees = DB::table('users as u');
+            // $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
+            // $employees = $employees->leftJoin('offices as o', 'u.office', '=', 'o.id');
+            // $employees = $employees->select(
+            //     'u.id',
+            //     'u.first_name',
+            //     'u.middle_name',
+            //     'u.last_name',
+            //     'u.suffix',
+            //     'u.employee_id',
+            //     'u.department as dept',
+            //     'd.department',
+            //     'u.position',
+            //     'u.role_type',
+            //     'u.employment_status',
+            //     'u.supervisor',
+            //     DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+            //     'o.company_name',
+            // );
+
+            // if (Auth::user()->id != 1) {
+            //     $employees = $employees->where('u.id','!=',1);
+            // }
+            // $employees = $employees->where( function($query) {
+            //     return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
+            //     });
+            // $employees = $employees->orderBy('u.last_name');
+            // $employees = $employees->orderBy('u.first_name');
+            // $employees = $employees->get();
 
             $offices = DB::table('offices')->orderBy('company_name')->get();
             $departments = DB::table('departments')->orderBy('department')->get();
@@ -108,10 +114,7 @@ class EmployeesController extends Controller
             ->first();
         $getLeaves = DB::table('leave_balances')->where('ref_id',$empid)->first();
 
-        // return var_dump($getLeaves);
-
         return response()->json(['getemployee'=>$getemployee,'getLeaves' => $getLeaves]);
-        // return var_dump(response()->json($getemployee));
     }
 
     
