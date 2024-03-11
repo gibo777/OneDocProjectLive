@@ -28,60 +28,60 @@ class ViewLeavesController extends Controller
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
-            // $leaves = DB::table('v_leaves');
-            // if (Auth::user()->id != 1 && Auth::user()->department != '1D-HR') {
-            //     if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN') {
-            //         $leaves = $leaves->where('supervisor', '=', $employee_id)
-            //             ->orWhere('employee_id', '=', $employee_id);
-            //     } else {
-            //         $leaves = $leaves->where('employee_id', '=', $employee_id);
-            //     }
-            // }
-            // $leaves = $leaves->get();
-
-
-	        $leaves = DB::table('leaves as L');
-            $leaves = $leaves->leftJoin('offices as o', 'L.office', '=', 'o.id');
-	        $leaves = $leaves->leftJoin('departments as d', 'L.department', '=', 'd.department_code');
-	        $leaves = $leaves->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id');
-            $leaves = $leaves->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id');
-	        $leaves = $leaves->select(
-                'L.id',
-	        	'L.leave_number',
-                'L.control_number',
-                'L.name',
-	        	'L.employee_id',
-	        	'L.leave_type',
-	        	'L.date_applied',
-	        	'L.date_from', 'L.date_to',
-	        	'L.no_of_days', 
-                'o.company_name',
-                'd.department',
-	        	'd.department_code as dept',
-	        	'u.supervisor',
-                'L.created_at',
-	        	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
-                DB::raw('L.leave_status as status')
-            );
-	        
-            if(Auth::user()->id!=1 && Auth::user()->department!='1D-HR') {
-                if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
-                    $leaves = $leaves->where('u.supervisor','=', $employee_id);
-                    $leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
-                } else { 
-                    $leaves = $leaves->where('L.employee_id','=', $employee_id);
+            $leaves = DB::table('v_leaves');
+            if (Auth::user()->id != 1 && Auth::user()->department != '1D-HR') {
+                if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN') {
+                    $leaves = $leaves->where('supervisor', '=', $employee_id)
+                        ->orWhere('employee_id', '=', $employee_id);
+                } else {
+                    $leaves = $leaves->where('employee_id', '=', $employee_id);
                 }
             }
-	        $leaves = $leaves->where( function($query) {
-	        	return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
-	        	});
-            $leaves = $leaves->orderBy('L.created_at','desc');            
-            // $leaves = $leaves->orderBy('L.name');            
-	        // $leaves = $leaves->orderBy('L.id');
-            // $leaves = $leaves->paginate(5);
-	        $leaves = $leaves->get();
+            $leaves = $leaves->get();
 
-         //    // $leaves = DB::select('CALL sp_viewleaves()');
+
+	        // $leaves = DB::table('leaves as L');
+         //    $leaves = $leaves->leftJoin('offices as o', 'L.office', '=', 'o.id');
+	        // $leaves = $leaves->leftJoin('departments as d', 'L.department', '=', 'd.department_code');
+	        // $leaves = $leaves->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id');
+         //    $leaves = $leaves->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id');
+	        // $leaves = $leaves->select(
+         //        'L.id',
+	        // 	'L.leave_number',
+         //        'L.control_number',
+         //        'L.name',
+	        // 	'L.employee_id',
+	        // 	'L.leave_type',
+	        // 	'L.date_applied',
+	        // 	'L.date_from', 'L.date_to',
+	        // 	'L.no_of_days', 
+         //        'o.company_name',
+         //        'd.department',
+	        // 	'd.department_code as dept',
+	        // 	'u.supervisor',
+         //        'L.created_at',
+	        // 	DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+         //        DB::raw('L.leave_status as status')
+         //    );
+	        
+         //    if(Auth::user()->id!=1 && Auth::user()->department!='1D-HR') {
+         //        if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN'){
+         //            $leaves = $leaves->where('u.supervisor','=', $employee_id);
+         //            $leaves = $leaves->orWhere('L.employee_id','=', $employee_id);
+         //        } else { 
+         //            $leaves = $leaves->where('L.employee_id','=', $employee_id);
+         //        }
+         //    }
+	        // $leaves = $leaves->where( function($query) {
+	        // 	return $query->where ('L.is_deleted','=', '0')->orWhereNull('L.is_deleted');
+	        // 	});
+         //    $leaves = $leaves->orderBy('L.created_at','desc');            
+         //    // $leaves = $leaves->orderBy('L.name');            
+	        // // $leaves = $leaves->orderBy('L.id');
+         //    // $leaves = $leaves->paginate(5);
+	        // $leaves = $leaves->get();
+
+            // $leaves = DB::select('CALL sp_viewleaves()');
 
             $departments        = DB::table('departments')->orderBy('department')->get();
             $leave_types        = DB::table('leave_types')->orderBy('leave_type_name')->get();
