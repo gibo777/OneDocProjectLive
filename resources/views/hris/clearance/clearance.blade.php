@@ -32,7 +32,7 @@
             {{ __('EMPLOYEE CLEARANCE FORM') }}
     </x-slot>
     <div>
-        <div class="max-w-6xl mx-auto mt-2">
+        <div class="max-w-8xl mx-auto mt-2">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -45,12 +45,23 @@
 
             <div class="px-5 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="row text-justify pt-2">
-                    {{-- <p class="text-center">CLEARANCE FORM</p> --}}
-                    <h6>
-                        The Employee Clearance process has been developed to assist departments in maintaining their 
-                        records and to confirm that <b>{{ config('app.company') }}'s</b> property has been returned by employees who are leaving their employment due to resignation and/or retirement. On your last day of work, you must complete and deliver this Employee Clearance Form to <b>{{ config('app.company') }}'s</b> Human Resources Department.
-                    </h6>
-                </div>
+                    <div class="col-md-3">
+                        <h6>
+                            The Employee Clearance process has been developed to assist departments in maintaining their 
+                            records and to confirm that <b>{{ config('app.company') }}'s</b> property has been returned by employees who are leaving their employment due to resignation and/or retirement. On your last day of work, you must complete and deliver this Employee Clearance Form to <b>{{ config('app.company') }}'s</b> Human Resources Department.
+                        </h6>
+
+                        <ul class="pl-1 h6">
+                            <li class="font-weight-bold">
+                                Manager or Supervisor, please confirm:
+                            </li>
+                            <li>- requested return of all department property</li>
+                            <li>- personal computer files have been removed</li>
+                            <li>- completion of all assigned duties and responsibilities</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-9">
+
                 <div class="row inset-shadow rounded">
                     <div class="col-md-4 pt-1">
                         <x-jet-label for="cfName" value="{{ __('Employee Name') }}" class="w-full" />
@@ -98,7 +109,7 @@
                     </div>
                 </div>
 
-                <div class="row mt-1">
+                {{-- <div class="row mt-1">
                     <div class="col-md-2 pt-1"></div>
                     <div class="col-md-5 pt-1">
                         <ul>
@@ -111,7 +122,7 @@
                         </ul>
                     </div>
                     <div class="col-md-4 pt-1"></div>
-                </div>
+                </div> --}}
 
                 <div class="row">
                     <div class="col-md-12 mt-2 py-0 px-1">
@@ -161,6 +172,8 @@
                 </div> --}}
 
 
+                    </div>
+                </div>
                 <div class="row">
                     <div class="flex items-center justify-center px-4 py-3 sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
                         <x-jet-button id="submitOvertime" name="submitOvertime" disabled>

@@ -198,27 +198,28 @@
                      });
                  },
                  eventClick: function (event) {
-                         $.ajax({
-                             type: "POST",
-                             url: SITEURL + '/fullcalenderAjax',
-                             data: {
-                                     id: event.id,
-                                     type: 'view'
-                             },
-                             success: function (response) {
-                                // prompt('',JSON.stringify(response));
-                                $("#calendarLabel").html(('Control #'+ response['control_number']).toUpperCase());
-                                $("#calendar_name").html(response['name']);
-                                $("#calendar_employee_id").html(response['employee_id']);
-                                $("#calendar_leave_type").html(response['leave_type']);
-                                $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
-                                $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
-                                $("#no_of_days").html(response['no_of_days']),
-                                $("#leave_status").html(response['leave_status']),
-                                $("#modalCalendar").modal('show');
+                        if (event.color === 'red') { return false; }
+                        $.ajax({
+                            type: "POST",
+                            url: SITEURL + '/fullcalenderAjax',
+                            data: {
+                                 id: event.id,
+                                 type: 'view'
+                            },
+                            success: function (response) {
+                            // prompt('',JSON.stringify(response));
+                            $("#calendarLabel").html(('Control #'+ response['control_number']).toUpperCase());
+                            $("#calendar_name").html(response['name']);
+                            $("#calendar_employee_id").html(response['employee_id']);
+                            $("#calendar_leave_type").html(response['leave_type']);
+                            $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
+                            $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
+                            $("#no_of_days").html(response['no_of_days']),
+                            $("#leave_status").html(response['leave_status']),
+                            $("#modalCalendar").modal('show');
 
-                             }
-                         });
+                            }
+                        });
                  }
 
              });

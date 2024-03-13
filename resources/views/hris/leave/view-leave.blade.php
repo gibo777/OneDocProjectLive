@@ -489,9 +489,9 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header banner-blue">
-        <h4 class="modal-title text-white" id="myModalLabel"></h4>
-        <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+      <div class="modal-header banner-blue py-2">
+        <h4 class="modal-title text-white fs-5" id="myModalLabel"></h4>
+        <button type="button" class="close fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
       <div class="modal-body">
 
@@ -758,13 +758,7 @@
 
 
 
-{{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
-<script>
- function printreport(){
-    $("#printtable").printThis();
-    // $("#printVisitModal").modal('show');
-    // console.log("PRINT FUNCTION FUNCTIONAL");
-}
+<script type="text/javascript">
 
 $(document).ready( function () {
     
@@ -776,92 +770,87 @@ $(document).ready( function () {
         "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
       });
 
-function formatDates(date) {
-    var d = new Date(date),
-    month = d.getMonth()+1,
-    day = d.getDate();
-
-    var new_date =
-    (month<10 ? '0' : '') + month + '/' +
-    (day<10 ? '0' : '') + day
-    + '/' + d.getFullYear()
-    ;
-    var hours = d.getHours();
-    var minutes = d.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    new_date = new_date+" "+strTime;
-    return new_date;
-}
-
-
-
-function currentDate() {
-    var d = new Date(),
+    function formatDates(date) {
+        var d = new Date(date),
         month = d.getMonth()+1,
         day = d.getDate();
 
-    var current_date =
+        var new_date =
         (month<10 ? '0' : '') + month + '/' +
         (day<10 ? '0' : '') + day
         + '/' + d.getFullYear()
         ;
-    return current_date;
-}
+        var hours = d.getHours();
+        var minutes = d.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        new_date = new_date+" "+strTime;
+        return new_date;
+    }
 
 
-	$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-		const aRT = "{{ Auth::user()->role_type }}";
-		if (aRT=='SUPER ADMIN' || aRT=='ADMIN') {
-		    var sD  = $('#filterDepartment').val();
-		    var sLT = $('#filterLeaveType').val();
-            var sLS = $('#filterLeaveStatus').val().toUpperCase();
-		    var cD  = data[2]; // Department Column
-            var cLT = data[4]; // Leave Type Column
-		    var cLS = data[9].toUpperCase(); // Leave Status Column
-		    
-		    // Check if a department filter is selected
-		    var departmentFilterActive = (sD != null && sD !== '');
+    function currentDate() {
+        var d = new Date(),
+            month = d.getMonth()+1,
+            day = d.getDate();
 
-		    // Check if a LeaveType filter is selected
-		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+        var current_date =
+            (month<10 ? '0' : '') + month + '/' +
+            (day<10 ? '0' : '') + day
+            + '/' + d.getFullYear()
+            ;
+        return current_date;
+    }
 
-            // Check if a LeaveType filter is selected
-            var leaveStatusFilterActive = (sLS != null && sLS !== '');
+    {{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
+     function printreport(){
+        $("#printtable").printThis();
+        // $("#printVisitModal").modal('show');
+        // console.log("PRINT FUNCTION FUNCTIONAL");
+    }
+    
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        const aRT = "{{ Auth::user()->role_type }}";
+        var sD = $('#filterDepartment').val();
+        var sLT = $('#filterLeaveType').val();
+        var sLS = $('#filterLeaveStatus').val().toUpperCase();
+        var cD = data[2]; // Department Column
+        var cLT = data[4]; // Leave Type Column
+        var cLS = data[9].toUpperCase(); // Leave Status Column
 
-		    // Apply both filters
-		    if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
-		        return true; // No filters applied, show all rows
-		    }
-		    var departmentMatch = !departmentFilterActive || cD.includes(sD);
+        // Check if a department filter is selected
+        var departmentFilterActive = (sD != null && sD !== '');
+
+        // Check if a LeaveType filter is selected
+        var leaveTypeFilterActive = (sLT != null && sLT !== '');
+
+        // Check if a LeaveStatus filter is selected
+        var leaveStatusFilterActive = (sLS != null && sLS !== '');
+
+        // Apply both filters
+        if (aRT == 'SUPER ADMIN' || aRT == 'ADMIN') {
+            if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
+                return true; // No filters applied, show all rows
+            }
+            var departmentMatch = !departmentFilterActive || cD.includes(sD);
             var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
-		    var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
+            var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
 
-		    return departmentMatch && leaveTypeMatch && leaveStatusMatch;
-		} else {
-		    var sLT = $('#filterLeaveType').val();
-		    var cLT = data[2]; // LeaveType Column
-		    
-		    // Check if a LeaveType filter is selected
-		    var leaveTypeFilterActive = (sLT != null && sLT !== '');
+            return departmentMatch && leaveTypeMatch && leaveStatusMatch;
+        } else {
+            if (!leaveTypeFilterActive) {
+                return true; // No filters applied, show all rows
+            }
+            var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
 
-		    // Apply both filters
-		    if (!leaveTypeFilterActive) {
-		        return true; // No filters applied, show all rows
-		    }
-		    var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+            return leaveTypeMatch;
+        }
+    });
 
-		    return leaveTypeMatch;
-		}
-	    
-	});
-
-
-    /* START - Date From and Date To Searching */
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         var searchDateFrom = $('#dateFrom').val();
         var searchDateTo = $('#dateTo').val();
@@ -883,17 +872,16 @@ function currentDate() {
         var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
 
         // Check if the row's time-in or time-out falls within the selected date range
-        if (
-            (!searchDateFrom || !searchDateTo) || // No date range selected
+        if ((!searchDateFrom || !searchDateTo) || // No date range selected
             (!timeIn && !timeOut) || // No time values available
             (timeIn >= dateFrom && timeIn <= dateTo) ||
-            (timeOut >= dateFrom && timeOut <= dateTo)
-        ) {
+            (timeOut >= dateFrom && timeOut <= dateTo)) {
             return true; // Row matches the search criteria
         }
 
         return false; // Row does not match the search criteria
     });
+
 
 
     /* Triggers Date From Searching of Time-In/Time-Out */
@@ -931,20 +919,20 @@ function currentDate() {
     /* END - Date From and Date To Searching */
 
 
-/* Filtering Departments - Gibs */
-$('#filterDepartment').on('keyup change', function() { 
-	tableLeaves.draw(); 
-});
-/* Filtering Leave Types - Gibs */
-$('#filterLeaveType').on('keyup change', function() { 
-	tableLeaves.draw(); 
-});
-/* Filtering Leave Statuses - Gibs */
-$('#filterLeaveStatus').on('keyup change', function() { 
-    tableLeaves.draw(); 
-});
+    /* Filtering Departments - Gibs */
+    $('#filterDepartment').on('keyup change', function() { 
+    	tableLeaves.draw(); 
+    });
+    /* Filtering Leave Types - Gibs */
+    $('#filterLeaveType').on('keyup change', function() { 
+    	tableLeaves.draw(); 
+    });
+    /* Filtering Leave Statuses - Gibs */
+    $('#filterLeaveStatus').on('keyup change', function() { 
+        tableLeaves.draw(); 
+    });
 
-/* EXPORT TO EXCEL TIMELOGS */
+    /* EXPORT TO EXCEL TIMELOGS */
     $('#exportExcelLeaves').click(function() {
         $.ajaxSetup({
             headers: {
@@ -982,173 +970,99 @@ $('#filterLeaveStatus').on('keyup change', function() {
 
     });
 
-/* Reroute to Leave Form */
-$(document).on('click','#createNewLeave', async function() {
-    window.location.href = "{{ route('hris.leave.eleave') }}";
-});
-
-/* Viewing Leave Details per Control Number - Gibs */
-$(document).on('dblclick','.view-leave',function(){
-    let leaveID = this.id;
-    $("#popup").show();
-    $("#confirm_reason").val('');
-    $('#dataLoad').css('display','flex');
-    $('#dataLoad').css('position','absolute');
-    $('#dataLoad').css('top','40%');
-    $('#dataLoad').css('left','40%');
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+    /* Reroute to Leave Form */
+    $(document).on('click','#createNewLeave', async function() {
+        window.location.href = "{{ route('hris.leave.eleave') }}";
     });
-    $.ajax({
-        url: window.location.origin+'/hris/view-leave-details',
-        method: 'GET',
-        data: { 'leaveID': leaveID }, // prefer use serialize method
-        success:function(data){
-            // alert(data[0]['is_head_approved']); return false;
-            $('#dataLoad').css('display','none');
-            var leave_number = data[0]['control_number'];
 
-            var modalHeader = "Control No. "+leave_number;
-            var dateFrom = data[0]['date_from'].split('-');
-                dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
-            var dateTo = data[0]['date_to'].split('-');
-                dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
-            var notif1 = "", notif2 = "", notif3 = "";
-            // var notification = data[0]['notification'].split('|');
-            (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
-            (data[0]['is_cancelled']==1 || data[0]['is_denied']==1 || data[0]['is_taken']==1 ) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
-            $("#update_leave").hide();
-            // $("#cancel_leave").hide();
-            $("#deny_leave").hide();
-            $("#approve_leave").hide();
-            $("#taken_leave").hide();
-            // $("#date_from").removeAttr('disabled');
-            // $("#date_to").removeAttr('disabled');
-            // $("#leave_type").removeAttr('disabled');
-            // $("#reason").removeAttr('disabled');
-            $("#div_others").attr('hidden',true);
-            // $("#others_leave").attr('hidden',true);
-            $("#others_leave").removeAttr('readonly');
-            /*$("input[name='leave_notification[]']").each( function() {
-                $(this).removeAttr("disabled");
-            });*/
+    /* Viewing Leave Details per Control Number - Gibs */
+    $(document).on('dblclick','.view-leave',function(){
+        let leaveID = this.id;
+        $("#popup").show();
+        $("#confirm_reason").val('');
+        $('#dataLoad').css('display','flex');
+        $('#dataLoad').css('position','absolute');
+        $('#dataLoad').css('top','40%');
+        $('#dataLoad').css('left','40%');
 
-
-            /*$("input[name='leave_notification[]']").each( function() {
-                $(this).prop("checked", false);
-                for (var i=0; i<notification.length; i++) {
-                    if (notification[i]==$(this).val()) {
-                        $(this).prop("checked", true);
-                    }
-                }
-            });*/
-            $("#hid_leave_id").val(data[0]['id']);
-            $("#myModalLabel").html(modalHeader);
-            $("#name").text(data[0]['name']);
-            $("#employee_number").text(data[0]['employee_id']);
-            $("#hid_dept").val(data[0]['department']);
-            $("#department").text(data[0]['dept']);
-            $("#date_applied").text(formatDates(data[0]['date_applied']));
-            
-            $("#leave_type").val(data[0]['leave_type']);
-            if (data[0]['leave_type']=="Others") {
-                $("#div_others").attr('hidden',false);
-                $("#others_leave").attr('hidden',false);
-                $("#others_leave").val(data[0]['others']);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-            $("#view_date_applied").val(data[0]['date_applied']);
-            $("#date_from").val(dateFrom);
-            $("#date_to").val(dateTo);
-            $("#hid_no_days").val(data[0]['no_of_days']);
-            $("#reason").val(data[0]['reason']);
-            $("#td_balance").html(data[0]['balance']);
+        });
+        $.ajax({
+            url: window.location.origin+'/hris/view-leave-details',
+            method: 'GET',
+            data: { 'leaveID': leaveID }, // prefer use serialize method
+            success:function(data){
+                $('#dataLoad').css('display','none');
+                var leave_number = data[0]['control_number'];
 
-            if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
-                if (data['auth_id']==data[0]['supervisor']) {
-                    // $("#date_from").attr('disabled', true);
-                    // $("#date_to").attr('disabled', true);
-                    // $("#leave_type").attr('disabled', true);
-                    // $("#reason").attr('disabled', true);
-                    // $("#others_leave").attr('readonly', true);
-                    /*$("input[name='leave_notification[]']").each( function() {
-                        $(this).attr("disabled", true);
-                    });*/
-                    if (data[0]['status']=="Pending") {
-                        $("#deny_leave").show();
-                        $("#approve_leave").show();
-                    } /*else {
-                        if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
-                            $("#cancel_leave").hide();
-                        } else {
-                            $("#cancel_leave").show();
-                        }
-                    }*/
-                } else {
-                    if (data['auth_id']==data[0]['employee_id']) {
+                var modalHeader = "Control No. "+leave_number;
+                var dateFrom = data[0]['date_from'].split('-');
+                    dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
+                var dateTo = data[0]['date_to'].split('-');
+                    dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
+                var notif1 = "", notif2 = "", notif3 = "";
+                (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
+                (data[0]['is_cancelled']==1 || data[0]['is_denied']==1 || data[0]['is_taken']==1 ) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
+                $("#update_leave").hide();
+                $("#deny_leave").hide();
+                $("#approve_leave").hide();
+                $("#taken_leave").hide();
+                $("#div_others").attr('hidden',true);
+                $("#others_leave").removeAttr('readonly');
+                $("#hid_leave_id").val(data[0]['id']);
+                $("#myModalLabel").html(modalHeader);
+                $("#name").text(data[0]['name']);
+                $("#employee_number").text(data[0]['employee_id']);
+                $("#hid_dept").val(data[0]['department']);
+                $("#department").text(data[0]['dept']);
+                $("#date_applied").text(formatDates(data[0]['date_applied']));
+                
+                $("#leave_type").val(data[0]['leave_type']);
+                if (data[0]['leave_type']=="Others") {
+                    $("#div_others").attr('hidden',false);
+                    $("#others_leave").attr('hidden',false);
+                    $("#others_leave").val(data[0]['others']);
+                }
+                $("#view_date_applied").val(data[0]['date_applied']);
+                $("#date_from").val(dateFrom);
+                $("#date_to").val(dateTo);
+                $("#hid_no_days").val(data[0]['no_of_days']);
+                $("#reason").val(data[0]['reason']);
+                $("#td_balance").html(data[0]['balance']);
+
+                if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
+                    if (data['auth_id']==data[0]['supervisor']) {
                         if (data[0]['status']=="Pending") {
-                            $("#update_leave").show();
-                        } else {
-                            // $("#date_from").attr('disabled', true);
-                            // $("#date_to").attr('disabled', true);
-                            // $("#leave_type").attr('disabled', true);
-                            // $("#reason").attr('disabled', true);
-                            // $("#others_leave").attr('readonly', true);
-                            /*$("input[name='leave_notification[]']").each( function() {
-                                $(this).attr("disabled", true);
-                            });*/
-                            /*if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
-                                $("#cancel_leave").hide();
-                            } else {
-                                $("#cancel_leave").show();
-                            }*/
+                            $("#deny_leave").show();
+                            $("#approve_leave").show();
                         }
                     } else {
-                        // $("#date_from").attr('disabled', true);
-                        // $("#date_to").attr('disabled', true);
-                        // $("#leave_type").attr('disabled', true);
-                        // $("#reason").attr('disabled', true);
-                        // $("#others_leave").attr('readonly', true);
-                        /*$("input[name='leave_notification[]']").each( function() {
-                            $(this).attr("disabled", true);
-                        });*/
-                        /*if (data['auth_department']==1) {
-                            if (data[0]['status']=="Head Approved") {
-                                $("#taken_leave").show();
-                            }
-                        }*/
+                        if (data['auth_id']==data[0]['employee_id']) {
+                            if (data[0]['status']=="Pending") {
+                                $("#update_leave").show();
+                            } 
+                        }
                     }
-                }
-            } else {
-                // alert(data[0]['status']); return false;
-                if (data[0]['status']=="Pending") {
-                    $("#update_leave").show();
                 } else {
-                    /*if (data[0]['status']=="Cancelled" || data[0]['status']=="Denied" || data[0]['is_taken']==1) {
-                        $("#cancel_leave").hide();
-                    } else {
-                        $("#cancel_leave").show();
-                    }*/
-                    // $("#date_from").attr('disabled', true);
-                    // $("#date_to").attr('disabled', true);
-                    // $("#leave_type").attr('disabled', true);
-                    // $("#reason").attr('disabled', true);
-                    // $("#others_leave").attr('readonly', true);
-                    /*$("input[name='leave_notification[]']").each( function() {
-                        $(this).attr("disabled", true);
-                    });*/
+                    // alert(data[0]['status']); return false;
+                    if (data[0]['status']=="Pending") {
+                        $("#update_leave").show();
+                    } 
                 }
+                /* OPEN MODAL View */
+                $("#myModal").modal("show");
             }
-            /* OPEN MODAL View */
-            $("#myModal").modal("show");
-        }
+        });
     });
 
-    });
-    
-});
+
+    document.getElementById("leave_form").onclick = function(){
+        var $leave_id = document.getElementById('hid_leave_id').value;
+        location.href = "/hris/view-leave/form-leave/"+$leave_id;
+    }
 
 
 
@@ -1170,10 +1084,10 @@ $(document).on('dblclick','.view-leave',function(){
             );*/
     });
 
+});
 
-document.getElementById("leave_form").onclick = function(){
-    var $leave_id = document.getElementById('hid_leave_id').value;
-    location.href = "/hris/view-leave/form-leave/"+$leave_id;
-}
+
+
+
 
 </script>

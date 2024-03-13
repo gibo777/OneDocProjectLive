@@ -251,7 +251,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header banner-blue py-2">
+      <div class="modal-header banner-blue py-1">
         <h5 class="modal-title text-white" id="myModalLabel"></h5>
         <button type="button" class="close fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
