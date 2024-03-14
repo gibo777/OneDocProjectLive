@@ -52,6 +52,22 @@ $(document).ready(function(){
         // return false;
     }
 
+    function overlapValidation (datefrom, dateto) {
+         return $.ajax({
+            url: window.location.origin + '/leave-overlapping',
+            method: 'get',
+            data: { 'dateFrom': datefrom, 'dateTo': dateto },
+            success: function(response) {
+                // Check if the response is 'true'
+                if (response === 'true') {
+                    return 1; // Overlap found
+                } else {
+                    return 0; // No overlap
+                }
+            }
+        });
+    }
+
     function leaveValidation (datefrom, dateto, leavetype="") {
         // alert("Date From: " + datefrom + "\n Date To: " + dateto + "\n Leave Type:" + leavetype);
         var div_upload = $("#div_upload");
@@ -317,122 +333,136 @@ $(document).ready(function(){
 
     /* SUBMIT LEAVE FORM begin*/
     $(document).on('click','#submitLeave',function (){
-        var empty_fields=0;
-        if ($("#leaveType").val()==""){
-            $("#leaveType").addClass('empty');
-            empty_fields++;
-        } else {
-            $("#leaveType").removeClass('empty');
-            if ($("#leaveType").val()=="Others") {
-                if ($.trim($("#others_leave").val())=="") {
-                    $("#others_leave").addClass('empty');
+
+        overlapValidation($("#leaveDateFrom").val(), $("#leaveDateTo").val())
+        .then(function(overlap) {
+            // Handle the response asynchronously
+            if (overlap==1 || overlap==true) {
+                Swal.fire({ icon: 'error', title: 'Overlapping Dates', text: 'Leave date/s already filed' });
+            } else {
+                var empty_fields=0;
+                if ($("#leaveType").val()==""){
+                    $("#leaveType").addClass('empty');
                     empty_fields++;
                 } else {
-                    $("#others_leave").removeClass('empty');
-                }
-            }
-        }
-
-        if ($("#leaveDateFrom").val()=="") {
-            $("#leaveDateFrom").addClass('empty');
-            empty_fields++;
-        } else {
-            $("#leaveDateFrom").removeClass('empty');
-        }
-
-        if ($("#leaveDateTo").val()=="") {
-            $("#leaveDateTo").addClass('empty');
-            empty_fields++;
-        } else {
-            $("#leaveDateTo").removeClass('empty');
-        }
-
-        if ($.trim($("#reason").val())=="") {
-            $("#reason").addClass('empty');
-            empty_fields++;
-        } else {
-            $("#reason").removeClass('empty');
-        }
-
-        /*Swal.fire({
-            title: empty_fields,
-        }); return false;*/
-        // alert(empty_fields); return false;
-
-        if (empty_fields>0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'NOTIFICATION',
-                text: 'Kindly fill-up all required fields',
-
-              });
-        } else {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: '/hris/eleave',
-                method: 'post',
-                data: $('#leave-form').serialize(), // prefer use serialize method
-                success:function(data){
-                    // prompt('', data); return false;
-                    console.log(data);
-                    const {isSuccess,message,newLeave} = data;
-
-                    if (isSuccess==true) {
-                        var notificationslev = [];
-                        $("input:checkbox[name='leave_notification[]']:checked").each(function(){
-                            notificationslev.push($(this).val());
-                        });
-
-                        Swal.fire({
-                            // width: '640px',
-                            scrollbarPadding: false,
-                            html: 
-                            `<div class="table-responsive">
-                                <table id="leaveSummary" class="table table-bordered data-table sm:justify-center table-hover">
-                                <thead class="thead">
-                                    <tr class='text-center'>
-                                        <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="data text-center" id="data">
-                                    <tr> <td class='text-right col-4'>Name:</td> <td>`           +newLeave.name+`</td> </tr>
-                                    <tr> <td class='text-right col-4'>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
-                                    <tr> <td class='text-right col-4'>Department:</td> <td>`     +newLeave.department+`</td> </tr>
-                                    <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
-                                    <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
-                                    <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
-                                    <tr> <td class='text-right'># of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
-                                    <tr> <td class='text-right'>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
-                                </tbody>
-                                </table>
-                            </div>
-                            `,
-                        }).then(function(){
-                            $('#PreviewModal').modal('hide');
-                                 Swal.fire(
-                                'LEAVE FORM successfully submitted!',
-                                '',
-                                'success'
-                              ).then(function(){
-                                window.location = window.location.origin+"/hris/view-leave";
-                              });
-                        });
-
-                    } else {
-                        Swal.fire({
-                            icon:'error',
-                            title:'Error',
-                            text:JSON.stringify(message)
-                        })
+                    $("#leaveType").removeClass('empty');
+                    if ($("#leaveType").val()=="Others") {
+                        if ($.trim($("#others_leave").val())=="") {
+                            $("#others_leave").addClass('empty');
+                            empty_fields++;
+                        } else {
+                            $("#others_leave").removeClass('empty');
+                        }
                     }
                 }
-            });
-        }
+
+                if ($("#leaveDateFrom").val()=="") {
+                    $("#leaveDateFrom").addClass('empty');
+                    empty_fields++;
+                } else {
+                    $("#leaveDateFrom").removeClass('empty');
+                }
+
+                if ($("#leaveDateTo").val()=="") {
+                    $("#leaveDateTo").addClass('empty');
+                    empty_fields++;
+                } else {
+                    $("#leaveDateTo").removeClass('empty');
+                }
+
+                if ($.trim($("#reason").val())=="") {
+                    $("#reason").addClass('empty');
+                    empty_fields++;
+                } else {
+                    $("#reason").removeClass('empty');
+                }
+
+                /*Swal.fire({
+                    title: empty_fields,
+                }); return false;*/
+                // alert(empty_fields); return false;
+
+                if (empty_fields>0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'NOTIFICATION',
+                        text: 'Kindly fill-up all required fields',
+
+                      });
+                } else {
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: '/hris/eleave',
+                        method: 'post',
+                        data: $('#leave-form').serialize(), // prefer use serialize method
+                        success:function(data){
+                            // prompt('', data); return false;
+                            console.log(data);
+                            const {isSuccess,message,newLeave} = data;
+
+                            if (isSuccess==true) {
+                                var notificationslev = [];
+                                $("input:checkbox[name='leave_notification[]']:checked").each(function(){
+                                    notificationslev.push($(this).val());
+                                });
+
+                                Swal.fire({
+                                    // width: '640px',
+                                    scrollbarPadding: false,
+                                    html: 
+                                    `<div class="table-responsive">
+                                        <table id="leaveSummary" class="table table-bordered data-table sm:justify-center table-hover">
+                                        <thead class="thead">
+                                            <tr class='text-center'>
+                                                <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="data text-center" id="data">
+                                            <tr> <td class='text-right col-4'>Name:</td> <td>`           +newLeave.name+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Department:</td> <td>`     +newLeave.department+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
+                                            <tr> <td class='text-right'># of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
+                                            <tr> <td class='text-right'>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    `,
+                                }).then(function(){
+                                    $('#PreviewModal').modal('hide');
+                                         Swal.fire(
+                                        'LEAVE FORM successfully submitted!',
+                                        '',
+                                        'success'
+                                      ).then(function(){
+                                        window.location = window.location.origin+"/hris/view-leave";
+                                      });
+                                });
+
+                            } else {
+                                Swal.fire({
+                                    icon:'error',
+                                    title:'Error',
+                                    text:JSON.stringify(message)
+                                })
+                            }
+                        }
+                    });
+                }
+            }
+        })
+        .catch(function(error) {
+            // Handle errors here
+            console.error(error);
+        });
+
         return false;
     });
     /* SUBMIT LEAVE FORM end*/

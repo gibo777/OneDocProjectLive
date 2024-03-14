@@ -93,6 +93,19 @@ class LeaveFormController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @return Boolean
+     */
+    public function overlapValidation (Request $request)
+    {
+        $isOverlap = DB::select('CALL sp_check_leave_overlap(?, ?, ?, @isOverlap)', [Auth::user()->employee_id, $request->dateFrom, $request->dateTo]);
+        $overlapResult = DB::select('SELECT @isOverlap as isOverlap');
+        return $overlapResult[0]->isOverlap;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function submit_leave(Request $request)

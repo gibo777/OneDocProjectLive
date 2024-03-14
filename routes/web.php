@@ -98,7 +98,7 @@ Route::get('/welcome', function () {
 /*======= E-LEAVE APPLICATION ======*/
 Route::get('/hris/eleave', [LeaveFormController::class, 'index'])->name('hris.leave.eleave');
 Route::post('/hris/eleave', [LeaveFormController::class, 'submit_leave']);
-
+Route::get('/leave-overlapping', [LeaveFormController::class, 'overlapValidation']);
 Route::get('/hris/eleave/balance', [LeaveFormController::class, 'show_balance'])->name('hris.leave.leave-balance');
 
 Route::get('/hris/view-leave', [ViewLeavesController::class, 'show_leave'])->name('hris.leave.view-leave');

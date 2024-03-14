@@ -389,19 +389,7 @@ $(document).ready(function(){
             };
 
             const [totalHours, hours, minutes] = calculateTimeDifference(otData.otDtFr, otData.otTFr, otData.otDtTo, otData.otTTo);
-
-            // const fromDate = new Date(otData.otDtFr+' '+otData.otTFr);
-            // const toDate = new Date(otData.otDtTo+' '+otData.otTTo);
-
-            // // Calculate the time difference in milliseconds
-            // var timeDifference = toDate - fromDate;
-
-            // // Convert milliseconds to hours and minutes
-            // var totalHours = timeDifference / (1000 * 60 * 60);
-            // var hours = Math.floor(totalHours);
-            // var minutes = Math.round((totalHours - hours) * 60);
-
-            // Swal.fire({ html: otData.otLoc }); return false;
+            
             Swal.fire({
                 scrollbarPadding: false,
                 showCancelButton: true,
