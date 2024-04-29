@@ -215,8 +215,42 @@ class OvertimesController extends Controller
         return response(['otDtls' => $otDtls]);
     }
 
+    public function viewOvertimeHistory (Request $request) {
+        if($request->ajax())
+         {
+
+            $leaves = DB::table('overtimes_history as o')
+            ->leftJoin('users as u', 'u.id', '=', 'o.ref_id')
+            ->leftJoin('departments as d', 'd.id', '=', 'o.department')
+            ->select(
+                'o.name', 
+                'o.ot_control_number',
+                'o.action', 
+                'o.action_reason',
+                DB::raw("DATE_FORMAT(o.created_at,'%m/%d/%Y %h:%i %p') as action_date"),
+                'o.head_name', 
+                DB::raw("DATE_FORMAT(o.date_applied,'%m/%d/%Y %h:%i %p') as date_applied"),
+                DB::raw("DATE_FORMAT(CONCAT(o.ot_date_from,' ',o.ot_time_from), '%m/%d/%Y %h:%i %p') as date_from"),
+                DB::raw("DATE_FORMAT(CONCAT(o.ot_date_to,' ',o.ot_time_to), '%m/%d/%Y %h:%i %p') as date_to"),
+                'o.ot_hours',
+                'o.ot_minutes',
+                'o.ot_hrmins'
+            )
+            ->where('o.ot_reference',$request->otRef)
+            ->orderBy('o.id')
+            ->get();
+
+            return $leaves;
+        }
+    }
+
     public function cancelOvertime (Request $request) {
         try {
+            $leave_id = $request->leaveID;
+            $action = "Cancelled";
+            $reason = $request->reason;
+            $currentDate = DB::raw('NOW()');
+            $message = "";
             $data = array(
                       'ot_status'         => 'cancelled',
                       'is_cancelled'      => 1,
@@ -231,6 +265,101 @@ class OvertimesController extends Controller
                     ->where('id',$request->otId)
                     ->update($data);
 
+            if ($update > 0) {
+                    $otData = DB::table('overtimes')
+                        ->select(
+                            'id',
+                            'ref_id',
+                            'name',
+                            'employee_id',
+                            'ot_control_number',
+                            'ot_location',
+                            'ot_reason',
+                            'date_applied',
+                            'ot_date_from',
+                            'ot_date_to',
+                            'ot_time_from',
+                            'ot_time_to',
+                            'ot_hours',
+                            'ot_minutes',
+                            'ot_hrmins',
+                            'ot_status',
+                            'office',
+                            'department',
+                            'head_id',
+                            'head_name',
+                            'is_head_approved',
+                            'head_approved_at',
+                            'head_approved_by',
+                            'is_cancelled',
+                            'cancelled_at',
+                            'cancelled_reason',
+                            'cancelled_by',
+                            'is_denied',
+                            'denied_at',
+                            'denied_reason',
+                            'denied_by',
+                            'rcdversion',
+                            'created_at',
+                            'updated_at',
+                            'created_by',
+                            'updated_by',
+                            DB::raw("'{$action}' as action"),
+                            DB::raw("'{$reason}' as action_reason")
+                        )->where('id','=',$request->otId);
+
+                    $otHistory = DB::table('overtimes_history')
+                    ->insertUsing([
+                        'ot_reference',
+                        'ref_id',
+                        'name',
+                        'employee_id',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_reason',
+                        'date_applied',
+                        'ot_date_from',
+                        'ot_date_to',
+                        'ot_time_from',
+                        'ot_time_to',
+                        'ot_hours',
+                        'ot_minutes',
+                        'ot_hrmins',
+                        'ot_status',
+                        'office',
+                        'department',
+                        'head_id',
+                        'head_name',
+                        'is_head_approved',
+                        'head_approved_at',
+                        'head_approved_by',
+                        'is_cancelled',
+                        'cancelled_at',
+                        'cancelled_reason',
+                        'cancelled_by',
+                        'is_denied',
+                        'denied_at',
+                        'denied_reason',
+                        'denied_by',
+                        'rcdversion',
+                        'created_at',
+                        'updated_at',
+                        'created_by',
+                        'updated_by',
+                        'action', 
+                        'action_reason'
+                    ],$otData);
+                    
+                    if ($otHistory>0) {
+                        $message = "Head Approval Successful!";
+                    } else {
+                        $message = "Failed Approval";
+                        DB::rollback();
+                    }
+                } else {
+                    DB::rollback();
+                }
+
             return response(['isSuccess'=>true,'message'=>'Request cancelled!']);
         } catch(Exception $e){
             return response(['isSuccess'=>false,'message'=>$e]);
@@ -239,12 +368,18 @@ class OvertimesController extends Controller
 
     public function denyOvertime (Request $request) {
         try {
+            $otId = $request->otId;
+            $action = "Denied";
+            $reason = $request->reason;
+            $currentDate = DB::raw('NOW()');
+            $message = "";
+
             $data = array(
                       'ot_status'     => 'denied',
                       'is_denied'     => 1,
                       'denied_at'     => DB::raw('NOW()'),
                       'denied_by'     => Auth::user()->employee_id,
-                      'denied_reason' => $request->reason,
+                      // 'denied_reason' => $request->reason,
                       'updated_at'    => DB::raw('NOW()'),
                       'updated_by'    => Auth::user()->employee_id
                   );
@@ -252,6 +387,101 @@ class OvertimesController extends Controller
             $update = DB::table('overtimes')
                     ->where('id',$request->otId)
                     ->update($data);
+
+            if ($update > 0) {
+                    $otData = DB::table('overtimes')
+                        ->select(
+                            'id',
+                            'ref_id',
+                            'name',
+                            'employee_id',
+                            'ot_control_number',
+                            'ot_location',
+                            'ot_reason',
+                            'date_applied',
+                            'ot_date_from',
+                            'ot_date_to',
+                            'ot_time_from',
+                            'ot_time_to',
+                            'ot_hours',
+                            'ot_minutes',
+                            'ot_hrmins',
+                            'ot_status',
+                            'office',
+                            'department',
+                            'head_id',
+                            'head_name',
+                            'is_head_approved',
+                            'head_approved_at',
+                            'head_approved_by',
+                            'is_cancelled',
+                            'cancelled_at',
+                            'cancelled_reason',
+                            'cancelled_by',
+                            'is_denied',
+                            'denied_at',
+                            'denied_reason',
+                            'denied_by',
+                            'rcdversion',
+                            'created_at',
+                            'updated_at',
+                            'created_by',
+                            'updated_by',
+                            DB::raw("'{$action}' as action"),
+                            DB::raw("'{$reason}' as action_reason")
+                        )->where('id','=',$request->otId);
+
+                    $otHistory = DB::table('overtimes_history')
+                    ->insertUsing([
+                        'ot_reference',
+                        'ref_id',
+                        'name',
+                        'employee_id',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_reason',
+                        'date_applied',
+                        'ot_date_from',
+                        'ot_date_to',
+                        'ot_time_from',
+                        'ot_time_to',
+                        'ot_hours',
+                        'ot_minutes',
+                        'ot_hrmins',
+                        'ot_status',
+                        'office',
+                        'department',
+                        'head_id',
+                        'head_name',
+                        'is_head_approved',
+                        'head_approved_at',
+                        'head_approved_by',
+                        'is_cancelled',
+                        'cancelled_at',
+                        'cancelled_reason',
+                        'cancelled_by',
+                        'is_denied',
+                        'denied_at',
+                        'denied_reason',
+                        'denied_by',
+                        'rcdversion',
+                        'created_at',
+                        'updated_at',
+                        'created_by',
+                        'updated_by',
+                        'action', 
+                        'action_reason'
+                    ],$otData);
+                    
+                    if ($otHistory>0) {
+                        $message = "Head Approval Successful!";
+                    } else {
+                        $message = "Failed Approval";
+                        DB::rollback();
+                    }
+                } else {
+                    DB::rollback();
+                }
 
             return response(['isSuccess'=>true,'message'=>'Request denied!']);
         } catch(Exception $e){
@@ -262,12 +492,18 @@ class OvertimesController extends Controller
     public function approveOvertime (Request $request) {
       // return $request->otId;
         try {
+            $otId = $request->otId;
+            $action = "Head Approved";
+            $reason = "N/A";
+            $currentDate = DB::raw('NOW()');
+            $message = "";
+
             $data = array(
                       'ot_status'         => 'head approved',
                       'is_head_approved'  => 1,
-                      'head_approved_at'  => DB::raw('NOW()'),
+                      'head_approved_at'  => $currentDate,
                       'head_approved_by'  => Auth::user()->employee_id,
-                      'updated_at'        => DB::raw('NOW()'),
+                      'updated_at'        => $currentDate,
                       'updated_by'        => Auth::user()->employee_id
                   );
 
@@ -275,7 +511,102 @@ class OvertimesController extends Controller
                     ->where('id',$request->otId)
                     ->update($data);
 
-            return response(['isSuccess'=>true,'message'=>'Request approved!']);
+                if ($update > 0) {
+                    $otData = DB::table('overtimes')
+                        ->select(
+                            'id',
+                            'ref_id',
+                            'name',
+                            'employee_id',
+                            'ot_control_number',
+                            'ot_location',
+                            'ot_reason',
+                            'date_applied',
+                            'ot_date_from',
+                            'ot_date_to',
+                            'ot_time_from',
+                            'ot_time_to',
+                            'ot_hours',
+                            'ot_minutes',
+                            'ot_hrmins',
+                            'ot_status',
+                            'office',
+                            'department',
+                            'head_id',
+                            'head_name',
+                            'is_head_approved',
+                            'head_approved_at',
+                            'head_approved_by',
+                            'is_cancelled',
+                            'cancelled_at',
+                            'cancelled_reason',
+                            'cancelled_by',
+                            'is_denied',
+                            'denied_at',
+                            'denied_reason',
+                            'denied_by',
+                            'rcdversion',
+                            'created_at',
+                            'updated_at',
+                            'created_by',
+                            'updated_by',
+                            DB::raw("'{$action}' as action"),
+                            DB::raw("'{$reason}' as action_reason")
+                        )->where('id','=',$request->otId);
+
+                    $otHistory = DB::table('overtimes_history')
+                    ->insertUsing([
+                        'ot_reference',
+                        'ref_id',
+                        'name',
+                        'employee_id',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_reason',
+                        'date_applied',
+                        'ot_date_from',
+                        'ot_date_to',
+                        'ot_time_from',
+                        'ot_time_to',
+                        'ot_hours',
+                        'ot_minutes',
+                        'ot_hrmins',
+                        'ot_status',
+                        'office',
+                        'department',
+                        'head_id',
+                        'head_name',
+                        'is_head_approved',
+                        'head_approved_at',
+                        'head_approved_by',
+                        'is_cancelled',
+                        'cancelled_at',
+                        'cancelled_reason',
+                        'cancelled_by',
+                        'is_denied',
+                        'denied_at',
+                        'denied_reason',
+                        'denied_by',
+                        'rcdversion',
+                        'created_at',
+                        'updated_at',
+                        'created_by',
+                        'updated_by',
+                        'action', 
+                        'action_reason'
+                    ],$otData);
+
+                    if ($otHistory>0) {
+                        $message = "Head Approval Successful!";
+                    } else {
+                        $message = "Failed Approval";
+                        DB::rollback();
+                    }
+                } else {
+                    DB::rollback();
+                }
+
+            return response(['isSuccess'=>true,'message'=>$message]);
         } catch(Exception $e){
             return response(['isSuccess'=>false,'message'=>$e]);
         }

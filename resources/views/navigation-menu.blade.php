@@ -61,7 +61,25 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
+                    <!-- Add more levels as needed -->
+                    <div class="relative" x-data="{ open: false }">
+                        <x-jet-nav-link @click="open = !open" aria-haspopup="true" :active="request()->routeIs('hris.leave.eleave.*')">
+                            {{ __('E-Forms') }}
+                        </x-jet-nav-link>
+
+                        <div x-show="open" @click.away="open = false" class="absolute z-10 left-0 mt-2 w-32 bg-white rounded-md shadow-lg">
+                            <!-- Second-level menu items -->
+                            <x-jet-nav-link href="{{ route('hris.leave.eleave') }}" :active="request()->routeIs('hris.leave.eleave')">
+                                {{ __('Leave Form') }}
+                            </x-jet-nav-link>
+                            <x-jet-nav-link href="{{ route('hris.leave.view-leave') }}" :active="request()->routeIs('hris.leave.view-leave')">
+                                {{ __('View Leaves') }}
+                            </x-jet-nav-link>
+                            <!-- Add more second-level menu items as needed -->
+                        </div>
+                    </div>
                 </div> --}}
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -179,55 +197,12 @@
                         <x-jet-responsive-nav-link href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">
                             {{ __('View Leaves') }}
                         </x-jet-responsive-nav-link>
-
-                        <!-- <x-jet-responsive-nav-link href="{{ route('calendar') }}"  id="nav_leaves_calendar">
-                            {{ __('Leaves Calendar') }}
-                        </x-jet-responsive-nav-link> -->
                     </div>
                     <div>
                         <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogslisting') }}"  id="nav_time_logs">
                             {{ __('TIME-LOGS') }}
                         </a>
                     </div>
-
-                    {{-- <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                        {{ __('PROCESS') }}
-                    </div>
-                    <div class="border-t border-gray-200" hidden>
-                        <x-jet-responsive-nav-link href="{{ route('process.eleave') }}">
-                                {{ __('Process e-Leave Applications') }}
-                        </x-jet-responsive-nav-link>
-                    </div> --}}
-
-                    <!-- <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                        {{ __('REPORTS') }}
-                    </div>
-                    <div class="border-t border-gray-200" hidden>
-                        <x-jet-responsive-nav-link href="#">
-                                {{ __('E-Leave Report') }}
-                        </x-jet-responsive-nav-link>
-                    </div> -->
-
-                    {{-- <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                        {{ __('HR MANAGAMENT') }}
-                    </div>
-                    <div class="border-t border-gray-200" hidden>
-                        <x-jet-responsive-nav-link href="{{ route('hr.management.employees') }}">
-                            {{ __('View Employees') }}
-                        </x-jet-responsive-nav-link>
-
-                        <x-jet-responsive-nav-link href="{{ route('hr.management.offices') }}">
-                            {{ __('Offices') }}
-                        </x-jet-responsive-nav-link>
-
-                        <x-jet-responsive-nav-link href="{{ route('hr.management.departments') }}">
-                            {{ __('Departments') }}
-                        </x-jet-responsive-nav-link>
-
-                        <x-jet-responsive-nav-link href="{{ route('hr.management.holidays') }}">
-                            {{ __('Holidays') }}
-                        </x-jet-responsive-nav-link>
-                    </div> --}}
 
                     <div class="mt-3 space-y-1"></div>
                 <hr block px-4 py-2 text-gray-400>
@@ -444,214 +419,36 @@
                         </div>
                     </div>
 
-                {{-- <div class="ml-3 mt-3 relative">
-                    <x-jet-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover">
-                                        {{ __('SET-UP') }}
-                                    </button>
-                                </span>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- E-LEAVE -->
-                            <x-jet-dropdown-link href="{{ route('register') }}">
-                                {{ __('User Registration') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.offices') }}">
-                                {{ __('Offices') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.departments') }}">
-                                {{ __('Departments') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.holidays') }}">
-                                {{ __('Holidays') }}
-                            </x-jet-dropdown-link>
-
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div> --}}
                 @endif
 
-                {{-- <div class="dropdown mt-3 mx-1">
-                    <button class="btn-outline-secondary inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      PROCESS
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                      <div class="dropdown dropend">
-                          <a class="dropdown-item" href="{{ route('process.eleave') }}" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Process e-Leave</a>
-                      </div>
-
-                    </div>
-                </div> --}}
-
-                <!-- E-LEAVE MENU start-->
-                {{-- <div class="ml-3 mt-3 relative">
-                    <x-jet-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="btn-outline-secondary inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover">
-                                        {{ __('E-FORMS') }}
-
-                                    </button>
-                                </span>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- E-LEAVE -->
-                            <x-jet-dropdown-link href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >
-                                {{ __('e-Leave Form') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">
-                                {{ __('View Leaves') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('calendar') }}"  id="nav_leaves_calendar">
-                                {{ __('Leaves Calendar') }}
-                            </x-jet-dropdown-link>
-
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div> --}}
-                <!-- E-LEAVE MENU end  -->
-
-                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                <!-- PROCESS start-->
-                {{-- <div class="ml-3 mt-3 relative">
-
-                    <x-jet-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover">
-                                        {{ __('PROCESS') }}
-
-                                    </button>
-                                </span>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- PROCESS E-LEAVE -->
-                            <x-jet-dropdown-link href="{{ route('process.eleave') }}">
-                                {{ __('Process e-Leave Applications') }}
-                            </x-jet-dropdown-link>
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div> --}}
-                <!-- PROCESS end  -->
-
-                <!-- ACCOUNT MANAGEMENT start-->
-                {{-- <div class="ml-3 mt-3 relative hidden">
-                    <x-jet-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover">
-                                        {{ __('HR MANAGEMENT') }}
-
-                                    </button>
-                                </span>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- E-LEAVE -->
-                            <x-jet-dropdown-link href="{{ route('hr.management.employees') }}">
-                                {{ __('View Employees') }}
-                            </x-jet-dropdown-link>
-
-                            @if (Auth::user()->role_type=='SUPER ADMIN')
-                            <x-jet-dropdown-link href="{{ route('hr.management.memos') }}">
-                                {{ __('Memo') }}
-                            </x-jet-dropdown-link>
-                            @endif
-
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div> --}}
-                <!-- ACCOUNT MANAGEMENT end  -->
-                @endif
-
-
-                {{-- ADMIN begin--}}
-                {{-- @if (Auth::user()->role_type=='SUPER ADMIN')
-                <div class="ml-3 mt-3 relative">
-                    <x-jet-dropdown align="left" width="48">
-                        <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover">
-                                        {{ __('SET-UP') }}
-                                    </button>
-                                </span>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- E-LEAVE -->
-                            <x-jet-dropdown-link href="{{ route('register') }}">
-                                {{ __('User Registration') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.offices') }}">
-                                {{ __('Offices') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.departments') }}">
-                                {{ __('Departments') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('hr.management.holidays') }}">
-                                {{ __('Holidays') }}
-                            </x-jet-dropdown-link>
-
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div>
-                @endif --}}
-                {{-- ADMIN end --}}
             </div>
-        {{-- <div id="nav_header_hid" class="max-w-7xl py-0 sm:col-span-1 justify-end">
-            <div>
-                <div class="btn-group dropup justify-end">
-                    <a id="hide_nav_header" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0">Hide Header</a>
-                </div>
-            </div>
-        </div>
-        <div id="nav_header_showed" class="hidden max-w-7xl py-0 sm:col-span-1 justify-end">
-            <div>
-                <div class="btn-group dropdown justify-end">
-                    <a id="show_nav_header" class="btn btn-outline-secondary btn-sm dropdown-toggle border-0">Show Header</a>
-                </div>
-            </div>
-        </div> --}}
 
             <div class="items-center justify-center">
 
                 @if ($timeIn)
                 <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn" disabled>
-                    {{ __('Time-In') }}
+                    <i class="fa-regular fa-clock"></i>&nbsp;Time-In
                 </x-jet-button>
                 @else
                 <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn">
-                    {{ __('Time-In') }}
+                    <i class="fa-regular fa-clock"></i>&nbsp;Time-In
                 </x-jet-button>
                 @endif
 
                 @if ($timeOut)
                 <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut" disabled>
-                    {{ __('Time-Out') }}
+                    <i class="fa-solid fa-clock"></i>&nbsp;Time-Out
                 </x-jet-button>
                 @else
                 <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut">
-                    {{ __('Time-Out') }}
+                    <i class="fa-solid fa-clock"></i>&nbsp;Time-Out
                 </x-jet-button>
                 @endif
 
             </div>
         </div>
     </div>
-
+</nav>
 
 
 
@@ -703,8 +500,6 @@
   </div>
 </div>
 
-
-</nav>
 
     {{-- <script src="node_modules/@popperjs/core/dist/umd/popper.min.js"></script> --}}
     <script type="text/javascript" src="{{ asset('/popper/js/bootstrap.bundle.js') }}"></script>

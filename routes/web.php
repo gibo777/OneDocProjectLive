@@ -123,6 +123,7 @@ Route::get('/hris/overtime', [OvertimesController::class, 'index'])->name('hris.
 Route::post('/hris/overtime', [OvertimesController::class, 'submitOvertime'])->name('submit.overtime');
 Route::get('/hris/view-overtime', [OvertimesController::class, 'viewOvertimes'])->name('hris.view-overtime');
 Route::get('/hris/view-overtime-details', [OvertimesController::class, 'viewOvertimeDetails'])->name('hris.view-overtime-details');
+Route::get('/hris/view-othistory',[OvertimesController::class,'viewOvertimeHistory']);
 Route::post('/hris/cancel-overtime', [OvertimesController::class, 'cancelOvertime'])->name('cancel.overtime');
 Route::post('/hris/deny-overtime', [OvertimesController::class, 'denyOvertime'])->name('deny.overtime');
 Route::post('/hris/approve-overtime', [OvertimesController::class, 'approveOvertime'])->name('approve.overtime');

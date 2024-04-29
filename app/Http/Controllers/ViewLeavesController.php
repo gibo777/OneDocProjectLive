@@ -275,6 +275,7 @@ class ViewLeavesController extends Controller
         if($request->ajax()){
             try {
                 $leave_id = $request->leaveID;
+
                 $data_array = array(
                     'leave_status'  => 'Deleted',
                     'is_deleted'    => 1,
@@ -377,23 +378,23 @@ class ViewLeavesController extends Controller
     function head_approve_leave (Request $request) {
         if($request->ajax()){
             try {
+                $currentDate = Carbon::now();
                 $leave_id = $request->leaveID;
                 $action = "Head Approved";
                 $reason = "N/A";
-                $date = date('Y-m-d H-i-s');
+                $date = DB::raw('NOW()');
 
                 $data_array = array(
                     'leave_status'          => 'Head Approved',
                     'is_head_approved'      => 1,
                     'head_name'             => Auth::user()->first_name.' '. Auth::user()->last_name,
-                    'date_approved_head'    => date('Y-m-d G-i-s')
+                    'date_approved_head'    => DB::raw('NOW()')
                 );
 
 
                 $update = DB::table('leaves');
                 $update = $update->where('id',$leave_id);
                 $update = $update->update($data_array);
-
                 
                 if ($update > 0) {
                     $leaveInsert = DB::table('leaves as L')
@@ -585,21 +586,21 @@ class ViewLeavesController extends Controller
                 $leave_id = $request->leaveID;
                 $action = $request->action;
                 $reason = $request->reason;
-                $date = date('Y-m-d H-i-s');
+                $date = DB::raw('NOW()');
 
                 if ($action=="Cancelled") {
                     $data_array = array(
                         'leave_status'    => 'Cancelled',
                         'is_cancelled'    => 1,
                         'cancelled_by'    => Auth::user()->employee_id,
-                        'date_cancelled'  => date('Y-m-d G-i-s')
+                        'date_cancelled'  => DB::raw('NOW()')
                     );
                 } else if ($action=="Denied") {
                     $data_array = array(
                         'leave_status' => 'Denied',
                         'is_denied'    => 1,
                         'denied_by'    => Auth::user()->employee_id,
-                        'date_denied'  => date('Y-m-d G-i-s')
+                        'date_denied'  => DB::raw('NOW()')
                     );
                 }
                 $update = DB::table('leaves');
@@ -700,6 +701,7 @@ class ViewLeavesController extends Controller
             ->leftJoin('departments as d', 'd.id', '=', 'h.department')
             // ->leftJoin('leave_balances as b', 'b.employee_id', '=', 'u.employee_id')
             ->select(
+                'h.name',
                 'h.leave_reference', 
                 'h.leave_number', 
                 'h.control_number',

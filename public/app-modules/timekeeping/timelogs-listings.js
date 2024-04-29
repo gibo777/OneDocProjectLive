@@ -1,5 +1,6 @@
 $(document).ready(function() {
-
+    
+Swal.fire({ html: 'timelogs'});
     if (("{{ count($employees) }}") == 0) { return false; }
     // Initialize DataTable
     var table = $('#dataTimeLogs').DataTable({
@@ -30,7 +31,7 @@ $(document).ready(function() {
 
     /*$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-            var sD  = $('#filterTimeLogsDept').val();
+            var sD  = $('#fTLDept').val();
             var cD  = data[2]; // Department Column
             
             // Check if a department filter is selected
@@ -48,8 +49,8 @@ $(document).ready(function() {
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
 
-            var sTO  = $('#filterTimeLogsOffice').val();
-            var sTD = $('#filterTimeLogsDept').val();
+            var sTO  = $('#fTLOffice').val();
+            var sTD = $('#fTLDept').val();
             var cTO  = data[2]; // Office Column
             var cTD = data[3]; // Department Column
             // alert(cTD); return false;
@@ -75,8 +76,8 @@ $(document).ready(function() {
 
     /* START - Date From and Date To Searching */
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var searchDateFrom = $('#dateFrom').val();
-        var searchDateTo = $('#dateTo').val();
+        var searchDateFrom = $('#fTLdtFrom').val();
+        var searchDateTo = $('#fTLdtTo').val();
 
         // Convert search date strings to Date objects
         var dateFrom = new Date(searchDateFrom);
@@ -108,21 +109,21 @@ $(document).ready(function() {
     });
 
 
-    $('#filterTimeLogsOffice').on('keyup change', function() {
+    $('#fTLOffice').on('keyup change', function() {
         table.draw();
     });
-    $('#filterTimeLogsDept').on('keyup change', function() {
+    $('#fTLDept').on('keyup change', function() {
         table.draw();
     });
 
 
     /* Triggers Date From Searching of Time-In/Time-Out */
-    $('#dateFrom').on('keyup change', function() {
-        if ($('#dateTo').val()=='' || $('#dateTo').val()==null) {
-            $('#dateTo').val($(this).val());
+    $('#fTLdtFrom').on('keyup change', function() {
+        if ($('#fTLdtTo').val()=='' || $('#fTLdtTo').val()==null) {
+            $('#fTLdtTo').val($(this).val());
         } else {
             var dateFrom = new Date($(this).val());
-            var dateTo = new Date($('#dateTo').val());
+            var dateTo = new Date($('#fTLdtTo').val());
             if( dateTo < dateFrom ) {
                 Swal.fire({
                     icon: 'error',
@@ -137,11 +138,11 @@ $(document).ready(function() {
     });
 
     /* Triggers Date To Searching of Time-In/Time-Out */
-    $('#dateTo').on('keyup change', function() {
-        var dateFrom = new Date($('#dateFrom').val());
+    $('#fTLdtTo').on('keyup change', function() {
+        var dateFrom = new Date($('#fTLdtFrom').val());
         var dateTo = new Date($(this).val());
         if( dateTo < dateFrom ) {
-            $(this).val($('#dateFrom').val());
+            $(this).val($('#fTLdtFrom').val());
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Date Range',
@@ -245,6 +246,7 @@ $(document).ready(function() {
 
     /* EXPORT TO EXCEL TIMELOGS */
     $('#exportExcel').click(function() {
+        // Swal.fire({ html: $('#fTLOffice').val() }); return false;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -253,32 +255,94 @@ $(document).ready(function() {
         $.ajax({
             url: '/timelogs-excel',
             method: 'get',
-            data: {'id': $(this).attr('id')},
-            success: function(html) {
-                // Create a temporary div to hold the table HTML
-                var tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
+            data: {
+                'id'        : `{{ Auth::user()->id }}`,
+                'office'    : $('#fTLOffice').val(),
+                'department': $('#fTLDept').val(),
+                'timeIn'    : $('#fTLdtFrom').val(),
+                'timeOut'   : $('#fTLdtTo').val()
+            },
+            success: function(response) {
 
-                // Extract data from the table
-                var data = [];
-                var headers = [];
-                var rows = tempDiv.querySelectorAll('tbody tr');
-                
-                // Extract headers
-                tempDiv.querySelectorAll('thead th').forEach(function(th) {
-                    headers.push(th.textContent.trim());
-                });
-                
-                // Push headers as the first row of data
-                data.push(headers);
-                
-                // Extract table data
-                rows.forEach(function(row) {
-                    var rowData = [];
-                    row.querySelectorAll('td').forEach(function(cell) {
-                        rowData.push(cell.textContent.trim());
+                // Extracting data from the SQL response JSON
+                const { tlSummary, tlDetailed, currentDate } = response;
+                var currentDateValue = currentDate;
+
+                /* Columns for Summary Timelogs */
+                var columnMappings1 = {
+                    'department': 'Department',
+                    'full_name': 'Name',
+                    'biometrics_id': 'Staff Code',
+                    'tdate': 'Date',
+                    'tweeks': 'Week',
+                    'time_in': 'Time1',
+                    'time_out': 'Time2'
+                };
+
+                // Define the columns you want to include in the Excel XML content
+                var selectedColumns1 = [
+                    'department',
+                    'full_name',
+                    'biometrics_id',
+                    'tdate',
+                    'tweeks',
+                    'time_in',
+                    'time_out'
+                ];
+
+
+                /* Columns for Detailed Timelogs */
+                var columnMappings2 = {
+                    'full_name': 'Name',
+                    'biometrics_id': 'Staff Code',
+                    'employee_id': 'Employee ID',
+                    'tdate': 'Date',
+                    'tweeks': 'Week',
+                    'time_in': 'Time-In',
+                    'time_out': 'Time-Out',
+                    'head_name': 'Supervisor',
+                    'office': 'Office',
+                    'department': 'Department'
+                };
+
+                // Define the columns you want to include in the Excel XML content
+                var selectedColumns2 = [
+                    'full_name',
+                    'biometrics_id',
+                    'employee_id',
+                    'tdate',
+                    'tweeks',
+                    'time_in',
+                    'time_out',
+                    'head_name',
+                    'office',
+                    'department',
+                ];
+
+                // Extract data for Excel XML content
+                var data1 = [];
+                var data2 = [];
+
+                // Push headers as the first row of data for Timelogs Summary
+                data1.push(selectedColumns1.map(column => columnMappings1[column]));
+                // Extract table data for Timelogs Summary
+                tlSummary.forEach(function (employee) {
+                    var rowData = selectedColumns1.map(column => {
+                        var value = employee[column];
+                        return (value !== null && value !== undefined) ? value : '';
                     });
-                    data.push(rowData);
+                    data1.push(rowData);
+                });
+
+                // Push headers as the first row of data for Detailed Timelogs
+                data2.push(selectedColumns2.map(column2 => columnMappings2[column2]));
+                // Extract table data for Detailed Timelogs
+                tlDetailed.forEach(function (employee2) {
+                    var rowData2 = selectedColumns2.map(column2 => {
+                        var value2 = employee2[column2];
+                        return (value2 !== null && value2 !== undefined) ? value2 : '';
+                    });
+                    data2.push(rowData2);
                 });
 
                 // Create Excel XML content
@@ -289,48 +353,86 @@ $(document).ready(function() {
                 xmlContent += ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n';
                 xmlContent += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n';
                 xmlContent += ' xmlns:html="http://www.w3.org/TR/REC-html40">\n';
-                xmlContent += '<Worksheet ss:Name="Sheet1">\n';
+
+                //======= Sheet 1 - Timelogs Summary =======//
+                xmlContent += '<Worksheet ss:Name="Timelogs Summary">\n';
                 xmlContent += '<Table>\n';
-                
-                // Add headers
+
+                //==== Add headers for Timelogs Summary ====//
                 xmlContent += '<Row>\n';
-                headers.forEach(function(header) {
-                    xmlContent += '<Cell><Data ss:Type="String">' + header + '</Data></Cell>\n';
+                selectedColumns1.forEach(function (column) {
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings1[column]}</Data></Cell>\n`;
                 });
                 xmlContent += '</Row>\n';
-                
-                // Add data rows
-                data.slice(1).forEach(function(row) {
+
+                // Add data rows for Timelogs Summary
+                data1.slice(1).forEach(function (row) {
                     xmlContent += '<Row>\n';
-                    row.forEach(function(cell) {
-                        xmlContent += '<Cell><Data ss:Type="String">' + cell + '</Data></Cell>\n';
+                    row.forEach(function (cell) {
+                        cell = cell.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
+                        xmlContent += `<Cell><Data ss:Type="String">${cell}</Data></Cell>\n`;
                     });
                     xmlContent += '</Row>\n';
                 });
-                
+
                 xmlContent += '</Table>\n';
                 xmlContent += '</Worksheet>\n';
+
+                //======= Sheet 2 - Detailed Timelogs =======//
+                xmlContent += '<Worksheet ss:Name="Detailed Timelogs">\n';
+                xmlContent += '<Table>\n';
+                // Add headers for Detailed Timelogs
+                xmlContent += '<Row>\n';
+                selectedColumns2.forEach(function (column2) {
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings2[column2]}</Data></Cell>\n`;
+                });
+                xmlContent += '</Row>\n';
+
+
+                // Swal.fire({ html: data2 }); return false;
+                // Add data rows for Detailed Timelogs
+                data2.slice(1).forEach(function(row2) {
+                    xmlContent += '<Row>\n';
+                    row2.forEach(function(cell2) {
+                        cell2 = cell2.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
+                        xmlContent += `<Cell><Data ss:Type="String">${cell2}</Data></Cell>\n`;
+                    });
+                    xmlContent += '</Row>\n';
+                });
+                xmlContent += '</Table>\n';
+                xmlContent += '</Worksheet>\n';
+
                 xmlContent += '</Workbook>';
 
                 // Create a blob from the XML content
                 var blob = new Blob([xmlContent], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
 
+                var filename = `1DOC_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
+
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'SVV_V3.xlsx'; // Use .xlsx extension for Excel files
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
 
                 // Clean up
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
+
+
             }
         });
         return false;
-
     });
+
 
 
 

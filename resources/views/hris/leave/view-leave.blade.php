@@ -176,7 +176,9 @@
                                 <div class="col-md-2"></div>
                                 @endif --}}
                                 <div class="col-md-2 px-1 py-3 text-center">
-                                    <x-jet-button  id="createNewLeave" >Create New Leave</x-jet-button>
+                                    <x-jet-button  id="createNewLeave" >
+                                        <i class="fa-solid fa-sheet-plastic"></i>&nbsp;Create New Leave
+                                    </x-jet-button>
                                 </div>
 		                    </div>
                         </div>
@@ -221,7 +223,7 @@
                                             @forelse($leaves as $leave)
                                                 <tr class="view-leave text-sm text-lg-lg" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                                    @if (url('/')=='http://localhost')
+                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
                                                         <td>xxx, xxx x.</td>
                                                     @else
                                                         <td>{{ $leave->name }}</td>
@@ -237,7 +239,7 @@
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_to)) }}</td>
                                                     <td>{{ $leave->no_of_days }}</td>
 
-                                                    @if (url('/')=='http://localhost')
+                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
                                                         <td>xxx, xxx x.</td>
                                                     @else
                                                         <td>{{ $leave->head_name }}</td>
@@ -440,34 +442,42 @@
     </div>
   </div>
 
-  <!-- =========================================== -->
+<!-- =========================================== -->
 <!-- Modal for History -->
 <div class="modal fade" id="modalHistory" tabindex="-1" role="dialog" aria-labelledby="leaveHistoryLabel" >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header banner-blue">
+        <div class="modal-header banner-blue py-2">
           <h4 class="modal-title text-lg text-white" id="leaveHistoryLabel">
               LEAVE HISTORY
           </h4>
-          <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+          <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
         </div>
         <div class="modal-body bg-gray-50">
-  
+            <div class="row">
+                <div class="col-md-6">
+                    <x-jet-label id="lHName"></x-jet-label>
+                </div>
+                <div class="col-md-6">
+                    <x-jet-label id="lHSupervisor"></x-jet-label>
+                </div>
+            </div>
               <div class="grid grid-cols-6 gap-6 pb-3">
+
                   <div class="col-span-6 sm:col-span-6 sm:justify-center font-medium scrollable">
                   <table id="data_history" class="table table-bordered data-table sm:justify-center table-hover">
                       <thead class="thead">
                           <tr>
-                              <th>Supervisor</th>
-                              <th>Leave Type</th>
-                              <th>Available</th>
-                              <th>Action</th>
-                              <th>Action Date</th>
-                              <th>Reason</th>
-                              <th>Date Applied</th>
-                              <th>Begin Date</th>
-                              <th>End Date</th>
-                              <th># of Day/s</th>
+                              <th class="text-nowrap">Leave Type</th>
+                              <th class="text-nowrap">Begin Date</th>
+                              <th class="text-nowrap">End Date</th>
+                              <th class="text-nowrap"># of Day/s</th>
+                              {{-- <th class="text-nowrap">Available</th> --}}
+                              <th class="text-nowrap">Action</th>
+                              <th class="text-nowrap">Action Date</th>
+                              <th class="text-nowrap">Reason</th>
+                              {{-- <th class="text-nowrap">Date Applied</th> --}}
+                              {{-- <th class="text-nowrap">Supervisor</th> --}}
                           </tr>
                       </thead>
                       <tbody class="data text-center" id="data">
@@ -481,7 +491,6 @@
     </div>
   </div>
   </div>
-  
   <!-- =========================================== -->
   
 
@@ -933,7 +942,7 @@ $(document).ready( function () {
     });
 
     /* EXPORT TO EXCEL TIMELOGS */
-    $('#exportExcelLeaves').click(function() {
+    $(document).on('click','#exportExcelLeaves',async function() {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1058,13 +1067,10 @@ $(document).ready( function () {
         });
     });
 
-
-    document.getElementById("leave_form").onclick = function(){
-        var $leave_id = document.getElementById('hid_leave_id').value;
-        location.href = "/hris/view-leave/form-leave/"+$leave_id;
-    }
-
-
+    $(document).on('click', '#leave_form',async function() {
+        var leave_id = $('#hid_leave_id').val();
+        window.location.href = "/hris/view-leave/form-leave/" + leave_id;
+    });
 
     $("#date_from").change(function(){
         // alert($("#reason").val()); return false;
@@ -1082,6 +1088,67 @@ $(document).ready( function () {
             $("#date_to").val(),
             $("#reason").val()
             );*/
+    });
+
+    $(document).on('click','.open_leave',function(e){
+        try{
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: window.location.origin+'/hris/view-history',
+                method: 'get',
+                data: {'leave_reference': $(this).val() }, // prefer use serialize method
+                success:function(data){
+                    // alert('test');
+                    // prompt('',data); return false;
+                    var historyLabel = "Leave History";
+                    $('#lHName').text('Name: '+data[0]['name']);
+                    $('#lHSupervisor').text('Supervisor: '+data[0]['head_name']);
+
+                    $("#data_history > tbody").empty();
+
+                    for(var n=0; n<data.length; n++) {
+                        $("#data_history > tbody:last-child")
+                        .append('<tr>');
+                        /*if ($("#hid_access_id").val()==1) {
+                            $("#data_history > tbody:last-child")
+                            .append('<td>'+data[n]['name']+'</td>')
+                            .append('<td>'+data[n]['employee_id']+'</td>')
+                            .append('<td>'+data[n]['department']+'</td>')
+                        }*/
+                        $("#data_history > tbody:last-child")
+                        // .append('<td>'+data[n]['leave_number']+'</td>')
+                        .append('<td>'+data[n]['leave_type']+'</td>')
+                        .append('<td>'+data[n]['date_from']+'</td>')
+                        .append('<td>'+data[n]['date_to']+'</td>')
+                        .append('<td>'+data[n]['no_of_days']+'</td>')
+                        // .append('<td>'+data[n]['leave_balance']+'</td>')
+                        .append('<td>'+data[n]['action']+'</td>')
+                        .append('<td>'+data[n]['created_at']+'</td>')
+                        .append('<td class="text-nowrap" id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason']/*.slice(0,10)*/+'</td>')
+                        // .append('<td>'+data[n]['date_applied']+'</td>')
+                        // .append('<td>'+data[n]['head_name']+'</td>')
+                        ;
+
+                        $("#title"+n).click(function () {
+                            $(this).attr('title').show();
+                        });
+                    }
+                    if ($("#hid_access_id").val()==1) {
+                        historyLabel = historyLabel+" of "+data[0]['name'];
+                    }
+                    historyLabel = historyLabel+" (Control #"+data[0]['control_number']+")";
+                    $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
+                    $("#modalHistory").modal("show");
+                }
+            });
+        }catch(error){
+            console.log(error);
+        }
     });
 
 });

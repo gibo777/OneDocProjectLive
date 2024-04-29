@@ -57,10 +57,10 @@
 <div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="calendarLabel" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <div class="modal-header banner-blue">
+      <div class="modal-header banner-blue py-2">
         <h4 class="modal-title text-xl text-white" id="calendarLabel">
         </h4>
-        <button type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
       </div>
       <div class="modal-body bg-gray-50">
         <div class="grid grid-cols-6 gap-6 ">

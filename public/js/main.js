@@ -248,63 +248,7 @@ $(document).ready(function(){
 
     /* VIEW HISTORY begin*/
    
-    $(document).on('click','.open_leave',function(e){
-        try{
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: window.location.origin+'/hris/view-history',
-                method: 'get',
-                data: {'leave_reference': $(this).val() }, // prefer use serialize method
-                success:function(data){
-                    // alert('test');
-                    // prompt('',data); return false;
-                    var historyLabel = "leave history";
-
-                    $("#data_history > tbody").empty();
-
-                    for(var n=0; n<data.length; n++) {
-                        $("#data_history > tbody:last-child")
-                        .append('<tr>');
-                        /*if ($("#hid_access_id").val()==1) {
-                            $("#data_history > tbody:last-child")
-                            .append('<td>'+data[n]['name']+'</td>')
-                            .append('<td>'+data[n]['employee_id']+'</td>')
-                            .append('<td>'+data[n]['department']+'</td>')
-                        }*/
-                        $("#data_history > tbody:last-child")
-                        .append('<td>'+data[n]['head_name']+'</td>')
-                        // .append('<td>'+data[n]['leave_number']+'</td>')
-                        .append('<td>'+data[n]['leave_type']+'</td>')
-                        .append('<td>'+data[n]['leave_balance']+'</td>')
-                        .append('<td>'+data[n]['action']+'</td>')
-                        .append('<td>'+data[n]['created_at']+'</td>')
-                        .append('<td id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason'].slice(0,10)+'</td>')
-                        .append('<td>'+data[n]['date_applied']+'</td>')
-                        .append('<td>'+data[n]['date_from']+'</td>')
-                        .append('<td>'+data[n]['date_to']+'</td>')
-                        .append('<td>'+data[n]['no_of_days']+'</td>');
-
-                        $("#title"+n).click(function () {
-                            $(this).attr('title').show();
-                        });
-                    }
-                    if ($("#hid_access_id").val()==1) {
-                        historyLabel = historyLabel+" of "+data[0]['name'];
-                    }
-                    historyLabel = historyLabel+" (Leave #"+data[0]['control_number']+")";
-                    $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
-                    $("#modalHistory").modal("show");
-                }
-            });
-        }catch(error){
-            console.log(error);
-        }
-    });
+    
     /* VIEW HISTORY end */
 
     /* VIEW ALL LEAVES begin */

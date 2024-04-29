@@ -322,9 +322,9 @@ class EmployeesController extends Controller
 
 
             return response()->json([
-                'tlSummary'=>$tlSummary, 
-                'tlDetailed'=>$tlDetailed, 
-                'currentDate'=>$formattedDateTime
+                'tlSummary'     => $tlSummary, 
+                'tlDetailed'    => $tlDetailed, 
+                'currentDate'   => $formattedDateTime
             ]);
 
             // $offices = DB::table('offices')->orderBy('company_name')->get();

@@ -143,12 +143,12 @@
                                             <!-- FILTER by Leave Type -->
                                             <div class="form-floating" id="divFReqStatus">
                                                 <select name="fReqStatus" id="fReqStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                                    <option value="">All Overtime Statuses</option>
+                                                    <option value="">All Statuses</option>
                                                     @foreach ($request_statuses as $request_status)
                                                     <option>{{ $request_status->request_status }}</option>
                                                     @endforeach
                                                 </select>
-                                                <x-jet-label for="fReqStatus" value="{{ __('OVERTIME STATUS') }}" />
+                                                <x-jet-label for="fReqStatus" value="{{ __('OT STATUS') }}" />
                                             </div>
                                         </div>
                                     </div>
@@ -164,7 +164,7 @@
                                 <div class="col-md-4 pt-2 item-right text-center mt-1 ">
                                     <div class="row">
                                         <div class="col-md-5">
-                                            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58 || Auth::user()->id==124 || Auth::user()->id==126)
+                                            @if (Auth::user()->id==1)
                                             <div class="form-group btn btn-outline-success d-inline-block rounded capitalize hover">
                                                 <i class="fas fa-table"></i>
                                                 <span id="exportExcelOvertimes" class="font-weight-bold">Export to Excel</span>
@@ -172,7 +172,7 @@
                                             @endif
                                         </div>
                                         <div class="col-md-7">
-                                            <x-jet-button id="requestNewOvertime">Request New Overtime</x-jet-button>
+                                            <x-jet-button id="requestNewOvertime" data-route="{{ route('hris.overtime') }}">Request New Overtime</x-jet-button>
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +217,15 @@
                                                     <td>{{ $viewOT->ot_datetime_to }}</td>
                                                     <td>{{ $viewOT->total_hours }}</td>
                                                     @if ($viewOT->ot_status!='pending')
-                                                    <td class="open_overtime {{ ($viewOT->ot_status=='cancelled'||$viewOT->ot_status=='denied') ? 'red-color' : 'green-color' }} items-center text-sm leading-4 font-medium">{{ $viewOT->ot_status }}</td>
+                                                    <td id="status_view" class="open_history">
+                                                        <button
+                                                            id="{{ $viewOT->id }}"
+                                                            value="{{ $viewOT->id }}"
+                                                            title="Show History #{{ $viewOT->ot_control_number }}"
+                                                            class="open_overtime {{ ($viewOT->ot_status=='cancelled'||$viewOT->ot_status=='denied') ? 'red-color' : 'green-color' }} inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500"
+                                                            >
+                                                            {{ strtoupper($viewOT->ot_status) }}
+                                                        </button></td>
                                                     @else
                                                     <td>{{ $viewOT->ot_status }}</td>
                                                     @endif
@@ -231,11 +239,6 @@
                                     </table>
 
                                 </div>
-                                @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                <div class="mt-1 hidden">
-                                <i class="fa fa-print inline-flex items-center justify-center px-4 py-2 bg-blue-800 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition hover" onclick="printreport()">&nbsp;print</i>
-                                </div>
-                                @endif
                     </div>
                 </div>
             </div>
@@ -247,6 +250,48 @@
     </div>
 
 {{-- MODAL --}}
+{{-- Modal for History --}}
+<div class="modal fade" id="myModalOT" tabindex="-1" role="dialog" aria-labelledby="otHistoryLabel" >
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header banner-blue py-2">
+          <h4 class="modal-title text-lg text-white" id="otHistoryLabel"></h4>
+          <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        </div>
+        <div class="modal-body bg-gray-50">
+            <div class="row w-full">
+                <div class="col-md-6">
+                    <x-jet-label id="otHName" class="text-nowrap"></x-jet-label>
+                </div>
+                <div class="col-md-6">
+                    <x-jet-label id="otHSupervisor" class="text-nowrap"></x-jet-label>
+                </div>
+            </div>
+              <div class="col-span-6 sm:col-span-6 sm:justify-center font-medium scrollable">
+              <table id="data_history" class="table table-bordered table-striped sm:justify-center table-hover">
+                  <thead class="thead">
+                      <tr>
+                          {{-- <th>Name</th> --}}
+                          {{-- <th>Date Applied</th> --}}
+                          {{-- <th>Hours</th> --}}
+                          {{-- <th>Minutes</th> --}}
+                          {{-- <th>Total Hours</th> --}}
+                          <th>Status</th>
+                          <th class="text-nowrap">Reason</th>
+                          <th class="text-nowrap">Action Date</th>
+                          {{-- <th>Supervisor</th> --}}
+                      </tr>
+                  </thead>
+                  <tbody class="data text-center" id="data">
+                  </tbody>
+              </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- =========================================== -->
+
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-xl" role="document">
@@ -352,12 +397,6 @@
                 <div class="row">
                     <div class="flex items-center justify-center px-4 py-3 sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
                     <div>
-                        {{-- <x-jet-button type="button" id="exportOTpdf" name="exportOTpdf">
-                            {{ __('Export PDF') }}
-                        </x-jet-button> --}}
-                        {{-- <x-jet-button type="button" id="otUpdate" name="otUpdate">
-                            {{ __('Update') }}
-                        </x-jet-button> --}}
                         <x-jet-button type="button" id="otCancelRequest" name="otCancelRequest">
                             {{ __('CANCEL REQUEST') }}
                         </x-jet-button>
@@ -372,6 +411,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <!-- =========================================== -->
@@ -417,368 +457,16 @@
   </div>
 </div>
 <!-- =========================================== -->
+<script type="text/javascript">
+    const supervisor = "{{ Auth::user()->supervisor }}";
+    const isHead = "{{ Auth::user()->is_head }}";
+    const employeeID = "{{ Auth::user()->employee_id }}";
+    const countOTS = "{{ count($viewOTS) }}";
+    const dataRoute = $('#requestNewOvertime').attr('data-route');
+</script>
 
+<script type="text/javascript" src="{{ asset('app-modules/e-forms/view-overtime.js') }}"></script>
 </x-app-layout>
 
 
 
-<script>
-
-
-
-$(document).ready( function () {
-    
-var tableLeaves = $('#dataViewOvertimes').DataTable({
-    "ordering": false,
-    "lengthMenu": [5, 10, 15, 25, 50, 75, 100], // Customize the options in the dropdown
-    "iDisplayLength": 15, // Set the default number of entries per page
-    "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
-    "initComplete": function () {
-        // Custom search function
-        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-            var sO = $('#fOtOffice').val();
-            var sD = $('#fOtDept').val();
-            var sS = $('#fReqStatus').val().toUpperCase();
-
-            var cO = data[1]; // Office Column
-            var cD = data[2]; // Department Column
-            var cS = data[8].toUpperCase(); // Status Column
-
-            // Check if an office filter is selected
-            var fOfficeActive = (sO != null && sO !== '');
-            // Check if a department filter is selected
-            var fDeptActive = (sD != null && sD !== '');
-            // Check if a request status filter is selected
-            var fReqStatusActive = (sS != null && sS !== '');
-
-            // Apply filters
-            if (!fOfficeActive && !fDeptActive && !fReqStatusActive) {
-                return true; // No filters applied, show all rows
-            }
-
-            var officeMatch = !fOfficeActive || cO.includes(sO);
-            var deptMatch = !fDeptActive || cD.includes(sD);
-            var statusMatch = !fReqStatusActive || cS.includes(sS);
-
-            return officeMatch && deptMatch && statusMatch;
-        });
-
-        // Apply the search
-        $('#fOtOffice, #fOtDept, #fReqStatus').on('change', function () {
-            tableLeaves.draw();
-        });
-
-        /* START - Date From and Date To Searching */
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var searchDateFrom = $('#fOtDateFrom').val();
-            var searchDateTo = $('#fOtDateTo').val();
-
-            // Convert search date strings to Date objects
-            var dateFrom = new Date(searchDateFrom);
-            var dateTo = new Date(searchDateTo);
-
-            // Set the time to the start and end of the selected days
-            dateFrom.setHours(0, 0, 0, 0);
-            dateTo.setHours(23, 59, 59, 999);
-
-            // Get the time-in and time-out values from columns 3 and 4
-            var searchBeginDate = data[5];
-            var searchEndDate = data[6];
-
-            // Convert time-in and time-out strings to Date objects (if applicable)
-            var timeIn = searchBeginDate ? new Date(searchBeginDate) : null;
-            var timeOut = searchEndDate ? new Date(searchEndDate) : null;
-
-            // Check if the row's time-in or time-out falls within the selected date range
-            if (
-                (!searchDateFrom || !searchDateTo) || // No date range selected
-                (!timeIn && !timeOut) || // No time values available
-                (timeIn >= dateFrom && timeIn <= dateTo) ||
-                (timeOut >= dateFrom && timeOut <= dateTo)
-            ) {
-                return true; // Row matches the search criteria
-            }
-
-            return false; // Row does not match the search criteria
-        });
-
-        /* Triggers Date From Searching of Time-In/Time-Out */
-        $('#fOtDateFrom').on('keyup change', function() {
-            if ($('#fOtDateTo').val()=='' || $('#fOtDateTo').val()==null) {
-                $('#fOtDateTo').val($(this).val());
-            } else {
-                var dateFrom = new Date($(this).val());
-                var dateTo = new Date($('#fOtDateTo').val());
-                if( dateTo < dateFrom ) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Date Range',
-                    }).then(function() {
-                        $(this).val('');
-                    });
-                }
-            }
-            tableLeaves.draw();
-        });
-
-        /* Triggers Date To Searching of Time-In/Time-Out */
-        $('#fOtDateTo').on('keyup change', function() {
-            var dateFrom = new Date($('#fOtDateFrom').val());
-            var dateTo = new Date($(this).val());
-            if( dateTo < dateFrom ) {
-                $(this).val($('#fOtDateFrom').val());
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid Date Range',
-                });
-            }
-            tableLeaves.draw();
-        });
-        /* END - Date From and Date To Searching */
-
-    }
-});
-
-
-
-/* EXPORT TO EXCEL TIMELOGS */
-    $('#exportExcelOvertimes').click(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: '/leaves-excel',
-            method: 'get',
-            data: {'id':$(this).attr('id')}, // prefer use serialize method
-            success:function(data){
-
-                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
-                var url = window.URL.createObjectURL(blob);
-
-                // Create a download link
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = 'leaves.xls'; // Use .xls extension for Excel files
-                document.body.appendChild(a);
-                a.click();
-
-                // Clean up
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            }
-        }); 
-        return false;
-
-    });
-
-    /* Reroute to Request Overtime Form */
-    $(document).on('click','#requestNewOvertime', async function() {
-        window.location.href = "{{ route('hris.overtime') }}";
-    });
-
-    /* Viewing Leave Details per Control Number - Gibs */
-    $(document).on('dblclick','.view-overtime',function(){
-        let otID = this.id;
-        // hris/view-overtime-details
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: '/hris/view-overtime-details',
-            method: 'get',
-            data: {'id': $(this).attr('id')}, // prefer use serialize method
-            success: function (data) {
-                const { otDtls } = data;
-
-                // Check if otDtls is not empty
-                if (otDtls) {
-                    // Additional code (if needed) after displaying the Swal modal
-                    var otControlNumber = otDtls.ot_control_number;
-                    var modalHeader = "Control No. " + otControlNumber;
-                    const supervisor = "{{ Auth::user()->supervisor }}";
-                    const isHead = "{{ Auth::user()->is_head }}";
-                    const employeeID = "{{ Auth::user()->employee_id }}";
-
-                    otDtls.is_cancelled==1 ? $('#otCancelRequest').hide() : $('#otCancelRequest').show();
-
-                    if (isHead ==1) {
-                        if (otDtls.employee_id==supervisor) {
-                            $('#otDenyRequest').hide();
-                            $('#otApproveRequest').hide();
-                        } else {
-                        // Swal.fire({ html:otDtls.employee_id+"<br>"+supervisor }); return false;
-                            if (otDtls.employee_id==employeeID) {
-                                $('#otDenyRequest').hide();
-                                $('#otApproveRequest').hide();
-                            } else {
-                                if (otDtls.ot_status=='pending'){
-                                    $('#otDenyRequest').show();
-                                    $('#otApproveRequest').show();
-                                } else {
-                                    $('#otDenyRequest').hide();
-                                    $('#otApproveRequest').hide();
-                                }
-                            }
-                        }
-                    } else {
-                        $('#otDenyRequest').hide()
-                        $('#otApproveRequest').hide();
-                    }
-
-                    $("#myModalLabel").html(modalHeader);
-                    $('#dotName').val(otDtls.name);
-                    $('#dotEmployeeNumber').val(otDtls.employee_id);
-                    $('#dotDateApplied').val(otDtls.date_applied);
-                    $('#dotOffice').val(otDtls.office);
-                    $('#dotDepartment').val(otDtls.department);
-                    $('#dotSupervisor').val(otDtls.supervisor);
-                    $('#dotLocation').val(otDtls.ot_location);
-                    $('#dotBeginDate').val(otDtls.begin_date);
-                    $('#dotEndDate').val(otDtls.end_date);
-                    $('#dotReason').val(otDtls.ot_reason);
-                    $('#dtdHours').html(otDtls.ot_hours);
-                    $('#dtdMinutes').html(otDtls.ot_minutes);
-                    $('#dtdTotalHours').html(otDtls.total_hours);
-                    $('#dotHidId').val(otID);
-                    $("#myModal").modal("show");
-                } else {
-                    // Handle the case when otDtls is empty
-                    console.log('No data available');
-                }
-            },
-            error: function (error) {
-                console.error('Error fetching data:', error);
-            }
-        }); return false;
-
-    });
-
-    // Cancel Request
-    $(document).on('click', '#otCancelRequest', async function() {
-        btn_clicked = "cancelled";
-        confirmModals(btn_clicked);
-    });
-
-    // Deny Request by Head/Supervisor
-    $(document).on('click', '#otDenyRequest', async function() {
-        btn_clicked = "denied";
-        confirmModals(btn_clicked);
-    });
-
-    // Approve Request by Head/Supervisor
-    $(document).on('click','#otApproveRequest',async function() {
-        // Swal.fire({text: 'Approve Request'});
-        const otId = $('#dotHidId').val();
-        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-        $.ajax({
-            url: window.location.origin+"/hris/approve-overtime",
-            method: 'post',
-            data: {
-            'otId': otId
-            }, // prefer use serialize method
-            success:function(data){
-                // Swal.fire({ html: data }); return false;
-                const {isSuccess,message} = data;
-
-                $("#modalConfirm").modal('hide');
-                $("#myModal").modal('hide');
-
-                isSuccess ?
-                    (Livewire.emit('refetchAcc'),
-                    Swal.fire({
-                        icon:'success',
-                        title:'Success',
-                        text:message
-                    }))
-                :
-                    Swal.fire({
-                        icon:'error',
-                        title:'Error',
-                        text:JSON.stringify(message)
-                    })
-            }
-        });
-        return false;
-    });
-
-    $(document).on('click','#clostBtn',async function () {
-        $('#modalConfirm').modal('hide');
-    });
-
-    $(document).on('click','#confirmBtn',async function () {
-
-        if ($('#otConfirmReason').val()==''){
-            $('#otConfirmReason').addClass('placeholder-warning');
-            $('#otConfirmReason').focus();
-        } else {
-            const otId = $('#dotHidId').val();
-            var url = '';
-            if (btn_clicked=='cancelled') {
-                url = window.location.origin+"/hris/cancel-overtime";
-            } else if (btn_clicked=='denied') {
-                url = window.location.origin+"/hris/deny-overtime";
-            }
-            
-            $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-            $.ajax({
-                url: url,
-                method: 'post',
-                data: {
-                'otId': otId,
-                'action' : btn_clicked,
-                'reason' : $("#otConfirmReason").val()
-                }, // prefer use serialize method
-                success:function(data){
-                    const {isSuccess,message} = data;
-
-                    $("#modalConfirm").modal('hide');
-                    $("#myModal").modal('hide');
-
-                    isSuccess ?
-                        (Livewire.emit('refetchAcc'),
-                        Swal.fire({
-                            icon:'success',
-                            title:'Success',
-                            text:message
-                        }))
-                    :
-                        Swal.fire({
-                            icon:'error',
-                            title:'Error',
-                            text:JSON.stringify(message)
-                        })
-                }
-            });
-        }
-        return false;
-    });
-
-    function confirmModals(btn) {
-        var message='',modalHeader='';
-        if (btn=='cancelled') {
-            message = "Reason for cancellation of request";
-            modalHeader = "Confirm Cancel";
-        } else {
-            message = "Reason for denying of request";
-            modalHeader = "Confirm Deny";
-        }
-
-        $('#confirmModalLabel').html(modalHeader);
-        $("#confirmMessage").html(message);
-        $("#otConfirmReason").val('');
-        $("#otConfirmReason").removeClass('placeholder-warning');
-        $("#modalConfirm").modal('show');
-        $(".modal-dialog").draggable({
-            cursor: "move"
-        });
-    }
-    
-});
-
-
-
-</script>
