@@ -703,57 +703,6 @@ $(document).ready(function(){
 
 
 
-    /* HEAD APPROVAL begin */
-    $("#approve_leave").click(function () {
-
-        // alert('Gilbert'); return false;
-        $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            // var data = $('#update-leave-form').serialize() + "&leave_id=" + $("#leave_id").val();
-            // data.push({'leave_id': $("#leave_id").val()});
-            // alert($("#hid_leave_id").val()); return false;
-            $.ajax({
-                url: window.location.origin+'/head-approve',
-                method: 'post',
-                data: { 'leaveID': $("#hid_leave_id").val() }, // prefer use serialize method
-                success:function(data){
-                    // prompt('',data); return false;
-                    $("#myModal").modal("hide");
-                    // $("#dialog_content").html(data);
-                    Swal.fire(
-                        'Approved by Head.',
-                        '',
-                        'success'
-                      )
-                      /*$('.swal2-confirm').click(function(){
-                        location.reload();
-                      })*/
-                    // $("#dialog_content").html("Approved by Head.");
-                    // $("#dialog" ).dialog({
-                    //     modal: true,
-                    //     title: "Confirmation",
-                    //     width: "auto",
-                    //     height: "auto",
-                    //     buttons: [
-                    //     {
-                    //         id: "OK",
-                    //         text: "OK",
-                    //         click: function () {
-                    //             $(this).dialog('close');
-                    //             location.reload();
-                    //         }
-                    //     }
-                    //     ]
-                    // });
-                    console.log(data);
-                }
-            });
-            return false;
-    });
-    /* HEAD APPROVAL end */
 
 
     var btn_clicked = "";

@@ -113,7 +113,7 @@
 
                                 <div class="col-md-5 text-center mt-1">
                                     <div class="row mx-1">
-                                        @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
+                                        {{-- @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN') --}}
                                         <!-- FILTER by Department -->
                                         <div class="col-md-4 px-1 text-center mt-1">
                                             <div class="form-floating" id="divFOtOffice">
@@ -137,7 +137,7 @@
                                                 <x-jet-label for="fOtDept" value="{{ __('DEPARTMENT') }}" />
                                             </div>
                                         </div>
-                                        @endif
+                                        {{-- @endif --}}
 
                                         <div class="col-md-4 px-1 text-center mt-1">
                                             <!-- FILTER by Leave Type -->

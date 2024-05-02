@@ -277,15 +277,23 @@
                                   <a class="dropdown-item" href="{{ route('calendar') }}"  id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
                               </div>
                           </div>
+                          
+                          <div class="dropdown dropend">
+                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
+                              <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                  <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavOvertime" >{{ __('Overtime Form') }} </a>
+                                  <a class="dropdown-item" href="{{ route('hris.view-overtime') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                              </div>
+                          </div>
 
                         @if (Auth::user()->id==1 || Auth::user()->id==2 || Auth::user()->id==58)
-                              <div class="dropdown dropend">
+                              {{-- <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                       <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavOvertime" >{{ __('Overtime Form') }} </a>
                                       <a class="dropdown-item" href="{{ route('hris.view-overtime') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
                                   </div>
-                              </div>
+                              </div> --}}
 
                               <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuWFH" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH Setup</a>
@@ -300,7 +308,7 @@
                                   @if(Auth::user()->id==1)
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                       <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
-                                      <a class="dropdown-item" href="#">Sub-menu 2</a>
+                                      {{-- <a class="dropdown-item" href="#">Sub-menu 2</a>
                                       <div class="dropdown-divider"></div>
                                       <div class="dropdown dropend">
                                           <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sub-menu 3</a>
@@ -310,7 +318,7 @@
                                               <div class="dropdown-divider"></div>
                                               <a class="dropdown-item" href="#">Sub-menu 3.3</a>
                                           </div>
-                                      </div>
+                                      </div> --}}
                                   </div>
                                   @endif
                               </div>

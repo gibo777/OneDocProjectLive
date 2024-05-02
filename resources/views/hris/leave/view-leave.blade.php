@@ -473,9 +473,9 @@
                               <th class="text-nowrap">End Date</th>
                               <th class="text-nowrap"># of Day/s</th>
                               {{-- <th class="text-nowrap">Available</th> --}}
-                              <th class="text-nowrap">Action</th>
-                              <th class="text-nowrap">Action Date</th>
+                              <th class="text-nowrap">Status</th>
                               <th class="text-nowrap">Reason</th>
+                              <th class="text-nowrap">Action Date</th>
                               {{-- <th class="text-nowrap">Date Applied</th> --}}
                               {{-- <th class="text-nowrap">Supervisor</th> --}}
                           </tr>
@@ -771,13 +771,82 @@
 
 $(document).ready( function () {
     
-    if (("{{ count($leaves) }}") == 0) { return false; }
-    var tableLeaves = $('#dataViewOvertimes').DataTable({
-        "ordering": false,
-        "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
-        "iDisplayLength": 15, // Set the default number of entries per page
-        "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
-      });
+    if (("{{ count($leaves) }}") > 0) { 
+        var tableLeaves = $('#dataViewOvertimes').DataTable({
+            "ordering": false,
+            "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
+            "iDisplayLength": 15, // Set the default number of entries per page
+            "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
+          });
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const aRT = "{{ Auth::user()->role_type }}";
+            var sD = $('#filterDepartment').val();
+            var sLT = $('#filterLeaveType').val();
+            var sLS = $('#filterLeaveStatus').val().toUpperCase();
+            var cD = data[2]; // Department Column
+            var cLT = data[4]; // Leave Type Column
+            var cLS = data[9].toUpperCase(); // Leave Status Column
+
+            // Check if a department filter is selected
+            var departmentFilterActive = (sD != null && sD !== '');
+
+            // Check if a LeaveType filter is selected
+            var leaveTypeFilterActive = (sLT != null && sLT !== '');
+
+            // Check if a LeaveStatus filter is selected
+            var leaveStatusFilterActive = (sLS != null && sLS !== '');
+
+            // Apply both filters
+            if (aRT == 'SUPER ADMIN' || aRT == 'ADMIN') {
+                if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
+                    return true; // No filters applied, show all rows
+                }
+                var departmentMatch = !departmentFilterActive || cD.includes(sD);
+                var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+                var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
+
+                return departmentMatch && leaveTypeMatch && leaveStatusMatch;
+            } else {
+                if (!leaveTypeFilterActive) {
+                    return true; // No filters applied, show all rows
+                }
+                var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+
+                return leaveTypeMatch;
+            }
+        });
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var searchDateFrom = $('#dateFrom').val();
+            var searchDateTo = $('#dateTo').val();
+
+            // Convert search date strings to Date objects
+            var dateFrom = new Date(searchDateFrom);
+            var dateTo = new Date(searchDateTo);
+
+            // Set the time to the start and end of the selected days
+            dateFrom.setHours(0, 0, 0, 0);
+            dateTo.setHours(23, 59, 59, 999);
+
+            // Get the time-in and time-out values from columns 3 and 4
+            var searchTimeIn = data[5];
+            var searchTimeOut = data[6];
+
+            // Convert time-in and time-out strings to Date objects (if applicable)
+            var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
+            var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
+
+            // Check if the row's time-in or time-out falls within the selected date range
+            if ((!searchDateFrom || !searchDateTo) || // No date range selected
+                (!timeIn && !timeOut) || // No time values available
+                (timeIn >= dateFrom && timeIn <= dateTo) ||
+                (timeOut >= dateFrom && timeOut <= dateTo)) {
+                return true; // Row matches the search criteria
+            }
+
+            return false; // Row does not match the search criteria
+        });
+    }
 
     function formatDates(date) {
         var d = new Date(date),
@@ -801,7 +870,6 @@ $(document).ready( function () {
     }
 
 
-
     function currentDate() {
         var d = new Date(),
             month = d.getMonth()+1,
@@ -822,76 +890,6 @@ $(document).ready( function () {
         // console.log("PRINT FUNCTION FUNCTIONAL");
     }
     
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const aRT = "{{ Auth::user()->role_type }}";
-        var sD = $('#filterDepartment').val();
-        var sLT = $('#filterLeaveType').val();
-        var sLS = $('#filterLeaveStatus').val().toUpperCase();
-        var cD = data[2]; // Department Column
-        var cLT = data[4]; // Leave Type Column
-        var cLS = data[9].toUpperCase(); // Leave Status Column
-
-        // Check if a department filter is selected
-        var departmentFilterActive = (sD != null && sD !== '');
-
-        // Check if a LeaveType filter is selected
-        var leaveTypeFilterActive = (sLT != null && sLT !== '');
-
-        // Check if a LeaveStatus filter is selected
-        var leaveStatusFilterActive = (sLS != null && sLS !== '');
-
-        // Apply both filters
-        if (aRT == 'SUPER ADMIN' || aRT == 'ADMIN') {
-            if (!departmentFilterActive && !leaveTypeFilterActive && !leaveStatusFilterActive) {
-                return true; // No filters applied, show all rows
-            }
-            var departmentMatch = !departmentFilterActive || cD.includes(sD);
-            var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
-            var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
-
-            return departmentMatch && leaveTypeMatch && leaveStatusMatch;
-        } else {
-            if (!leaveTypeFilterActive) {
-                return true; // No filters applied, show all rows
-            }
-            var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
-
-            return leaveTypeMatch;
-        }
-    });
-
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var searchDateFrom = $('#dateFrom').val();
-        var searchDateTo = $('#dateTo').val();
-
-        // Convert search date strings to Date objects
-        var dateFrom = new Date(searchDateFrom);
-        var dateTo = new Date(searchDateTo);
-
-        // Set the time to the start and end of the selected days
-        dateFrom.setHours(0, 0, 0, 0);
-        dateTo.setHours(23, 59, 59, 999);
-
-        // Get the time-in and time-out values from columns 3 and 4
-        var searchTimeIn = data[5];
-        var searchTimeOut = data[6];
-
-        // Convert time-in and time-out strings to Date objects (if applicable)
-        var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
-        var timeOut = searchTimeOut ? new Date(searchTimeOut) : null;
-
-        // Check if the row's time-in or time-out falls within the selected date range
-        if ((!searchDateFrom || !searchDateTo) || // No date range selected
-            (!timeIn && !timeOut) || // No time values available
-            (timeIn >= dateFrom && timeIn <= dateTo) ||
-            (timeOut >= dateFrom && timeOut <= dateTo)) {
-            return true; // Row matches the search criteria
-        }
-
-        return false; // Row does not match the search criteria
-    });
-
-
 
     /* Triggers Date From Searching of Time-In/Time-Out */
     $('#dateFrom').on('keyup change', function() {
@@ -1128,8 +1126,8 @@ $(document).ready( function () {
                         .append('<td>'+data[n]['no_of_days']+'</td>')
                         // .append('<td>'+data[n]['leave_balance']+'</td>')
                         .append('<td>'+data[n]['action']+'</td>')
-                        .append('<td>'+data[n]['created_at']+'</td>')
                         .append('<td class="text-nowrap" id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason']/*.slice(0,10)*/+'</td>')
+                        .append('<td>'+data[n]['created_at']+'</td>')
                         // .append('<td>'+data[n]['date_applied']+'</td>')
                         // .append('<td>'+data[n]['head_name']+'</td>')
                         ;
@@ -1150,6 +1148,59 @@ $(document).ready( function () {
             console.log(error);
         }
     });
+
+
+    /* HEAD APPROVAL begin */
+    $("#approve_leave").click(function () {
+
+        // Swal.fire({html:'mb'}); return false;
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            // var data = $('#update-leave-form').serialize() + "&leave_id=" + $("#leave_id").val();
+            // data.push({'leave_id': $("#leave_id").val()});
+            // alert($("#hid_leave_id").val()); return false;
+            $.ajax({
+                url: window.location.origin+'/head-approve',
+                method: 'post',
+                data: { 'leaveID': $("#hid_leave_id").val() }, // prefer use serialize method
+                success:function(data){
+                    // prompt('',data); return false;
+                    $("#myModal").modal("hide");
+                    // $("#dialog_content").html(data);
+                    Swal.fire(
+                        'Approved by Head.',
+                        '',
+                        'success'
+                      )
+                      /*$('.swal2-confirm').click(function(){
+                        location.reload();
+                      })*/
+                    // $("#dialog_content").html("Approved by Head.");
+                    // $("#dialog" ).dialog({
+                    //     modal: true,
+                    //     title: "Confirmation",
+                    //     width: "auto",
+                    //     height: "auto",
+                    //     buttons: [
+                    //     {
+                    //         id: "OK",
+                    //         text: "OK",
+                    //         click: function () {
+                    //             $(this).dialog('close');
+                    //             location.reload();
+                    //         }
+                    //     }
+                    //     ]
+                    // });
+                    console.log(data);
+                }
+            });
+            return false;
+    });
+    /* HEAD APPROVAL end */
 
 });
 

@@ -156,7 +156,7 @@ function confirmModals(btn) {
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'leaves.xls'; // Use .xls extension for Excel files
+                a.download = 'OT.xls'; // Use .xls extension for Excel files
                 document.body.appendChild(a);
                 a.click();
 
@@ -208,7 +208,7 @@ $(document).on('click', '#requestNewOvertime', function(event) {
                                 $('#otDenyRequest').hide();
                                 $('#otApproveRequest').hide();
                             } else {
-                                if (otDtls.ot_status=='pending'){
+                                if ((otDtls.ot_status=='pending') && (otDtls.head_id==employeeID)) {
                                     $('#otDenyRequest').show();
                                     $('#otApproveRequest').show();
                                 } else {
@@ -391,7 +391,7 @@ $(document).on('click', '#requestNewOvertime', function(event) {
                     if ($("#hid_access_id").val()==1) {
                         historyLabel = historyLabel+" of "+data[0]['name'];
                     }
-                    historyLabel = historyLabel+" (Control #"+data[0]['ot_control_number']+")";
+                    historyLabel = historyLabel+" (Control # "+data[0]['ot_control_number']+")";
                     $("#otHistoryLabel").html(historyLabel.toUpperCase());
                     $("#myModalOT").modal("show");
                 }

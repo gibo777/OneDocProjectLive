@@ -153,7 +153,7 @@ class OvertimesController extends Controller
                 $viewOTS = $viewOTS->where('ot.employee_id', Auth::user()->employee_id);
               }
             }
-            $viewOTS = $viewOTS->orderBy('ot.ot_date_from','desc');
+            $viewOTS = $viewOTS->orderBy('ot.created_at','desc');
             $viewOTS = $viewOTS->get();
             // return var_dump($otUser);
             $offices = DB::table('offices')->orderBy('company_name')->get();
@@ -181,6 +181,7 @@ class OvertimesController extends Controller
                 'ot.employee_id',
                 'o.company_name as office',
                 'd.department',
+                'ot.head_id',
                 DB::raw("(SELECT CONCAT(
                   last_name, 
                   CASE 

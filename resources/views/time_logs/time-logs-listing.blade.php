@@ -129,7 +129,7 @@
                                             @forelse($employees as $employee)
                                                 <tr id="{{ $employee->employee_id.'|'.($employee->f_time_in ? $employee->f_time_in : $employee->f_time_out) }}"
                                                      class="text-sm text-lg-lg">
-                                                    @if (url('/')=='http://localhost')
+                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
                                                     <td>xxx, xxx x.</td>
                                                     @else
                                                     <td>{{ $employee->full_name }}</td>
@@ -139,7 +139,7 @@
                                                     <td>{{ $employee->department }}</td>
                                                     <td>{{ $employee->time_in ? date('m/d/Y g:i A',strtotime($employee->time_in)) : '' }}</td>
                                                     <td>{{ $employee->time_out ? date('m/d/Y g:i A',strtotime($employee->time_out)) : '' }}</td>
-                                                    @if (url('/')=='http://localhost')
+                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
                                                     <td>xxx, xxx x.</td>
                                                     @else
                                                     <td>{{ $employee->head_name }}</td>
