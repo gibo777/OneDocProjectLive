@@ -480,7 +480,7 @@ class ViewLeavesController extends Controller
     }
 
     function hr_approve_leave (Request $request) {
-        return var_dump($request->all());
+        // return var_dump($request->all());
         if($request->ajax()){
             try {
                 $leave_id = $request->leaveID;
@@ -535,7 +535,7 @@ class ViewLeavesController extends Controller
                             'L.head_name',
                             DB::raw("'{$action}' as action"),
                             DB::raw("'{$reason}' as action_reason"),
-                            DB::raw("'{$date}' as created_at")
+                            DB::raw("{$date}' as created_at")
                         )->where('L.id','=',$request->leaveID);
 
                     $history = DB::table('leave_history')
@@ -645,7 +645,7 @@ class ViewLeavesController extends Controller
                             'L.head_name',
                             DB::raw("'{$action}' as action"),
                             DB::raw("'{$reason}' as action_reason"),
-                            DB::raw("'{$date}' as created_at")
+                            DB::raw("{$date} as created_at")
                         )->where('L.id','=',$request->leaveID);
 
                     $history = DB::table('leave_history')
