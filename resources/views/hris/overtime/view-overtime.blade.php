@@ -202,7 +202,7 @@
                                         <tbody class="data hover" id="viewLeave">
                                             @forelse($viewOTS as $viewOT)
                                                 <tr class="view-overtime text-sm text-lg-lg" id="{{ $viewOT->id }}">
-                                                    @if (url('/')=='http://localhost')
+                                                    @if (Str::startsWith(url('/'), ['http://localhost']))
                                                         <td>xxx, xxx x.</td>
                                                     @else
                                                         <td>{{ $viewOT->name }}</td>

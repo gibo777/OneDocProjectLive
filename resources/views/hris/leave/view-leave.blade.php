@@ -223,7 +223,7 @@
                                             @forelse($leaves as $leave)
                                                 <tr class="view-leave text-sm text-lg-lg" id="{{ $leave->id }}">
                                                     @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
+                                                    @if (Str::startsWith(url('/'), ['http://localhost']))
                                                         <td>xxx, xxx x.</td>
                                                     @else
                                                         <td>{{ $leave->name }}</td>
@@ -239,7 +239,7 @@
                                                     <td>{{ date('m/d/Y',strtotime($leave->date_to)) }}</td>
                                                     <td>{{ $leave->no_of_days }}</td>
 
-                                                    @if (!Str::startsWith(url('/'), ['https://sofia.onedoc.ph']))
+                                                    @if (Str::startsWith(url('/'), ['http://localhost']))
                                                         <td>xxx, xxx x.</td>
                                                     @else
                                                         <td>{{ $leave->head_name }}</td>
