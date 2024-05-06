@@ -279,14 +279,14 @@
                           </div>
                           
                           <div class="dropdown dropend">
-                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
+                              <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overtime</a>
                               <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                   <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavOvertime" >{{ __('Overtime Form') }} </a>
                                   <a class="dropdown-item" href="{{ route('hris.view-overtime') }}"  id="nav_view_leaves">{{ __('View Overtimes') }} </a>
                               </div>
                           </div>
 
-                        @if (Auth::user()->id==1 || Auth::user()->id==2 || Auth::user()->id==58)
+                        @if (Auth::user()->id==1)
                               {{-- <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overttime</a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">

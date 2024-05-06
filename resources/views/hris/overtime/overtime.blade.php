@@ -8,7 +8,7 @@
 </style>
 
     <x-slot name="header">
-            {{ __('REQUEST FOR OVERTIME') }}
+            {{ __('OVERTIME REQUEST FORM') }}
     </x-slot>
     <div>
         <div class="max-w-6xl mx-auto mt-2">

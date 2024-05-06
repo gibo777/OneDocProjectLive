@@ -183,7 +183,7 @@ class OvertimesController extends Controller
         if($request->ajax())
          {
 
-            $leaves = DB::table('overtimes_history as o')
+            /*$otDHistory = DB::table('overtimes_history as o')
             ->leftJoin('users as u', 'u.id', '=', 'o.ref_id')
             ->leftJoin('departments as d', 'd.id', '=', 'o.department')
             ->select(
@@ -202,9 +202,14 @@ class OvertimesController extends Controller
             )
             ->where('o.ot_reference',$request->otRef)
             ->orderBy('o.id')
+            ->get();*/
+
+            $otDHistory = DB::table('v_overtime_history')
+            ->where('ot_reference',$request->otRef)
+            ->orderBy('id')
             ->get();
 
-            return $leaves;
+            return $otDHistory;
         }
     }
 

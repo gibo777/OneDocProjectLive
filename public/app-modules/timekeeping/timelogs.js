@@ -220,7 +220,7 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
 });
 
 /*==== EXPORT TO EXCEL TIMELOGS - Start ====*/
-$('#exportExcel').click(function() {
+$(document).on('click', '#exportExcel', async function() {
     // Swal.fire({ html: $('#fTLOffice').val() }); return false;
     $.ajaxSetup({
         headers: {
