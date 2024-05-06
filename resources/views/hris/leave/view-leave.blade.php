@@ -468,10 +468,10 @@
                   <table id="data_history" class="table table-bordered data-table sm:justify-center table-hover">
                       <thead class="thead">
                           <tr>
-                              <th class="text-nowrap">Leave Type</th>
+                              {{-- <th class="text-nowrap">Leave Type</th>
                               <th class="text-nowrap">Begin Date</th>
                               <th class="text-nowrap">End Date</th>
-                              <th class="text-nowrap"># of Day/s</th>
+                              <th class="text-nowrap"># of Day/s</th> --}}
                               {{-- <th class="text-nowrap">Available</th> --}}
                               <th class="text-nowrap">Status</th>
                               <th class="text-nowrap">Reason</th>
@@ -1120,10 +1120,10 @@ $(document).ready( function () {
                         }*/
                         $("#data_history > tbody:last-child")
                         // .append('<td>'+data[n]['leave_number']+'</td>')
-                        .append('<td>'+data[n]['leave_type']+'</td>')
-                        .append('<td>'+data[n]['date_from']+'</td>')
-                        .append('<td>'+data[n]['date_to']+'</td>')
-                        .append('<td>'+data[n]['no_of_days']+'</td>')
+                        // .append('<td>'+data[n]['leave_type']+'</td>')
+                        // .append('<td>'+data[n]['date_from']+'</td>')
+                        // .append('<td>'+data[n]['date_to']+'</td>')
+                        // .append('<td>'+data[n]['no_of_days']+'</td>')
                         // .append('<td>'+data[n]['leave_balance']+'</td>')
                         .append('<td>'+data[n]['action']+'</td>')
                         .append('<td class="text-nowrap" id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason']/*.slice(0,10)*/+'</td>')
