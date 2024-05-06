@@ -27,6 +27,11 @@ textarea {
   height: 100px !important;
 }
 
+.table thead th {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 .thead {
      background-image: linear-gradient(rgb(7,71,191),rgb(32,108,206),rgb(7,71,191));
      color: #FFFFFF;

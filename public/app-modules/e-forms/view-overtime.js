@@ -195,11 +195,9 @@ $(document).on('click', '#requestNewOvertime', function(event) {
                 // Check if otDtls is not empty
                 if (otDtls) {
                     var otControlNumber = otDtls.ot_control_number;
-                    var modalHeader = "Control No. " + otControlNumber;+
-
-                    (otDtls.is_cancelled==1 || otDtls.is_denied) ? $('#otCancelRequest').hide() : $('#otCancelRequest').show();
+                    var modalHeader = "Control No. " + otControlNumber;
+                    (otDtls.is_cancelled==1 || otDtls.is_denied==1) ? $('#otCancelRequest').hide() : $('#otCancelRequest').show();
                     if (isHead ==1) {
-
                         if (otDtls.employee_id==supervisor) {
                             $('#otDenyRequest').hide();
                             $('#otApproveRequest').hide();

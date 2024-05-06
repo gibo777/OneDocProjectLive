@@ -271,15 +271,9 @@
               <table id="data_history" class="table table-bordered table-striped sm:justify-center table-hover">
                   <thead class="thead">
                       <tr>
-                          {{-- <th>Name</th> --}}
-                          {{-- <th>Date Applied</th> --}}
-                          {{-- <th>Hours</th> --}}
-                          {{-- <th>Minutes</th> --}}
-                          {{-- <th>Total Hours</th> --}}
                           <th>Status</th>
                           <th class="text-nowrap">Reason</th>
                           <th class="text-nowrap">Action Date</th>
-                          {{-- <th>Supervisor</th> --}}
                       </tr>
                   </thead>
                   <tbody class="data text-center" id="data">

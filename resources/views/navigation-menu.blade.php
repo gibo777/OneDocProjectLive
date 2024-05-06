@@ -544,19 +544,29 @@ $(document).ready(function(){
       });
     }); */
 
+    $(document).on('click','#dNavEleave', function(e){
+        if ( has_supervisor=='' || has_supervisor==null ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'NOTIFICATION',
+                html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
 
-    $("#dNavEleave").on('click', function(e){
-        // if  (role_type!='SUPER ADMIN') {
-            if ( has_supervisor=='' || has_supervisor==null ) {
-                Swal.fire({
-                    // icon: 'error',
-                    title: 'NOTIFICATION',
-                    html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
+              });
+            return false;
+        }
+    });
 
-                  });
-                return false;
-            }
-        // }
+
+    $(document).on('click','#dNavOvertime', function(e){
+        if ( has_supervisor=='' || has_supervisor==null ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'NOTIFICATION',
+                html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
+
+              });
+            return false;
+        }
     });
 
 

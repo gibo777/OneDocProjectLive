@@ -108,6 +108,7 @@ class OvertimesController extends Controller
                     'head_id' => Auth::user()->supervisor,
                     'head_name' => $request->otHead,
                     'date_applied' => DB::raw('NOW()'),
+                    'ip_address' => $request->ip(),
                     'created_by' => Auth::user()->employee_id,
                     'updated_by' => Auth::user()->employee_id,
                     'created_at' => DB::raw('NOW()'),
@@ -155,6 +156,7 @@ class OvertimesController extends Controller
             }
             $viewOTS = $viewOTS->orderBy('ot.created_at','desc');
             $viewOTS = $viewOTS->get();
+
             // return var_dump($otUser);
             $offices = DB::table('offices')->orderBy('company_name')->get();
             $departments = DB::table('departments')->orderBy('department')->get();
@@ -171,48 +173,9 @@ class OvertimesController extends Controller
         }
     }
     public function viewOvertimeDetails (Request $request) {
-      // return $request->id;
-        $otDtls = DB::table('overtimes as ot')
-            ->leftJoin('departments as d', 'ot.department', 'd.department_code')
-            ->leftJoin('offices as o','ot.office','o.id')
-            ->select(
-                'ot.id',
-                'ot.name', 
-                'ot.employee_id',
-                'o.company_name as office',
-                'd.department',
-                'ot.head_id',
-                DB::raw("(SELECT CONCAT(
-                  last_name, 
-                  CASE 
-                      WHEN suffix IS NOT NULL AND suffix != '' THEN CONCAT(' ', suffix, ',')
-                      ELSE ','
-                  END, ' ',
-                  first_name, ' ', 
-                  middle_name
-              ) FROM users WHERE employee_id = ot.head_id) as supervisor"),
-                'ot.ot_control_number',
-                'ot.ot_location',
-                'ot.ot_date_from',
-                'ot.ot_time_from',
-                'ot.ot_date_to',
-                'ot.ot_time_to',
-                'ot.ot_hours',
-                'ot.ot_minutes',
-                'ot.ot_hrmins as total_hours',
-                DB::raw("DATE_FORMAT(CONCAT(ot.ot_date_from,' ',ot.ot_time_from), '%m/%d/%Y %h:%i %p') AS begin_date"),
-                DB::raw("DATE_FORMAT(CONCAT(ot.ot_date_to,' ',ot.ot_time_to), '%m/%d/%Y %h:%i %p') AS end_date"),
-                DB::raw("DATE_FORMAT(ot.date_applied, '%m/%d/%Y %h:%i %p') AS date_applied"),
-                'ot.ot_reason',
-                'ot.is_head_approved',
-                'ot.is_cancelled',
-                'ot.is_denied',
-                'ot.ot_status'
-            )
-            // ->where('u.id', '!=', 1)
-            ->where('ot.id', $request->id)
+        $otDtls = DB::table('v_overtime_details')
+            ->where('id', $request->id)
             ->first();
-
         return response(['otDtls' => $otDtls]);
     }
 
@@ -301,6 +264,7 @@ class OvertimesController extends Controller
                             'denied_reason',
                             'denied_by',
                             'rcdversion',
+                            'ip_address',
                             'created_at',
                             'updated_at',
                             'created_by',
@@ -343,6 +307,7 @@ class OvertimesController extends Controller
                         'denied_reason',
                         'denied_by',
                         'rcdversion',
+                        'ip_address',
                         'created_at',
                         'updated_at',
                         'created_by',
@@ -424,6 +389,7 @@ class OvertimesController extends Controller
                             'denied_reason',
                             'denied_by',
                             'rcdversion',
+                            'ip_address',
                             'created_at',
                             'updated_at',
                             'created_by',
@@ -466,6 +432,7 @@ class OvertimesController extends Controller
                         'denied_reason',
                         'denied_by',
                         'rcdversion',
+                        'ip_address',
                         'created_at',
                         'updated_at',
                         'created_by',
@@ -547,6 +514,7 @@ class OvertimesController extends Controller
                             'denied_reason',
                             'denied_by',
                             'rcdversion',
+                            'ip_address',
                             'created_at',
                             'updated_at',
                             'created_by',
@@ -589,6 +557,7 @@ class OvertimesController extends Controller
                         'denied_reason',
                         'denied_by',
                         'rcdversion',
+                        'ip_address',
                         'created_at',
                         'updated_at',
                         'created_by',
