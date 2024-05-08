@@ -122,7 +122,7 @@ function confirmModals(btn) {
         message = "Reason for cancellation of request";
         modalHeader = "Confirm Cancel";
     } else {
-        message = "Reason for denying of request";
+        message = "Reason for denial of request";
         modalHeader = "Confirm Deny";
     }
 
@@ -145,28 +145,192 @@ function confirmModals(btn) {
             }
         });
         $.ajax({
-            url: '/leaves-excel',
+            url: '/ot-timelogs-excel',
             method: 'get',
-            data: {'id':$(this).attr('id')}, // prefer use serialize method
-            success:function(data){
+            data: {
+                'id'        : uID,
+                'office'    : $('#fTLOffice').val(),
+                'department': $('#fTLDept').val(),
+                'timeIn'    : $('#fTLdtFrom').val(),
+                'timeOut'   : $('#fTLdtTo').val()
+            },
+            success: function(response) {
 
-                var blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+                // Extracting data from the SQL response JSON
+                const { tlSummary, tlDetailed, currentDate } = response;
+                var currentDateValue = currentDate;
+
+                /* Columns for Summary Timelogs */
+                var columnMappings1 = {
+                    'name': 'Name',
+                    'department': 'Department',
+                    'ot_control_number': 'Control Number',
+                    'ot_location': 'OT Location',
+                    'ot_hours': 'Hours',
+                    'ot_minutes': 'Minutes',
+                    'total_hours': 'Total Hours',
+                    'ot_date_from': 'Begin Date',
+                    'ot_time_from': 'Begin Time',
+                    'ot_date_to': 'End Date',
+                    'ot_time_to': 'End Time'
+                };
+
+                // Define the columns you want to include in the Excel XML content
+                var selectedColumns1 = [
+                    'name',
+                    'department',
+                    'ot_control_number',
+                    'ot_location',
+                    'ot_hours',
+                    'ot_minutes',
+                    'total_hours',
+                    'ot_date_from',
+                    'ot_time_from',
+                    'ot_date_to',
+                    'ot_time_to'
+                ];
+
+
+                /* Columns for Detailed Timelogs */
+                /*var columnMappings2 = {
+                    'full_name': 'Name',
+                    'biometrics_id': 'Staff Code',
+                    'employee_id': 'Employee ID',
+                    'tdate': 'Date',
+                    'tweeks': 'Week',
+                    'time_in': 'Time-In',
+                    'time_out': 'Time-Out',
+                    'head_name': 'Supervisor',
+                    'office': 'Office',
+                    'department': 'Department'
+                };
+*/
+                // Define the columns you want to include in the Excel XML content
+                /*var selectedColumns2 = [
+                    'full_name',
+                    'biometrics_id',
+                    'employee_id',
+                    'tdate',
+                    'tweeks',
+                    'time_in',
+                    'time_out',
+                    'head_name',
+                    'office',
+                    'department',
+                ];*/
+
+                // Extract data for Excel XML content
+                var data1 = [];
+                // var data2 = [];
+
+                // Push headers as the first row of data for Timelogs Summary
+                data1.push(selectedColumns1.map(column => columnMappings1[column]));
+                // Extract table data for Timelogs Summary
+                tlSummary.forEach(function (employee) {
+                    var rowData = selectedColumns1.map(column => {
+                        var value = employee[column];
+                        return (value !== null && value !== undefined) ? value : '';
+                    });
+                    data1.push(rowData);
+                });
+
+                /*// Push headers as the first row of data for Detailed Timelogs
+                data2.push(selectedColumns2.map(column2 => columnMappings2[column2]));
+                // Extract table data for Detailed Timelogs
+                tlDetailed.forEach(function (employee2) {
+                    var rowData2 = selectedColumns2.map(column2 => {
+                        var value2 = employee2[column2];
+                        return (value2 !== null && value2 !== undefined) ? value2 : '';
+                    });
+                    data2.push(rowData2);
+                });*/
+
+                // Create Excel XML content
+                var xmlContent = '<?xml version="1.0"?>\n';
+                xmlContent += '<?mso-application progid="Excel.Sheet"?>\n';
+                xmlContent += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n';
+                xmlContent += ' xmlns:o="urn:schemas-microsoft-com:office:office"\n';
+                xmlContent += ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n';
+                xmlContent += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n';
+                xmlContent += ' xmlns:html="http://www.w3.org/TR/REC-html40">\n';
+
+                //======= Sheet 1 - Timelogs Summary =======//
+                xmlContent += '<Worksheet ss:Name="Requested Overtime Summary">\n';
+                xmlContent += '<Table>\n';
+
+                //==== Add headers for Timelogs Summary ====//
+                xmlContent += '<Row>\n';
+                selectedColumns1.forEach(function (column) {
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings1[column]}</Data></Cell>\n`;
+                });
+                xmlContent += '</Row>\n';
+
+                // Add data rows for Timelogs Summary
+                data1.slice(1).forEach(function (row) {
+                    xmlContent += '<Row>\n';
+                    row.forEach(function (cell) {
+                        cell = cell.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
+                        xmlContent += `<Cell><Data ss:Type="String">${cell}</Data></Cell>\n`;
+                    });
+                    xmlContent += '</Row>\n';
+                });
+
+                xmlContent += '</Table>\n';
+                xmlContent += '</Worksheet>\n';
+
+                //======= Sheet 2 - Detailed Timelogs =======//
+                /*xmlContent += '<Worksheet ss:Name="Detailed Timelogs">\n';
+                xmlContent += '<Table>\n';
+                // Add headers for Detailed Timelogs
+                xmlContent += '<Row>\n';
+                selectedColumns2.forEach(function (column2) {
+                    xmlContent += `<Cell><Data ss:Type="String">${columnMappings2[column2]}</Data></Cell>\n`;
+                });
+                xmlContent += '</Row>\n';
+
+
+                // Swal.fire({ html: data2 }); return false;
+                // Add data rows for Detailed Timelogs
+                data2.slice(1).forEach(function(row2) {
+                    xmlContent += '<Row>\n';
+                    row2.forEach(function(cell2) {
+                        cell2 = cell2.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/'/g, '&apos;')
+                        .replace(/"/g, '&quot;');
+                        xmlContent += `<Cell><Data ss:Type="String">${cell2}</Data></Cell>\n`;
+                    });
+                    xmlContent += '</Row>\n';
+                });
+                xmlContent += '</Table>\n';
+                xmlContent += '</Worksheet>\n';*/
+
+                xmlContent += '</Workbook>';
+
+                // Create a blob from the XML content
+                var blob = new Blob([xmlContent], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
+
+                var filename = `OT_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
 
                 // Create a download link
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'OT.xls'; // Use .xls extension for Excel files
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
 
                 // Clean up
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
-            }
-        }); 
-        return false;
 
+
+            }
+        });
+        return false;
     });
 
     /* Reroute to Request Overtime Form */

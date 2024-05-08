@@ -250,6 +250,9 @@ Route::get('/leaves-excel',[ViewLeavesController::class, 'leavesExcel'])->name('
 Route::get('/timelogs-excel',[EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');
 
 
+Route::get('/ot-timelogs-excel',[OvertimesController::class, 'otTimeLogsExcel'])->name('ot.timelogs.excel');
+
+
 /* ===== MAIL ======*/
 Route::get('/send-mail', [PageController::class, 'send_mail']);
 

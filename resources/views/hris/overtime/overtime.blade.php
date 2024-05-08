@@ -64,7 +64,7 @@
                 <div class="row">
                     <div class="col-md-4 mt-2 p-0 mr-3">
                         <div class="form-floating">
-                            <x-jet-input id="otLocation" type="text" name="otLocation" class="form-control" />
+                            <x-jet-input id="otLocation" type="text" name="otLocation" class="form-control" required/>
                             <label for="otLocation" class="font-weight-bold w-full">
                                 OT LOCATION (Actual Location) <span class="text-danger"> *</span>
                             </label>
@@ -75,7 +75,7 @@
                             <div class="row">
                                 <div class="col-md-6 p-0">
                                     <div class="form-floating text-center">
-                                        <x-jet-input id="otDateFrom" name="otDateFrom" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                        <x-jet-input id="otDateFrom" name="otDateFrom" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off" required/>
                                         <label for="otDateFrom" class="font-weight-bold text-secondary">
                                             OT Begin Date<span class="text-danger"> *</span>
                                         </label>
@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="col-md-6 p-0">
                                     <div class="form-floating text-center">
-                                        <x-jet-input id="otTimeFrom" name="otTimeFrom" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                        <x-jet-input id="otTimeFrom" name="otTimeFrom" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off" required/>
                                         <label for="otDateFrom" class="font-weight-bold text-secondary">
                                             OT Begin Time<span class="text-danger"> *</span>
                                         </label>
@@ -95,7 +95,7 @@
                             <div class="row">
                                 <div class="col-md-6 p-0">
                                     <div class="form-floating text-center">
-                                        <x-jet-input id="otDateTo" name="otDateTo" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                        <x-jet-input id="otDateTo" name="otDateTo" type="date" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off" required/>
                                         <label for="otDateTo" class="font-weight-bold text-secondary">
                                             OT End Date<span class="text-danger"> *</span>
                                         </label>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6 p-0">
                                     <div class="form-floating text-center">
-                                        <x-jet-input id="otTimeTo" name="otTimeTo" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off"/>
+                                        <x-jet-input id="otTimeTo" name="otTimeTo" type="time" class="form-control w-full" placeholder="mm/dd/yyyy" autocomplete="off" required/>
                                         <label for="otDateTo" class="font-weight-bold text-secondary">
                                             OT End Time<span class="text-danger"> *</span>
                                         </label>
@@ -118,7 +118,7 @@
 
                 <div class="row">
                     <div class="col-md-6 form-floating text-center w-full p-0 mt-2">
-                        <textarea id="otReason" name="otReason" class="form-control block w-full" placeholder="REASON" /></textarea>
+                        <textarea id="otReason" name="otReason" class="form-control block w-full" placeholder="REASON" required/></textarea>
                         {{-- <x-jet-label for="reason" value="{{ __('REASON') }}" class="w-full" /> --}}
                         <label for="otReason" class="font-weight-bold text-secondary text-center w-full">
                             <h6>REASON<span class="text-danger"> *</span></h6>

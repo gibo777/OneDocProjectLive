@@ -221,7 +221,7 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
 
 /*==== EXPORT TO EXCEL TIMELOGS - Start ====*/
 $(document).on('click', '#exportExcel', async function() {
-    // Swal.fire({ html: $('#fTLOffice').val() }); return false;
+    // Swal.fire({ html: uID }); return false;
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -231,7 +231,7 @@ $(document).on('click', '#exportExcel', async function() {
         url: '/timelogs-excel',
         method: 'get',
         data: {
-            'id'        : `{{ Auth::user()->id }}`,
+            'id'        : uID,
             'office'    : $('#fTLOffice').val(),
             'department': $('#fTLDept').val(),
             'timeIn'    : $('#fTLdtFrom').val(),

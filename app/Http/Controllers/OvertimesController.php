@@ -116,7 +116,7 @@ class OvertimesController extends Controller
                 ];
                 $insert = DB::table('overtimes')->insert($data);
 
-                return response(['isSuccess' => true,'message'=>'Overtime request submitted!']);
+                return response(['isSuccess' => true,'message'=>'OVERTIME REQUEST successfully submitted!']);
             } catch(Exception $e){
                 return response(['isSuccess'=>false,'message'=>$e]);
             }
@@ -572,9 +572,9 @@ class OvertimesController extends Controller
                     ],$otData);
 
                     if ($otHistory>0) {
-                        $message = "Head Approval Successful!";
+                        $message = "Approved by Head.";
                     } else {
-                        $message = "Failed Approval";
+                        $message = "Failed Approval!";
                         DB::rollback();
                     }
                 } else {
@@ -584,6 +584,66 @@ class OvertimesController extends Controller
             return response(['isSuccess'=>true,'message'=>$message]);
         } catch(Exception $e){
             return response(['isSuccess'=>false,'message'=>$e]);
+        }
+    }
+
+    public function otTimeLogsExcel (Request $request) {
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
+            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
+        {
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+            $currentDate = Carbon::now('Asia/Manila');
+            $formattedDateTime = $currentDate->format('YmdHis');
+
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+                $tlSummary = DB::table('v_overtime_details');
+                if (Auth::user()->id!=1) {
+                    $tlSummary = $tlSummary->where('employee_id',Auth::user()->employee_id)
+                    ->orWhere('head_id',Auth::user()->employee_id);
+                }
+                $tlSummary = $tlSummary->get();
+               /* $tlSummary = DB::select("CALL sp_generated_timelogs_summary(?, ?, ?, ?, ?)", [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                    // date('Y-m-d', strtotime($request->timeIn)), // Format the date as 'Y-m-d'
+                    // date('Y-m-d', strtotime($request->timeOut)) // Format the date as 'Y-m-d'
+                ]);*/
+
+                $tlDetailed = DB::select("CALL sp_generated_timelogs_detailed(?, ?, ?, ?, ?)", [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                ]);
+                
+            } else {
+                $tlSummary = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+            }
+
+
+            return response()->json([
+                'tlSummary'     => $tlSummary, 
+                'tlDetailed'    => $tlDetailed, 
+                'currentDate'   => $formattedDateTime
+            ]);
+
+            // $offices = DB::table('offices')->orderBy('company_name')->get();
+            // $departments = DB::table('departments')->orderBy('department')->get();
+
+            // return view('/reports/excel/timelogs-excel', 
+            //     [
+            //         'employees'     => $employees, 
+            //         'offices'       => $offices,
+            //         'departments'   => $departments,
+            //         'currentDate'   => $formattedDateTime
+            //     ]);
+        } else {
+            return redirect('/');
         }
     }
 }

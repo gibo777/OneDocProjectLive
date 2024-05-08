@@ -452,6 +452,7 @@
 </div>
 <!-- =========================================== -->
 <script type="text/javascript">
+    const uID = `{{ Auth::user()->id }}`;
     const supervisor = "{{ Auth::user()->supervisor }}";
     const isHead = "{{ Auth::user()->is_head }}";
     const employeeID = "{{ Auth::user()->employee_id }}";
