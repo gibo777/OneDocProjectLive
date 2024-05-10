@@ -160,7 +160,7 @@ function confirmModals(btn) {
                 const { tlSummary, tlDetailed, currentDate } = response;
                 var currentDateValue = currentDate;
 
-                /* Columns for Summary Timelogs */
+                /* Columns for Overtime Summary */
                 var columnMappings1 = {
                     'name': 'Name',
                     'department': 'Department',

@@ -7,7 +7,7 @@
             {{-- {{ $fullName }} --}}
             {{-- {{ url('/qr-code-link').'/'.$qrLink }} --}}
             <div >
-            	<img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(140)->generate( env('APP_URL').'qr-code-link/'.$qrLink )) !!} ">
+            	<img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(140)->generate( env('APP_URL').'emp-val/'.$qrLink )) !!} ">
 		        <a id="downloadLink" href="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)
             ->margin(5)->generate( env('APP_URL').'qr-code-link/'.$qrLink )) !!} " download="{{$fullName}}.png">Download QR Code</a>
 		    </div>

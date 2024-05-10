@@ -17,7 +17,6 @@
             <form id="leave-form" method="POST" action="{{ route('hris.leave.eleave') }}">
             @csrf
 
-
             <div class="px-5 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                 <div class="row inset-shadow rounded">
                     <div class="col-md-4 pt-1">

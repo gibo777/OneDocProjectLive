@@ -24,7 +24,7 @@ class QRCodeController extends Controller
     public function index(Request $request)
     {
         $userQR = DB::table('users as u')->select( 
-            'u.qr_code_link',
+            'u.qr_code_link', 'u.employee_id',
             DB::raw('CONCAT(u.last_name, 
                 (CASE WHEN u.suffix IS NOT NULL THEN CONCAT(", ", u.suffix, ", ") ELSE ", " END), 
                 u.first_name,
@@ -37,7 +37,7 @@ class QRCodeController extends Controller
 
 
         // $fullName = join(' ',[$userQR->last_name.' '.$userQR->suffix.',',$userQR->first_name,$userQR->middle_name]);
-        return view('modals/qr_code', ['qrLink'=>$userQR->qr_code_link, 'fullName'=>$userQR->full_name]);
+        return view('modals/qr_code', ['qrLink'=>$userQR->employee_id, 'fullName'=>$userQR->full_name]);
     }
 
     /**
@@ -55,7 +55,7 @@ class QRCodeController extends Controller
                 DB::raw("DATE_FORMAT(u.birthdate, '%m/%d/%Y') as birthday"),
                 'p.country_name')
             ->leftJoin('provinces as p','u.country','=','p.country_code')
-            ->where('u.qr_code_link',$qrLink)
+            ->where('u.employee_id',$qrLink)
             ->first();
 
         // For example, you can return a view with the $qrLink variable
@@ -70,7 +70,8 @@ class QRCodeController extends Controller
             // DB::raw("CONCAT(last_name, ', ', first_name, ' ', middle_name) as full_name"),
             DB::raw("CONCAT(last_name, (CASE WHEN suffix IS NOT NULL AND suffix <> '' THEN CONCAT(' ',suffix, ', ') ELSE ', ' END), first_name, (CASE WHEN middle_name IS NOT NULL THEN CONCAT(' ', SUBSTRING(middle_name, 1, 1)) ELSE '' END)) as full_name"),
             DB::raw("NOW() as today"),
-            'qr_code_link'
+            'qr_code_link',
+            'employee_id'
         ])
         ->orderBy('full_name')
         // ->limit(10) // Limit for testing only
@@ -91,7 +92,7 @@ class QRCodeController extends Controller
             $qrCode = QrCode::format('png')
             ->size(300)
             ->margin(5)
-            ->generate(url('/qr-code-link').'/'.$link->qr_code_link);
+            ->generate(url('/emp-val').'/'.$link->employee_id);
 
             // Define the file name for the QR code
             $fileName = $link->full_name . '.png';
@@ -109,7 +110,7 @@ class QRCodeController extends Controller
         if ($zip->open($zipFileName, ZipArchive::CREATE) === true) {
             foreach ($qrLinks as $link) {
                 $fileName = $link->full_name . '.png';
-                $filePath = url('/qr-code-link').'/'.$link->qr_code_link;
+                $filePath = url('/emp-val').'/'.$link->employee_id;
                 $zip->addFile($filePath, $fileName);
             }
 

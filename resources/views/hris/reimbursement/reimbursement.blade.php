@@ -41,77 +41,81 @@
                 </div>
             @endif
 
+            <form id="reimbursementForm" method="POST" action="">
+            @csrf
 
-            <div class="px-5 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
-                {{-- <div class="row">
-                    <div class="col-md-12 p-1 text-center">
-                        <x-jet-label for="name" value="{{ __('Reimbursement Request') }}" class="w-full" />
-                    </div>
-                </div> --}}
-                <div class="row mt-2 border-1 py-2 inset-shadow">
-                    <div class="col-md-6 nopadding">
-                        <div class="row">
-                            <div class="col-md-3 text-center pt-2">
-                                <x-jet-label for="inputField" value="{{ __('Incurred at') }}" />
-                            </div>
-                            <div class="col-md-8">
-                                <x-jet-input id="rPlace" name="rPlace" type="text" placeholder='Multiple places separated by comma ( , )' class="w-full shadow-none"/>
-                                <x-jet-input-error for="rPlace" class="mt-2" />
+                <div class="px-5 pt-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+                    {{-- <div class="row">
+                        <div class="col-md-12 p-1 text-center">
+                            <x-jet-label for="name" value="{{ __('Reimbursement Request') }}" class="w-full" />
+                        </div>
+                    </div> --}}
+                    <div class="row mt-2 border-1 py-2 inset-shadow">
+                        <div class="col-md-4 nopadding">
+                            <div class="row">
+                                <div class="col-md-3 text-center pt-2">
+                                    <x-jet-label for="inputField" value="{{ __('Incurred at') }}" />
+                                </div>
+                                <div class="col-md-8">
+                                    <x-jet-input id="rPlace" name="rPlace" type="text" placeholder='Multiple places separated by comma ( , )' class="w-full shadow-none"/>
+                                    <x-jet-input-error for="rPlace" class="mt-2" />
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-6 nopadding">
+                            <div class="row items-center">
+                                <div class="col-md-3 text-center pt-2">
+                                    <x-jet-label value="{{ __('For the Period of ') }}"/>
+                                </div>
+                                <div class="col-md-2.5 nopadding">
+                                        <x-jet-input id="rDateFrom" name="rDateFrom" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
+                                </div>
+                                <div class="col-sm-1 nopadding text-center">to</div>
+                                <div class="col-md-2.5 p-0 m-0">
+                                        <x-jet-input id="rDateTo" name="rDateTo" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <x-jet-button id="addRow">Add new row</x-jet-button>
+                        </div>
                     </div>
-                    <div class="col-md-6 nopadding">
-                        <div class="row">
-                            <div class="col-md-3 text-center pt-2">
-                                <x-jet-label value="{{ __('For the Period of ') }}"/>
-                            </div>
-                            <div class="col-md-2.5 nopadding">
-                                    <x-jet-input id="rDateFrom" name="rDateFrom" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
-                            </div>
-                            <div class="col-sm-1 nopadding text-center">to</div>
-                            <div class="col-md-2.5 p-0 m-0">
-                                    <x-jet-input id="rDateTo" name="rDateTo" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
-                            </div>
+
+                    <div class="row border-1 mt-2">
+                        <table id="dataLineItems" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Document Support</th>
+                                    <th>Date</th>
+                                    <th>Particulars</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Remarks</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>  
+
+                    <div class="row">
+                        <!-- Upload File -->
+                        <div id="div_upload" name="div_upload" class="form-floating col-md-4" hidden="true">
+                            <x-jet-input id="upload_file" type="file" class="form-control mt-1 block w-full" placeholder="Attach necessary document" />
+                            <x-jet-label for="upload_file" value="{{ __('Attach necessary document') }}" />
+
+                            <x-jet-input-error for="name" class="mt-2" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="flex items-center justify-center px-4 py-3 sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
+                            <x-jet-button id="submit_leave" name="submit_leave" disabled>
+                                {{ __('Submit Reimbursement Request') }}
+                            </x-jet-button>
+
                         </div>
                     </div>
                 </div>
-
-                <div class="row text-right mt-3">
-                    <p><x-jet-button id="addRow">Add new row</x-jet-button></p>
-                </div>
-                <div class="row border-1">
-                    <table id="dataLineItems" class="display" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Document Support</th>
-                                <th>Date</th>
-                                <th>Particulars</th>
-                                <th>Category</th>
-                                <th>Amount</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>  
-
-                <div class="row">
-                    <!-- Upload File -->
-                    <div id="div_upload" name="div_upload" class="form-floating col-md-4" hidden="true">
-                        <x-jet-input id="upload_file" type="file" class="form-control mt-1 block w-full" placeholder="Attach necessary document" />
-                        <x-jet-label for="upload_file" value="{{ __('Attach necessary document') }}" />
-
-                        <x-jet-input-error for="name" class="mt-2" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="flex items-center justify-center px-4 py-3 sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
-                        <x-jet-button id="submit_leave" name="submit_leave" disabled>
-                            {{ __('Submit Reimbursement Request') }}
-                        </x-jet-button>
-
-                    </div>
-                </div>
-            </div>
+            </form>
                 
         </div>
     </div>
@@ -140,50 +144,77 @@
   </div>
 </div>
     
-<x-jet-input id="holidates" type="hidden" value="{{ $holidays->implode('date', '|') }}"></x-jet-input>
 </x-app-layout>
 
-<div id="popup">
-  <p id="pop_content" class="text-justify px-2"></p>
-</div>
-
-<div id="error_dialog">
-  <p id="error_dialog_content" class="text-justify px-2"></p>
-</div>
 
 <script type="text/javascript">
 $(document).ready(function() {
-let counter = 1;
+    let counter = 1;
+    let addRowButton = $('#addRow');
 
     function addNewRow() {
-    table.row
-        .add([
-            `<input name="rFile[${counter}]" type="file" class="form-control">`,
-            `<input name="rDate[${counter}]" type="date" class="form-control">`,
-            `<input name="rParticulars[${counter}]" class="form-control">`,
-            `<select name="rCategories[${counter}]" class="form-control">
-            <option value="">Select Category</option>
-            <option>Category 1</option>
-            <option>Category 2</option>
-            <option>Category 3</option>
-            <option>Category 4</option>
-            <option>Category 5</option>
-            </select>`,
-            `<input name="rAmount[${counter}]" class="form-control">`,
-            `<input name="rRemarks[${counter}]" class="form-control">`
-        ])
-        .draw(false);
- 
-    counter++;
-}
- 
-const table = $('#dataLineItems').DataTable({
+        if (validatePreviousRow()) {
+            const removeButton = counter > 1 ? `<button name="removeRow[${counter}]" type="button" class="btn btn-danger" value="${counter}"><i class="fa-solid fa-trash-can"></i></button>` : '';
+            table.row
+                .add([
+                    `<input name="rFile[${counter}]" type="file" class="form-control">`,
+                    `<input name="rDate[${counter}]" type="date" class="form-control">`,
+                    `<input name="rParticulars[${counter}]" class="form-control">`,
+                    `<select name="rCategories[${counter}]" class="form-control">
+                        <option value="">Select Category</option>
+                        <option>Category 1</option>
+                        <option>Category 2</option>
+                        <option>Category 3</option>
+                        <option>Category 4</option>
+                        <option>Category 5</option>
+                    </select>`,
+                    `<input type="number" name="rAmount[${counter}]" class="form-control">`,
+                    `<input name="rRemarks[${counter}]" class="form-control">`,
+                    removeButton
+                ])
+                .draw(false);
+
+            counter++;
+            // Remove the "Add new row" button after adding a row
+            // addRowButton.prop('disabled', true).text('Row added');
+        } else {
+            Swal.fire({
+                icon: "error",
+                html:"Please fill all fields in the previous row before adding another row."
+            });
+        }
+        return false;
+    }
+
+    function validatePreviousRow() {
+        let isValid = true;
+
+        // Select all input fields in the previous row
+        const prevRowInputs = $(`#dataLineItems tbody tr:last-child input`);
+
+        // Loop through each input field in the previous row and check if it's empty
+        prevRowInputs.each(function() {
+            if ($(this).val().trim() === '') {
+                isValid = false;
+                return false; // Exit the loop early if any field is empty
+            }
+        });
+
+        return isValid;
+    }
+
+    const table = $('#dataLineItems').DataTable({
+        "ordering": false,
         "columnDefs": [
             { "orderable": false, "targets": "_all" }, // Disable sorting for all columns
             { "targets": [3], "orderable": true },
-            { "width": '100px', targets: [0] },
+            { "width": '30px', targets: [6] }, // Adjust the width to fit the icon size
+            { "width": '120px', targets: [0] },
             { "width": '80px', targets: [1] },
-            { "width": '140px', targets: [2] },
+            { "width": '160px', targets: [2] },
+            { "width": '120px', targets: [3] },
+            { "width": '120px', targets: [4] },
+            { "width": '160px', targets: [5] },
         ],
         "lengthMenu": [ -1 ], // Disable the "Show [X] entries" dropdown
         "paging": false, // Disable pagination
@@ -193,12 +224,18 @@ const table = $('#dataLineItems').DataTable({
             // "info": "Displaying _START_ to _END_ of _TOTAL_ entries"
             "info": ""
         },
+    });
+
+    // Event listener for "Add new row" button
+    addRowButton.on('click', addNewRow);
+
+    // Automatically add a first row of data
+    addNewRow();
+
+    $(document).on('click', 'button[name^="removeRow["]', function() {
+        Swal.fire({ html: $(this).val() }); return false;
+    });
 });
- 
-document.querySelector('#addRow').addEventListener('click', addNewRow);
- 
-// Automatically add a first row of data
-addNewRow();
-});
+
 
 </script>

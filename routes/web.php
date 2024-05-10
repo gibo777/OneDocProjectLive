@@ -223,7 +223,7 @@ Route::post('webcam', [WebcamController::class, 'store'])->name('webcam.capture'
 
 /* QR CODE */
 Route::get('/qr-code', [QRCodeController::class, 'index'])->name('qr-code');
-Route::get('/qr-code-link/{qrLink}', [QRCodeController::class, 'qrCodeProfile'])->name('qr-code-profile');
+Route::get('/emp-val/{qrLink}', [QRCodeController::class, 'qrCodeProfile'])->name('qr-code-profile');
 Route::get('/download-multiple-qrcodes', [QRCodeController::class, 'downloadMultipleQRCodes']);
 
 /*======= REPORTS =======*/
