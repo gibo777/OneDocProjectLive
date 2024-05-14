@@ -35,12 +35,22 @@ class LoginRequest extends FormRequest
 
     public function authCheckLogin ($email, $password)
     {
-        $authLogin = DB::table('users')->select('password')->where('email', $email)->first();
+        $authLogin = DB::table('users')
+        ->select(
+            'password',
+            'employment_status'
+        )
+        ->where('email', $email)->first();
 
         if ($authLogin) {
             $authPass = $authLogin->password;
+            $authStatus = $authLogin->employment_status;
             if (Hash::check($password, $authPass)) {
-                return response(['isSuccess' => true,'message'=>'Credentials matched!']);
+                if ($authStatus=='NO LONGER CONNECTED') {
+                    return response(['isSuccess' => false,'message'=>'You are '.$authStatus.'!']);
+                } else {
+                    return response(['isSuccess' => true,'message'=>'Credentials matched!']);
+                }
             } else {
                 return response(['isSuccess' => false,'message'=>'Invalid credentials!']);
             }

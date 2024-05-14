@@ -30,26 +30,26 @@
 						    </thead> --}}
 						    <tbody class="data" id="viewEmployee">
 						            <tr id="{{ $qrProfile->id }}">
-						            	<td class="thead">Name</td>
-						                <td colspan="3">{{ join(' ',[$qrProfile->last_name.' '.$qrProfile->suffix.',',$qrProfile->first_name,$qrProfile->middle_name]) }}</td>
+						            	<td class="thead col-3 text-right">Name</td>
+						                <td class="col-9 text-left">{{ join(' ',[$qrProfile->last_name.' '.$qrProfile->suffix.',',$qrProfile->first_name,$qrProfile->middle_name]) }}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
-						            	<td class="thead">Position</td>
-						                <td>{{ $qrProfile->position}}</td>
+						            	<td class="thead text-right">Position</td>
+						                <td class="text-left">{{ $qrProfile->position}}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
-						            	<td class="thead">Department</td>
-						                <td>{{ $qrProfile->department }}</td>
+						            	<td class="thead text-right">Department</td>
+						                <td class="text-left">{{ $qrProfile->department }}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
-						            	<td class="thead">Date Hired</td>
+						            	<td class="thead text-right">Date Hired</td>
 						                {{-- <td>{{ date("m-d-Y",strtotime($qrProfile->date_hired)) }}</td> --}}
-						                <td>{{ ($qrProfile->date_hired == NULL || $qrProfile->date_hired=='01/01/1970') ? '' : $qrProfile->date_hired }}</td>
+						                <td class="text-left">{{ ($qrProfile->date_hired == NULL || $qrProfile->date_hired=='01/01/1970') ? '' : $qrProfile->date_hired }}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
-						            	<td class="thead">Status</td>
-						                <td class="font-weight-bold {{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? 'text-danger' : 'text-success' }}">
-										    {{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? $qrProfile->employment_status : 'ACTIVE'}}
+						            	<td class="thead text-right">Status</td>
+						                <td class="text-left font-weight-bold {{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? 'text-danger' : 'text-success' }}">
+										    {{ (strtolower($qrProfile->employment_status)=='no longer connected') ? $qrProfile->employment_status : 'ACTIVE'}}
 										</td>
 						            </tr>
 						    </tbody>
