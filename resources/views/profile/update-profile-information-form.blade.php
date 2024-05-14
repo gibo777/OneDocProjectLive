@@ -75,7 +75,7 @@
                     </div>
                     <!-- DATE HIRED -->
                     <div class="col-md-12 nopadding my-2">
-                            <x-jet-label for="date_hired" value="{{ __('Date Started:') }}" class="text-left nopadding" />
+                            <x-jet-label for="date_hired" value="{{ __('Date Hired:') }}" class="text-left nopadding" />
                             <x-jet-input id="date_hired" type="text" class="border-0 shadow-none w-full" wire:model="state.date_hired" disabled />
                     </div>
 

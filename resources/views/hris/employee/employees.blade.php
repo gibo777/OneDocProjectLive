@@ -596,9 +596,12 @@ $(document).ready(function() {
 
                 const {getemployee,getLeaves,qrCodeLink} = data;
                 var imgProfilePhotoLocation = '';
-                var dh = (getemployee.date_hired!=null) ? getemployee.date_hired.split('-') : '';
-                var valDateHired = (getemployee.date_hired!=null) ? [dh[1],dh[2],dh[0]].join('/') : '';
+                var dh = (getemployee.date_hired!=null && getemployee.date_hired!='1970-01-01') ? getemployee.date_hired.split('-') : '';
+
+                var valDateHired = (getemployee.date_hired!=null && getemployee.date_hired!='1970-01-01') ? [dh[1],dh[2],dh[0]].join('/') : '';
                 var sched = getemployee.weekly_schedule.split('|');
+
+                var valDateReg = (getemployee.date_regularized!=null && getemployee.date_regularized!='01/01/1970') ? getemployee.date_regularized : '';
 
                 var labelElement = $("#fullName");
                 var fullName = [getemployee.last_name];
@@ -643,7 +646,7 @@ $(document).ready(function() {
 
                 $("#employment_status").val(getemployee.employment_status);
                 $("#date_hired").val( valDateHired );
-                $("#dateRegularized").val( getemployee.date_regularized );
+                $("#dateRegularized").val( valDateReg );
                 // $("input[name='weekly_schedule']").val(1);
                 $("#office").val(getemployee.office);
                 $("#supervisor").val(getemployee.supervisor);

@@ -60,6 +60,7 @@ class UpdateProfileInformationForm extends Component
     public function mount()
     {
         $this->state = Auth::user()->withoutRelations()->toArray();
+        ($this->state['date_hired']=='January 01, 1970' || $this->state['date_hired']==NULL) ? $this->state['date_hired']='' :$this->state['date_hired'];
     }
 
     /**

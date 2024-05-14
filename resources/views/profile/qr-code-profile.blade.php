@@ -44,11 +44,13 @@
 						            <tr id="{{ $qrProfile->id }}">
 						            	<td class="thead">Date Hired</td>
 						                {{-- <td>{{ date("m-d-Y",strtotime($qrProfile->date_hired)) }}</td> --}}
-						                <td>{{ $qrProfile->date_hired }}</td>
+						                <td>{{ ($qrProfile->date_hired == NULL || $qrProfile->date_hired=='01/01/1970') ? '' : $qrProfile->date_hired }}</td>
 						            </tr>
 						            <tr id="{{ $qrProfile->id }}">
 						            	<td class="thead">Status</td>
-						                <td>{{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? $qrProfile->employment_status : 'ACTIVE'}}</td>
+						                <td class="font-weight-bold {{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? 'text-danger' : 'text-success' }}">
+										    {{ ($qrProfile->employment_status=='NO LONGER CONNECTED') ? $qrProfile->employment_status : 'ACTIVE'}}
+										</td>
 						            </tr>
 						    </tbody>
 						</table>
@@ -60,6 +62,15 @@
         			Invalid Link
         		</div>
 	            @endif
+
+            <div class="flex items-center justify-end px-3">
+                <a class="underline text-md text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    {{ __('Go to Employee Portal') }}
+                </a>
+            </div>
+            {{-- <div class="flex items-center justify-center mt-3">
+                <span class="text-sm">Copyright © {{ env('COMPANY_NAME') }}</span>
+            </div> --}}
         </div>
     </div>
 </x-guest-layout>
