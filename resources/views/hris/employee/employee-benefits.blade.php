@@ -72,25 +72,19 @@
                                         </thead>
                                         <tbody class="data hover" id="viewEmployee">
                                                 <tr id="">
-                                                    @if (url('/')=='http://localhost')
                                                     <td>Below 3 years</td>
-                                                    @endif
                                                     <td>10</td>
                                                     <td>10</td>
                                                     <td>5</td>
                                                 </tr>
                                                 <tr id="">
-                                                    @if (url('/')=='http://localhost')
                                                     <td>More than 3 years to 6 years</td>
-                                                    @endif
                                                     <td>12</td>
                                                     <td>12</td>
                                                     <td>5</td>
                                                 </tr>
                                                 <tr id="">
-                                                    @if (url('/')=='http://localhost')
                                                     <td>More than 6 years</td>
-                                                    @endif
                                                     <td>15</td>
                                                     <td>15</td>
                                                     <td>5</td>

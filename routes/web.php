@@ -258,7 +258,7 @@ Route::get('/send-mail', [PageController::class, 'send_mail']);
 
 
 /* TESTING ONLY */
-Route::get('/test', [TestController::class,'test_view']);
+Route::get('/test', [TestController::class,'test_view'])->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')]);
 // Route::get('/hris/{var1}/{var2}', function($var1,$var2) {return $var1."-----------".$var2;});
 Route::get('/tcpdf', [HomeController::class, 'createPDF'])->name('createPDF');
 
