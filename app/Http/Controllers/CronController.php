@@ -32,9 +32,14 @@ class CronController extends Controller
     		'date_regularized',
     		DB::raw('NOW() as server_datetime'),
     		DB::raw('DATE_FORMAT(NOW(),"%Y-%m-%d") as server_date'),
-    		DB::raw('DATE_FORMAT(NOW(),"%H:%i:%s") as server_time')
+    		DB::raw('DATE_FORMAT(NOW(),"%H:%i:%s") as server_time'),
+            DB::raw('TIMESTAMPDIFF(YEAR, date_regularized, CURDATE()) AS years_since_regularized'),
+            DB::raw('TIMESTAMPDIFF(MONTH, date_regularized, CURDATE()) % 12 AS months_since_regularized')
     	)
-    	->where('date_regularized','!=', NULL)
+        ->where('date_regularized','!=', NULL)
+    	->where('date_regularized','!=', '1970-01-01')
+        ->orderBy('first_name')
+        ->orderBy('last_name')
     	->get();
 
     	$string = '';
@@ -53,31 +58,36 @@ $regularDate = Carbon::parse($value->date_regularized);
 $serverDate = Carbon::parse($value->server_date); 
 $diff = $regularDate->diffInYears($serverDate);
 
-$string .= "Date Regularized: " . $regularDate->format('M d, Y') . "<br>";
-$string .= "Server Date: " . $serverDate->format('M d, Y') . "<br>";
-$string .= "Month: " . $serverDate->format('m') . "<br>";
-$string .= "Year: " . $serverDate->format('Y') . "<br>";
-$string .= "Employee ID: " . $value->employee_id . "<br><br>";
-$string .= "Difference in Years: " . $diff . "<br>";
+$yearsTenure = intval($value->years_since_regularized);
 
-switch ($diff) {
-    case $diff > 6:
-        $string .= "More than 6 years";
-        $string .= "VL Credit Added: ". number_format((15/12),4);
-        break;
+if (url('/')=='http://localhost' && $value->id!=1 && $value->id!=2) {
+    $string .= "Name: " . implode(' ',['Xxx', 'X', 'Xxx', ucwords(strtolower($value->suffix))]);
+} else {
+    $string .= "Name: " . implode(' ',[ucwords(strtolower($value->first_name)), ucwords(strtolower($value->middle_name)), ucwords(strtolower($value->last_name)), ucwords(strtolower($value->suffix))]);
+}
+$string .= " | Employee ID: " . $value->employee_id;
+$string .= " | Date Regularized: " . $regularDate->format('M d, Y');
+$string .= " | Regularized Tenure: ". $value->years_since_regularized . " Year/s and ". $value->months_since_regularized. " Month/s";
+// $string .= "Server Date: " . $serverDate->format('M d, Y') . "<br>";
+// $string .= "Month: " . $serverDate->format('m') . "<br>";
+// $string .= "Year: " . $serverDate->format('Y') . "<br>";
+// $string .= "<br>Difference in Years: " . $diff;
 
-    case $diff >= 3 && $diff < 6:
-        $string .= "More than 3 years to 6 years";
-        $string .= "VL Credit Added: ". number_format((12/12),4);
-        break;
 
-    default:
-        $string .= "Below 3 years<br>";
-        $string .= "VL Credit Added: ". number_format((10/12),4);
-        break;
+if ($yearsTenure > 6) {
+    $string .= " (More than 6 years)";
+    $string .= " | VL Credit Added: " . number_format((15 / 12), 4);
+} elseif ($yearsTenure >= 3 && $yearsTenure < 6) {
+    $string .= " (More than 3 years to 6 years)";
+    $string .= " | VL Credit Added: " . number_format((12 / 12), 4);
+} else {
+    $string .= " (Below 3 years)";
+    $string .= " | VL Credit Added: " . number_format((10 / 12), 4);
 }
 
-$string .= "<br>==============================<br>";
+$string .= "<br>";
+for ($i = 0; $i < 125; $i++) { $string .= "="; }
+$string .= "<br>";
 
             /*==============================*/
     	}
