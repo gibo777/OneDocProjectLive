@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    var ctrSubmit = 0;
 
     function currentDate() {
         var d = new Date(),
@@ -333,6 +334,12 @@ $(document).ready(function(){
 
     /* SUBMIT LEAVE FORM begin*/
     $(document).on('click','#submitLeave',function (){
+        ctrSubmit++;
+
+        if (ctrSubmit>1){
+            Swal.fire({ html: 'Please wait for the leave to be submitted...'}); return false;
+        }
+
 
         overlapValidation($("#leaveDateFrom").val(), $("#leaveDateTo").val())
         .then(function(overlap) {
@@ -376,11 +383,6 @@ $(document).ready(function(){
                 } else {
                     $("#reason").removeClass('empty');
                 }
-
-                /*Swal.fire({
-                    title: empty_fields,
-                }); return false;*/
-                // alert(empty_fields); return false;
 
                 if (empty_fields>0) {
                     Swal.fire({

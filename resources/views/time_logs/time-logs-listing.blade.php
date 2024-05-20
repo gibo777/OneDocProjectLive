@@ -181,7 +181,3 @@
 <script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs.js') }}"></script>
 
 </x-app-layout>
-
-
-
-

@@ -38,6 +38,7 @@ class CronController extends Controller
     	)
         ->where('date_regularized','!=', NULL)
     	->where('date_regularized','!=', '1970-01-01')
+        ->whereDate('date_regularized', '<=', DB::raw('CURDATE()'))
         ->orderBy('first_name')
         ->orderBy('last_name')
     	->get();
@@ -54,40 +55,40 @@ class CronController extends Controller
             // Check the Regularized Day then check the current server month
 
 
-$regularDate = Carbon::parse($value->date_regularized); 
-$serverDate = Carbon::parse($value->server_date); 
-$diff = $regularDate->diffInYears($serverDate);
+            $regularDate = Carbon::parse($value->date_regularized); 
+            $serverDate = Carbon::parse($value->server_date); 
+            $diff = $regularDate->diffInYears($serverDate);
 
-$yearsTenure = intval($value->years_since_regularized);
+            $yearsTenure = intval($value->years_since_regularized);
 
-if (url('/')=='http://localhost' && $value->id!=1 && $value->id!=2) {
-    $string .= "Name: " . implode(' ',['Xxx', 'X', 'Xxx', ucwords(strtolower($value->suffix))]);
-} else {
-    $string .= "Name: " . implode(' ',[ucwords(strtolower($value->first_name)), ucwords(strtolower($value->middle_name)), ucwords(strtolower($value->last_name)), ucwords(strtolower($value->suffix))]);
-}
-$string .= " | Employee ID: " . $value->employee_id;
-$string .= " | Date Regularized: " . $regularDate->format('M d, Y');
-$string .= " | Regularized Tenure: ". $value->years_since_regularized . " Year/s and ". $value->months_since_regularized. " Month/s";
-// $string .= "Server Date: " . $serverDate->format('M d, Y') . "<br>";
-// $string .= "Month: " . $serverDate->format('m') . "<br>";
-// $string .= "Year: " . $serverDate->format('Y') . "<br>";
-// $string .= "<br>Difference in Years: " . $diff;
+            if (url('/')=='http://localhost' && $value->id!=1 && $value->id!=2) {
+                $string .= "Name: " . implode(' ',['Xxx', 'X', 'Xxx', ucwords(strtolower($value->suffix))]);
+            } else {
+                $string .= "Name: " . implode(' ',[ucwords(strtolower($value->first_name)), ucwords(strtolower($value->middle_name)), ucwords(strtolower($value->last_name)), ucwords(strtolower($value->suffix))]);
+            }
+            $string .= " | Employee ID: " . $value->employee_id;
+            $string .= " | Date Regularized: " . $regularDate->format('M d, Y');
+            $string .= " | Regularized Tenure: ". $value->years_since_regularized . " Year/s and ". $value->months_since_regularized. " Month/s";
+            // $string .= "Server Date: " . $serverDate->format('M d, Y') . "<br>";
+            // $string .= "Month: " . $serverDate->format('m') . "<br>";
+            // $string .= "Year: " . $serverDate->format('Y') . "<br>";
+            // $string .= "<br>Difference in Years: " . $diff;
 
 
-if ($yearsTenure > 6) {
-    $string .= " (More than 6 years)";
-    $string .= " | VL Credit Added: " . number_format((15 / 12), 4);
-} elseif ($yearsTenure >= 3 && $yearsTenure < 6) {
-    $string .= " (More than 3 years to 6 years)";
-    $string .= " | VL Credit Added: " . number_format((12 / 12), 4);
-} else {
-    $string .= " (Below 3 years)";
-    $string .= " | VL Credit Added: " . number_format((10 / 12), 4);
-}
+            if ($yearsTenure > 6) {
+                $string .= " (More than 6 years)";
+                $string .= " | VL Credit Added: " . number_format((15 / 12), 4);
+            } elseif ($yearsTenure >= 3 && $yearsTenure < 6) {
+                $string .= " (More than 3 years to 6 years)";
+                $string .= " | VL Credit Added: " . number_format((12 / 12), 4);
+            } else {
+                $string .= " (Below 3 years)";
+                $string .= " | VL Credit Added: " . number_format((10 / 12), 4);
+            }
 
-$string .= "<br>";
-for ($i = 0; $i < 125; $i++) { $string .= "="; }
-$string .= "<br>";
+            $string .= "<br>";
+            for ($i = 0; $i < 125; $i++) { $string .= "="; }
+            $string .= "<br>";
 
             /*==============================*/
     	}
