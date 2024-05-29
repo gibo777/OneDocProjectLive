@@ -739,6 +739,10 @@ class ViewLeavesController extends Controller
                 'h.no_of_days'
             )
             ->where('h.leave_reference','=',$request->leave_reference)
+            ->where(function($query) {
+                $query->where('h.is_deleted', '!=', '1')
+                      ->orWhereNull('h.is_deleted');
+            })
             ->orderBy('h.id')
             ->get();
 
