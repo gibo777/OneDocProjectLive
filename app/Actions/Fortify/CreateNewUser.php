@@ -124,6 +124,12 @@ class CreateNewUser implements CreatesNewUsers
         $insert = new LeaveBalances;
         $insert->ref_id = $user->id;
         $insert->year = Carbon::now()->format('Y');
+        $insert->VL = 0;
+        $insert->SL = 0;
+        $insert->ML = 0;
+        $insert->PL = 0;
+        $insert->EL = 0;
+        $insert->others = 0;
         $insert->employee_id = $user->employee_id;
         $insert->save();
 
