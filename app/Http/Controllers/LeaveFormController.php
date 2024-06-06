@@ -54,6 +54,7 @@ class LeaveFormController extends Controller
               DB::raw('FORMAT((CASE WHEN EL is not null THEN EL ELSE 0 END),2) as EL'),
               DB::raw('FORMAT((CASE WHEN others is not null THEN others ELSE 0 END),2) as others')
             )
+            ->where('is_deleted','!=',1)
             ->where('employee_id',Auth::user()->employee_id)->get();
 
             return view('hris.leave.eleave', 
