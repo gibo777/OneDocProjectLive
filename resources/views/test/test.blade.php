@@ -31,7 +31,7 @@ $(document).ready(function(){
 
 <input type="text" id="autoFillText">
 <p class="copy-text">Click here to copy this text</p>
-{{ phpinfo() }}
+{{-- {{ phpinfo() }} --}}
 
 </body>
 </html>
