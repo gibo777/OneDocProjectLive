@@ -23,6 +23,17 @@ class CronController extends Controller
      */
     public function cronAutoComputeLeaveCredits () {
 
+        $userIDs = DB::table('users')
+        ->select('id')
+        ->whereRaw('DAY(date_regularized) = DAY(CURDATE())')
+        ->get();
+
+        // $string = "";
+        // foreach ($userIDs as $key => $value) {
+        //     $string .= $value->id."<br>";
+        // }
+        // return $string;
+
     	$select = DB::table('users')
     	->select(
     		'id',
@@ -43,7 +54,7 @@ class CronController extends Controller
         ->orderBy('last_name')
     	->get();
 
-    	$string = '';
+    	$string = '<link rel="shortcut icon" href="'.asset('img/all/onedoc-favicon.png').'">';
     	foreach ($select as $key => $value) {
             // Check Current Date vs Date Regularized (if 0 to 3years, 3years to 6years, and 6years up)
             // Check if already added monthly leave credits for VL, SL, and EL

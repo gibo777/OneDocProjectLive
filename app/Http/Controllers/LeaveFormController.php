@@ -45,7 +45,7 @@ class LeaveFormController extends Controller
             (Auth::user()->gender=='F') ? $leaveTypes=$leaveTypes->where('leave_type','!=', 'PL') : $leaveTypes=$leaveTypes->where('leave_type','!=', 'ML');
             $leaveTypes =$leaveTypes->get();
 
-            $leave_credits = DB::table('leave_balances')
+            /*$leave_credits = DB::table('leave_balances')
             ->select(
               DB::raw('FORMAT((CASE WHEN VL is not null THEN VL ELSE 0 END),2) as VL'),
               DB::raw('FORMAT((CASE WHEN SL is not null THEN SL ELSE 0 END),2) as SL'),
@@ -55,14 +55,37 @@ class LeaveFormController extends Controller
               DB::raw('FORMAT((CASE WHEN others is not null THEN others ELSE 0 END),2) as others')
             )
             ->whereNull('is_deleted')
-            ->where('employee_id',Auth::user()->employee_id)->get();
+            ->where('employee_id',Auth::user()->employee_id)->get();*/
+
+            $employeeId = Auth::user()->employee_id;
+            $leaveCredits = DB::table('leaves')
+                ->select('employee_id',
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "SL" THEN no_of_days ELSE 0 END), 0) as SL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "VL" THEN no_of_days ELSE 0 END), 0) as VL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "EL" THEN no_of_days ELSE 0 END), 0) as EL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "ML" THEN no_of_days ELSE 0 END), 0) as ML'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "PL" THEN no_of_days ELSE 0 END), 0) as PL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "Others" THEN no_of_days ELSE 0 END), 0) as others')
+                )
+                ->where(function ($query) {
+                    $query->whereNull('is_deleted')
+                        ->orWhere('is_deleted', '!=', 1);
+                })
+                ->where(function ($query) {
+                    $query->whereNull('is_cancelled')
+                        ->orWhere('is_cancelled', '!=', 1);
+                })
+                ->where('employee_id', $employeeId)
+                ->groupBy('employee_id')
+                ->get();
+
 
             return view('hris.leave.eleave', 
               [
                 'holidays'=>$holidays, 
                 'department'=>$department,
                 'leaveTypes'=>$leaveTypes,
-                'leave_credits'=>$leave_credits
+                'leave_credits'=>$leaveCredits
               ]);
         } else {
             return redirect('/');
@@ -91,7 +114,7 @@ class LeaveFormController extends Controller
     }*/
 
     /**
-     * Store a newly created resource in storage.
+     * Validate if overlapping dates.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return Boolean

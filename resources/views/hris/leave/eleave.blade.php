@@ -70,12 +70,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2 p-1 text-center my-3">
+                    <div class="col-md-2 p-1 text-left my-3">
+                            {{-- <label class="with-pay hover">{{ __('With Pay?') }}</label>
+                            <input id="withPay" name="withPay" type="checkbox" class="hover" disabled />
+                            <x-jet-input-error for="withPay" class="mt-2" /> --}}
+                    </div>
+                    <div class="col-md-1 p-1 text-left my-3">
                             <label class="half-day hover">{{ __('Halfday?') }}</label>
                             <input id="isHalfDay" name="isHalfDay" type="checkbox" class="hover" />
                             <x-jet-input-error for="isHalfDay" class="mt-2" />
                     </div>
-                    <div class="col-md-8 mt-2">
+                    <div class="col-md-7 mt-2">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating">
@@ -101,7 +106,7 @@
                                 <div class="form-floating" id="div_number_of_days">
                                     <x-jet-input id="hid_no_days" type="text" name="hid_no_days" class="form-control" readonly/>
                                     <x-jet-input id="hid_schedule" name="hid_schedule" value="{{Auth::user()->weekly_schedule }}" hidden/>
-                                    <x-jet-label for="number_of_days" value="{{ __('NUMBER OF DAY/S') }}" class="w-full" />
+                                    <x-jet-label for="number_of_days" value="{{ __('# OF DAY/S') }}" class="w-full" />
                                 </div>
                             </div>
                         </div>
@@ -132,29 +137,36 @@
                             </div>
 
                             <div class="form-floating col-md-6 p-1">
-                                <table class="table table-bordered data-table mx-auto">
-                                    <tr class="text-center">
-                                        <th>VL</th>
-                                        <th>SL</th>
-                                        <th>EL</th>
-                                        <th>ML/PL</th>
-                                        <th>Other</th>
-                                    </tr>
-                                    <tr>
-                                        @foreach($leave_credits as $leave_balance)
-                                        <td>{{ $leave_balance->VL }}</td>
-                                        <td>{{ $leave_balance->SL }}</td>
-                                        <td>{{ $leave_balance->EL }}</td>
-                                        @if(Auth::user()->gender==='M')
-                                        <td>{{ $leave_balance->PL }}</td>
-                                        @elseif (Auth::user()->gender==='F')
-                                        <td>{{ $leave_balance->ML }}</td>
-                                        @endif
-                                        <td>{{ $leave_balance->others }}</td>
-                                        @endforeach
-                                    </tr>
-                                  </tbody>
+                                <table class="table table-bordered data-table mx-auto text-sm">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th colspan="5" class="py-1">Leaves Consumed</th>
+                                        </tr>
+                                        <tr class="text-center bg-faded">
+                                            <th class="py-1">VL</th>
+                                            <th class="py-1">SL</th>
+                                            <th class="py-1">EL</th>
+                                            <th class="py-1">ML/PL</th>
+                                            <th class="py-1">Other</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @foreach($leave_credits as $leave_balance)
+                                            <td class="py-1">{{ $leave_balance->VL }}</td>
+                                            <td class="py-1">{{ $leave_balance->SL }}</td>
+                                            <td class="py-1">{{ $leave_balance->EL }}</td>
+                                            @if(Auth::user()->gender==='M')
+                                            <td class="py-1">{{ $leave_balance->PL }}</td>
+                                            @elseif (Auth::user()->gender==='F')
+                                            <td class="py-1">{{ $leave_balance->ML }}</td>
+                                            @endif
+                                            <td class="py-1">{{ $leave_balance->others }}</td>
+                                            @endforeach
+                                        </tr>
+                                    </tbody>
                                 </table>
+
                             </div>
 
                         </div>
