@@ -95,6 +95,10 @@ class CronController extends Controller
             } else {
                 $string .= " (Below 3 years)";
                 $string .= " | VL Credit Added: " . number_format((10 / 12), 4);
+
+                if ($value->employee_id=='2022-0314') {
+                    // $addCredits = DB::;
+                }
             }
 
             $string .= "<br>";
