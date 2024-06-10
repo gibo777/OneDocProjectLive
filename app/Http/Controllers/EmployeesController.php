@@ -159,7 +159,6 @@ class EmployeesController extends Controller
         try{
             $data_array = array(
                 'employee_id'       => $request->employee_id,
-                'biometrics_id'     => $request->bioId,
                 'position'          => $request->position,
                 'department'        => $request->department,
                 
@@ -172,22 +171,24 @@ class EmployeesController extends Controller
                 'is_head'           => $request->is_head,
                 'date_regularized'  => date('Y-m-d',strtotime($request->dateRegularized))
             );
+            if ($request->bioId !== null && filter_var($request->bioId, FILTER_VALIDATE_INT) !== false) {
+                $data_array['biometrics_id'] = $request->bioId;
+            }
 
-            // return var_dump($data_array);
-            $leaves = [
+            /*$leaves = [
                 'VL'=>$request->vl,
                 'SL'=>$request->sl,
                 'ML'=>$request->ml,
                 'PL'=>$request->pl,
                 'EL'=>$request->el,
                 'others'=>$request->others
-            ];
+            ];*/
 
             $update = DB::table('users');
             $update = $update->where('id',$request->id);
             $update = $update->update($data_array);
 
-            DB::table('leave_balances')->where('employee_id',$request->employee_id)->update($leaves);
+            // DB::table('leave_balances')->where('employee_id',$request->employee_id)->update($leaves);
 
             return response(['isSuccess' => true,'message'=>'Successfully updated!']);
         }catch(\Error $e){

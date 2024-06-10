@@ -71,7 +71,7 @@ class CronController extends Controller
             $diff = $regularDate->diffInYears($serverDate);
 
             $yearsTenure = intval($value->years_since_regularized);
-
+if ($value->employee_id=='2022-0314') {
             if (url('/')=='http://localhost' && $value->id!=1 && $value->id!=2) {
                 $string .= "Name: " . implode(' ',['Xxx', 'X', 'Xxx', ucwords(strtolower($value->suffix))]);
             } else {
@@ -96,15 +96,15 @@ class CronController extends Controller
                 $string .= " (Below 3 years)";
                 $string .= " | VL Credit Added: " . number_format((10 / 12), 4);
 
-                if ($value->employee_id=='2022-0314') {
-                    // $addCredits = DB::;
-                }
+                // if ($value->employee_id=='2022-0314') {
+                //     $addCredits = DB::table('');
+                // }
             }
 
             $string .= "<br>";
             for ($i = 0; $i < 125; $i++) { $string .= "="; }
             $string .= "<br>";
-
+}
             /*==============================*/
     	}
 

@@ -468,21 +468,24 @@ $(document).ready(function() {
             'update_weekly_schedule': $("#update_weekly_schedule").val(),
             'office': $("#office").val(),
             'supervisor': $("#supervisor").val(),
-            'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),
+            /*'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),*/
             'employee_id' : $("#employee_id").val(), 
             'bioId' : $("#bioId").val(), 
             'position' : $("#position").val(),
             'department' : $("#department").val(),
-            'vl': $('#vacationLeaves').val(),
+            /*'vl': $('#vacationLeaves').val(),
             'sl':$('#sickLeaves').val(),
             'ml': $('#maternityLeaves').val(),
             'pl': $('#paternityLeaves').val(),
             'el': $('#emergencyLeaves').val(),
-            'others':$('#otherLeaves').val(),
+            'others':$('#otherLeaves').val(),*/
             'roleType': $("#updateRoleType").val(),
             'is_head': isHead,
         };
         // alert(isHead); return false;
+        // Swal.fire({ html: JSON.stringify(uD) }); return false;
+        // prompt('',JSON.stringify(uD));return false;
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
