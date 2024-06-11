@@ -161,7 +161,7 @@ class EmployeesController extends Controller
      **/
     public function updateEmployee (Request $request)
     {
-        
+
         try{
             $data_array = array(
                 'role_type'         => $request->roleType,
@@ -172,7 +172,7 @@ class EmployeesController extends Controller
                 'birthdate'         => date('Y-m-d',strtotime($request->birthdate)),
 
                 'employee_id'       => $request->employee_id,
-                'position'          => $request->position,
+                'position'          => strtoupper($request->position),
                 'department'        => $request->department,
                 
                 'employment_status' => $request->employment_status,
