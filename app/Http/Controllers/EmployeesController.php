@@ -169,7 +169,7 @@ class EmployeesController extends Controller
                 'gender'            => $request->gender,
                 'civil_status'      => $request->civil_status,
                 'nationality'       => $request->nationality,
-                'birthdate'         => date('Y-m-d',strtotime($request->birthdate)),
+                'birthdate'         => $request->birthdate ? date('Y-m-d', strtotime($request->birthdate)) : null,
 
                 'employee_id'       => $request->employee_id,
                 'position'          => strtoupper($request->position),
@@ -185,6 +185,8 @@ class EmployeesController extends Controller
             if ($request->bioId !== null && filter_var($request->bioId, FILTER_VALIDATE_INT) !== false) {
                 $data_array['biometrics_id'] = $request->bioId;
             }
+
+            // return var_dump($data_array);
 
             /*$leaves = [
                 'VL'=>$request->vl,
