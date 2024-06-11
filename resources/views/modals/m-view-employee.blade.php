@@ -116,18 +116,49 @@
                                             </div>
                                         </div>
 
-                                        <div class="row my-1 pt-1 inset-shadow">
-                                            <div class="col-md-1 px-1">
-                                                    <x-jet-label id="gender" class="w-full text-md" />
+                                        <div class="row my-1 pt-1">
+                                            <div class="col-md-2 px-1">
+                                                    {{-- <x-jet-label id="gender" class="w-full text-md" /> --}}
+                                                    <div class="form-floating">
+                                                        <select name="gender" id="gender" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                                            <option value=""></option>
+                                                            @foreach ($genders as $gender)
+                                                            <option value="{{ $gender->sex_code }}">{{ $gender->sex }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <x-jet-label for="gender" value="{{ __('Sex') }}" class="text-black-50 w-full" />
+                                                    </div>
                                             </div>
                                             <div class="col-md-2 px-1">
-                                                    <x-jet-label id="civilStatus" class="w-full text-md" />
-                                            </div>
-                                            <div class="col-md-3 px-1">
-                                                    <x-jet-label id="nationality" class="w-full text-md" />
+                                                    {{-- <input id="civilStatus" class="w-full text-md" /> --}}
+                                                    <div class="form-floating">
+                                                        <select name="civilStatus" id="civilStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                                            <option value=""></option>
+                                                            @foreach ($civilStatuses as $civilStatus)
+                                                            <option>{{ $civilStatus->civil_status }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <x-jet-label for="civilStatus" value="{{ __('Civil Status') }}" class="text-black-50 w-full" />
+                                                    </div>
                                             </div>
                                             <div class="col-md-2 px-1">
-                                                    <x-jet-label id="birthDate" class="w-full text-md" />
+                                                    <div class="form-floating">
+                                                        <select name="nationality" id="nationality" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                                            <option value=""></option>
+                                                            @foreach ($nationalities as $nationality)
+                                                            <option>{{ $nationality->nationality }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <x-jet-label for="nationality" value="{{ __('Nationality') }}" class="text-black-50 w-full" />
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 px-1">
+                                                {{-- <x-jet-label id="birthDate" class="w-full text-md" /> --}}
+                                                <div class="form-floating">
+                                                    <x-jet-input id="birthDate" type="date" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                                    <x-jet-label for="birthDate" value="{{ __('Birthday') }}" class="pl-4 text-black-50 w-full" />
+                                                    <x-jet-input-error for="birthDate" class="mt-2" />
+                                                </div>
                                             </div>
                                             <div class="col-md-4 px-1">
                                                     <x-jet-label id="birthPlace" class="w-full text-md" />

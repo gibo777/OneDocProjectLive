@@ -188,7 +188,7 @@
   Launch Modal window
 </button> -->
 
-@include('modals/m-view-employee');
+@include('modals/m-view-employee')
 
                 </div>
 
@@ -406,7 +406,7 @@ $(document).ready(function() {
                 var zipCode = (getemployee.zip_code!=null) ? getemployee.zip_code : '';
                 var contact = (getemployee.contact_number!=null) ? getemployee.contact_number : '';
                 var civil_status = (getemployee.civil_status!=null) ? getemployee.civil_status.toUpperCase() : '';
-                var nationality = (getemployee.citizenship!=null) ? getemployee.citizenship.toUpperCase() : '';
+                var nationality = (getemployee.nationality!=null) ? getemployee.nationality.toUpperCase() : '';
                 var birthPlace = (getemployee.birth_place!=null) ? getemployee.birth_place.toUpperCase() : '';
                 var birthday = (getemployee.birthday!=null) ? getemployee.birthday : '';
 
@@ -422,10 +422,15 @@ $(document).ready(function() {
                 $("#email").html("Email: "+getemployee.email);
                 $("#contactNumber").html("Contact Number: "+contact);
 
-                $("#gender").html("Sex: "+getemployee.gender);
-                $("#civilStatus").html("Civil Status: "+civil_status);
-                $("#nationality").html("Nationality: "+nationality);
-                $("#birthDate").html("Birthday: "+ birthday);
+                // $("#gender").html("Sex: "+getemployee.gender);
+                // $("#civilStatus").html("Civil Status: "+civil_status);
+                // $("#nationality").html("Nationality: "+nationality);
+                // $("#birthDate").html(birthday);
+                $("#gender").val(getemployee.gender);
+                $("#civilStatus").val(civil_status);
+                $("#nationality").val(nationality);
+
+                $("#birthDate").val(birthday);
                 $("#birthPlace").html("Birthplace: "+birthPlace);
 
                 $('#vacationLeaves').html("Vacation Leave : " + (getLeaves.VL ? getLeaves.VL : 0));
@@ -458,29 +463,38 @@ $(document).ready(function() {
    
     /* Button to update Employee details */
     $('#updateEmployee > button').on('click', function() {
+
         var isHead = 0;
         $("#isHead").is(':checked') ? isHead = 1 : isHead = 0;
         const uD = {
-            'id' : $(this).attr('id'),
-            'employment_status': $("#employment_status").val(),
-            'date_hired': $("#date_hired").val(),
-            'dateRegularized': $("#dateRegularized").val(),
+            'id'        : $(this).attr('id'),
+            'roleType'  : $("#updateRoleType").val(),
+            'is_head'   : isHead,
+
+            'gender'        : $('#gender').val(),
+            'civil_status'  : $('#civilStatus').val(),
+            'nationality'   : $('#nationality').val(),
+            'birthdate'     : $('#birthDate').val(),
+
+            'office'        : $("#office").val(),
+            'department'    : $("#department").val(),
+            'supervisor'    : $("#supervisor").val(),
+
+            'date_hired'            : $("#date_hired").val(),
+            'employment_status'     : $("#employment_status").val(),
+            'dateRegularized'       : $("#dateRegularized").val(),
             'update_weekly_schedule': $("#update_weekly_schedule").val(),
-            'office': $("#office").val(),
-            'supervisor': $("#supervisor").val(),
-            /*'name': [$("#last_name").val(), $("#first_name").val(),$("#suffix").val(),$("#middle_name").val()].join(' '),*/
-            'employee_id' : $("#employee_id").val(), 
-            'bioId' : $("#bioId").val(), 
-            'position' : $("#position").val(),
-            'department' : $("#department").val(),
+
+            'employee_id'   : $("#employee_id").val(), 
+            'bioId'         : $("#bioId").val(), 
+            'position'      : $("#position").val(),
+
             /*'vl': $('#vacationLeaves').val(),
             'sl':$('#sickLeaves').val(),
             'ml': $('#maternityLeaves').val(),
             'pl': $('#paternityLeaves').val(),
             'el': $('#emergencyLeaves').val(),
             'others':$('#otherLeaves').val(),*/
-            'roleType': $("#updateRoleType").val(),
-            'is_head': isHead,
         };
         // alert(isHead); return false;
         // Swal.fire({ html: JSON.stringify(uD) }); return false;

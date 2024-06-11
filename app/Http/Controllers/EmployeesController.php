@@ -64,11 +64,14 @@ class EmployeesController extends Controller
             // $employees = $employees->orderBy('u.first_name');
             // $employees = $employees->get();
 
-            $offices = DB::table('offices')->orderBy('company_name')->get();
-            $departments = DB::table('departments')->orderBy('department')->get();
-            $leave_types = DB::table('leave_types')->orderBy('leave_type_name')->get();
-            $holidays = DB::table('holidays')->orderBy('holiday')->get();
-            $empStatuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
+            $offices        = DB::table('offices')->orderBy('company_name')->get();
+            $departments    = DB::table('departments')->orderBy('department')->get();
+            $leave_types    = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $holidays       = DB::table('holidays')->orderBy('holiday')->get();
+            $empStatuses    = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
+            $genders        = DB::table('genders')->get();
+            $civilStatuses  = DB::table('civil_statuses')->orderBy('id')->get();
+            $nationalities  = DB::table('nationalities')->orderBy('nationality')->get();
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
@@ -87,14 +90,17 @@ class EmployeesController extends Controller
 
             return view('/hris/employee/employees', 
                 [
-                    'holidays'=>$holidays, 
-                    'employees'=>$employees, 
-                    'offices'=>$offices,
-                    'departments'=>$departments,
-                    'leave_types'=>$leave_types, 
-                    'employment_statuses'=>$empStatuses,
-                    'heads'=>$heads,
-                    'roleTypeUsers'=>$roleTypeUsers
+                    'holidays'              => $holidays, 
+                    'employees'             => $employees, 
+                    'offices'               => $offices,
+                    'departments'           => $departments,
+                    'leave_types'           => $leave_types, 
+                    'employment_statuses'   => $empStatuses,
+                    'heads'                 => $heads,
+                    'roleTypeUsers'         => $roleTypeUsers,
+                    'genders'               => $genders,
+                    'civilStatuses'         => $civilStatuses,
+                    'nationalities'         => $nationalities
                 ]);
         } else {
             return redirect('/');
@@ -155,9 +161,16 @@ class EmployeesController extends Controller
      **/
     public function updateEmployee (Request $request)
     {
-        // return var_dump($request->input());
+        
         try{
             $data_array = array(
+                'role_type'         => $request->roleType,
+                'is_head'           => $request->is_head,
+                'gender'            => $request->gender,
+                'civil_status'      => $request->civil_status,
+                'nationality'       => $request->nationality,
+                'birthdate'         => date('Y-m-d',strtotime($request->birthdate)),
+
                 'employee_id'       => $request->employee_id,
                 'position'          => $request->position,
                 'department'        => $request->department,
@@ -167,8 +180,6 @@ class EmployeesController extends Controller
                 'weekly_schedule'   => join('|',$request->update_weekly_schedule),
                 'office'            => $request->office,
                 'supervisor'        => $request->supervisor,
-                'role_type'         => $request->roleType,
-                'is_head'           => $request->is_head,
                 'date_regularized'  => date('Y-m-d',strtotime($request->dateRegularized))
             );
             if ($request->bioId !== null && filter_var($request->bioId, FILTER_VALIDATE_INT) !== false) {
