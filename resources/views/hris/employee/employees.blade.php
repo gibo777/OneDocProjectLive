@@ -336,7 +336,7 @@ $(document).ready(function() {
                 var imgProfilePhotoLocation = '';
                 var dh = (getemployee.date_hired!=null && getemployee.date_hired!='1970-01-01') ? getemployee.date_hired.split('-') : '';
 
-                var valDateHired = (getemployee.date_hired!=null && getemployee.date_hired!='1970-01-01') ? [dh[1],dh[2],dh[0]].join('/') : '';
+                var valDateHired = (getemployee.date_hired!=null && getemployee.date_hired!='1970-01-01') ? getemployee.date_hired : '';
                 var sched = getemployee.weekly_schedule.split('|');
 
                 var valDateReg = (getemployee.date_regularized!=null && getemployee.date_regularized!='01/01/1970') ? getemployee.date_regularized : '';
