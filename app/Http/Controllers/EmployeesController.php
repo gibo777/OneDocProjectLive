@@ -176,7 +176,7 @@ class EmployeesController extends Controller
                 'department'        => $request->department,
                 
                 'employment_status' => $request->employment_status,
-                'date_hired'        => date('Y-m-d',strtotime($request->date_hired)),
+                'date_hired'        => $request->date_hired ? date('Y-m-d',strtotime($request->date_hired)) : null,
                 'weekly_schedule'   => join('|',$request->update_weekly_schedule),
                 'office'            => $request->office,
                 'supervisor'        => $request->supervisor,

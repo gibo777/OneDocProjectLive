@@ -155,7 +155,7 @@
                                             <div class="col-md-2 px-1">
                                                 {{-- <x-jet-label id="birthDate" class="w-full text-md" /> --}}
                                                 <div class="form-floating">
-                                                    <x-jet-input id="birthDate" type="date" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                                    <x-jet-input id="birthDate" type="date" class="form-control block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
                                                     <x-jet-label for="birthDate" value="{{ __('Birthday') }}" class="pl-4 text-black-50 w-full" />
                                                     <x-jet-input-error for="birthDate" class="mt-2" />
                                                 </div>
