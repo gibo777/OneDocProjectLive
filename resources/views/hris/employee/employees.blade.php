@@ -408,7 +408,7 @@ $(document).ready(function() {
                 var civil_status = (getemployee.civil_status!=null) ? getemployee.civil_status.toUpperCase() : '';
                 var nationality = (getemployee.nationality!=null) ? getemployee.nationality.toUpperCase() : '';
                 var birthPlace = (getemployee.birth_place!=null) ? getemployee.birth_place.toUpperCase() : '';
-                var birthday = (getemployee.birthday!=null) ? getemployee.birthday : '';
+                var birthday = (getemployee.birthdate!=null) ? getemployee.birthdate : '';
 
                 $("#homeAddress").html("Address: "+ [hAdd, bAdd, ctAdd, pAdd].join(' '));
                 $("#homeCountry").html("Country: "+ cAdd);
