@@ -208,7 +208,7 @@
                                         <div class="row my-1 pt-1">
                                             <div class="col-md-3 px-1 my-1">
                                                 <div class="form-floating">
-                                                    <x-jet-input id="date_hired" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                                    <x-jet-input id="date_hired" type="date" class="form-control block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
                                                     <x-jet-label for="date_hired" value="{{ __('Date Started') }}" class="pl-4 text-black-50 w-full" />
                                                     <x-jet-input-error for="date_hired" class="mt-2" />
                                                 </div>
@@ -226,7 +226,7 @@
                                             </div>
                                             <div class="col-md-3 px-1 my-1">
                                                 <div class="form-floating">
-                                                    <x-jet-input id="dateRegularized" type="text" class="form-control datepicker block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
+                                                    <x-jet-input id="dateRegularized" type="date" class="form-control block w-full" placeholder="mm/dd/yyyy" autocomplete="off" />
                                                     <x-jet-label for="dateRegularized" value="{{ __('Date Regularized') }}" class="pl-4 text-black-50 w-full" />
                                                     <x-jet-input-error for="dateRegularized" class="mt-2" />
                                                 </div>
