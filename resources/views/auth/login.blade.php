@@ -63,6 +63,10 @@
                 </div>
             </div>
 
+            <div class="flex items-center justify-center py-0">
+                <div id="capsLockMessage" class="mt-2 text-md font-weight-bold text-red-500 hidden">Caps Lock is ON</div>
+            </div>
+
             <!-- <div class="block mt-4">
                 <label for="remember_me" class="flex items-center">
                     <x-jet-checkbox id="remember_me" name="remember" />
@@ -105,6 +109,29 @@
 </audio>
 <input type="button" id="audio-button" name="" value="button" hidden>
 <script type="text/javascript">
+
+document.addEventListener('DOMContentLoaded', function() {
+    var capsLockMessage = document.getElementById('capsLockMessage');
+
+    function checkCapsLock(e) {
+        var capsLockState = (e.getModifierState && e.getModifierState('CapsLock')) ||
+                            (e.key === 'CapsLock');
+
+        if (capsLockState) {
+            capsLockMessage.classList.remove('hidden');
+        } else {
+            capsLockMessage.classList.add('hidden');
+        }
+    }
+
+    // Add event listeners to document for keydown and keyup events
+    document.addEventListener('keydown', checkCapsLock);
+    document.addEventListener('keyup', checkCapsLock);
+    document.addEventListener('mouseover', checkCapsLock);
+});
+
+
+
     $(document).ready(function(){
 
         $("#eye_view").on('click', function(e) {
@@ -229,6 +256,7 @@
             });
         }
     });
+
 </script>
 
 </x-guest-layout>
