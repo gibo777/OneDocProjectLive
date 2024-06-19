@@ -9,18 +9,13 @@
         position: relative;
     }
 
-    /*.logo-image, .main-image {
-        max-width: 100%;
-        height: auto; 
-    }*/
-
     .zoom-image {
         position: absolute;
         top: 0;
         left: 100%; /* Position it just outside the parent */
-        transform: translateX(-100%); /* Hide it by default */
-        width: 150px; /* Adjust width as needed */
-        height: 150px; /* Adjust height to match width */
+        transform: translateX(100%); /* Hide it by default */
+        width: 300px; /* Adjust width as needed */
+        /*height: 250px;*/ /* Adjust height to match width */
         background-color: #fff; /* Optional: add a background color */
         border: 1px solid #ccc; /* Optional: add a border */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional: add shadow */
@@ -32,9 +27,11 @@
         height: auto;
     }
 
-    /*.hidden {
-        display: none !important; 
-    }*/
+    .logo-image, .main-image {
+        max-width: 100%;
+        height: auto; 
+    }
+
 </style>
 
 <div>
@@ -147,18 +144,16 @@
             </div>
 
 <div class="row px-3 image-container">
-    <div class="col-md-6 justify-content-end align-items-center">
-        <img src="img/company/onedoc-logo.png" >
+    <div class="col-md-6 text-md-end align-items-center d-flex justify-content-end">
+        <img src="img/company/onedoc-logo.png" class="img-fluid">
     </div>
     <div id="firstImage" class="col-md-2 justify-content-start align-items-center position-relative">
         <img src="img/company/1doc_dpo_dps.png" class="main-image">
         <div id="secondImage" class="zoom-image hidden">
-            <img src="img/company/dpo_dps_qr.png">
+            <img src="img/company/1doc_dpo_dps.jpg">
         </div>
     </div>
 </div>
-
-
 
 
 
