@@ -2,12 +2,40 @@
 
 
 <x-app-layout>
-<style type="text/css">
-  .bg-footer {
-    background-color: rgb(32,39,55);
-  }
-</style>
+
 <!-- <div style="height: 580px"> -->
+<style>
+    .image-container {
+        position: relative;
+    }
+
+    /*.logo-image, .main-image {
+        max-width: 100%;
+        height: auto; 
+    }*/
+
+    .zoom-image {
+        position: absolute;
+        top: 0;
+        left: 100%; /* Position it just outside the parent */
+        transform: translateX(-100%); /* Hide it by default */
+        width: 150px; /* Adjust width as needed */
+        height: 150px; /* Adjust height to match width */
+        background-color: #fff; /* Optional: add a background color */
+        border: 1px solid #ccc; /* Optional: add a border */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional: add shadow */
+        pointer-events: none; /* Allows clicks to go through the zoomed image */
+    }
+
+    .zoom-image img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /*.hidden {
+        display: none !important; 
+    }*/
+</style>
 
 <div>
     <x-slot name="header">
@@ -118,11 +146,21 @@
 
             </div>
 
-            <div class="row px-3 justify-content-center align-items-center mx-2">
-                <img src="{{ asset('img/company/onedoc-logo.png') }}" style="width: auto; height: auto;">
-                <img src="{{ asset('img/company/1doc_dpo_dps.png') }}" style="width: auto; height: auto;">
-                <img src="{{ asset('img/company/dpo_dps_qr.png') }}" style="width: auto; height: auto;">
-            </div>
+<div class="row px-3 image-container">
+    <div class="col-md-6 justify-content-end align-items-center">
+        <img src="img/company/onedoc-logo.png" >
+    </div>
+    <div id="firstImage" class="col-md-2 justify-content-start align-items-center position-relative">
+        <img src="img/company/1doc_dpo_dps.png" class="main-image">
+        <div id="secondImage" class="zoom-image hidden">
+            <img src="img/company/dpo_dps_qr.png">
+        </div>
+    </div>
+</div>
+
+
+
+
 
         </div>
     </div>
@@ -149,6 +187,40 @@
     $("#audio-background")[0].play(); return false;
     });
   });*/
+
+
+$(document).ready(function() {
+        $('#firstImage').mouseenter(function() {
+            $('#secondImage').removeClass('hidden'); // Show zoom image container
+        });
+
+        $('#firstImage').mousemove(function(e) {
+            var containerOffset = $(this).offset();
+            var x = e.pageX - containerOffset.left;
+            var y = e.pageY - containerOffset.top;
+            var imageWidth = $('#secondImage').width();
+            var imageHeight = $('#secondImage').height();
+
+            // Calculate position to keep the zoomed image within the bounds of the main image
+            var posX = x - imageWidth / 2;
+            var posY = y - imageHeight / 2;
+
+            // Adjust position to stay within bounds
+            if (posX < 0) posX = 0;
+            if (posY < 0) posY = 0;
+            if (posX + imageWidth > $(this).width()) posX = $(this).width() - imageWidth;
+            if (posY + imageHeight > $(this).height()) posY = $(this).height() - imageHeight;
+
+            $('#secondImage').css({
+                left: posX + 'px',
+                top: posY + 'px'
+            });
+        });
+
+        $('#firstImage').mouseleave(function() {
+            $('#secondImage').addClass('hidden'); // Hide zoom image container
+        });
+    });
 </script>
 
 </x-app-layout>

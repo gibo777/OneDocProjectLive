@@ -29,11 +29,12 @@
     <x-jet-authentication-card>
         <x-slot name="logo">
         </x-slot>
-            <div class="drop-shadow">
+
+            {{-- <div class="drop-shadow"> --}}
+            <div class="">
                 <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded mx-auto d-block pb-3"/>
                 <!-- <x-jet-authentication-card-logo /> -->
             </div>
-
 
         <x-jet-validation-errors class="mb-4" />
 

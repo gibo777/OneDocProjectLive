@@ -72,35 +72,80 @@
 <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
 {{-- END --}}
     </head>
-    <body class="font-sans antialiased">
-        <x-jet-banner />
 
-        <div class="min-h-screen bg-gray-100" id="module_content">
-            @livewire('navigation-menu')
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header id="module_header" class="bg-white shadow banner-blue font-white-bold hover">
-                    <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
-                    <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 fw-bold">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+<body class="font-sans antialiased">
+    <x-jet-banner />
 
-            <!-- Page Content -->
-            <main>
-                <div class="overflow-auto max-h-[500px]">
-                    {{ $slot }}
+    <div class="min-h-screen bg-gray-100" id="module_content">
+        @livewire('navigation-menu')
+
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header id="module_header" class="bg-white shadow banner-blue font-white-bold hover">
+                <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
+                <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 fw-bold">
+                    {{ $header }}
                 </div>
-            </main>
+            </header>
+        @endif
 
+        <!-- Page Content -->
+        <main>
+            <div class="overflow-auto max-h-[500px]">
+                {{ $slot }}
+            </div>
+        </main>
+
+    </div>
+
+    @stack('modals')
+
+    @livewireScripts
+</body>
+
+
+{{-- <body class="font-sans antialiased">
+    <x-jet-banner />
+
+    <!-- Livewire Navigation Menu (fixed) -->
+    <div class="fixed top-0 left-0 w-full bg-white shadow z-50">
+        @livewire('navigation-menu')
+
+        <!-- Permanent Header (fixed) -->
+        @if (isset($header))
+            <header id="module_header" class="bg-white shadow banner-blue font-white-bold hover fixed top-[60px] left-0 w-full z-40">
+                <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 font-bold">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
+    </div>
+    
+    <!-- Spacer for Main Content -->
+    <div class="h-[160px]"></div>
+
+    <!-- Main Content (scrollable) -->
+    <main class="mt-[120px] relative z-0">
+        <div class="max-h-[calc(100vh - 180px)] overflow-y-auto px- sm:px-6 lg:px-8 py-6">
+            {{ $slot }}
         </div>
+    </main>
 
-        @stack('modals')
+    @stack('modals')
 
-        @livewireScripts
-    </body>
+    @livewireScripts
+</body> --}}
+
+
+
+
+
+
+
+
+
+
 
     {{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
     <script>
