@@ -29,7 +29,7 @@
 </style>
 
     <x-slot name="header">
-            {{ __('REIMBURSEMENT REQUEST FORM') }}
+            {{ __('LIQUIDATION/REIMBURSEMENT REQUEST FORM') }}
     </x-slot>
     <div>
         <div class="max-w-8xl mx-auto mt-2">
@@ -62,16 +62,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 nopadding">
+                        <div class="col-md-2 form-floating px-2">
+                            <x-jet-input id="rBudget" name="rBudget" type="number" step='0.01' class="form-control w-full shadow-none text-right"/>
+                            <x-jet-label for="rBudget" value="{{ __('Budget') }}" class="text-black-50 w-full"/>
+                            <x-jet-input-error for="rBudget" class="mt-2" />
+                        </div>
+                        <div class="col-md-4">
                             <div class="row items-center">
-                                <div class="col-md-3 text-center pt-2">
+                                {{-- <div class="col-md-3 text-center pt-2">
                                     <x-jet-label value="{{ __('For the Period of ') }}"/>
-                                </div>
-                                <div class="col-md-2.5 nopadding">
+                                </div> --}}
+                                <x-jet-label for="rDateFrom" value="{{ __('For the Period of:') }}" class="text-black-50 w-full py-0 m-0"/>
+                                <div class="col-md-4 nopadding">
                                         <x-jet-input id="rDateFrom" name="rDateFrom" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
                                 </div>
                                 <div class="col-sm-1 nopadding text-center">to</div>
-                                <div class="col-md-2.5 p-0 m-0">
+                                <div class="col-md-4 p-0 m-0">
                                         <x-jet-input id="rDateTo" name="rDateTo" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
                                 </div>
                             </div>
