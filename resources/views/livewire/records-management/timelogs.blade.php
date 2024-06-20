@@ -1,7 +1,6 @@
 <x-slot name="header">
     {{ __('TIME LOGS') }}
 </x-slot>
-
 <div id="view_leaves">
     <div class="w-full mx-auto py-2 sm:px-6 lg:px-8">
         <!-- FORM start -->
@@ -57,12 +56,12 @@
                         </div>
 
                         <div class="col-md-2 pt-2 text-center mt-1">
-                            {{-- @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
+                            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
                             <div class="form-group btn btn-outline-success d-inline-block p-2 rounded capitalize hover">
                                 <i class="fas fa-table"></i>
                                 <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
                             </div>
-                            @endif --}}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -71,36 +70,39 @@
                     <!-- Table -->
                     <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
                         <div class="d-flex justify-content-center" id="pagination">
-                            {{ $timelogs->links() }}
+                            {{ $timeLogs->links() }}
                         </div>
                         <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover">
                             <thead class="thead">
                                 <tr class="dt-head-center">
-                                    <th>ID</th>
-                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Emp. ID</th>
                                     <th>Office</th>
                                     <th>Department</th>
-                                    <th>Time In</th>
-                                    <th>Time Out</th>
+                                    <th>Date</th>
+                                    {{-- <th>Time In</th>
+                                    <th>Time Out</th> --}}
                                     <th>Supervisor</th>
                                 </tr>
                             </thead>
                             <tbody class="data hover" id="viewEmployee">
-                                @foreach ($timelogs as $record)
-                                <tr>
-                                    <td>{{ $record->id }}</td>
+                                @foreach ($timeLogs as $record)
+                                <tr id="{{ $record->employee_id.'|'.$record->date }}">
+                                    <td>{{ $record->full_name }}</td>
+                                    {{-- <td>{{ $record->id }}</td> --}}
                                     <td>{{ $record->employee_id }}</td>
                                     <td>{{ $record->office }}</td>
                                     <td>{{ $record->department }}</td>
-                                    <td>{{ $record->time_in }}</td>
-                                    <td>{{ $record->time_out }}</td>
+                                    <td>{{ date('m/d/Y', strtotime($record->date)) }}</td>
+                                    {{-- <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}</td>
+                                    <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}</td> --}}
                                     <td>{{ $record->supervisor }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-center" id="pagination">
-                            {{ $timelogs->links() }}
+                            {{ $timeLogs->links() }}
                         </div>
                     </div>
                 </div>
@@ -109,7 +111,14 @@
     </div>
 </div>
 
+
 <!-- Loading Indicator -->
 <div id="dataLoad" style="display: none">
     <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
 </div>
+
+<!-- =========================================== -->
+<script type="text/javascript">
+    const uID = `{{ Auth::user()->id }}`;
+</script>
+<script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs.js') }}"></script>

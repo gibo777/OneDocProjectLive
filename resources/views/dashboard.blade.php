@@ -144,15 +144,17 @@
             </div>
 
 <div class="row px-3 image-container">
-    <div class="col-md-6 text-md-end align-items-center d-flex justify-content-end">
+    <div class="col-md-3"></div>
+    <div class="col-md-3 text-md-end align-items-center d-flex justify-content-center">
         <img src="img/company/onedoc-logo.png" class="img-fluid">
     </div>
-    <div id="firstImage" class="col-md-2 justify-content-start align-items-center position-relative">
+    <div id="firstImage" class="col-md-2 justify-content-center align-items-center position-relative">
         <img src="img/company/1doc_dpo_dps.png" class="main-image">
         <div id="secondImage" class="zoom-image hidden">
             <img src="img/company/1doc_dpo_dps_lg.png">
         </div>
     </div>
+    {{-- <div class="col-md-4"></div> --}}
 </div>
 
 
