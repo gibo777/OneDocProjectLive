@@ -60,8 +60,8 @@ class Timelogs extends Component
 		              ->orWhere('t.supervisor', Auth::user()->employee_id);
 		    });
 		}
-		if (Auth::user()->id!=1) {
-			$timeLogs = $query->where('t.employee_id', '!=',1);
+		if (Auth::user()->id!=1 || Auth::user()->id!=2) {
+			$timeLogs = $timeLogs->where('t.employee_id', '!=',1);
 		}
 
 		$timeLogs = $timeLogs->where(function ($query) {
