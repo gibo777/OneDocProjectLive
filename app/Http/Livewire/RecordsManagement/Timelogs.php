@@ -61,7 +61,7 @@ class Timelogs extends Component
 		    });
 		}
 		if (Auth::user()->id!=1) {
-			$timeLogs = $query->where('t.employee_id', '!=',Auth::user()->employee_id);
+			$timeLogs = $query->where('t.employee_id', '!=',1);
 		}
 
 		$timeLogs = $timeLogs->where(function ($query) {
