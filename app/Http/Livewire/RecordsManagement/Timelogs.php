@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\RecordsManagement;
 
+use Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -31,7 +32,7 @@ class Timelogs extends Component
 		        DB::raw("CONCAT(u.last_name, 
 		                (CASE WHEN u.suffix IS NOT NULL AND u.suffix != '' THEN CONCAT(' ', u.suffix, ', ') ELSE ', ' END), 
 		                u.first_name,
-		                (CASE WHEN u.middle_name IS NOT NULL AND u.middle_name != '' THEN CONCAT(' ', SUBSTRING(u.middle_name, 1, 1)) ELSE ' ' END)
+		                (CASE WHEN u.middle_name IS NOT NULL AND u.middle_name != '' THEN CONCAT(' ', SUBSTRING(u.middle_name, 1, 1)) ELSE '' END)
 		            ) AS full_name"),
 		        't.employee_id',
 		        't.department',
@@ -46,32 +47,44 @@ class Timelogs extends Component
 		                   ' ', SUBSTRING(middle_name, 1, 1)) 
 		             FROM users 
 		             WHERE employee_id = u.supervisor) AS supervisor")
-		    )
-		    ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
+		    );
+
+		$timeLogs = $timeLogs->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
 		    ->leftJoin('departments as d', 't.department', '=', 'd.department_code')
-		    ->leftJoin('offices as o', 't.office', '=', 'o.id')
-		    ->where(function ($query) {
+		    ->leftJoin('offices as o', 't.office', '=', 'o.id');
+
+		// Additional conditional check for user role
+		if (Auth::user()->role_type != 'SUPER ADMIN') {
+		    $timeLogs = $timeLogs->where(function ($query) {
+		        $query->where('t.employee_id', Auth::user()->employee_id)
+		              ->orWhere('t.supervisor', Auth::user()->employee_id);
+		    });
+		}
+		if (Auth::user()->id!=1) {
+			$timeLogs = $query->where('t.employee_id', '!=',Auth::user()->employee_id);
+		}
+
+		$timeLogs = $timeLogs->where(function ($query) {
 		        $query->where('u.is_deleted', 0)
 		              ->orWhereNull('u.is_deleted');
 		    })
-		    ->where('u.id', '!=', 1)
+		    // ->where('u.id', '!=', 1)
 		    ->groupBy(
-		    	'full_name', 
-		    	't.employee_id', 
-		    	't.department', 
-		    	'o.company_name', 
-		    	'created_date',
-		    	'date', 
-		    	// 'time_in',
-		    	// 'time_out',
-		    	'supervisor'
+		        'full_name', 
+		        't.employee_id', 
+		        't.department', 
+		        'o.company_name', 
+		        'created_date',
+		        'date', 
+		        // 'time_in',
+		        // 'time_out',
+		        'supervisor'
 		    )
 		    ->orderBy('created_date', 'desc')
 		    ->orderBy('full_name', 'asc')
 		    ->paginate($this->pageSize);
 
 		return $timeLogs;
-
 
     }
 

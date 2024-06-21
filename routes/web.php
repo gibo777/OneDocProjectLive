@@ -283,7 +283,7 @@ Route::get('/decrypt', function () {
 
 
 /*======= TIME LOGS =======*/
-Route::get('/timelogs-listing', Timelogs::class)->name('timelogs-listing');
+Route::get('/timelogs-listing', Timelogs::class)->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->name('timelogs-listing');
 Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
 Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
 Route::get('/create-image-path', [WebcamController::class, 'createNewImagePath'])->name('create.image.path');

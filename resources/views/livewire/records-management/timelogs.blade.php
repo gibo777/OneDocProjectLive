@@ -121,4 +121,4 @@
 <script type="text/javascript">
     const uID = `{{ Auth::user()->id }}`;
 </script>
-<script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs.js') }}"></script>
+<script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs-listings.js') }}"></script>
