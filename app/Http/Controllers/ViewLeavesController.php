@@ -84,7 +84,7 @@ class ViewLeavesController extends Controller
             // $leaves = DB::select('CALL sp_viewleaves()');
 
             $departments        = DB::table('departments')->orderBy('department')->get();
-            $leave_types        = DB::table('leave_types')->orderBy('leave_type_name')->get();
+            $leave_types        = DB::table('leave_types')/*->orderBy('leave_type_name')*/->get();
             $holidays           = DB::table('holidays')->orderBy('holiday')->get();
             $request_statuses   = DB::table('request_statuses')->orderBy('request_status')->get();
 

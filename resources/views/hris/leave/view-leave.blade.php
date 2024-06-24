@@ -783,9 +783,15 @@ $(document).ready( function () {
             var sD = $('#filterDepartment').val();
             var sLT = $('#filterLeaveType').val();
             var sLS = $('#filterLeaveStatus').val().toUpperCase();
-            var cD = data[2]; // Department Column
-            var cLT = data[4]; // Leave Type Column
-            var cLS = data[9].toUpperCase(); // Leave Status Column
+
+            if (aRT == 'SUPER ADMIN' || aRT == 'ADMIN') {
+                var cD = data[2]; // Department Column
+                var cLT = data[4]; // Leave Type Column
+                var cLS = data[9].toUpperCase(); // Leave Status Column
+            } else {
+                var cLT = data[1]; // Leave Type Column
+                var cLS = data[6].toUpperCase(); // Leave Status Column
+            }
 
             // Check if a department filter is selected
             var departmentFilterActive = (sD != null && sD !== '');
@@ -807,16 +813,18 @@ $(document).ready( function () {
 
                 return departmentMatch && leaveTypeMatch && leaveStatusMatch;
             } else {
-                if (!leaveTypeFilterActive) {
+                if (!leaveTypeFilterActive && !leaveStatusFilterActive) {
                     return true; // No filters applied, show all rows
                 }
                 var leaveTypeMatch = !leaveTypeFilterActive || cLT.includes(sLT);
+                var leaveStatusMatch = !leaveStatusFilterActive || cLS.includes(sLS);
 
-                return leaveTypeMatch;
+                return leaveTypeMatch && leaveStatusMatch;
             }
         });
 
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            const aRT = "{{ Auth::user()->role_type }}";
             var searchDateFrom = $('#dateFrom').val();
             var searchDateTo = $('#dateTo').val();
 
@@ -828,9 +836,14 @@ $(document).ready( function () {
             dateFrom.setHours(0, 0, 0, 0);
             dateTo.setHours(23, 59, 59, 999);
 
-            // Get the time-in and time-out values from columns 3 and 4
-            var searchTimeIn = data[5];
-            var searchTimeOut = data[6];
+            if (aRT == 'SUPER ADMIN' || aRT == 'ADMIN') {
+                // Get the time-in and time-out values from columns 3 and 4
+                var searchTimeIn = data[5];
+                var searchTimeOut = data[6];
+            } else {
+                var searchTimeIn = data[2];
+                var searchTimeOut = data[3];
+            }
 
             // Convert time-in and time-out strings to Date objects (if applicable)
             var timeIn = searchTimeIn ? new Date(searchTimeIn) : null;
