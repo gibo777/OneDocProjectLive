@@ -544,30 +544,18 @@ $(document).ready(function(){
       });
     }); */
 
-    $(document).on('click','#dNavEleave', function(e){
-        if ( has_supervisor=='' || has_supervisor==null ) {
+    
+    $(document).on('click', '#dNavEleave, #dNavOvertime', function(e) {
+        if (has_supervisor == '' || has_supervisor == null) {
             Swal.fire({
                 icon: 'error',
                 title: 'NOTIFICATION',
                 html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
-
-              });
+            });
             return false;
         }
     });
 
-
-    $(document).on('click','#dNavOvertime', function(e){
-        if ( has_supervisor=='' || has_supervisor==null ) {
-            Swal.fire({
-                icon: 'error',
-                title: 'NOTIFICATION',
-                html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
-
-              });
-            return false;
-        }
-    });
 
 
     /**
@@ -693,6 +681,7 @@ $(document).ready(function() {
             method: 'post',
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
+                prompt('',data); return false;
                 // Swal.fire({ html: data}); return false;
                 if (data.isSuccess==true) {
                   // Display a success message using Swal

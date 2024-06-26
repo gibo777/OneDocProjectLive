@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 
 
@@ -69,15 +70,17 @@ class LeaveFormController extends Controller
                 )
                 ->where(function ($query) {
                     $query->whereNull('is_deleted')
-                        ->orWhere('is_deleted', '!=', 1);
+                        ->orWhere('is_deleted', 0);
                 })
                 ->where(function ($query) {
                     $query->whereNull('is_cancelled')
-                        ->orWhere('is_cancelled', '!=', 1);
+                        ->orWhere('is_cancelled', 0);
                 })
+                ->where('is_head_approved',1)
                 ->where('employee_id', $employeeId)
+                ->where(DB::raw('YEAR(date_from)'),Carbon::now('Asia/Manila')->format('Y'))
                 ->groupBy('employee_id')
-                ->get();
+                ->first();
 
 
             return view('hris.leave.eleave', 

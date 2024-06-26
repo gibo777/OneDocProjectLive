@@ -174,58 +174,106 @@ class ViewLeavesController extends Controller
             $departments = DB::table('departments')->get();
             $leave_types = DB::table('leave_types')->get();
 
-	        $leaves = DB::table('leaves as L');
-	        $leaves = $leaves->leftJoin('departments as d', 'L.department', '=', 'd.department_code');
-	        $leaves = $leaves->leftJoin('users as u', 'u.employee_id','=','L.employee_id');
-            $leaves = $leaves->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id');
-	        $leaves = $leaves->select(
-	        	'L.id',
-	        	'L.name',
-                'L.control_number',
-                'L.leave_number',
-	        	'L.employee_id',
-	        	'L.department',
-	        	'L.leave_type',
-	        	'L.date_applied',
-	        	'L.date_from', 
-                'L.date_to',
-	        	'L.no_of_days', 
-                'L.others',
-	        	'L.reason',
-	        	// 'L.notification', 
-	        	'd.department as dept',
-	        	'u.access_code',
-                'u.supervisor',
-	        	'L.is_head_approved',
-	        	'L.is_hr_approved',
-                'L.is_taken',
-                'L.is_cancelled',
-                DB::raw('(CASE 
-                    WHEN L.leave_type="VL" THEN b.VL 
-                    WHEN L.leave_type="SL" THEN b.SL
-                    WHEN L.leave_type="ML" THEN b.ML
-                    WHEN L.leave_type="PL" THEN b.PL
-                    WHEN L.leave_type="EL" THEN b.EL
-                    WHEN L.leave_type="Others" THEN b.Others
-                    END) as balance'),
-                DB::raw('(CASE WHEN L.is_denied=1 THEN "Denied" WHEN L.is_cancelled=1 THEN "Cancelled" WHEN L.is_taken=1 THEN "Taken" ELSE (CASE WHEN L.is_head_approved=1 THEN "Head Approved" ELSE "Pending" END) END) as status'))
-	        ->where('L.id','=', $request->leaveID)
-            ->where( function($query) {
-                return $query->where('L.is_deleted','=',0)->orWhereNull('L.is_deleted');
-            })
-	        ->get();
-            $leaves['auth_id'] = Auth::user()->employee_id;
-            $leaves['auth_access'] = Auth::user()->access_code;
-            $leaves['auth_department'] = Auth::user()->department;
-            $leaves['role_type'] = Auth::user()->role_type;
+            // Retrieve leave details based on leaveID
+            $leaves = DB::table('leaves as L')
+                ->leftJoin('departments as d', 'L.department', '=', 'd.department_code')
+                ->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id')
+                ->leftJoin('leave_balances as b', 'u.employee_id', '=', 'b.employee_id')
+                ->select(
+                    'L.id',
+                    'L.name',
+                    'L.control_number',
+                    'L.leave_number',
+                    'L.employee_id',
+                    'L.department',
+                    'L.leave_type',
+                    'L.date_applied',
+                    'L.date_from',
+                    'L.date_to',
+                    'L.no_of_days',
+                    'L.others',
+                    'L.reason',
+                    'd.department as dept',
+                    'u.access_code',
+                    'u.supervisor',
+                    'L.is_head_approved',
+                    'L.is_hr_approved',
+                    'L.is_taken',
+                    'L.is_cancelled',
+                    DB::raw('CASE 
+                        WHEN L.leave_type = "VL" THEN b.VL 
+                        WHEN L.leave_type = "SL" THEN b.SL
+                        WHEN L.leave_type = "ML" THEN b.ML
+                        WHEN L.leave_type = "PL" THEN b.PL
+                        WHEN L.leave_type = "EL" THEN b.EL
+                        WHEN L.leave_type = "Others" THEN b.Others
+                        ELSE 0
+                        END AS balance'),
+                    DB::raw('CASE 
+                        WHEN L.is_denied = 1 THEN "Denied" 
+                        WHEN L.is_cancelled = 1 THEN "Cancelled" 
+                        WHEN L.is_taken = 1 THEN "Taken" 
+                        ELSE (CASE 
+                            WHEN L.is_head_approved = 1 THEN "Head Approved" 
+                            ELSE "Pending" 
+                            END) 
+                        END AS status')
+                )
+                ->where('L.id', '=', $request->leaveID)
+                ->where(function ($query) {
+                    $query->where('L.is_deleted', '=', 0)
+                        ->orWhereNull('L.is_deleted');
+                })
+                ->first();
 
-            return $leaves;
-			// return var_dump($leaves);
-    		// return view('hris.leave.view-leave-details', ['leaves'=>$leaves,'holidays'=>$holidays, 'departments'=>$departments, 'leave_types'=>$leave_types]);
+            if (!$leaves) {
+                // Handle case where no leave is found for the provided ID
+                return response()->json(['error' => 'Leave not found'], 404);
+            }
+
+            // Retrieve leave credits based on employee_id and year
+            $leaveCredits = DB::table('leaves')
+                ->select('employee_id',
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "SL" THEN no_of_days ELSE 0 END), 0) as SL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "VL" THEN no_of_days ELSE 0 END), 0) as VL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "EL" THEN no_of_days ELSE 0 END), 0) as EL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "ML" THEN no_of_days ELSE 0 END), 0) as ML'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "PL" THEN no_of_days ELSE 0 END), 0) as PL'),
+                    DB::raw('COALESCE(SUM(CASE WHEN leave_type = "Others" THEN no_of_days ELSE 0 END), 0) as others')
+                )
+                ->where(function ($query) {
+                    $query->whereNull('is_deleted')
+                        ->orWhere('is_deleted', 0);
+                })
+                ->where(function ($query) {
+                    $query->whereNull('is_cancelled')
+                        ->orWhere('is_cancelled', 0);
+                })
+                ->where('is_head_approved', 1)
+                ->where('employee_id', $leaves->employee_id)
+                ->where(DB::raw('YEAR(date_from)'), Carbon::now('Asia/Manila')->format('Y'))
+                ->groupBy('employee_id')
+                ->first();
+
+            if (!$leaveCredits) {
+                // Handle case where no leave credits are found for the employee
+                $leaveCredits = ['SL'=>'0.0','VL'=>'0.0','EL'=>'0.0','ML'=>'0.0','PL'=>'0.0','Others'=>'0.0'];  
+            }
+
+            // Attach leave credits to $leaves object
+            // $leaves->leaveCredits = $leaveCredits;
+
+            // Prepare response and return as JSON
+            $response = [
+                'leaves' => $leaves,
+                'holidays' => $holidays,
+                'departments' => $departments,
+                'leave_types' => $leave_types,
+                'leaveCredits' => $leaveCredits,
+            ];
+
+            return response()->json($response);
     	}
-    	/*else {
-    		return "Gilbert";
-    	}*/
     }
 
     function update_leave (Request $request) {
@@ -701,7 +749,7 @@ class ViewLeavesController extends Controller
             ->leftJoin('departments as d', 'd.id', '=', 'h.department')
             // ->leftJoin('leave_balances as b', 'b.employee_id', '=', 'u.employee_id')
             ->select(
-                'h.name',
+                'h.name', 'u.gender',
                 'h.leave_reference', 
                 'h.leave_number', 
                 'h.control_number',

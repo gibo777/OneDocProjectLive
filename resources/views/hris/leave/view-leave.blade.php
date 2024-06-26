@@ -513,7 +513,7 @@
         <form id="update-leave-form" method="POST" action="" class="px-2">
         @csrf
                 
-                <div class="row">
+                <div class="row inset-shadow">
                     <div class="col-md-4 p-1">
                         <!-- Name -->
                         {{-- <div class="form-floating"> --}}
@@ -619,6 +619,25 @@
                                 <x-jet-label for="reason" value="{{ __('REASON') }}" class="font-semibold text-gray-800 leading-tight pt-4"/>
                                 <x-jet-input-error for="reason" class="mt-2" />
                             </div>
+                            <div class="form-floating col-md-6 p-1">
+                                <table class="table table-bordered data-table mx-auto text-sm">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th colspan="5" class="py-1">Leaves Consumed</th>
+                                        </tr>
+                                        <tr class="text-center bg-faded">
+                                            <th class="py-1">VL</th>
+                                            <th class="py-1">SL</th>
+                                            <th class="py-1">EL</th>
+                                            <th class="py-1">ML/PL</th>
+                                            <th class="py-1">Other</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="viewLeaveCredits">
+                                    </tbody>
+                                </table>
+
+                            </div>
 
                         </div>
                         <div class="row text-left">
@@ -686,9 +705,9 @@
                         <x-jet-button type="button" id="approve_leave" name="approve_leave">
                             {{ __('APPROVE') }}
                         </x-jet-button>
-                        <x-jet-button type="button" id="taken_leave" name="taken_leave">
+                        {{-- <x-jet-button type="button" id="taken_leave" name="taken_leave">
                             {{ __('TAKEN') }}
-                        </x-jet-button>
+                        </x-jet-button> --}}
                     </div>
                 </div>
           </form>
@@ -998,6 +1017,12 @@ $(document).ready( function () {
     /* Viewing Leave Details per Control Number - Gibs */
     $(document).on('dblclick','.view-leave',function(){
         let leaveID = this.id;
+
+        const authId = `{{Auth::user()->employee_id}}`;
+        const authAccess = `{{Auth::user()->access_code}}`;
+        const authDepartment = `{{Auth::user()->department}}`;
+        const roleType = `{{Auth::user()->role_type}}`;
+
         $("#popup").show();
         $("#confirm_reason").val('');
         $('#dataLoad').css('display','flex');
@@ -1016,59 +1041,82 @@ $(document).ready( function () {
             data: { 'leaveID': leaveID }, // prefer use serialize method
             success:function(data){
                 $('#dataLoad').css('display','none');
-                var leave_number = data[0]['control_number'];
+
+                const {leaves,holidays,departments,leave_types,leaveCredits} = data;
+                // var leave_number = data[0]['control_number'];
+                var leave_number = leaves.control_number;
 
                 var modalHeader = "Control No. "+leave_number;
-                var dateFrom = data[0]['date_from'].split('-');
+                var dateFrom = leaves.date_from.split('-');
                     dateFrom = dateFrom[1]+"/"+dateFrom[2]+"/"+dateFrom[0];
-                var dateTo = data[0]['date_to'].split('-');
+                var dateTo = leaves.date_to.split('-');
                     dateTo = dateTo[1]+"/"+dateTo[2]+"/"+dateTo[0];
                 var notif1 = "", notif2 = "", notif3 = "";
-                (data[0]['is_head_approved']!=1) ? $("#leave_form").hide() : $("#leave_form").show();
-                (data[0]['is_cancelled']==1 || data[0]['is_denied']==1 || data[0]['is_taken']==1 ) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
+                (leaves.is_head_approved!=1) ? $("#leave_form").hide() : $("#leave_form").show();
+                (leaves.is_cancelled==1 || leaves.is_denied==1 || leaves.is_taken==1 ) ? $("#cancel_leave").hide() : $("#cancel_leave").show();
                 $("#update_leave").hide();
                 $("#deny_leave").hide();
                 $("#approve_leave").hide();
-                $("#taken_leave").hide();
+                //$("#taken_leave").hide();
                 $("#div_others").attr('hidden',true);
                 $("#others_leave").removeAttr('readonly');
-                $("#hid_leave_id").val(data[0]['id']);
+                $("#hid_leave_id").val(leaves.id);
                 $("#myModalLabel").html(modalHeader);
-                $("#name").text(data[0]['name']);
-                $("#employee_number").text(data[0]['employee_id']);
-                $("#hid_dept").val(data[0]['department']);
-                $("#department").text(data[0]['dept']);
-                $("#date_applied").text(formatDates(data[0]['date_applied']));
+                $("#name").text(leaves.name);
+                $("#employee_number").text(leaves.employee_id);
+                $("#hid_dept").val(leaves.department);
+                $("#department").text(leaves.dept);
+                $("#date_applied").text(formatDates(leaves.date_applied));
                 
-                $("#leave_type").val(data[0]['leave_type']);
-                if (data[0]['leave_type']=="Others") {
+                $("#leave_type").val(leaves.leave_type);
+                if (leaves.leave_type=="Others") {
                     $("#div_others").attr('hidden',false);
                     $("#others_leave").attr('hidden',false);
-                    $("#others_leave").val(data[0]['others']);
+                    $("#others_leave").val(leaves.others);
                 }
-                $("#view_date_applied").val(data[0]['date_applied']);
+                $("#view_date_applied").val(leaves.date_applied);
                 $("#date_from").val(dateFrom);
                 $("#date_to").val(dateTo);
-                $("#hid_no_days").val(data[0]['no_of_days']);
-                $("#reason").val(data[0]['reason']);
-                $("#td_balance").html(data[0]['balance']);
+                $("#hid_no_days").val(leaves.no_of_days);
+                $("#reason").val(leaves.reason);
+                // $("#td_balance").html(leaves.balance);
 
-                if (data['role_type']=='ADMIN' || data['role_type']=='SUPER ADMIN') {
-                    if (data['auth_id']==data[0]['supervisor']) {
-                        if (data[0]['status']=="Pending") {
+                // Clear existing content (if any) in tbody
+                $('#viewLeaveCredits').empty();
+                // Create a new row for leave credits
+                var newRow = $('<tr class="text-center"></tr>');
+                // Append cells based on leaveCredits object
+                newRow.append('<td class="py-1">' + (leaveCredits.VL || '0.0') + '</td>');
+                newRow.append('<td class="py-1">' + (leaveCredits.SL || '0.0') + '</td>');
+                newRow.append('<td class="py-1">' + (leaveCredits.EL || '0.0') + '</td>');
+                if (leaves.gender === 'M') {
+                    newRow.append('<td class="py-1">' + (leaveCredits.PL || '0.0') + '</td>');
+                } else if (leaves.gender === 'F') {
+                    newRow.append('<td class="py-1">' + (leaveCredits.ML || '0.0') + '</td>');
+                } else {
+                    newRow.append('<td class="py-1">0.0</td>'); // Default if neither male nor female
+                }
+                newRow.append('<td class="py-1">' + (leaveCredits.others || '0.0') + '</td>');
+                // Append the new row to the tbody
+                $('#viewLeaveCredits').append(newRow);
+
+
+                if (roleType=='ADMIN' || roleType=='SUPER ADMIN') {
+                    if (authId==leaves.supervisor) {
+                        if (leaves.status=="Pending") {
                             $("#deny_leave").show();
                             $("#approve_leave").show();
                         }
                     } else {
-                        if (data['auth_id']==data[0]['employee_id']) {
-                            if (data[0]['status']=="Pending") {
+                        if (authId==leaves.employee_id) {
+                            if (leaves.status=="Pending") {
                                 $("#update_leave").show();
                             } 
                         }
                     }
                 } else {
                     // alert(data[0]['status']); return false;
-                    if (data[0]['status']=="Pending") {
+                    if (leaves.status=="Pending") {
                         $("#update_leave").show();
                     } 
                 }

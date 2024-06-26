@@ -152,17 +152,27 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            @foreach($leave_credits as $leave_balance)
-                                            <td class="py-1">{{ $leave_balance->VL }}</td>
-                                            <td class="py-1">{{ $leave_balance->SL }}</td>
-                                            <td class="py-1">{{ $leave_balance->EL }}</td>
-                                            @if(Auth::user()->gender==='M')
-                                            <td class="py-1">{{ $leave_balance->PL }}</td>
-                                            @elseif (Auth::user()->gender==='F')
-                                            <td class="py-1">{{ $leave_balance->ML }}</td>
+                                            @if(empty($leaveCredits))
+                                                <td class="py-1">0.0</td>
+                                                <td class="py-1">0.0</td>
+                                                <td class="py-1">0.0</td>
+                                                @if(Auth::user()->gender === 'M')
+                                                    <td class="py-1">0.0</td>
+                                                @elseif(Auth::user()->gender === 'F')
+                                                    <td class="py-1">0.0</td>
+                                                @endif
+                                                <td class="py-1">0.0</td>
+                                            @else
+                                                <td class="py-1">{{ $leaveCredits->VL }}</td>
+                                                <td class="py-1">{{ $leaveCredits->SL }}</td>
+                                                <td class="py-1">{{ $leaveCredits->EL }}</td>
+                                                @if(Auth::user()->gender === 'M')
+                                                    <td class="py-1">{{ $leaveCredits->PL }}</td>
+                                                @elseif(Auth::user()->gender === 'F')
+                                                    <td class="py-1">{{ $leaveCredits->ML }}</td>
+                                                @endif
+                                                <td class="py-1">{{ $leaveCredits->others }}</td>
                                             @endif
-                                            <td class="py-1">{{ $leave_balance->others }}</td>
-                                            @endforeach
                                         </tr>
                                     </tbody>
                                 </table>
