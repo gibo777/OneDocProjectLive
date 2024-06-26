@@ -681,7 +681,7 @@ $(document).ready(function() {
             method: 'post',
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
-                prompt('',data); return false;
+                // prompt('',data); return false;
                 // Swal.fire({ html: data}); return false;
                 if (data.isSuccess==true) {
                   // Display a success message using Swal
