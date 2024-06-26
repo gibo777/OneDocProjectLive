@@ -199,7 +199,7 @@
                         </x-jet-responsive-nav-link>
                     </div>
                     <div>
-                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('time-logs') }}"  id="nav_time_logs">
+                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogslisting') }}"  id="nav_time_logs">
                             {{ __('TIME-LOGS') }}
                         </a>
                     </div>
@@ -369,7 +369,7 @@
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Time Keeping </a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('time-logs') }}">Time Logs</a>
+                                        <a class="dropdown-item" href="{{ route('timelogslisting') }}">Time Logs</a>
                                   </div>
                               </div>
                               @if (Auth::user()->id==1 || Auth::user()->id==2)
@@ -544,30 +544,18 @@ $(document).ready(function(){
       });
     }); */
 
-    $(document).on('click','#dNavEleave', function(e){
-        if ( has_supervisor=='' || has_supervisor==null ) {
+    
+    $(document).on('click', '#dNavEleave, #dNavOvertime', function(e) {
+        if (has_supervisor == '' || has_supervisor == null) {
             Swal.fire({
                 icon: 'error',
                 title: 'NOTIFICATION',
                 html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
-
-              });
+            });
             return false;
         }
     });
 
-
-    $(document).on('click','#dNavOvertime', function(e){
-        if ( has_supervisor=='' || has_supervisor==null ) {
-            Swal.fire({
-                icon: 'error',
-                title: 'NOTIFICATION',
-                html: 'Kindly ask HR for the supervisor to be assigned. <br>Thank you!',
-
-              });
-            return false;
-        }
-    });
 
 
     /**
@@ -693,6 +681,7 @@ $(document).ready(function() {
             method: 'post',
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
+                // prompt('',data); return false;
                 // Swal.fire({ html: data}); return false;
                 if (data.isSuccess==true) {
                   // Display a success message using Swal
