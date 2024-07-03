@@ -191,6 +191,7 @@ $(document).ready(function(){
             $('#leaveType').val()
         );
     });
+    
     $(document).on('change', '#isHalfDay', function() {
         $(this).is(':checked') ? $('#leaveDateTo').prop('disabled', true) : $('#leaveDateTo').prop('disabled', false);
         if ($('#isHalfDay').is(':checked')) {
@@ -227,8 +228,8 @@ $(document).ready(function(){
         leaveBalance(); // This will show current Leave Balance/s
 
         if ($(this).val()!="SL" || $(this).val()!="EL" || $(this).val().toUpperCase()=="OTHERS") {
-            // alert(priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val())); return false;
-            if (priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
+            // alert(priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val())); return false;
+            if (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
                 $('#leaveDateFrom').val("");
                 $('#leaveDateTo').val("");
                 $('#hid_no_days').val("");
@@ -276,7 +277,7 @@ $(document).ready(function(){
             $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
-        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation('{{ $department->curDate }}',$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");

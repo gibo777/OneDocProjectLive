@@ -289,6 +289,9 @@
   <p id="error_dialog_content" class="text-justify px-2"></p>
 </div>
 
+<script type="text/javascript">
+    const curDateLeave = '{{ $department->curDate }}';
+</script>
 <script type="text/javascript" src="{{ asset('/js/modules/eleaves/eleave-form.js') }}"></script>
 
 </x-app-layout>
