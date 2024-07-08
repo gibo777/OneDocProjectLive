@@ -224,7 +224,7 @@ class EmployeesController extends Controller
             $employee_id = Auth::user()->employee_id;
 
             if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
-                $employees = DB::select('CALL sp_timelogs_admins()');
+                $employees = DB::select('CALL sp_timelogs_admins('.Auth::user()->id.','.Auth::user()->office.')');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
             }
