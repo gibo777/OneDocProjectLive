@@ -40,6 +40,7 @@ class User extends Authenticatable
         'weekly_schedule',
         'gender',
         'role_type',
+        'is_head',
         'email', 
         'password',
         'remember_token',

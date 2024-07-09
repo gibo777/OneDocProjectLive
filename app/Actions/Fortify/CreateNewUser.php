@@ -66,9 +66,11 @@ class CreateNewUser implements CreatesNewUsers
                 'department'        => $input['department'],
                 'office'            => $input['office'],
 
-                'gender'    => $input['gender'],
-                'email'     => $input['email'],
-                'role_type' => $input['role_type'],
+                'gender'            => $input['gender'],
+                'email'             => $input['email'],
+                'role_type'         => $input['role_type'],
+                // 'role_permission'   => ($input['role_type']=='SUPER ADMIN') ? 1 : 0,
+                'is_head'           => ($input['role_type']=='ADMIN' || $input['role_type']=='SUPER ADMIN') ? 1 : 0,
 
                 'remember_token' => $token,
                 'qr_code_link' => $randomString,
@@ -76,6 +78,7 @@ class CreateNewUser implements CreatesNewUsers
                 'created_by' => Auth::user()->employee_id,
                 // 'password' => Hash::make($input['password']),
             ];
+            // return var_dump($insertFields);
             // dd($insertFields);
 
             return tap(User::create($insertFields), function (User $user) {
