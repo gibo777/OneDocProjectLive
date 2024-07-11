@@ -180,7 +180,9 @@ class EmployeesController extends Controller
                 'weekly_schedule'   => join('|',$request->update_weekly_schedule),
                 'office'            => $request->office,
                 'supervisor'        => $request->supervisor,
-                'date_regularized'  => date('Y-m-d',strtotime($request->dateRegularized))
+                'date_regularized'  => date('Y-m-d',strtotime($request->dateRegularized)),
+                'updated_at'        => Carbon::now('Asia/Manila'),
+                'updated_by'        => Auth::user()->employee_id
             );
             if ($request->bioId !== null && filter_var($request->bioId, FILTER_VALIDATE_INT) !== false) {
                 $data_array['biometrics_id'] = $request->bioId;
