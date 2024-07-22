@@ -227,7 +227,7 @@ $(document).ready(function(){
 
         leaveBalance(); // This will show current Leave Balance/s
 
-        if ($(this).val()!="SL" || $(this).val()!="EL" || $(this).val().toUpperCase()=="OTHERS") {
+        if ($(this).val()!="SL" || $(this).val()!="EL") {
             // alert(priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val())); return false;
             if (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
                 $('#leaveDateFrom').val("");
@@ -285,7 +285,8 @@ $(document).ready(function(){
             Swal.fire({
                 icon: 'warning',
                 title: 'INVALID',
-                text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
+                text: `Application for leave of absence must be filed at the latest, 
+                three (3) working days prior to the date of leave.`,
               });
         }
 
