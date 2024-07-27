@@ -2,45 +2,48 @@ $(document).ready(function() {
 
 
     function formatDate(inputDate) {
-        var date = new Date(inputDate); // Create a Date object from the input string
+        var date = new Date(inputDate);
         var year = date.getFullYear();
-        var month = String(date.getMonth() + 1).padStart(2, "0"); // Pad the month with leading zeros if needed
-        var day = String(date.getDate()).padStart(2, "0"); // Pad the day with leading zeros if needed
+        var month = String(date.getMonth() + 1).padStart(2, "0");
+        var day = String(date.getDate()).padStart(2, "0");
 
         // Return the formatted date in the desired format (MM-DD-YYYY)
         return [month,day,year].join("/");
     }
 
 
-
-    $('#fTLOffice').on('keyup change', function() {
-        // table.draw();
-    });
-    $('#fTLDept').on('keyup change', function() {
-        // table.draw();
-    });
-
-
-
     /* Triggers Date From Searching of Time-In/Time-Out */
-    $(document).on('keyup change','#fTLdtFrom', async function() {
-        if ($('#fTLdtTo').val()=='' || $('#fTLdtTo').val()==null) {
-            $('#fTLdtTo').val($(this).val());
-        } else {
-            var dateFrom = new Date($(this).val());
-            var dateTo = new Date($('#fTLdtTo').val());
-            if( dateTo < dateFrom ) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid Date Range',
-                    // text: '',
-                }).then(function() {
-                    $(this).val('');
-                });
-            }
-        }
-        // table.draw();
+    // $(document).on('change', '#fTLdtFrom', function() {
+    //     var dateFrom = new Date($(this).val());
+    //     var yearFrom = dateFrom.getFullYear();
+    //     var dateTo = new Date($('#fTLdtTo').val());
+    //     if ($('#fTLdtTo').val() == '') {
+    //         $('#fTLdtTo').val($(this).val());
+    //     } else if (dateTo < dateFrom) {
+    //         $('#fTLdtTo').val($(this).val());
+    //         // console.log(dateFrom);
+    //         /*Swal.fire({
+    //             icon: 'error',
+    //             title: 'Invalid Date Range',
+    //         }).then(function() {
+    //             Livewire.emit('setDateTo');
+    //         });*/
+    //     }
+    // });
+
+    $(document).on('click','#clearFilter',function() {
+        Livewire.emit('clearDateFilter');
     });
+
+    Livewire.on('setDateTo', function() {
+        $('#fTLdtTo').val($('#fTLdtFrom').val());
+    });
+
+    Livewire.on('clearDateFilter', function() {
+        $('#fTLdtTo').val(''); $('#fTLdtFrom').val('');
+    });
+
+
 
 
     /* Triggers Date To Searching of Time-In/Time-Out */
@@ -55,12 +58,8 @@ $(document).ready(function() {
                 // text: '',
             });
         }
-        // table.draw();
     });
     /* END - Date From and Date To Searching */
-
-
-
 
 
 /* Double Click event to show Employee details */
@@ -73,7 +72,7 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
     });
 
     $.ajax({
-        url: '/timelogs-detailed',
+        url: '/timelogs-perday',
         method: 'get',
         data: {'id':$(this).attr('id')},
         success: function(data){
@@ -146,14 +145,14 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
 
 /*==== EXPORT TO EXCEL TIMELOGS - Start ====*/
 $(document).on('click', '#exportExcel', async function() {
-    // Swal.fire({ html: uID }); return false;
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
     $.ajax({
-        url: '/timelogs-excel',
+        url: '/export-timelogs-xls',
         method: 'get',
         data: {
             'id'        : uID,
@@ -163,6 +162,7 @@ $(document).on('click', '#exportExcel', async function() {
             'timeOut'   : $('#fTLdtTo').val()
         },
         success: function(response) {
+            // prompt('test',response); return false;
 
             // Extracting data from the SQL response JSON
             const { tlSummary, tlDetailed, currentDate } = response;

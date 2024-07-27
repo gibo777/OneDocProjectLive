@@ -79,6 +79,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'birth_place'   => $input['birth_place'],
 
                 'email'         => $input['email'],
+                'updated_by'    => Auth::user()->employee_id,
             ];
 
             $data['birthdate'] = date('Y-m-d',strtotime($data['birthdate']));

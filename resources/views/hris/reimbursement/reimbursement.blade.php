@@ -28,6 +28,7 @@
     }
 </style>
 
+
     <x-slot name="header">
             {{ __('LIQUIDATION/REIMBURSEMENT REQUEST FORM') }}
     </x-slot>
@@ -51,20 +52,14 @@
                         </div>
                     </div> --}}
                     <div class="row mt-2 border-1 py-2 inset-shadow">
-                        <div class="col-md-4 nopadding">
-                            <div class="row">
-                                <div class="col-md-3 text-center pt-2">
-                                    <x-jet-label for="inputField" value="{{ __('Incurred at') }}" />
-                                </div>
-                                <div class="col-md-8">
-                                    <x-jet-input id="rPlace" name="rPlace" type="text" placeholder='Multiple places separated by comma ( , )' class="w-full shadow-none"/>
-                                    <x-jet-input-error for="rPlace" class="mt-2" />
-                                </div>
-                            </div>
+                        <div class="col-md-4">
+                            <x-jet-label for="inputField" value="{{ __('Incurred at') }}" class="w-full py-0 m-0"/>
+                            <x-jet-input id="rPlace" name="rPlace" type="text" placeholder='Multiple places separated by comma ( , )' class="w-full shadow-none"/>
+                            <x-jet-input-error for="rPlace" class="mt-2" />
                         </div>
-                        <div class="col-md-2 form-floating px-2">
-                            <x-jet-input id="rBudget" name="rBudget" type="number" step='0.01' class="form-control w-full shadow-none text-right"/>
-                            <x-jet-label for="rBudget" value="{{ __('Budget') }}" class="text-black-50 w-full"/>
+                        <div class="col-md-2 px-2">
+                            <x-jet-label for="rBudget" value="{{ __('Budget Requested') }}" class="w-full py-0 m-0"/>
+                            <x-jet-input id="rBudget" name="rBudget" type="number" step='0.01' class="form-control py-0 w-full shadow-none text-right"/>
                             <x-jet-input-error for="rBudget" class="mt-2" />
                         </div>
                         <div class="col-md-4">
@@ -72,7 +67,7 @@
                                 {{-- <div class="col-md-3 text-center pt-2">
                                     <x-jet-label value="{{ __('For the Period of ') }}"/>
                                 </div> --}}
-                                <x-jet-label for="rDateFrom" value="{{ __('For the Period of:') }}" class="text-black-50 w-full py-0 m-0"/>
+                                <x-jet-label for="rDateFrom" value="{{ __('For the Period of:') }}" class=" w-full py-0 m-0"/>
                                 <div class="col-md-4 nopadding">
                                         <x-jet-input id="rDateFrom" name="rDateFrom" type="date" placeholder="mm/dd/yyyy" class="shadow-none" autocomplete="off"/>
                                 </div>
@@ -82,7 +77,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 text-right">
+                        <div class="col-md-2 text-right py-2">
                             <x-jet-button id="addRow">Add new row</x-jet-button>
                         </div>
                     </div>
@@ -91,13 +86,13 @@
                         <table id="dataLineItems" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Document Support</th>
+                                    <th style="white-space: nowrap;">Document Support</th>
                                     <th>Date</th>
                                     <th>Particulars</th>
                                     <th>Category</th>
                                     <th>Amount</th>
                                     <th>Remarks</th>
-                                    <th></th>
+                                    {{-- <th></th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -163,7 +158,15 @@ $(document).ready(function() {
             const removeButton = counter > 1 ? `<button name="removeRow[${counter}]" type="button" class="btn btn-danger" value="${counter}"><i class="fa-solid fa-trash-can"></i></button>` : '';
             table.row
                 .add([
-                    `<input name="rFile[${counter}]" type="file" class="form-control">`,
+                    `<div class="input-group">
+                        <div class="custom-file">
+                            <input name="rFile[${counter}]" type="file" class="custom-file-input form-control">
+                            <label class="custom-file-label">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <span class="input-group-text preview-icon" id="previewIcon_${counter}"><i class="fas fa-image"></i></span>
+                        </div>
+                    </div>`,
                     `<input name="rDate[${counter}]" type="date" class="form-control">`,
                     `<input name="rParticulars[${counter}]" class="form-control">`,
                     `<select name="rCategories[${counter}]" class="form-control">
@@ -179,6 +182,21 @@ $(document).ready(function() {
                     removeButton
                 ])
                 .draw(false);
+             $('.custom-file-input').on('change', function() {
+                var input = $(this);
+                var id = input.attr('name').match(/\[(.*?)\]/)[1]; // Extract counter from input name
+                
+                if (input[0].files && input[0].files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        // Update preview icon with image preview
+                        $('#previewIcon_' + id).html('<img src="' + e.target.result + '" style="max-height: 32px; max-width: 32px;">');
+                    };
+
+                    reader.readAsDataURL(input[0].files[0]);
+                }
+            });
 
             counter++;
             // Remove the "Add new row" button after adding a row
@@ -214,8 +232,8 @@ $(document).ready(function() {
         "columnDefs": [
             { "orderable": false, "targets": "_all" }, // Disable sorting for all columns
             { "targets": [3], "orderable": true },
-            { "width": '30px', targets: [6] }, // Adjust the width to fit the icon size
-            { "width": '120px', targets: [0] },
+            // { "width": '30px', targets: [6] }, // Adjust the width to fit the icon size
+            { "width": '260px', targets: [0] },
             { "width": '80px', targets: [1] },
             { "width": '160px', targets: [2] },
             { "width": '120px', targets: [3] },

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Carbon\Carbon;
 
 use Adrianorosa\GeoLocation\GeoLocation;
   
@@ -73,9 +74,87 @@ class WebcamController extends Controller
         return view('time_logs/time-logs');
     }
 
+    protected function checkTimeLogExists($empId, $curDate)
+    {
+        $logDate = $curDate->format('Y-m-d');
+        $checkExists = DB::table('time_logs_header')
+                ->where('employee_id', $empId)
+                ->where('log_date', $logDate)
+                ->exists();
+
+        return $checkExists ? 1 : 0;
+    }
+
     function saveTimeLogs (Request $request) {
         // return $request->ip();
         try{
+            $curDate = Carbon::now('Asia/Manila');
+
+            $exists = $this->checkTimeLogExists(Auth::user()->employee_id, $curDate);
+
+            if ($exists) { // If exist, new time log will only update time_in (if NULL) /time_out (latest)
+                // return "Log Date Exists...";
+                $updateLog = DB::table('time_logs_header');
+                if ($request->logEvent=='TimeIn') {
+                    $updateLog->where('employee_id',Auth::user()->employee_id)
+                    ->where('log_date',$curDate->format('Y-m-d'))
+                    ->whereNull('time_in')
+                    ->update([
+                        'time_in'=>$curDate->format('H:i:s'),
+                        'updated_at'=>$curDate
+                    ]);
+                } else {
+                    $updateLog->where('employee_id',Auth::user()->employee_id)
+                    ->where('log_date',$curDate->format('Y-m-d'))
+                    ->update([
+                        'time_out'=>$curDate->format('H:i:s'),
+                        'updated_at'=>$curDate
+                    ]);
+                }
+                $logId = DB::table('time_logs_header')
+                ->select('id')
+                ->where('employee_id',Auth::user()->employee_id)
+                ->whereDate('log_date',$curDate->format('Y-m-d'))->first();
+
+                ($logId) ? $logId = $logId->id : $logId = null;
+
+            } else { // Insert new header for time logs if not existing yet.
+                // return "New Log Date...";
+                $supervisor = DB::table('users')
+                    ->where('employee_id', Auth::user()->supervisor)
+                    ->first();
+
+                $header = [
+                    'full_name'     => Auth::user()->last_name
+                                        . (empty(Auth::user()->suffix) ? ', ' : ' ' . Auth::user()->suffix . ', ')
+                                        . Auth::user()->first_name
+                                        . (empty(Auth::user()->middle_name) ? '' : ' ' . Auth::user()->middle_name),
+                    'employee_id'   => Auth::user()->employee_id, 
+                    'office'        => Auth::user()->office,
+                    'department'    => Auth::user()->department,
+                    'supervisor'    => $supervisor ? $supervisor->last_name
+                                        . (empty($supervisor->suffix) ? ', ' : ' ' . $supervisor->suffix . ', ')
+                                        . $supervisor->first_name
+                                        . (empty($supervisor->middle_name) ? '' : ' ' . $supervisor->middle_name)
+                                    : '',
+                    'log_date'      => $curDate->format('Y-m-d'),
+                    'created_at'    => $curDate,
+                    'updated_at'    => $curDate
+                ];
+                if ($request->logEvent=='TimeIn') {
+                    $header['time_in'] = $curDate->format('H:i:s');
+                } else {
+                    $header['time_out'] = $curDate->format('H:i:s');
+                }
+
+                $logId = DB::table('time_logs_header')->insertGetId($header);
+
+            }
+
+            // return $logId;
+            // return response(['isSuccess' => true,'message'=>$logId]);
+
+
             // $ip = request()->server('SERVER_ADDR');
             // $details = GeoLocation::lookup($ip);
             $storagePath = public_path('storage/timelogs');
@@ -84,7 +163,8 @@ class WebcamController extends Controller
                 File::makeDirectory($storagePath, 0755, true);
             }
 
-            $fileName = Auth::user()->id.'_'.substr(md5(uniqid('', true)), 0, 12);
+            $now = now()->format('Ymd');
+            $fileName = Auth::user()->id . '_' . $now . substr(md5(uniqid('', true)), 0, 12);
             $file = $fileName.'.txt';
             
             $image = $request->image;
@@ -93,6 +173,7 @@ class WebcamController extends Controller
 
 
             $data = [
+                'ref_id'                => $logId,
                 'employee_id'           => Auth::user()->employee_id, 
                 // 'profile_photo_path'    => $request->image,
                 'image_path'            => $fileName,
@@ -109,14 +190,14 @@ class WebcamController extends Controller
                 // 'region_code' => ,
                 // 'city_name' => ,
                 // 'zip_code' => ,
-                'created_at'            => date('Y-m-d H:i:s'),
-                'updated_at'            => date('Y-m-d H:i:s')
+                'created_at'            => now(),
+                'updated_at'            => now()
             ];
 
             if ($request->logEvent=='TimeIn') {
-                $data['time_in'] = date('Y-m-d H:i:s');
+                $data['time_in'] = now();
             } else {
-                $data['time_out'] = date('Y-m-d H:i:s');
+                $data['time_out'] = now();
             }
             // return var_dump($data);
             DB::table('time_logs')->insert($data);

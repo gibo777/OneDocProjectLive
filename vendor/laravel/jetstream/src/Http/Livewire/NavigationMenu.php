@@ -6,6 +6,7 @@ use Auth;
 use Livewire\Component;
 use App\Http\Controllers\HRMemoController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class NavigationMenu extends Component
 {
@@ -33,7 +34,6 @@ class NavigationMenu extends Component
         foreach ($counts as $count) {
             $counter = $counter + $count->memo_count;
         }
-// return Auth::user()->id;
         $timeCount = DB::table('time_logs')
         ->where('employee_id', Auth::user()->employee_id)
         ->whereNotNull('time_in')
@@ -49,7 +49,16 @@ class NavigationMenu extends Component
         } else {
             $timeIn=''; $timeOut='disabled';
         }
+
+        $serverStatus = DB::table('server_status')->where('id', 1)->value('status');
         
-        return view('navigation-menu', ['notification_count'=>$counter, 'timeIn'=>$timeIn, 'timeOut'=>$timeOut, 'timeCount'=> $timeCount ]);
+        return view('navigation-menu', 
+            [
+                'notification_count'    => $counter, 
+                'timeIn'                => $timeIn, 
+                'timeOut'               => $timeOut, 
+                'timeCount'             => $timeCount,
+                'serverStatus'          => $serverStatus
+            ]);
     }
 }

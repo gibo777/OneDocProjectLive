@@ -12,7 +12,7 @@
     
     @if($isForbidden)
         <div class="max-w-6xl mx-auto py-2 sm:px-6 lg:px-8">
-            The current user has no rights for this link
+            The current user does not have rights to access this link.
         </div>
     @else
         @if($isExpired)

@@ -20,5 +20,12 @@
     RewriteRule ^ index.php [L]
 
     RewriteCond %{HTTPS} !=on
-    #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}:1026/$1 [R=301,L]
+
+    # Redirect from HTTP to HTTPS and port 1025 to HTTPS and port 1026
+    RewriteCond %{HTTPS} off
+    RewriteCond %{SERVER_PORT} ^1025$ [OR]
+    RewriteCond %{SERVER_PORT} ^1026$
+    RewriteRule ^(.*)$ https://sofia.onedoc.ph:1026/$1 [R=301,L]
+    
 </IfModule>

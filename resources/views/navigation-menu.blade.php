@@ -199,7 +199,7 @@
                         </x-jet-responsive-nav-link>
                     </div>
                     <div>
-                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogslisting') }}"  id="nav_time_logs">
+                        <a  class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogs-listing') }}"  id="nav_time_logs">
                             {{ __('TIME-LOGS') }}
                         </a>
                     </div>
@@ -369,7 +369,7 @@
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Time Keeping </a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('timelogslisting') }}">Time Logs</a>
+                                        <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
                                   </div>
                               </div>
                               @if (Auth::user()->id==1 || Auth::user()->id==2)
@@ -394,7 +394,7 @@
                     </div>
                 @else
                     <div class="dropdown mt-3 mx-1">
-                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="{{ route('timelogslisting') }}" id="nav_home" >TIME-LOGS</a>
+                        <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" href="{{ route('timelogs-listing') }}" id="nav_home" >TIME-LOGS</a>
                     </div>
                 @endif
 
@@ -420,9 +420,14 @@
                               <a class="dropdown-item" href="{{ route('hr.management.holidays') }}">
                                   {{ __('Holidays') }}
                               </a>
+                              @if (Auth::user()->id==1)
                               <a class="dropdown-item" href="{{ route('employee-benefits') }}">
                                   {{ __('Benefits') }}
                               </a>
+                              <a id="navServerStatus" href="{{ route('server-status') }}" class="dropdown-item hover font-weight-bold {{ $serverStatus ? 'text-success' : 'text-danger' }}">
+                                  {{ __('Server Status') }}
+                              </a>
+                              @endif
                             </div>
                         </div>
                     </div>
@@ -517,10 +522,18 @@
 <!-- NAVIGATOR end -->
 
 <script type="text/javascript">
+  // scripts.js
+document.addEventListener('DOMContentLoaded', function() {
+    let isActive = JSON.parse(document.getElementById('navServerStatus').getAttribute('data-is-active'));
+    console.log(isActive); // Logs the current value of isActive
+});
+
 $(document).ready(function(){
 
     let has_supervisor = "{{ Auth::user()->supervisor }}";
     let role_type = "{{ Auth::user()->role_type }}";
+
+
 
     /*Pusher.logToConsole = true;
     var pusher = new Pusher('264cb3116052cba73db3', {
@@ -681,18 +694,14 @@ $(document).ready(function() {
             method: 'post',
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
-                // prompt('',data); return false;
-                // Swal.fire({ html: data}); return false;
                 if (data.isSuccess==true) {
                   // Display a success message using Swal
                   Swal.fire({
                     icon: 'success',
                     title: 'Image saved successfully!',
-                    // text: dataURL,
                   });
                   video.currentTime = 0;
                   video.style.display = "none";
-                  // alert(window.location.href);
                   setTimeout(function() {
                     location.reload();
                   }, 5000);
@@ -740,8 +749,6 @@ $(document).ready(function() {
     });
 
     $('#btnTimeOut').click(function() {
-        // alert('Gibs'); return false;
-
         $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeOut");
 

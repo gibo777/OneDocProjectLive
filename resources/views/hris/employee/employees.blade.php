@@ -405,6 +405,7 @@ $(document).ready(function() {
                 var cAdd = (getemployee.country_name!=null) ? getemployee.country_name : '' ;
                 var zipCode = (getemployee.zip_code!=null) ? getemployee.zip_code : '';
                 var contact = (getemployee.contact_number!=null) ? getemployee.contact_number : '';
+                var mobile = (getemployee.mobile_number!=null) ? getemployee.mobile_number : '';
                 var civil_status = (getemployee.civil_status!=null) ? getemployee.civil_status.toUpperCase() : '';
                 var nationality = (getemployee.nationality!=null) ? getemployee.nationality.toUpperCase() : '';
                 var birthPlace = (getemployee.birth_place!=null) ? getemployee.birth_place.toUpperCase() : '';
@@ -419,8 +420,9 @@ $(document).ready(function() {
                 $("#position").val(getemployee.position);
                 $("#department").val(getemployee.department);
 
-                $("#email").html("Email: "+getemployee.email);
-                $("#contactNumber").html("Contact Number: "+contact);
+                $("#email").val(getemployee.email);
+                $("#contactNumber").val(contact);
+                $("#mobileNumber").val(mobile);
 
                 // $("#gender").html("Sex: "+getemployee.gender);
                 // $("#civilStatus").html("Civil Status: "+civil_status);
@@ -488,6 +490,10 @@ $(document).ready(function() {
             'employee_id'   : $("#employee_id").val(), 
             'bioId'         : $("#bioId").val(), 
             'position'      : $("#position").val(),
+
+            'email'         : $("#email").val(),
+            'contact_number': $("#contactNumber").val(),
+            'mobile_number' : $("#mobileNumber").val(),
 
             /*'vl': $('#vacationLeaves').val(),
             'sl':$('#sickLeaves').val(),

@@ -185,6 +185,13 @@
     });
   });*/
 
+/*Swal.fire({
+  title: 'Employee Portal Maintenance Schedule',
+  showClass: { popup: '', backdrop: '' },
+  hideClass: { popup: '', backdrop: '' },
+  allowOutsideClick: false,
+  html: 'There will be a server maintenance'
+});*/
 
 $(document).ready(function() {
         $('#firstImage').mouseenter(function() {

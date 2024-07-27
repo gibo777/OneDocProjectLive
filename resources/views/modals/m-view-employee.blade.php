@@ -104,7 +104,7 @@
                                                 </div>
                                         </div>
 
-                                        <div class="row my-1 pt-1 inset-shadow">
+                                        {{-- <div class="row my-1 pt-1 inset-shadow">
                                             <div class="col-md-4 px-1">
                                                     <x-jet-label id="email" class="w-full text-md" />
                                             </div>
@@ -112,7 +112,26 @@
                                                     <x-jet-label id="contactNumber" class="w-full text-md" />
                                             </div>
                                             <div class="col-md-4 px-1">
-                                                    <x-jet-label for="mobile_number" class="w-full text-md" />
+                                                    <x-jet-label for="mobileNumber" class="w-full text-md" />
+                                            </div>
+                                        </div> --}}
+
+
+                                        <div class="row my-1 pt-1">
+                                            <div class="col-md-6 form-floating px-1">
+                                                    <x-jet-input id="email" type="email" class="form-control block w-full" placeholder="Email" required/>
+                                                    <x-jet-label for="email" value="{{ __('Email') }}" class="text-black-50 w-full" />
+                                                    <x-jet-input-error for="email" class="mt-2" />
+                                            </div>
+                                            <div class="col-md-3 form-floating px-1">
+                                                    <x-jet-input id="contactNumber" type="text" class="form-control block w-full" placeholder="Contact Number"/>
+                                                    <x-jet-label for="contactNumber" value="{{ __('Contact Number') }}" class="text-black-50 w-full" />
+                                                    <x-jet-input-error for="contactNumber" class="mt-2" />
+                                            </div>
+                                            <div class="col-md-3 form-floating px-1">
+                                                    <x-jet-input id="mobileNumber" type="text" class="form-control block w-full" placeholder="Mobile Number"/>
+                                                    <x-jet-label for="mobileNumber" value="{{ __('Mobile Number') }}" class="text-black-50 w-full" />
+                                                    <x-jet-input-error for="mobileNumber" class="mt-2" />
                                             </div>
                                         </div>
 
@@ -252,7 +271,7 @@
                                                     <x-jet-input-error for="employee_id" class="mt-2" />
                                             </div>
                                             <div class="col-md-3 form-floating px-1">
-                                                    <x-jet-input id="bioId" type="number" class="form-control block w-full" autocomplete="bio_id" min="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
+                                                    <x-jet-input id="bioId" type="number" class="form-control block w-full" autocomplete="bio_id" min="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" placeholder="Biometrics ID"/>
                                                     <x-jet-label for="bioId" value="{{ __('Biometrics ID') }}" class="text-black-50 w-full" />
                                                     <x-jet-input-error for="bioId" class="mt-2" />
                                             </div>

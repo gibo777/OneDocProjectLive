@@ -174,6 +174,10 @@ class EmployeesController extends Controller
                 'employee_id'       => $request->employee_id,
                 'position'          => strtoupper($request->position),
                 'department'        => $request->department,
+
+                'email'             => $request->email,
+                'contact_number'    => $request->contact_number,
+                'mobile_number'     => $request->mobile_number,
                 
                 'employment_status' => $request->employment_status,
                 'date_hired'        => $request->date_hired ? date('Y-m-d',strtotime($request->date_hired)) : null,
@@ -225,7 +229,7 @@ class EmployeesController extends Controller
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
-            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+            if (Auth::user()->is_head == 1 || Auth::user()->is_head==1) {
                 $employees = DB::select('CALL sp_timelogs_admins('.Auth::user()->id.','.Auth::user()->office.')');
             } else {
                 $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');

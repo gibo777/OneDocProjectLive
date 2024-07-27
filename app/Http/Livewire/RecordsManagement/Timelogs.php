@@ -7,6 +7,12 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use \Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+
 class Timelogs extends Component
 {
     use WithPagination;
@@ -17,6 +23,8 @@ class Timelogs extends Component
     public $search = ''; // Search input variable
     public $fTLOffice = ''; // Office filter variable
     public $fTLDept = ''; // Office filter variable
+    public $fTLdtFrom = ''; //Date From filter variable
+    public $fTLdtTo = ''; // Date To filter variable
 
     protected $listeners = ['pageSizeChanged'];
 
@@ -45,85 +53,111 @@ class Timelogs extends Component
         $this->departments = DB::table('departments')->orderBy('department')->get();
     }
 
+    
+    public function clearDateFilters()
+    {
+        $this->fTLdtFrom = null;
+        $this->fTLdtTo = null;
+    }
+
     private function fetchTimeLogs()
 	{
-	    $timeLogs = DB::table('time_logs as t')
-	        ->select(
-	            DB::raw("CONCAT(u.last_name, 
-	                    (CASE WHEN u.suffix IS NOT NULL AND u.suffix != '' THEN CONCAT(' ', u.suffix, ', ') ELSE ', ' END), 
-	                    u.first_name,
-	                    (CASE WHEN u.middle_name IS NOT NULL AND u.middle_name != '' THEN CONCAT(' ', SUBSTRING(u.middle_name, 1, 1)) ELSE '' END)
-	                ) AS full_name"),
-	            't.employee_id',
-	            't.department',
-	            'o.company_name as office',
-	            DB::raw("IFNULL(DATE(t.time_in), DATE(t.time_out)) AS log_date"),
+		/*if (empty($this->fTLdtTo) && !empty($this->fTLdtFrom)) {
+	        $this->fTLdtTo = $this->fTLdtFrom;
+	    }*/
+		$timeLogs = DB::table('time_logs_header as th')
+		    ->select(
+		    	'th.id',
+		        'th.full_name',
+		        'th.employee_id',
+		        'o.company_name as office',
+		        'd.department',
+		        'th.log_date',
+		        'th.time_in',
+		        'th.time_out',
+		        'th.supervisor'
+		    )
+		    ->leftJoin('users as u', 'th.employee_id', '=', 'u.employee_id')
+		    ->leftJoin('departments as d', 'th.department', '=', 'd.department_code')
+		    ->leftJoin('offices as o', 'th.office', '=', 'o.id')
+		    ->where(function ($query) {
+		        // Apply office filter if selected
+		        if (!empty($this->fTLOffice)) {
+		            $query->where('th.office', $this->fTLOffice);
+		        }
 
-	            DB::raw("(SELECT time_in FROM time_logs WHERE employee_id = t.employee_id AND DATE(time_in) = log_date ORDER BY time_in ASC LIMIT 1) AS f_time_in"),
+		        // Apply department filter if selected
+		        if (!empty($this->fTLDept)) {
+		            $query->where('th.department', $this->fTLDept);
+		        }
 
-        		DB::raw("(SELECT time_out FROM time_logs WHERE employee_id = t.employee_id AND DATE(time_out) = log_date ORDER BY time_out DESC LIMIT 1) AS f_time_out"),
-        		
-	            DB::raw("DATE(t.created_at) AS created_date"),
-	            DB::raw("(SELECT CONCAT(last_name, 
-	                       (CASE WHEN suffix IS NOT NULL AND suffix != '' THEN CONCAT(' ', suffix, ', ') ELSE ', ' END), 
-	                       first_name, 
-	                       ' ', SUBSTRING(middle_name, 1, 1)) 
-	                     FROM users 
-	                     WHERE employee_id = u.supervisor) AS supervisor")
-	        );
+		        // Apply search query if search term is provided
+		        if (!empty($this->search)) {
+				    $searchTerms = explode(' ', $this->search);
+				    $query->where(function ($q) use ($searchTerms) {
+				        foreach ($searchTerms as $term) {
+				            $q->where('th.full_name', 'like', '%' . $term . '%');
+				        }
+				    })
+				    ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
+				}
 
-	    $timeLogs = $timeLogs->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
-	        ->leftJoin('departments as d', 't.department', '=', 'd.department_code')
-	        ->leftJoin('offices as o', 't.office', '=', 'o.id');
+		        // Filter by date range
+		        if (!empty($this->fTLdtFrom) && !empty($this->fTLdtTo)) {
+		            $query->whereBetween('th.log_date', [$this->fTLdtFrom, $this->fTLdtTo]);
+		        } elseif (!empty($this->fTLdtFrom)) {
+		            $query->where('th.log_date', $this->fTLdtFrom);
+		        } elseif (!empty($this->fTLdtTo)) {
+		            $query->where('th.log_date', $this->fTLdtTo);
+		        }
 
-	    // Apply office filter if selected
-	    if (!empty($this->fTLOffice)) {
-	        $timeLogs->where('t.office', $this->fTLOffice);
-	    }
+		        // Additional conditional check for user role
+		        if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
+		            $query->where(function ($q) {
+		                $q->where('th.employee_id', Auth::user()->employee_id)
+		                  ->orWhere('u.supervisor', Auth::user()->employee_id);
+		            });
+		        }
 
-	    // Apply department filter if selected
-	    if (!empty($this->fTLDept)) {
-	        $timeLogs->where('t.department', $this->fTLDept);
-	    }
+		        // Exclude specific user IDs
+		        if (Auth::user()->id != 1 && Auth::user()->id != 2) {
+		            $query->where('u.id', '!=', 1);
+		        }
+		        if  (Auth::user()->is_head==1) {
+		        	switch (Auth::user()->id) {
+		        		case 1: case 8: case 18: case 58: break;
+		        		case 124:
+		        			$query->where(function($q) {
+		        				return $q->where('u.office', Auth::user()->office)
+		        						->orWhereIn('u.office',[6,8,12,14,15]);
+		        			});
+		        			break;
+		        		case 86: case 126:
+		        			$query->where(function($q) {
+		        				return $q->where('u.office', Auth::user()->office)
+		        						->orWhereIn('u.office',[8,12,14,15]);
+		        			});
+		        			break;
+		        		default:
+		        			$query->where(function($q) {
+		        				return $q->where('u.employee_id', Auth::user()->employee_id)
+		        						->orWhere('u.supervisor',Auth::user()->employee_id);
+		        			});
+		        			break;
+		        	}
+		        } else {
+		        	$query->where('u.employee_id', Auth::user()->employee_id);
+		        }
 
-	    // Apply search query if search term is provided
-	    if (!empty($this->search)) {
-	        $timeLogs->where(function ($q) {
-	            $q->where('u.first_name', 'like', '%' . $this->search . '%')
-	              ->orWhere('u.last_name', 'like', '%' . $this->search . '%')
-	              ->orWhere('u.middle_name', 'like', '%' . $this->search . '%')
-	              ->orWhere('t.employee_id', 'like', '%' . $this->search . '%');
-	        });
-	    }
-
-	    // Additional conditional check for user role
-	    if (Auth::user()->role_type != 'SUPER ADMIN') {
-	        $timeLogs->where(function ($query) {
-	            $query->where('t.employee_id', Auth::user()->employee_id)
-	                  ->orWhere('t.supervisor', Auth::user()->employee_id);
-	        });
-	    }
-
-	    if (Auth::user()->id != 1 && Auth::user()->id != 2) {
-	        $timeLogs->where('t.employee_id', '!=', 1);
-	    }
-
-	    $timeLogs = $timeLogs->where(function ($query) {
-	            $query->where('u.is_deleted', 0)
-	                  ->orWhereNull('u.is_deleted');
-	        })
-	        ->groupBy(
-	            'full_name',
-	            't.employee_id',
-	            't.department',
-	            'o.company_name',
-	            'created_date',
-	            'log_date',
-	            'supervisor'
-	        )
-	        ->orderBy('created_date', 'desc')
-	        ->orderBy('full_name', 'asc')
-	        ->paginate($this->pageSize);
+		        // Filter by deleted users
+		        $query->where(function ($q) {
+		            $q->where('u.is_deleted', 0)
+		              ->orWhereNull('u.is_deleted');
+		        });
+		    })
+		    ->orderBy('th.log_date', 'desc')
+		    ->orderBy('th.full_name', 'asc')
+		    ->paginate($this->pageSize);
 
 	    return $timeLogs;
 	}
@@ -135,5 +169,84 @@ class Timelogs extends Component
     {
         $this->pageSize = $size;
         $this->resetPage();
+    }
+
+
+    /**
+     * Timelogs Details
+     *
+     * @return view for modal
+     * @author Gilbert L. Retiro
+     **/
+    public function timelogsPerday (Request $request)
+    {
+        $employees = DB::select(DB::raw("CALL sp_timelogs_perday('$request->id')"));
+        return $employees;
+    }
+
+
+    /**
+     * Timelogs Excel Report
+     *
+     * @return view to generate Excel File
+     * @author Gilbert L. Retiro
+     **/
+    public function timeLogsExcel (Request $request)
+    {
+        // return var_dump($request->input());
+        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
+            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
+        {
+            $access_code = Auth::user()->access_code;
+            $employee_id = Auth::user()->employee_id;
+            $currentDate = Carbon::now('Asia/Manila');
+            $formattedDateTime = $currentDate->format('YmdHis');
+
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+                $tlSummary = DB::select("CALL sp_timelogs_header(?, ?, ?, ?, ?)", [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                ]);
+
+                // return var_dump($tlSummary);
+
+                $tlDetailed = DB::select("CALL sp_timelogs_detailed_xls(?, ?, ?, ?, ?)", [
+                    Auth::user()->id,
+                    $request->office,
+                    $request->department,
+                    $request->timeIn,
+                    $request->timeOut
+                ]);
+
+                // return var_dump($tlDetailed);
+
+                
+            } else {
+                $tlSummary = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+            }
+
+
+            return response()->json([
+                'tlSummary'     => $tlSummary, 
+                'tlDetailed'    => $tlDetailed, 
+                'currentDate'   => $formattedDateTime
+            ]);
+
+            // $offices = DB::table('offices')->orderBy('company_name')->get();
+            // $departments = DB::table('departments')->orderBy('department')->get();
+
+            // return view('/reports/excel/timelogs-excel', 
+            //     [
+            //         'employees'     => $employees, 
+            //         'offices'       => $offices,
+            //         'departments'   => $departments,
+            //         'currentDate'   => $formattedDateTime
+            //     ]);
+        } else {
+            return redirect('/');
+        }
     }
 }

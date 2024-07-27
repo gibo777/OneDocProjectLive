@@ -740,7 +740,6 @@ class ViewLeavesController extends Controller
     }
 
     function view_leave_history (Request $request) {
-        // return var_dump($request->all());
          if($request->ajax())
          {
 
