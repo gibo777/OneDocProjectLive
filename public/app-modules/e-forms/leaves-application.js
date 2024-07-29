@@ -153,7 +153,7 @@ $(document).ready( function () {
 
     $(document).on('click','.open_leave',function(e){
         try{
-            let modalWidth = '45%';
+            let modalWidth = '50%';
             
             if ($(window).width() <= 768) {
                 modalWidth = '100%';
