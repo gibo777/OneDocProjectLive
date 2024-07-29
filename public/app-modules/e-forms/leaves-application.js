@@ -153,6 +153,11 @@ $(document).ready( function () {
 
     $(document).on('click','.open_leave',function(e){
         try{
+            let modalWidth = '45%';
+            
+            if ($(window).width() <= 768) {
+                modalWidth = '100%';
+            }
             e.preventDefault();
             $.ajaxSetup({
                 headers: {
@@ -164,36 +169,37 @@ $(document).ready( function () {
                 method: 'get',
                 data: {'leave_reference': $(this).attr('value') }, // prefer use serialize method
                 success:function(data){
-                    Swal.fire({ 
-                        html: `<div class="banner-blue pl-2 p-1 text-md text-left">
-                                    Leave History (Control #${data[0]['control_number']})
-                                </div>`, 
-                    });
-                    /*var historyLabel = "Leave History";
-                    $('#lHName').text('Name: '+data[0]['name']);
-                    $('#lHSupervisor').text('Supervisor: '+data[0]['head_name']);
-
-                    $("#data_history > tbody").empty();
-
+                    var dLHistory = '';
+                    dLHistory += `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
+                            <thead class="thead">
+                                <tr class="dt-head-center">
+                                    <th class="py-1">Status</th>
+                                    <th class="py-1">Reason</th>
+                                    <th class="py-1">Date</th>
+                                </tr>
+                            </thead>`;
                     for(var n=0; n<data.length; n++) {
-                        $("#data_history > tbody:last-child")
-                        .append('<tr>');
-                        $("#data_history > tbody:last-child")
-                        .append('<td>'+data[n]['action']+'</td>')
-                        .append('<td class="text-nowrap" id="title'+n+'" title="'+data[n]['action_reason']+'">'+data[n]['action_reason']+'</td>')
-                        .append('<td>'+data[n]['created_at']+'</td>')
-                        ;
+                        dLHistory += `<tr>
+                            <td class="py-1">${data[n]['action']}</td>
+                            <td class="py-1">${data[n]['action_reason']}</td>
+                            <td class="py-1">${data[n]['created_at']}</td>
+                            </tr>`;
+                    }
+                    dLHistory += `</table>`;
 
-                        $("#title"+n).click(function () {
-                            $(this).attr('title').show();
-                        });
-                    }
-                    if ($("#hid_access_id").val()==1) {
-                        historyLabel = historyLabel+" of "+data[0]['name'];
-                    }
-                    historyLabel = historyLabel+" (Control #"+data[0]['control_number']+")";
-                    $("#leaveHistoryLabel").html(historyLabel.toUpperCase());
-                    $("#modalHistory").modal("show");*/
+                    Swal.fire({ 
+                        width: modalWidth,
+                        html: `<div class="banner-blue pl-2 p-1 text-md text-left">
+                                    Leave History (<strong>${data[0]['control_number']}</strong>)
+                                </div>
+                                <div class="row text-sm w-full text-left my-2">
+                                    <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
+                                    <div class="col-md-6"><em>Supervisor:</em> <strong>${data[0]['head_name']}</strong></div>
+                                </div>
+
+                                ${dLHistory}
+                                `,
+                    });
                 }
             });
         }catch(error){
