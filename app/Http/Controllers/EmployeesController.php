@@ -113,7 +113,8 @@ class EmployeesController extends Controller
             ->select(
                 'u.*', 
                 DB::raw("DATE_FORMAT(u.birthdate, '%m/%d/%Y') as birthday"),
-                DB::raw("DATE_FORMAT(u.date_regularized, '%m/%d/%Y') as date_regularized"),
+                // DB::raw("DATE_FORMAT(u.date_regularized, '%m/%d/%Y') as date_regularized"),
+                'u.date_regularized',
                 'p.country_name')
             ->leftJoin('provinces as p','u.country','=','p.country_code')
             ->where('u.id',$empid)
