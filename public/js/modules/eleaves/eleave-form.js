@@ -75,7 +75,8 @@ $(document).ready(function(){
         var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
         var weekends_count =  isWeekendandHolidays(datefrom,dateto);
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
-        // alert('test'); return false;
+
+        if (leavetype=='ML' || leavetype=='PL') { number_of_days = date_range; }
 
         /*if ($('#leaveType').val()=="SL"&& Date.parse(datefrom) > Date.now()){
             $('#leaveDateFrom').val("");
@@ -227,7 +228,7 @@ $(document).ready(function(){
 
         leaveBalance(); // This will show current Leave Balance/s
 
-        if ($(this).val()!="SL" || $(this).val()!="EL") {
+        if ($(this).val()!="SL" || $(this).val()!="EL" || $(this).val()!="ML" || $(this).val()!="PL") {
             // alert(priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val())); return false;
             if (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
                 $('#leaveDateFrom').val("");
@@ -277,7 +278,7 @@ $(document).ready(function(){
             $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
-        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val()!="ML" && $('#leaveType').val()!="PL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");
@@ -446,7 +447,7 @@ $(document).ready(function(){
                                         '',
                                         'success'
                                       ).then(function(){
-                                        window.location = window.location.origin+"/hris/view-leave";
+                                        window.location = window.location.origin+"/e-forms/leaves-listing";
                                       });
                                 });
 
