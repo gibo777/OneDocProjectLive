@@ -132,12 +132,42 @@ class Timelogs extends Component
 		        						->orWhereIn('u.office',[6,8,12,14,15]);
 		        			});
 		        			break;
-		        		case 86: case 126:
+		        		case 86: case 126: case 222:
 		        			$query->where(function($q) {
 		        				return $q->where('u.office', Auth::user()->office)
 		        						->orWhereIn('u.office',[8,12,14,15]);
 		        			});
 		        			break;
+                        case 72:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office',[12]);
+                            });
+                            break;
+                        case 135:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office',[8,12]);
+                            });
+                            break;
+                        case 223:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office',[8,14]);
+                            });
+                            break;
+                        case 131: case 238:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office',[14]);
+                            });
+                            break;
+                        case 155: case 159:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office',[15]);
+                            });
+                            break;
 		        		default:
 		        			$query->where(function($q) {
 		        				return $q->where('u.employee_id', Auth::user()->employee_id)
