@@ -790,7 +790,7 @@ class ViewLeavesController extends Controller
                 $query->where('h.is_deleted', '!=', '1')
                       ->orWhereNull('h.is_deleted');
             })
-            ->orderBy('h.id')
+            ->orderBy('h.id', 'desc')
             ->get();
 
             return $leaves;

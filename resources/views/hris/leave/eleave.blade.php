@@ -104,7 +104,7 @@
                             <div class="col-md-3">
                                 <!-- Number of Days -->
                                 <div class="form-floating" id="div_number_of_days">
-                                    <x-jet-input id="hid_no_days" type="text" name="hid_no_days" class="form-control" readonly/>
+                                    <x-jet-input id="hid_no_days" type="number" name="hid_no_days" class="form-control" readonly/>
                                     <x-jet-input id="hid_schedule" name="hid_schedule" value="{{Auth::user()->weekly_schedule }}" hidden/>
                                     <x-jet-label for="number_of_days" value="{{ __('# OF DAY/S') }}" class="w-full" />
                                 </div>

@@ -148,18 +148,14 @@ class LeaveFormController extends Controller
             'leaveDateTo' => $request->isHalfDay ? '':'required'
         ];
 
-        // return var_dump($request->input());
-
         $validator = Validator::make($request->all(),$rules);
 
         if ($validator->fails()) {
-          // return "gibs 1";
             return redirect(route('hris.leave.eleave'))
             ->withInput()
             ->withErrors($validator);
         }
         else{
-            // return "gibs 2";
             $inputData = $request->input();
             try{
                 $insert_increment = DB::table('leaves')
@@ -172,33 +168,6 @@ class LeaveFormController extends Controller
                 } else {
                     $new_leave_number = $insert_increment->leave_number+1;
                 }
-                // return $new_leave_number;
-
-                // $date = strtotime($inputData['date_applied'].date('G:i:s'));
-                // $dateapplied =  date('Y-m-d H:i:s', $date);
-
-
-
-                /*$insert = new LeaveForm;
-                $insert->leave_number = $new_leave_number;
-                $insert->name = Auth::user()->last_name.' '.Auth::user()->suffix.', '.Auth::user()->first_name.' '.Auth::user()->middle_name;
-                $insert->employee_id = Auth::user()->employee_id;
-                $insert->department = Auth::user()->department;
-                $insert->date_applied = date('Y-m-d H:i:s');
-                $insert->leave_type = $inputData['leave_type'];
-                $insert->reason = $inputData['reason'];
-                // $insert->notification = implode('|',$data['leave_notification']);
-                $insert->date_from = date('Y-m-d',strtotime($inputData['leaveDateFrom']));
-                $insert->date_to = date('Y-m-d',strtotime($inputData['leaveDateTo']));
-                $insert->no_of_days = $inputData['hid_no_days'];
-                if ($inputData['leave_type']=='Others') {
-                    $insert->others = $inputData['others_leave'];
-                }
-                $insert->ip_address = request()->ip();
-                $insert->save();*/
-
-
-                // return $request->isHalfDay ? date('Y-m-d',strtotime($inputData['leaveDateFrom'])) : date('Y-m-d',strtotime($inputData['leaveDateTo'])) ;
 
                 $data = [
                     'leave_number' => $new_leave_number, 
@@ -211,7 +180,7 @@ class LeaveFormController extends Controller
                     'reason' => $inputData['reason'],
                     'date_from'=>date('Y-m-d',strtotime($inputData['leaveDateFrom'])),
                     'date_to'=> $request->isHalfDay ? date('Y-m-d',strtotime($inputData['leaveDateFrom'])) : date('Y-m-d',strtotime($inputData['leaveDateTo'])),
-                    'no_of_days' => $inputData['hid_no_days'],
+                    'no_of_days' => number_format($inputData['hid_no_days'],2),
                     'ip_address' => $request->ip(),
                     'created_at' => DB::raw('NOW()'),
                     'updated_at' => DB::raw('NOW()')
