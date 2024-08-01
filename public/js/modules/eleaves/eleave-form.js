@@ -18,7 +18,6 @@ $(document).ready(function(){
         var holidays = $("#holidates").val().split("|");
         var schedules = $("#hid_schedule").val().split("|");
         var dayoffs = [];
-        // alert(holidays.length); return false;
         var d1 = new Date(datefrom),
             d2 = new Date(dateto),
             isWeekend = false;
@@ -45,12 +44,9 @@ $(document).ready(function(){
                     }
                 }
             }
-            // alert(count);
-            // }
             d1.setDate(d1.getDate() + 1);
         }
         return count;
-        // return false;
     }
 
     function overlapValidation (datefrom, dateto) {
@@ -59,53 +55,23 @@ $(document).ready(function(){
             method: 'get',
             data: { 'dateFrom': datefrom, 'dateTo': dateto },
             success: function(response) {
-                // Check if the response is 'true'
-                if (response === 'true') {
-                    return 1; // Overlap found
-                } else {
-                    return 0; // No overlap
-                }
+                return response === 'true' ? 1 : 0;
             }
         });
     }
 
     function leaveValidation (datefrom, dateto, leavetype="") {
-        // alert("Date From: " + datefrom + "\n Date To: " + dateto + "\n Leave Type:" + leavetype);
         var div_upload = $("#div_upload");
         var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
         var weekends_count =  isWeekendandHolidays(datefrom,dateto);
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
 
         if (leavetype=='ML' || leavetype=='PL') { number_of_days = date_range; }
-
-        /*if ($('#leaveType').val()=="SL"&& Date.parse(datefrom) > Date.now()){
-            $('#leaveDateFrom').val("");
-            $('#leaveDateTo').val("");
-            $('#hid_no_days').val("");
-            Swal.fire({
-                icon: 'error',
-                title: 'INVALID DATE FOR SICK LEAVE',
-                text: '',
-
-              })
-        }
-        else*/ if ( Date.parse(dateto) < Date.parse(datefrom)) {
-            // $("#range_notice").html("Invalid Date Range.");
-            // $("#range_notice").css("color","#ff0800");
-            $('#leaveDateFrom').val("");
-            $('#leaveDateTo').val("");
-            $('#hid_no_days').val("");
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid Date Range',
-                text: '',
-
-              })
-
+        if ( Date.parse(dateto) < Date.parse(datefrom)) {
+            $('#leaveDateTo').val($('#leaveDateFrom').val());
         } else {
 
             $("#range_notice").html("");
-            // $("#number_of_days").html(number_of_days);
             if (isNaN(number_of_days) == false) {
                 if (number_of_days>0 && $('#isHalfDay').is(':checked')) {
                     $("#hid_no_days").val(0.5);
@@ -128,8 +94,6 @@ $(document).ready(function(){
                 $("#div_upload").hide();
             }
         }
-
-        // return alert("Current Date: " + output + "\nDate From: " + datefrom + "\nDate To: " + dateto);
     }
 
 
@@ -150,10 +114,12 @@ $(document).ready(function(){
             $.ajax({
                 url: window.location.origin+'/hris/eleave/balance',
                 method: 'get',
-                data: { 'employeeId': "{{ Auth::user()->employee_id }}", 'type': $("#leaveType").val() }, // prefer use serialize method
+                data: { 
+                    'employeeId': empID, 
+                    'type': $("#leaveType").val() 
+                    }, // prefer use serialize method
                 success:function(data){
-                    // prompt('',data); return false;
-                    $("#td_balance").html(data);
+                    // $("#td_balance").html(data); //Do not remove this (Uncomment this when autocompute is ready)
 
                 }
             });
@@ -228,7 +194,7 @@ $(document).ready(function(){
 
         leaveBalance(); // This will show current Leave Balance/s
 
-        if ($(this).val()!="SL" || $(this).val()!="EL" || $(this).val()!="ML" || $(this).val()!="PL") {
+        if ($(this).val()=="VL") {
             // alert(priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val())); return false;
             if (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
                 $('#leaveDateFrom').val("");
@@ -278,7 +244,7 @@ $(document).ready(function(){
             $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
-        if ($('#leaveType').val()!="SL" && $('#leaveType').val()!="EL" && $('#leaveType').val()!="ML" && $('#leaveType').val()!="PL" && $('#leaveType').val().toUpperCase()!="OTHERS" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+        if ($('#leaveType').val()=="VL" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");

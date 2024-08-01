@@ -76,6 +76,10 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/e-forms/leaves-listing', LeaveApplication::class)->name('eforms.leaves-listing');
     Route::get('/e-forms/leave-detailed', [LeaveApplication::class, 'fetchDetailedLeave'])->name('eforms.leaves-detailed');
     Route::post('/e-forms/head-approve', [LeaveApplication::class, 'headApproveLeave'])->name('eforms.head-approve-leave');
+    Route::post('/e-forms/revoke-leave', [LeaveApplication::class, 'revokeLeave'])->name('eforms.revoke-leave');
+
+
+
 
     Route::get('/hris/eleave', [LeaveFormController::class, 'index'])->name('hris.leave.eleave');
     Route::post('/hris/eleave', [LeaveFormController::class, 'submit_leave']);

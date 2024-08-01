@@ -26,7 +26,7 @@
 				    <div class="row mx-1 inset-shadow">
 
 				    	<div class="col-md-7 row py-2">
-						        <div class="col-md-3 w-full">
+						        <div class="col-md-3 px-1">
 						            <div class="form-floating w-full">
 						                <select wire:model="fTLOffice" name="fTLOffice" id="fTLOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
 						                    <option value="">All Offices</option>
@@ -38,7 +38,7 @@
 						            </div>
 						        </div>
 
-						        <div class="col-md-3">
+						        <div class="col-md-3 px-1">
 						            <div class="form-floating w-full">
 						                <select wire:model="fTLDept" name="fTLDept" id="fTLDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
 						                    <option value="">All Departments</option>
@@ -50,7 +50,7 @@
 						            </div>
 						        </div>
 
-						        <div class="col-md-3">
+						        <div class="col-md-3 px-1">
 						            <div class="form-floating w-full">
 						                <select wire:model="fLType" name="fLType" id="fLType" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
 						                    <option value="">All Types</option>
@@ -62,7 +62,7 @@
 						            </div>
 						        </div>
 
-						        <div class="col-md-3">
+						        <div class="col-md-3 px-1">
 						            <div class="form-floating w-full">
 						                <select wire:model="fLStatus" name="fLStatus" id="fLStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
 						                    <option value="">All Statuses</option>
@@ -129,12 +129,12 @@
 								                </div>
 								            @endif
 		                                </div>
-		                                <div class="row col-md-8 py-1">
-							        		<div class="col-md-2 text-center">
+		                                <div class="row col-md-8 my-2">
+							        		<div class="col-md-2 text-left">
 							            		<x-jet-label for="search" value="{{ __('Search') }}" class="my-0 pt-1 text-sm"/>
 							        		</div>
 							        		<div class="col-md-10">
-							        			<x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search" class="w-full"  placeholder="Name/Employee ID">
+							        			<x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search" class="w-full"  placeholder="Name/Employee ID/ Control Number" title="Name/Employee #/ Control #">
 							        			</x-jet-input>
 							        		</div>
 		                                </div>

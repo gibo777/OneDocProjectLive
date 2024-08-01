@@ -1,29 +1,3 @@
-<style type="text/css">
-    .swal2-close {
-        background-color: #ff0000 !important;
-        color: #ffffff !important;
-        font-weight: 500;
-        height: 22px !important;
-        width: 22px !important;
-        margin-right: 3px;
-        margin-top: 3px;
-        transition: background-color 0.3s ease;
-    }
-    .swal2-close:hover {
-        background-color: #ff5555 !important;
-        font-weight: 300;
-    }
-
-    .modal-body {
-        white-space: nowrap;
-    }
-
-    .modal-body ol {
-        white-space: normal;
-        margin-top: 0;
-        padding-left: 20px;
-    }
-</style>
 
 <div class="banner-blue pl-2 p-1 text-md text-left">
     Control No. <strong>{{ $dLeave->control_number }}</strong>
@@ -34,7 +8,7 @@
 
         <div class="row border-1 px-2">
             <div class="col-md-3 px-1 mt-1 text-wrap">
-                <x-jet-label class="text-secondary" for="name">
+                <x-jet-label id="dLName" class="text-secondary" for="name">
                     {!! __('<i class="text-sm">Name:</i>&nbsp;<strong>:name</strong>', ['name' => $dLeave->name]) !!}
                 </x-jet-label>
             </div>
@@ -58,6 +32,13 @@
 
         <div class="row border-1 px-2">
             <div class="col-md-3 p-1">
+                <div id="dHType" hidden><em>Leave Type:</em>&nbsp;
+                    <strong>{{$dLeave->leave_type_name}}
+                    @if ($dLeave->leave_type_name == 'Others')
+                    {{ ' - '.$dLeave->others}}
+                    @endif
+                    </strong></div>
+
                 @if ( (Auth::user()->employee_id==$dLeave->supervisor) && $dLeave->leave_status=='Pending')
                     <div class="form-floating">
                         <select name="dLtype" id="dLtype" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block" placeholder="LEAVE TYPE">
@@ -73,11 +54,11 @@
                         <x-jet-input id="dLOthers" name="dLOthers" class="w-full" type="text" placeholder="Specify leave here..." value="{{ $dLeave->others }}" autocomplete="off"/>
                     </div>
                 @else
-                    <x-jet-label class="text-secondary text-wrap" for="leave_type">
+                    <x-jet-label class="text-secondary text-wrap" for="leaveType">
                         {!! __('<i class="text-sm">Leave Type:</i>&nbsp;<strong>:leave_type</strong>', ['leave_type' => strtoupper($dLeave->leave_type_name) ]) !!}
                     </x-jet-label>
                     @if ($dLeave->leave_type=='Others')
-                        <x-jet-label class="text-secondary text-wrap" for="leave_type">
+                        <x-jet-label class="text-secondary text-wrap" for="leaveOthers">
                             {!! __('&nbsp;<strong>:others</strong>', ['others' => $dLeave->others ]) !!}
                         </x-jet-label>
                     @endif
@@ -85,7 +66,7 @@
             </div>
 
             <div class="col-md-4 p-1">
-                <x-jet-label class="text-secondary text-wrap" for="no_of_days">
+                <x-jet-label id="dLDate" class="text-secondary text-wrap" for="no_of_days">
                     {!! __('<i class="text-sm">Date:</i>&nbsp;<strong>:date_covered</strong>', ['date_covered' => '('.
                         join('<b class="px-1">-</b>',  [ 
                             date('D, m/d/Y', strtotime($dLeave->date_from)),

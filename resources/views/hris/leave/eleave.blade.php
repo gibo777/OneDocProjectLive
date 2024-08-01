@@ -291,6 +291,7 @@
 
 <script type="text/javascript">
     const curDateLeave = `{{ $department->curDate }}`;
+    const empID = `{{ Auth::user()->employee_id }}`;
 </script>
 <script type="text/javascript" src="{{ asset('/js/modules/eleaves/eleave-form.js') }}"></script>
 

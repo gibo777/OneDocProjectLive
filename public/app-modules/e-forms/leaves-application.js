@@ -1,99 +1,62 @@
-
-$(document).ready( function () {
-
-    function formatDates(date) {
-        var d = new Date(date),
-        month = d.getMonth()+1,
-        day = d.getDate();
-
-        var new_date =
-        (month<10 ? '0' : '') + month + '/' +
-        (day<10 ? '0' : '') + day
-        + '/' + d.getFullYear()
-        ;
-        var hours = d.getHours();
-        var minutes = d.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        new_date = new_date+" "+strTime;
-        return new_date;
-    }
-
-
-    function currentDate() {
-        var d = new Date(),
-            month = d.getMonth()+1,
-            day = d.getDate();
-
-        var current_date =
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day
-            + '/' + d.getFullYear()
-            ;
-        return current_date;
-    }
+$(document).ready(function () {
+    let parentSwalOpen = false;
 
     /* EXPORT TO EXCEL TIMELOGS */
-    $(document).on('click','#exportExcelLeaves',async function() {
+    $(document).on('click', '#exportExcelLeaves', async function() {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         $.ajax({
             url: '/leaves-excel',
-            method: 'get',
-            data: {'id':$(this).attr('id')}, // prefer use serialize method
-            success:function(html){
-                var tempDiv = document.createElement('div');
+            method: 'GET',
+            data: { 'id': $(this).attr('id') },
+            success: function(html) {
+                let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
 
-                // Get the value of hidCurrentDate
-                var currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
-                var filename = `Leaves_${currentDateValue}.xlsx`;
+                let currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
+                let filename = `Leaves_${currentDateValue}.xlsx`;
 
-                var blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-                var url = window.URL.createObjectURL(blob);
+                let blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                let url = window.URL.createObjectURL(blob);
 
-                // Create a download link
-                var a = document.createElement('a');
+                let a = document.createElement('a');
                 a.href = url;
-                a.download = filename; // Use .xls extension for Excel files
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
 
-                // Clean up
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error exporting to Excel:', error);
             }
-        }); 
-        return false;
+        });
 
+        return false;
     });
 
     /* Reroute to Leave Form */
-    $(document).on('click','#createNewLeave', async function() {
+    $(document).on('click', '#createNewLeave', function() {
         window.location.href = lReq;
     });
 
     /* Viewing Leave Details per Control Number - Gibs */
-    $(document).on('dblclick','.view-leave',function(){
-        let modalWidth = '75%';
-        
-        if ($(window).width() <= 768) {
-            modalWidth = '100%';
-        }
+    $(document).on('dblclick', '.view-leave', function() {
+        let modalWidth = $(window).width() <= 768 ? '100%' : '75%';
+        let clickCtr = 0;
         const lID = $(this).attr('id');
-        var lType = '', lOthers='';
 
         $.ajax({
             url: '/e-forms/leave-detailed',
-            method: 'get',
-            data: {'id': lID },
+            method: 'GET',
+            data: { 'id': lID },
             success: function(html) {
+                parentSwalOpen = true;
                 Swal.fire({
                     html: html,
                     showCloseButton: true,
@@ -101,94 +64,90 @@ $(document).ready( function () {
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     width: modalWidth,
-                });
+                    didOpen: () => {
+                        $("#bApproveLeave").click(function() {
+                            const lType = $('#dLtype').val() || '';
+                            const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
+                            approveLeave(lID, lType, lOthers);
+                        });
 
-                $("#bApproveLeave").click(function () {
-                    if ($('#dLtype').length) {
-                        lType = $('#dLtype').val();
-                        if (lType=='Others') {
-                            lOthers = $('#dLOthers').val();
-                        }
+                        $('#bDenyLeave').click(function() {
+                            if (clickCtr === 0) {
+                                const lType = $('#dLtype').val() || '';
+                                const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
+                                denyLeave(lID, lType, lOthers, $('#dLName').html(), $('#dLDate').html(), $('#dHType').html());
+                            }
+                            clickCtr++;
+                        });
+
+                        $('#bCancelLeave').click(function() {
+                            if (clickCtr === 0) {
+                                const lType = $('#dLtype').val() || '';
+                                const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
+                                cancelLeave(lID, lType, lOthers, $('#dLName').html(), $('#dLDate').html(), $('#dHType').html());
+                            }
+                            clickCtr++;
+                        });
+                    },
+                    didClose: () => {
+                        parentSwalOpen = false;
                     }
-                    approveLeave(lID,lType,lOthers);
-                });
-
-                $('#bDenyLeave').click(function() {
-                    alert('test Deny');
-                });
-                
-                $('#bCancelLeave').click(function() {
-                    alert('test Cancel');
                 });
             },
             error: function(xhr, status, error) {
-                console.error(error);
+                console.error('Error fetching leave details:', error);
             }
         });
-
     });
 
-    $(document).on('click', '#leave_form',async function() {
-        var leave_id = $('#hid_leave_id').val();
-        window.location.href = "/hris/view-leave/form-leave/" + leave_id;
+    $(document).on('click', '#leave_form', function() {
+        let leave_id = $('#hid_leave_id').val();
+        window.location.href = `/hris/view-leave/form-leave/${leave_id}`;
     });
 
-    $("#date_from").change(function(){
-        // alert($("#reason").val()); return false;
+    $("#date_from").change(function() {
         $("#number_of_days").html('');
-        $("#date_from").val()=='' ? $("#date_to").val($(this).val()) : $("#date_to").val();
-        /*leaveValidation(
-            $(this).val(),
-            $("#date_to").val(),
-            $("#leave_type").val()
-            );
-        submitLeaveValidation (
-            $("#leave_type").val(),
-            $("#others_leave").val(),
-            $(this).val(),
-            $("#date_to").val(),
-            $("#reason").val()
-            );*/
+        let dateFrom = $(this).val();
+        $("#date_to").val(dateFrom || $("#date_to").val());
     });
 
-    $(document).on('click','.open_leave',function(e){
-        try{
-            let modalWidth = '50%';
-            
-            if ($(window).width() <= 768) {
-                modalWidth = '100%';
-            }
+    $(document).on('click', '.open_leave', function(e) {
+        try {
             e.preventDefault();
+            let modalWidth = $(window).width() <= 768 ? '100%' : '50%';
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $.ajax({
-                url: window.location.origin+'/hris/view-history',
-                method: 'get',
-                data: {'leave_reference': $(this).attr('value') }, // prefer use serialize method
-                success:function(data){
-                    var dLHistory = '';
-                    dLHistory += `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
-                            <thead class="thead">
-                                <tr class="dt-head-center">
-                                    <th class="py-1">Status</th>
-                                    <th class="py-1">Reason</th>
-                                    <th class="py-1">Date</th>
-                                </tr>
-                            </thead>`;
-                    for(var n=0; n<data.length; n++) {
+                url: `${window.location.origin}/hris/view-history`,
+                method: 'GET',
+                data: { 'leave_reference': $(this).attr('value') },
+                success: function(data) {
+                    let dLHistory = `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
+                        <thead class="thead">
+                            <tr class="dt-head-center">
+                                <th class="py-1">Status</th>
+                                <th class="py-1">Reason</th>
+                                <th class="py-1">Date</th>
+                            </tr>
+                        </thead>`;
+
+                    data.forEach(item => {
                         dLHistory += `<tr>
-                            <td class="py-1">${data[n]['action']}</td>
-                            <td class="py-1">${data[n]['action_reason']}</td>
-                            <td class="py-1">${data[n]['created_at']}</td>
-                            </tr>`;
-                    }
+                            <td class="py-1">${item['action']}</td>
+                            <td class="py-1">${item['action_reason']}</td>
+                            <td class="py-1">${item['created_at']}</td>
+                        </tr>`;
+                    });
                     dLHistory += `</table>`;
 
-                    Swal.fire({ 
+                    Swal.fire({
                         width: modalWidth,
+                        confirmButtonText: "Close",
                         html: `<div class="banner-blue pl-2 p-1 text-md text-left">
                                     Leave History (<strong>${data[0]['control_number']}</strong>)
                                 </div>
@@ -196,52 +155,161 @@ $(document).ready( function () {
                                     <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
                                     <div class="col-md-6"><em>Supervisor:</em> <strong>${data[0]['head_name']}</strong></div>
                                 </div>
-
-                                ${dLHistory}
-                                `,
+                                ${dLHistory}`
                     });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching leave history:', error);
                 }
             });
-        }catch(error){
-            console.log(error);
+        } catch (error) {
+            console.log('Error:', error);
         }
     });
 
-    $(document).on('change','#dLtype', async function() {
-        if ($(this).val()=='Others') {
-            $('#divLOthers').prop('hidden',false);
-        } else {
-            $('#divLOthers').prop('hidden',true);
-        }
+    $(document).on('change', '#dLtype', function() {
+        $('#divLOthers').prop('hidden', $(this).val() !== 'Others');
     });
 
     function approveLeave(lID, lType, lOthers) {
         $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            var dataObject = {
-                'lID'       : lID,
-                'lType'     : lType,
-                'lOthers'   : lOthers
-            };
-            $.ajax({
-                url: window.location.origin+'/e-forms/head-approve',
-                method: 'post',
-                data: { 'lData': dataObject },
-                success:function(data){
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        let dataObject = {
+            'lID': lID,
+            'lType': lType,
+            'lOthers': lOthers
+        };
+
+        $.ajax({
+            url: `${window.location.origin}/e-forms/head-approve`,
+            method: 'POST',
+            data: { 'lData': dataObject },
+            success: function(data) {
+                if (data.isSuccess) {
                     Swal.fire({
-                        title: 'Approved by Head.',
+                        title: data.message,
                         icon: 'success',
-                        html: data,
                     }).then(() => {
-                        Livewire.emit('pageSizeChanged');
+                        Livewire.emit('refreshComponent');
                     });
-                    console.log(data);
+                    console.log('Approve Leave Data:', data);
+                } else {
+                    Swal.fire({
+                        title: data.message,
+                        icon: 'error',
+                    });
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error approving leave:', error);
+            }
+        });
     }
 
+    function denyLeave(lID, lType, lOthers, dLName, dLDate, dHType) {
+        Swal.fire({
+            allowOutsideClick: false,
+            confirmButtonText: 'Confirm Deny',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            showCloseButton: true,
+            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
+                        Confirmation to Deny Leave
+                    </div>
+                    <div class="inset-shadow p-1">
+                        <div class="text-left text-sm">${dLName}</div>
+                        <div class="text-left text-sm">${dLDate}</div>
+                        <div class="text-left text-sm">${dHType}</div>
+                    </div>
+                    <div class="text-left text-sm fw-bold py-1"><em>Reason for denying leave:</em></div>
+                    <textarea id="confirmDenyLeave" name="confirmDenyLeave"
+                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
+                    placeholder="Kindly specify your reason here.."></textarea>`,
+            preConfirm: () => {
+                let reason = $('#confirmDenyLeave').val();
+                if (!reason) {
+                    Swal.showValidationMessage('Please enter your reason for denying leave');
+                    Swal.getPopup().querySelector('#confirmDenyLeave').focus();
+                }
+                return reason;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleRevokeConfirmation(lID, result.value,"Denied");
+            }
+        });
+    }
+
+    function cancelLeave(lID, lType, lOthers, dLName, dLDate, dHType) {
+        Swal.fire({
+            allowOutsideClick: false,
+            confirmButtonText: 'Confirm Cancel',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            showCloseButton: true,
+            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
+                        Confirmation to Cancel Leave
+                    </div>
+                    <div class="inset-shadow p-1">
+                        <div class="text-left text-sm">${dLName}</div>
+                        <div class="text-left text-sm">${dLDate}</div>
+                        <div class="text-left text-sm">${dHType}</div>
+                    </div>
+                    <div class="text-left text-sm fw-bold py-1"><em>Reason for cancellation of leave:</em></div>
+                    <textarea id="confirmCancelLeave" name="confirmCancelLeave"
+                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
+                    placeholder="Kindly specify your reason here.."></textarea>`,
+            preConfirm: () => {
+                let reason = $('#confirmCancelLeave').val();
+                if (!reason) {
+                    Swal.showValidationMessage('Please enter your reason for cancellation of leave');
+                    Swal.getPopup().querySelector('#confirmCancelLeave').focus();
+                }
+                return reason;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call a function to handle the cancellation of the leave
+                handleRevokeConfirmation(lID, result.value,"Cancelled");
+            }
+        });
+    }
+
+    function handleRevokeConfirmation(lID, lReason, lAction) {
+        const url = window.location.origin+"/e-forms/revoke-leave";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                lID: lID,
+                lReason: lReason,
+                lAction: lAction
+            },
+            success: function(data) {
+                if (data.isSuccess) {
+                    Swal.fire({
+                        title: data.message,
+                        icon: 'success',
+                    }).then(() => {
+                        Livewire.emit('refreshComponent');
+                    });
+                } else {
+                    Swal.fire({
+                        title: data.message,
+                        icon: 'error',
+                    });
+                }
+            }
+        });
+    }
 
 });

@@ -38,7 +38,7 @@ class LeaveApplication extends Component
 
     public function render()
     {
-        $leaves = $this->fetchTimeLogs();
+        $leaves = $this->fetchLeavesListing();
         $this->loadDropdowns();
 
         return view('livewire.e-forms.leave-application', [
@@ -46,6 +46,11 @@ class LeaveApplication extends Component
             'offices' => $this->offices,
             'departments' => $this->departments,
         ]);
+    }
+
+    public function refreshComponent()
+    {
+    	$this->reset('page');
     }
 
 
@@ -64,7 +69,7 @@ class LeaveApplication extends Component
         $this->fLdtTo = null;
     }
 
-    private function fetchTimeLogs()
+    private function fetchLeavesListing()
 	{
 
 	    $leaves = DB::table('leaves as l')
@@ -100,22 +105,23 @@ class LeaveApplication extends Component
 		        });
 	    (Auth::user()->id!=1 && Auth::user()->id!=2) ? $leaves = $leaves->where('u.id', '<>', 1) : '';
 		$leaves = $leaves->where(function ($query) {
+
 		        // Apply office filter if selected
 		        if (!empty($this->fTLOffice)) {
 		            $query->where('l.office', $this->fTLOffice);
 		        }
-
 		        // Apply department filter if selected
 		        if (!empty($this->fTLDept)) {
 		            $query->where('l.department', $this->fTLDept);
 		        }
+		        // Apply Leave Type filter if selected
 		        if (!empty($this->fLType)) {
 		            $query->where('l.leave_type', $this->fLType);
 		        }
+		        // Apply Leave Status filter if selected
 		        if (!empty($this->fLStatus)) {
 		            $query->where('l.leave_status', $this->fLStatus);
 		        }
-
 		        // Apply search query if search term is provided
 		        if (!empty($this->search)) {
 				    $searchTerms = explode(' ', $this->search);
@@ -124,9 +130,9 @@ class LeaveApplication extends Component
 				            $q->where('l.name', 'like', '%' . $term . '%');
 				        }
 				    })
-				    ->orWhere('l.employee_id', 'like', '%' . $this->search . '%');
+				    ->orWhere('l.employee_id', 'like', '%' . $this->search . '%')
+				    ->orWhere('l.control_number', 'like', '%' . $this->search . '%');
 				}
-
 		        // Filter by date range
 		        if (!empty($this->fLdtFrom) && !empty($this->fLdtTo)) {
 		            $query->where(function ($q) {
@@ -362,61 +368,131 @@ class LeaveApplication extends Component
                     ],$leaveInsert);
 
                     if ($history>0) {
-                        return "Head Approval Successful!";
+                    	return response()->json(['isSuccess'=>true,'message' => "Head Approval Successful!"]);
                     } else {
-                        return "Failed to Approve Leave";
                         DB::rollback();
+                    	return response()->json(['isSuccess'=>false,'message' => "Failed to Approve Leave"]);
                     }
                 } else {
-                    return "Failed to Approve Leave";
                     DB::rollback();
+                    return response()->json(['isSuccess'=>false,'message' => "Failed to Approve Leave"]);
                 }
             }
             catch(Exception $e){
-                return redirect(route('eforms.leaves-listing'))->with('failed',"Operation Failed!");
+            	return response()->json(['isSuccess'=>false,'message' => $e]);
             }
     	}
     }
 
-    function updateLeave (Request $request) {
-    	if($request->ajax()){
+
+    function revokeLeave (Request $request) {
+        if($request->ajax()){
             try {
-        		$name             = $request->name;
-        		$employee_number  = $request->employee_number;
-        		$department       = $request->department;
-                $date_applied     = date('Y-m-d',strtotime($request->date_applied)).' '.date('G:i:s');
-        		$leave_type       = $request->leave_type;
-        		$others_leave     = $request->others_leave;
-        		$reason           = $request->reason;
-        		$date_from        = date('Y-m-d',strtotime($request->date_from));
-        		$date_to          = date('Y-m-d',strtotime($request->date_to));
-        		$hid_no_days      = $request->hid_no_days;
-        		$leave_id         = $request->leave_id;
+                $lID = $request->lID;
+                $action = $request->lAction;
+                $reason = $request->lReason;
+                $date = DB::raw('NOW()');
 
-                $data_array = array(
-                            'date_applied'  => $date_applied,
-                            'leave_type'    => $leave_type,
-                            'reason'        => $reason,
-                            'date_from'     => $date_from,
-                            'date_to'       => $date_to,
-                            'no_of_days'    => $hid_no_days
-                        );
-
-                if ($leave_type=="Others") {
-                    $data_array['others'] = $others_leave;
+                if ($action=="Cancelled") {
+                    $data_array = array(
+                        'leave_status'    => 'Cancelled',
+                        'is_cancelled'    => 1,
+                        'cancelled_by'    => Auth::user()->employee_id,
+                        'date_cancelled'  => DB::raw('NOW()')
+                    );
+                } else if ($action=="Denied") {
+                    $data_array = array(
+                        'leave_status' => 'Denied',
+                        'is_denied'    => 1,
+                        'denied_by'    => Auth::user()->employee_id,
+                        'date_denied'  => DB::raw('NOW()')
+                    );
                 }
-
-                // $data_array['id']=$leave_id; var_dump($data_array); die();
-
-        		$update = DB::table('leaves');
-                $update = $update->where('id',$leave_id);
+                $update = DB::table('leaves');
+                $update = $update->where('id',$lID);
                 $update = $update->update($data_array);
+
+                if ($update > 0) {
+                    $leaveInsert = DB::table('leaves as L')
+                        ->leftJoin('leave_balances as b', 'b.employee_id','=','L.employee_id')
+                        ->select(
+                            'L.id', 
+                            'L.leave_number', 
+                            'L.control_number', 
+                            'L.name', 
+                            'L.department', 
+                            'L.date_applied', 
+                            'L.employee_id', 
+                            'L.leave_type',
+                            DB::raw('(CASE 
+                                WHEN L.leave_type="VL" THEN 
+                                    (CASE WHEN b.VL IS NULL THEN 0 ELSE b.VL END)
+                                WHEN L.leave_type="SL" THEN 
+                                    (CASE WHEN b.SL IS NULL THEN 0 ELSE b.SL END)
+                                WHEN L.leave_type="ML" THEN 
+                                    (CASE WHEN b.ML IS NULL THEN 0 ELSE b.ML END)
+                                WHEN L.leave_type="PL" THEN 
+                                    (CASE WHEN b.PL IS NULL THEN 0 ELSE b.PL END)
+                                WHEN L.leave_type="EL" THEN 
+                                    (CASE WHEN b.EL IS NULL THEN 0 ELSE b.EL END)
+                                WHEN L.leave_type="Others" THEN 
+                                    (CASE WHEN b.Others IS NULL THEN 0 ELSE b.Others END)
+                                ELSE 0
+                                END) as leave_balance'), 
+                            'L.others', 
+                            'L.reason',  
+                            'L.date_from', 
+                            'L.date_to', 
+                            'L.no_of_days', 
+                            'L.is_head_approved', 
+                            'L.date_approved_head', 
+                            'L.head_name',
+                            DB::raw("'{$action}' as action"),
+                            DB::raw("'{$reason}' as action_reason"),
+                            DB::raw("NOW() as created_at")
+                        )->where('L.id','=',$lID);
+
+                    $history = DB::table('leave_history')
+                    ->insertUsing([
+                        'leave_reference', 
+                        'leave_number', 
+                        'control_number', 
+                        'name', 
+                        'department',
+                        'date_applied', 
+                        'employee_id', 
+                        'leave_type', 
+                        'leave_balance', 
+                        'others', 
+                        'reason', 
+                        'date_from', 
+                        'date_to', 
+                        'no_of_days', 
+                        'is_head_approved', 
+                        'date_approved_head', 
+                        'head_name', 
+                        'action', 
+                        'action_reason', 
+                        'created_at'
+                    ],$leaveInsert);
+
+                    if ($history>0) {
+                    	return response()->json(['isSuccess'=>true,'message' => "Leave ".$action." Successfuly!"]);
+                    } else {
+                        DB::rollback();
+                    	return response()->json(['isSuccess'=>false,'message' => "Action Failed!"]);
+                    }
+                } else {
+                	return response()->json(['isSuccess'=>false,'message' => "Action Failed!"]);
+                }
             }
             catch(Exception $e){
-                return redirect(route('hris.leave.view-leave'))->with('failed',"Operation Failed!");
+                DB::rollback();
+            	return response()->json(['isSuccess'=>false,'message' => $e]);
             }
-    	}
+        }
     }
+
 
 
 }

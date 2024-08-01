@@ -9,7 +9,7 @@ Christopher Napoles
 ========================*/
 
 /* Customized */
- .img-company-logo {
+.img-company-logo {
      /*margin-top: 12px;*/
      padding: 60px;
      width: 380px;
@@ -17,6 +17,33 @@ Christopher Napoles
 
 .img-company-logo:hover {
      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+/* Swal */
+
+.swal2-close {
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    height: 22px !important;
+    width: 22px !important;
+    margin-right: 3px;
+    margin-top: 3px;
+    transition: background-color 0.3s ease;
+}
+.swal2-close:hover {
+    background-color: #ff5555 !important;
+    font-weight: 300;
+}
+
+.modal-body {
+    white-space: nowrap;
+}
+
+.modal-body ol {
+    white-space: normal;
+    margin-top: 0;
+    padding-left: 20px;
 }
 
 .w-33 {

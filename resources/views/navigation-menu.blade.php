@@ -194,7 +194,7 @@
                             {{ __('E-Leave Form') }}
                         </x-jet-responsive-nav-link>
 
-                        <x-jet-responsive-nav-link href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">
+                        <x-jet-responsive-nav-link href="{{ route('eforms.leaves-listing') }}"  id="nav_view_leaves">
                             {{ __('View Leaves') }}
                         </x-jet-responsive-nav-link>
                     </div>
@@ -273,7 +273,7 @@
                               <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
                               <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                   <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}" id="dNavEleave" >{{ __('E-Leave Form') }} </a>
-                                  <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"  id="nav_view_leaves">{{ __('View Leaves') }} </a>
+                                  <a class="dropdown-item" href="{{ route('eforms.leaves-listing') }}"  id="nav_view_leaves">{{ __('View Leaves') }} </a>
                                   <a class="dropdown-item" href="{{ route('calendar') }}"  id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
                               </div>
                           </div>
@@ -439,7 +439,7 @@
             <div class="items-center justify-center">
 
                 @if ($timeIn)
-                <x-jet-button type="button" id="btnTimeIn" name="btnTimeIn" disabled>
+                <x-jet-button type="button" disabled>
                     <i class="fa-regular fa-clock"></i>&nbsp;Time-In
                 </x-jet-button>
                 @else
@@ -449,7 +449,7 @@
                 @endif
 
                 @if ($timeOut)
-                <x-jet-button type="button" id="btnTimeOut" name="btnTimeOut" disabled>
+                <x-jet-button type="button" disabled>
                     <i class="fa-solid fa-clock"></i>&nbsp;Time-Out
                 </x-jet-button>
                 @else

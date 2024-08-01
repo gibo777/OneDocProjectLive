@@ -60,7 +60,60 @@
                                 <div class="row bg-light">
                                     <div class="col-md-3 my-1 p-2">
                                         <div class="flex justify-center my-1 w-100">
-                                            <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover">
+                                            {{-- <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover"> --}}
+
+                    <div x-data="{photoName: null, photoPreview: null}" class="col-md-12 d-block nopadding">
+                        
+                        <!-- START Profile Photo File Input -->
+                        <input id="hidden_profile_photo" type="file" class="hidden"
+                                    wire:model="photo"
+                                    x-ref="photo"
+                                    x-on:change="
+                                    photoName = $refs.photo.files[0].name;
+                                    const reader = new FileReader();
+                                    reader.onload = (e) => {
+                                        photoPreview = e.target.result;
+                                    };
+                                    reader.readAsDataURL($refs.photo.files[0]);
+                                    " />
+
+                        <!-- <x-jet-label for="photo" value="{{ __('Photo') }}" /> -->
+
+                        <!-- Current Profile Photo -->
+                        <div  id="divPhotoPreview1" class="flex justify-center mt-1 w-100" x-show="! photoPreview">
+                            <img id="imgProfile" src="" alt="" class="rounded-full h-id w-id object-cover">
+                        </div>
+                        <!-- New Profile Photo Preview -->
+                        <div id="divPhotoPreview2" class="flex justify-center mt-1 w-100" x-show="photoPreview" style="display: none;">
+                            <span class="block rounded-full w-id h-id bg-cover bg-no-repeat bg-center" x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
+                            </span>
+                        </div>
+                        <div id="divPhotoPreview3" class="hidden">
+                            <img src="" id="profilePhotoPreview" class="rounded-full h-id w-id object-cover"/>
+                        </div>
+                        <!-- END Profile Photo File Input -->
+
+                        <div class="col-span-12 w-full btn">
+                            <x-jet-secondary-button id="capturePhoto" class="mt-1 mr-1 fa fa-solid fa-camera" type="button" data-bs-toggle="tooltip" title="Capture Photo" hidden>
+                            </x-jet-secondary-button>
+
+                            <x-jet-secondary-button id="uploadPhoto" class="mt-1 mr-1 fa fa-upload" type="button" x-on:click.prevent="$refs.photo.click()" data-bs-toggle="tooltip" title="Upload a New Photo">
+                            </x-jet-secondary-button>
+                            
+                        </div>
+
+                        <?php
+                        /*@if ($this->user->profile_photo_path)
+                            <x-jet-secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
+                                {{ __('Remove Photo') }}
+                            </x-jet-secondary-button>
+                        @endif*/
+                        ?>
+                        <x-jet-input-error for="photo" class="mt-2" />
+                    </div>
+
+
+                    
                                         </div>
 
                                         <div class="row my-1 mx-3 border-1">
