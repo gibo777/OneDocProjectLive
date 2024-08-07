@@ -168,6 +168,11 @@ class Timelogs extends Component
                                         ->orWhereIn('u.office',[15]);
                             });
                             break;
+                        case 174:
+                            $query->where(function($q) {
+                                return $q->where('u.office', Auth::user()->office);
+                            });
+                            break;
 		        		default:
 		        			$query->where(function($q) {
 		        				return $q->where('u.employee_id', Auth::user()->employee_id)
