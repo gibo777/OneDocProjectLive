@@ -50,11 +50,30 @@ class CreateNewUser implements CreatesNewUsers
 
         return DB::transaction(function () use ($input,$token,$randomString) {
 
-        $insertFields = [
-                'first_name'    => strtoupper($input['first_name']),
-                'last_name'     => strtoupper($input['last_name']),
-                'middle_name'   => $input['middle_name'] ? strtoupper($input['middle_name']) : null,
-                'suffix'        => $input['suffix'] ? strtoupper($input['suffix']) : null,
+            $name = $input['last_name'];
+
+            if (!empty($input['first_name'])) {
+                $name .= ', ' . $input['first_name'];
+            }
+
+            if (!empty($input['suffix'])) {
+                $name .= ' ' . $input['suffix'];
+            }
+
+            if (!empty($input['middle_name'])) {
+                $middleNameParts = explode(' ', $input['middle_name']);
+                $middleInitials = array_map(function($part) {
+                    return strtoupper(substr($part, 0, 1)) . '.';
+                }, $middleNameParts);
+                $name .= ' ' . implode('', $middleInitials);
+            }
+
+            $insertFields = [
+                'name'              => $name,
+                'first_name'        => strtoupper($input['first_name']),
+                'last_name'         => strtoupper($input['last_name']),
+                'middle_name'       => $input['middle_name'] ? strtoupper($input['middle_name']) : '',
+                'suffix'            => $input['suffix'] ? strtoupper($input['suffix']) : '',
 
                 'employee_id'       => $input['employee_id'],
                 'employment_status' => $input['employment_status'],
@@ -67,15 +86,15 @@ class CreateNewUser implements CreatesNewUsers
                 'office'            => $input['office'],
 
                 'gender'            => $input['gender'],
-                'email'             => $input['email'],
+                'email'             => preg_replace('/\s+/', '', $input['email']),
                 'role_type'         => $input['role_type'],
                 // 'role_permission'   => ($input['role_type']=='SUPER ADMIN') ? 1 : 0,
                 'is_head'           => ($input['role_type']=='ADMIN' || $input['role_type']=='SUPER ADMIN') ? 1 : 0,
 
-                'remember_token' => $token,
-                'qr_code_link' => $randomString,
-                'expires_at' => Carbon::now()->addHour(),
-                'created_by' => Auth::user()->employee_id,
+                'remember_token'    => $token,
+                'qr_code_link'      => $randomString,
+                'expires_at'        => Carbon::now()->addHour(),
+                'created_by'        => Auth::user()->employee_id,
                 // 'password' => Hash::make($input['password']),
             ];
             // return var_dump($insertFields);
