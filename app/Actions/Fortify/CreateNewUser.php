@@ -69,7 +69,7 @@ class CreateNewUser implements CreatesNewUsers
             }
 
             $insertFields = [
-                'name'              => $name,
+                'name'              => strtoupper($name),
                 'first_name'        => strtoupper($input['first_name']),
                 'last_name'         => strtoupper($input['last_name']),
                 'middle_name'       => $input['middle_name'] ? strtoupper($input['middle_name']) : '',
