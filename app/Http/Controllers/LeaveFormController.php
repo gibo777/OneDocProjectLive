@@ -88,7 +88,7 @@ class LeaveFormController extends Controller
                 'holidays'=>$holidays, 
                 'department'=>$department,
                 'leaveTypes'=>$leaveTypes,
-                'leave_credits'=>$leaveCredits
+                'leaveCredits'=>$leaveCredits
               ]);
         } else {
             return redirect('/');
