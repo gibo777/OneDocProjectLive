@@ -2,10 +2,12 @@
 
 namespace App\Actions\Fortify;
 
+use Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
@@ -76,7 +78,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'religion'      => $input['religion'],
                 // 'birthdate'     => date('Y-m-d',$input['birthdate']),
                 'birthdate'     => $input['birthdate'],
-                'birth_place'   => $input['birth_place'],
+                'birth_place'   => strtoupper($input['birth_place']),
 
                 'email'         => $input['email'],
                 'updated_by'    => Auth::user()->employee_id,
