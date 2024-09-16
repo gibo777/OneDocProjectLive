@@ -15,9 +15,11 @@ use App\Http\Controllers\ProcessController;
 
 /* E-Forms */
 use App\Http\Livewire\EForms\LeaveApplication;
-/* Timelogs */
+/* Records Management */
 use App\Http\Livewire\RecordsManagement\Timelogs;
+use App\Http\Livewire\RecordsManagement\Employees;
 use App\Http\Livewire\ServerStatus;
+use App\Http\Livewire\AdminDashboard;
 
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
@@ -68,9 +70,17 @@ Route::get('/', function () {
 Route::get('/emp-val/{qrLink}', [QRCodeController::class, 'qrCodeProfile'])->name('qr-code-profile');
 
 Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(function () {
+
     Route::get('/dashboard', function () {
+        if (Auth::user()->id==1){
+        // return view('dashboard-admin');
+            return redirect('/admin-dashboard');
+        } else {
         return view('dashboard');
+        }
     })->name('dashboard');
+
+    Route::get('/admin-dashboard', AdminDashboard::class)->name('admin.dashboard');
 
     /*======= E-LEAVE APPLICATION ======*/
     Route::get('/e-forms/leaves-listing', LeaveApplication::class)->name('eforms.leaves-listing');
@@ -78,13 +88,12 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/e-forms/head-approve', [LeaveApplication::class, 'headApproveLeave'])->name('eforms.head-approve-leave');
     Route::post('/e-forms/revoke-leave', [LeaveApplication::class, 'revokeLeave'])->name('eforms.revoke-leave');
 
-
-
-
     Route::get('/hris/eleave', [LeaveFormController::class, 'index'])->name('hris.leave.eleave');
     Route::post('/hris/eleave', [LeaveFormController::class, 'submit_leave']);
     Route::get('/leave-overlapping', [LeaveFormController::class, 'overlapValidation']);
     Route::get('/hris/eleave/balance', [LeaveFormController::class, 'show_balance'])->name('hris.leave.leave-balance');
+
+
 
     Route::get('/hris/view-leave', [ViewLeavesController::class, 'show_leave'])->name('hris.leave.view-leave');
     Route::get('/hris/filter-leave', [ViewLeavesController::class, 'filter_leave'])->name('hris.leave.filter-leave');
@@ -239,6 +248,10 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/timelogs-listing', Timelogs::class)->name('timelogs-listing');
     Route::get('/timelogs-perday', [Timelogs::class, 'timelogsPerday'])->name('timelogs-perday');
 
+    /*======= EMPLOYEES =======*/
+    Route::get('/employees-listing', Employees::class)->name('employees-listing');
+    Route::get('/employee-detailed',[Employees::class,'fetchDetailedEmployee']);
+    Route::post('/update-employee-info',[Employees::class,'updateEmployeeInfo']);
 
     Route::get('/timelogs',[WebcamController::class, 'timeLogs'])->name('timelogs');
     Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
@@ -247,9 +260,16 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
     Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
 
-    /*======= CRON / SCHEDULER =====*/
-    Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
 
     /*======= SERVER STATUS =====*/
     Route::get('/server-status', ServerStatus::class)->name('server-status');
 });
+
+
+/*======= Leave from the link sent via email =====*/
+Route::get('/leave/{action}/{hashId}', [LeaveFormController::class, 'leaveHeadDecide'])->name('leave.decide');
+Route::post('/leave-link/head-approve', [LeaveApplication::class, 'linkHeadApproveLeave'])->name('leave-link.head-approve-leave');
+Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeave'])->name('leave-link.head-deny-leave');
+
+/*======= CRON / SCHEDULER =====*/
+Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');

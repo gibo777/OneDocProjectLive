@@ -75,7 +75,8 @@
 						        </div>
 				    	</div>
 
-				    	<div class="col-md-5 row">
+				    	<div class="col-md-5">
+				    		<div class="row px-0 mx-0 w-full">
 						        <div class="col-md-8 pt-2 text-center">
 								    <div class="flex justify-between items-center">
 								        <x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
@@ -91,11 +92,12 @@
 							        </div>
 						        </div>
 
-						        <div class="col-md-4 text-center mt-2 py-2">
+						        <div class="col-md-4 text-center mt-2">
                                     <x-jet-button  id="createNewLeave">
-                                        <i class="fa-solid fa-sheet-plastic"></i>&nbsp;New Leave
+                                        <i class="fa-solid fa-sheet-plastic"></i>&nbsp;File a Leave
                                     </x-jet-button>
 						        </div>
+				    		</div>
 				    	</div>
 				    </div>
 				</div>

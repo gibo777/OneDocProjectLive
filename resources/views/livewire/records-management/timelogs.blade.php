@@ -130,8 +130,10 @@
                                     <th class="py-1">Office</th>
                                     <th class="py-1" style="width: 20%">Department</th>
                                     <th class="py-1" style="width: 8%">Date</th>
+                                    <th class="py-1" style="width: 8%">Day</th>
                                     <th class="py-1" style="width: 8%">Time In</th>
                                     <th class="py-1" style="width: 8%">Time Out</th>
+                                    {{-- <th class="py-1" style="width: 8%">Status</th> --}}
                                     <th class="py-1">Supervisor</th>
                                 </tr>
                             </thead>
@@ -149,8 +151,10 @@
                                     <td>{{ $record->office }}</td>
                                     <td>{{ $record->department }}</td>
                                     <td>{{ date('m/d/Y', strtotime($record->log_date)) }}</td>
+                                    <td>{{ date('D', strtotime($record->log_date)) }}</td>
                                     <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}</td>
                                     <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}</td>
+                                    {{-- <td></td> --}}
                                     @if (url('/')=='http://localhost')
                                     	<td>xxx, xxx x.</td>
                                     @else
@@ -184,12 +188,6 @@
             </div>
         </div>
     </div>
-
-
-<!-- Loading Indicator -->
-<div id="dataLoad" style="display: none">
-    <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
-</div>
 
 <!-- =========================================== -->
 <script type="text/javascript">

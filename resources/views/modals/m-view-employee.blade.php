@@ -146,8 +146,8 @@
                                                 </div>
                                         </div>
                                         <div class="row my-1 pt-1 inset-shadow">
-                                                <div class="col-md-7 px-1">
-                                                        <x-jet-label id="homeAddress" class="w-full text-md" />
+                                                <div class="col-md-7 px-1 ">
+                                                        <x-jet-label id="homeAddress" class="w-full text-md text-wrap" />
                                                 </div>
                                                 <div class="col-md-3 px-1">
                                                         <x-jet-label id="homeCountry" class="w-full text-md" />

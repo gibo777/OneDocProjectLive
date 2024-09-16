@@ -48,12 +48,11 @@ class WebcamController extends Controller
         $fileName = $this->generateRandomString(40) . '.jpg';
         
         $file = $folderPath . $fileName;
-        // dd($file);
 
         Storage::put($file, $image_base64);
 
         $webcamPhotoLocation = asset("storage/".$file);
-// dd($webcamPhotoLocation);
+
         return $webcamPhotoLocation;
         // dd($webcamPhotoLocation);
         

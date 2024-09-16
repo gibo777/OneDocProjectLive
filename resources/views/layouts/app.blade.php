@@ -8,9 +8,6 @@
 
         <title>{{ config('app.name', 'One Document Corporation') }}</title>
 
-        <!-- Fonts -->
-        {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800;700&display=swap"> --}}
-
         <!-- Styles -->
 <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
@@ -97,6 +94,15 @@
             </div>
         </main>
 
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="dataLoad" style="display: none">
+        <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
+    </div>
+
+    <div id="dataProcess" style="display: none">
+        <img src="{{ asset('/img/misc/processing.gif') }}">
     </div>
 
     @stack('modals')

@@ -67,8 +67,6 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
     $('#dataLoad').css({
         'display': 'flex',
         'position': 'absolute',
-        'top': '40%',
-        'left': '40%'
     });
 
     $.ajax({

@@ -30,7 +30,7 @@ trait HasProfilePhoto
         });
     }
 
-    /**
+    /**$user
      * Delete the user's profile photo.
      *
      * @return void

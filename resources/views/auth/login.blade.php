@@ -29,11 +29,8 @@
     <x-jet-authentication-card>
         <x-slot name="logo">
         </x-slot>
-
-            {{-- <div class="drop-shadow"> --}}
             <div class="">
                 <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded mx-auto d-block pb-3"/>
-                <!-- <x-jet-authentication-card-logo /> -->
             </div>
 
         <x-jet-validation-errors class="mb-4" />
@@ -68,23 +65,12 @@
                 <div id="capsLockMessage" class="mt-2 text-md font-weight-bold text-red-500 hidden">Caps Lock is ON</div>
             </div>
 
-            <!-- <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-jet-checkbox id="remember_me" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div> -->
-
             <div class="flex items-center justify-center">
                 @if (Route::has('password.request'))
 
                     <a class="underline text-md text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
-                   <!--  &nbsp;|&nbsp; 
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
-                        {{ __('Not yet registered?') }}
-                    </a> -->
                 @endif
             </div>
 

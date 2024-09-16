@@ -309,6 +309,7 @@ $(document).ready(function(){
             Swal.fire({ html: 'Please wait for the leave to be submitted...'}); return false;
         }
 
+        // Swal.fire({ html: 'I miss you my 345 partner...'}); return false;
 
         overlapValidation($("#leaveDateFrom").val(), $("#leaveDateTo").val())
         .then(function(overlap) {
@@ -361,6 +362,10 @@ $(document).ready(function(){
 
                       });
                 } else {
+                    $('#dataProcess').css({
+                        'display': 'flex',
+                        'position': 'absolute',
+                    });
 
                     $.ajaxSetup({
                         headers: {
@@ -372,7 +377,6 @@ $(document).ready(function(){
                         method: 'post',
                         data: $('#leave-form').serialize(), // prefer use serialize method
                         success:function(data){
-                            // prompt('', data); return false;
                             console.log(data);
                             const {isSuccess,message,newLeave} = data;
 
@@ -381,6 +385,7 @@ $(document).ready(function(){
                                 $("input:checkbox[name='leave_notification[]']:checked").each(function(){
                                     notificationslev.push($(this).val());
                                 });
+                                $('#dataProcess').hide();
 
                                 Swal.fire({
                                     // width: '640px',

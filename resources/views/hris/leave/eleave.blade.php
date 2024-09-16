@@ -153,15 +153,9 @@
                                     <tbody>
                                         <tr>
                                             @if(empty($leaveCredits))
-                                                <td class="py-1">0.0</td>
-                                                <td class="py-1">0.0</td>
-                                                <td class="py-1">0.0</td>
-                                                @if(Auth::user()->gender === 'M')
+                                                @for ($i = 0; $i < 5; $i++)
                                                     <td class="py-1">0.0</td>
-                                                @elseif(Auth::user()->gender === 'F')
-                                                    <td class="py-1">0.0</td>
-                                                @endif
-                                                <td class="py-1">0.0</td>
+                                                @endfor
                                             @else
                                                 <td class="py-1">{{ $leaveCredits->VL }}</td>
                                                 <td class="py-1">{{ $leaveCredits->SL }}</td>
@@ -255,30 +249,6 @@
             <!-- FORM end -->
         </div>
     </div>
-
-{{-- PREVIEW MODALS --}}
-
-<div class="modal fade" id="PreviewModal" tabindex="-1" role="dialog" arial-labelledby="modalErrorLabel" data-bs-backdrop="static" data-bs-keyboard="false" >
-  <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title text-lg" id="modalErrorLabel">LEAVE SUMMARY</h4>
-            <button id="truesubmitleave" type="button" class="close btn btn-primary fa fa-close" data-bs-dismiss="modal" arial-label="Close"><span aria-hidden="true"></span></button>
-        </div>
-
-        <div class="modal-body bg-gray-50 red-color">
-            <x-jet-label id="nameofemp" />
-            <x-jet-label id="employeenumofemp" />
-            <x-jet-label id="departmentofemp" />
-            <x-jet-label id="dateappliedofemp" />
-            <x-jet-label id="leavetypeofemp" />
-            <x-jet-label id="datecoveredofemp" />
-            <x-jet-label id="summary_date_to" />
-            <x-jet-label id="notificationofleaveofemp" />
-            <x-jet-label id="reasonofemp" />
-    </div>
-  </div>
-</div>
     
 <x-jet-input id="holidates" type="hidden" value="{{ $holidays->implode('date', '|') }}"></x-jet-input>
 <div id="popup">
@@ -288,6 +258,7 @@
 <div id="error_dialog">
   <p id="error_dialog_content" class="text-justify px-2"></p>
 </div>
+
 
 <script type="text/javascript">
     const curDateLeave = `{{ $department->curDate }}`;
