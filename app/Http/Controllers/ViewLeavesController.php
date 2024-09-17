@@ -845,7 +845,7 @@ class ViewLeavesController extends Controller
                 'o.company_name',
                 'u.supervisor',
                 'L.created_at',
-                DB::raw('(SELECT CONCAT(first_name," ",last_name) FROM users WHERE employee_id = u.supervisor) as head_name'),
+                DB::raw('(SELECT CONCAT(first_name, " ", last_name, IFNULL(CONCAT(" ", suffix), "")) FROM users WHERE employee_id = u.supervisor) as head_name'),
                 DB::raw("DATE_FORMAT(L.date_applied, '%m-%d-%Y %h:%i %p') as date_applied"),
                 'L.leave_status as status')
             ->where('u.id','!=',1)

@@ -178,7 +178,6 @@
 		}
 	});
 
-    // Function to handle the SweetAlert2 login prompt
     async function linkApproveLeave(lId, lHash, dLName, dLDate) {
 		let lType = $('#dLtype').val();
 		let lOthers = $('#dLOthers').val();
