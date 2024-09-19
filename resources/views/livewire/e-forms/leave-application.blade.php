@@ -127,7 +127,7 @@
 								            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
 								                <div class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3">
 								                    <i class="fas fa-table"></i>
-								                    <span id="exportExcel" class="font-weight-bold">Export Excel</span>
+								                    <span id="exportExcelLeaves" class="font-weight-bold">Export Excel</span>
 								                </div>
 								            @endif
 		                                </div>
