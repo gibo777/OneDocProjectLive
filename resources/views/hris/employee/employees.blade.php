@@ -318,8 +318,8 @@ $(document).ready(function() {
     $(document).on('dblclick','.view-employees tr',async function(){
         $('#dataLoad').css('display','flex');
         $('#dataLoad').css('position','absolute');
-        $('#dataLoad').css('top','40%');
-        $('#dataLoad').css('left','40%');
+        /*$('#dataLoad').css('top','40%');
+        $('#dataLoad').css('left','40%');*/
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
