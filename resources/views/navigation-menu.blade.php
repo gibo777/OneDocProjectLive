@@ -498,13 +498,6 @@
                         <input type="button" id="takeSnapshot" value="Take Snapshot" class="btn btn-primary ">
                     </div>
                 </div>
-                {{-- <div class="row">
-                    <div class="col-md-12 text-center">
-                        <x-jet-button id="saveTempPhoto">{{ __('Ok') }}
-                        </x-jet-button>
-                    </div>
-                </div> --}}
-
             </form>
         </div>
 
@@ -695,7 +688,6 @@ $(document).ready(function() {
             data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
             success:function(data){
                 if (data.isSuccess==true) {
-                  // Display a success message using Swal
                   Swal.fire({
                     icon: 'success',
                     title: 'Image saved successfully!',
@@ -727,9 +719,14 @@ $(document).ready(function() {
         $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeIn");
 
+        const isMobile = window.innerWidth <= 768;
+        const webcamWidth = isMobile ? 320 : 430;
+        const webcamHeight = isMobile ? 240 : 350;
+
         Webcam.set({
-            width: 430,
-            height: 350,
+            // width: 430,
+            width: webcamWidth,
+            height: webcamHeight,
             image_format: 'jpeg',
             jpeg_quality: 90,
             constraints: {
@@ -752,9 +749,13 @@ $(document).ready(function() {
         $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeOut");
 
+        const isMobile = window.innerWidth <= 768;
+        const webcamWidth = isMobile ? 320 : 430;
+        const webcamHeight = isMobile ? 240 : 350;
+
         Webcam.set({
-            width: 430,
-            height: 350,
+            width: webcamWidth,
+            height: webcamHeight,
             image_format: 'jpeg',
             jpeg_quality: 90,
             constraints: {
