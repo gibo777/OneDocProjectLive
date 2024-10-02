@@ -224,9 +224,9 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/send-mail', [PageController::class, 'send_mail']);
 
     /* TESTING ONLY */
-    Route::middleware(['allowOnlyAdmin',config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->group(function() {
+    /*Route::middleware(['allowOnlyAdmin',config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->group(function() {
         Route::get('/test', [TestController::class,'test_view']);
-    });
+    });*/
 
     Route::get('/tcpdf', [HomeController::class, 'createPDF'])->name('createPDF');
 
@@ -273,3 +273,6 @@ Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeav
 
 /*======= CRON / SCHEDULER =====*/
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
+
+
+Route::get('/test', [TestController::class,'test_view']);

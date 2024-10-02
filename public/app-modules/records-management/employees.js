@@ -61,10 +61,12 @@ $(document).ready(function () {
             beforeSend: function() {
                 $('#dataLoad').css({
                     'display': 'flex',
-                    'position': 'absolute',
-                    'top': '40%',
-                    'left': '40%'
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
                 });
+
             },
             success:function(data){
                 $('#dataLoad').css('display','none');

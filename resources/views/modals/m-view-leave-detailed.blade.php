@@ -162,7 +162,7 @@
                             </tr>
                             <tr>
                                 <th>As of:</th>
-                                <td id="td_as_of"></td>
+                                <td id="td_as_of">{{ \Carbon\Carbon::now()->format('m/d/Y') }}</td>
                             </tr>
                           </tbody>
                         </table>

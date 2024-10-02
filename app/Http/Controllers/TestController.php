@@ -49,7 +49,8 @@ class TestController extends Controller
             ];
 
         $countries = DB::table('countries')->get();
-    	return view('/test/test', ['months'=>$months, 'countries'=>$countries]);
+        // return view('/test/test', ['months'=>$months, 'countries'=>$countries]);
+    	return view('/test/test-gps');
       
     }
 }

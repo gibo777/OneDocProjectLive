@@ -13,6 +13,9 @@ use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LeaveApplicationSubmitted;
+
 class LeaveApplication extends Component
 {
     use WithPagination;
@@ -369,6 +372,12 @@ class LeaveApplication extends Component
                     ],$leaveInsert);
 
                     if ($history>0) {
+                        $newLeave = $leaveInsert->first();
+                        $lEmail = DB::table('users')
+                        ->where('employee_id',$newLeave->employee_id)
+                        ->value('email');
+
+                        Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
                     	return response()->json(['isSuccess'=>true,'message' => "Head Approval Successful!"]);
                     } else {
                         DB::rollback();
@@ -478,6 +487,13 @@ class LeaveApplication extends Component
                     ],$leaveInsert);
 
                     if ($history>0) {
+                        if ($action=="Denied") {
+                            $newLeave = $leaveInsert->first();
+                            $lEmail = DB::table('users')
+                            ->where('employee_id',$newLeave->employee_id)
+                            ->value('email');
+                            Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
+                        }
                     	return response()->json(['isSuccess'=>true,'message' => "Leave ".$action." Successfuly!"]);
                     } else {
                         DB::rollback();
@@ -507,10 +523,12 @@ class LeaveApplication extends Component
 
             $headId = DB::table('leaves as l')
             ->leftJoin('users as u','l.employee_id','u.employee_id')
-            ->select('u.supervisor as head_id')
+            ->select('u.supervisor as head_id', 'u.email')
             ->addSelect(DB::raw("(SELECT CONCAT(first_name, ' ', last_name, ' ', suffix) FROM users WHERE employee_id = u.supervisor) as head_name"))
             ->where('l.id',$lId)
             ->where('l.hash_id',$lHash)->first();
+
+            // return var_dump($headId);
 
             try {
                 $dataArray = array(
@@ -525,8 +543,6 @@ class LeaveApplication extends Component
                     $dataArray['leave_type']= $lType;
                     $dataArray['others']    = $lOthers;
                 }
-
-                // return var_dump($dataArray);
 
                 $update = DB::table('leaves');
                 $update = $update->where('id',$lId);
@@ -604,6 +620,9 @@ class LeaveApplication extends Component
                     ],$leaveInsert);
 
                     if ($history>0) {
+                        $newLeave = $leaveInsert->first();
+                        // Email Notification to User/Employee after approved by the Head/Supervisor
+                        Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
                         return response()->json(['isSuccess'=>true,'message' => "Head Approval Successful!"]);
                     } else {
                         DB::rollback();
@@ -629,17 +648,18 @@ class LeaveApplication extends Component
                 $action = $request->lAction;
                 $reason = $request->lReason;
                 $date = DB::raw('NOW()');
-
+                
                 $headId = DB::table('leaves as l')
                 ->leftJoin('users as u','l.employee_id','u.employee_id')
+                ->select('u.supervisor as head_id', 'u.email')
+                ->addSelect(DB::raw("(SELECT CONCAT(first_name, ' ', last_name, ' ', suffix) FROM users WHERE employee_id = u.supervisor) as head_name"))
                 ->where('l.id',$lId)
-                ->where('l.hash_id',$lHash)
-                ->value('u.supervisor');
+                ->where('l.hash_id',$lHash)->first();
 
                 $data_array = array(
                     'leave_status'  => 'Denied',
                     'is_denied'     => 1,
-                    'denied_by'     => $headId,
+                    'denied_by'     => $headId->head_id,
                     'date_denied'   => DB::raw('NOW()'),
                     'updated_at'    => DB::raw('NOW()')
                 );
@@ -713,6 +733,9 @@ class LeaveApplication extends Component
                     ],$leaveInsert);
 
                     if ($history>0) {
+                        $newLeave = $leaveInsert->first();
+                        // Email Notification to User/Employee after denied by the Head/Supervisor
+                        Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
                         return response()->json(['isSuccess'=>true,'message' => "Leave ".$action." Successfuly!"]);
                     } else {
                         DB::rollback();

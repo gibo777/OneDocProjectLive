@@ -132,11 +132,28 @@ class LeaveFormController extends Controller
             $new_leave_number = $insert_increment ? $insert_increment->leave_number + 1 : 1;
             $hashId = Str::random(16);
 
+            $nameParts = [
+                Auth::user()->last_name,
+                Auth::user()->first_name
+            ];
+
+            if (!empty(Auth::user()->suffix)) {
+                $nameParts[] = Auth::user()->suffix;
+            }
+
+            if (!empty(Auth::user()->middle_name)) {
+                $nameParts[] = Auth::user()->middle_name;
+            }
+
+            $lFullName = implode(' ', $nameParts);
+            $lFullName = $nameParts[0] . ', ' . implode(' ', array_slice($nameParts, 1));
+
+
             // Prepare leave data
             $data = [
                 'leave_number'  => $new_leave_number,
                 'hash_id'       => $hashId,
-                'name'          => Auth::user()->last_name . ' ' . Auth::user()->suffix . ', ' . Auth::user()->first_name . ' ' . Auth::user()->middle_name,
+                'name'          => $lFullName,
                 'employee_id'   => Auth::user()->employee_id,
                 'office'        => Auth::user()->office,
                 'department'    => Auth::user()->department,
@@ -188,7 +205,7 @@ class LeaveFormController extends Controller
             $denyUrl = route('leave.decide', ['action'=>'deny', 'hashId' => $hashId]).'-'.$insertId;
 
             // Send the email to the supervisor
-            Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl));
+            Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
 
             return response([
                 'isSuccess' => true, 
@@ -223,9 +240,7 @@ class LeaveFormController extends Controller
             case 'PL': return number_format($leaves_balances[0]->PL,2); break;
             case 'EL': return number_format($leaves_balances[0]->EL,2); break;
             case 'Others': return number_format($leaves_balances[0]->others,2); break;
-            default: 
-                # code...
-                break;
+            default: return 0.0; break;
         }
     }
 

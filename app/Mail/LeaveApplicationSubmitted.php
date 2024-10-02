@@ -14,6 +14,7 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
     public $newLeave;
     public $approveUrl;
     public $denyUrl;
+    public $event;
 
     /**
      * Create a new message instance.
@@ -23,11 +24,12 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
      * @param  string  $denyUrl
      * @return void
      */
-    public function __construct($newLeave, $approveUrl, $denyUrl)
+    public function __construct($newLeave, $approveUrl, $denyUrl, $event)
     {
         $this->newLeave   = $newLeave;
         $this->approveUrl = $approveUrl;
         $this->denyUrl    = $denyUrl;
+        $this->event      = $event;
     }
 
     /**
@@ -37,12 +39,33 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('emails.leave-application-submitted')
-                    ->subject('Leave Application Submitted')
-                    ->with([
-                        'newLeave'  => $this->newLeave,
-                        'approveUrl'=> $this->approveUrl,
-                        'denyUrl'   => $this->denyUrl,
-                    ]);
+        switch ($this->event) {
+            case 'approved':
+                return $this->view('emails.leave-application-decided')
+                            ->subject('Leave Application Approved')
+                            ->with([
+                                'dLeave' => $this->newLeave,
+                                'decide' => $this->event,
+                            ]);
+                break;
+            case 'denied':
+                return $this->view('emails.leave-application-decided')
+                            ->subject('Leave Application Denied')
+                            ->with([
+                                'dLeave' => $this->newLeave,
+                                'decide' => $this->event,
+                            ]);
+                break;
+            
+            default:
+                return $this->view('emails.leave-application-submitted')
+                            ->subject('Leave Application Submitted')
+                            ->with([
+                                'newLeave'  => $this->newLeave,
+                                'approveUrl'=> $this->approveUrl,
+                                'denyUrl'   => $this->denyUrl,
+                            ]);
+                break;
+        }
     }
 }

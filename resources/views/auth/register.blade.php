@@ -268,6 +268,13 @@
 
 $(document).ready(function() {
     $("#btnsubmit").click(function() {
+        $('#dataLoad').css({
+            'display': 'flex',
+            'position': 'fixed',
+            'top': '50%',
+            'left': '50%',
+            'transform': 'translate(-50%, -50%)'
+        });
          $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -283,12 +290,14 @@ $(document).ready(function() {
             success:function(data){
                 const {isError,isDuplicate,message} = data;
                 if (isDuplicate) {
+                $('#dataLoad').css('display','none');
                     Swal.fire({ 
                         icon: "error",
                         html: message, 
                     });
                     return false;
                 } else { return true;}
+                $('#dataLoad').css('display','none');
             }
         });
     });

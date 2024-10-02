@@ -275,7 +275,6 @@
                 lAction: lAction
             },
             success: function(data) {
-            	// prompt('',data); return false;
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,

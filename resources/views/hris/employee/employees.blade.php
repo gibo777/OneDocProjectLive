@@ -316,10 +316,14 @@ $(document).ready(function() {
 
     /* Double Click event to show Employee details */
     $(document).on('dblclick','.view-employees tr',async function(){
-        $('#dataLoad').css('display','flex');
-        $('#dataLoad').css('position','absolute');
-        /*$('#dataLoad').css('top','40%');
-        $('#dataLoad').css('left','40%');*/
+        $('#dataLoad').css({
+            'display': 'flex',
+            'position': 'fixed',
+            'top': '50%',
+            'left': '50%',
+            'transform': 'translate(-50%, -50%)'
+        });
+                
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

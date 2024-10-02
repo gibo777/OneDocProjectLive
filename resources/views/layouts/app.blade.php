@@ -465,5 +465,5 @@
             };
         })(jQuery);
 
-            </script>
+</script>
 </html>

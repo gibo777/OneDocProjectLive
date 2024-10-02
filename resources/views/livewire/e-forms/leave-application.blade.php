@@ -92,7 +92,7 @@
 							        </div>
 						        </div>
 
-						        <div class="col-md-4 text-center mt-2">
+						        <div class="col-md-4 text-center my-2">
                                     <x-jet-button  id="createNewLeave">
                                         <i class="fa-solid fa-sheet-plastic"></i>&nbsp;File a Leave
                                     </x-jet-button>
