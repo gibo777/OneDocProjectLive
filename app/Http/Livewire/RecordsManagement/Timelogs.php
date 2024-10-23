@@ -168,7 +168,7 @@ class Timelogs extends Component
                                         ->orWhereIn('u.office',[15]);
                             });
                             break;
-                        case 174: case 290;
+                        case 174: case 290: case 315:
                             $query->where(function($q) {
                                 return $q->where('u.office', Auth::user()->office);
                             });
