@@ -195,14 +195,19 @@ class LeaveFormController extends Controller
                 )
                 ->where('l.id', $insertId)->first();
 
-            // Fetch the supervisor's email
-            $supervisorEmail = DB::table('users')
-                ->where('employee_id', Auth::user()->supervisor)
-                ->value('email');
-
             // Generate URLs for approval and denial
             $approveUrl = route('leave.decide', ['action'=>'approve', 'hashId' => $hashId]).'-'.$insertId;
             $denyUrl = route('leave.decide', ['action'=>'deny', 'hashId' => $hashId]).'-'.$insertId;
+
+            // Fetch the supervisor's email
+            $defaultSupervisorEmail = DB::table('users')
+                ->where('employee_id', Auth::user()->supervisor)
+                ->value('email');
+
+            // Check if the default supervisor's email contains 'jmyulo'
+            $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
+                ? DB::table('users')->where('id', 32)->value('email') 
+                : $defaultSupervisorEmail;
 
             // Send the email to the supervisor
             Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
