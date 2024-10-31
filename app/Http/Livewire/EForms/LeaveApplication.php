@@ -169,6 +169,12 @@ class LeaveApplication extends Component
 		        						->orWhere('l.office',6);
 		        			});
 		        			break;
+
+                        case 126:
+                            $query->where(function($q) {
+                                return $q->whereIn('l.office', [8,12,13,14,15]);
+                            });
+                            break;
 		        		default:
 		        			$query->where(function($q) {
 		        				return $q->where('l.employee_id', Auth::user()->employee_id)
