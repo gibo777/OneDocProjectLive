@@ -285,7 +285,7 @@ class HRManagementController extends Controller
             try{
                 $insert = new Departments;
                 $insert->department_code = strtoupper($data['department_code']);
-                $insert->department = ucwords(strtolower($data['department']));
+                $insert->department = strtoupper($data['department']);
                 $insert->created_by = Auth::user()->employee_id;
                 $insert->updated_by = Auth::user()->employee_id;
                 $insert->save();
@@ -301,7 +301,7 @@ class HRManagementController extends Controller
             try {
                 $data_array = array(
                     'department_code'   => $request->department_code,
-                    'department'        => $request->department,
+                    'department'        => strtoupper($request->department),
                     'updated_by'        => Auth::user()->employee_id,
                     'updated_at'        => date('Y-m-d H:i:s')
                 );
