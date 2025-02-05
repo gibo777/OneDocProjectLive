@@ -64,7 +64,7 @@
 
 				        {{-- Export Button --}}
 				        <div class="col-md-3 text-center mt-2 py-2">
-				            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
+				            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==58 || Auth::user()->id==287)
 				                <div class="form-group btn btn-outline-success d-inline-block shadow-sm p-2 rounded capitalize hover w-75">
 				                    <i class="fas fa-table"></i>
 				                    <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
