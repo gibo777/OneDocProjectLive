@@ -125,7 +125,7 @@ class Timelogs extends Component
 		        }
 		        if  (Auth::user()->is_head==1) {
 		        	switch (Auth::user()->id) {
-		        		case 1: case 8: case 18: case 58: break;
+		        		case 1: case 8: case 18: case 58: break; case 287: break;
 		        		case 124:
 		        			$query->where(function($q) {
 		        				return $q->where('u.office', Auth::user()->office)
