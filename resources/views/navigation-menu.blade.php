@@ -723,8 +723,8 @@ $(document).ready(function() {
                 method: 'post',
                 data: {
                   'logEvent'  : $("#logEvent").val(), 
-                  'latitude'  : parseFloat(latitude),
-                  'longitude' : parseFloat(longitude),
+                  // 'latitude'  : parseFloat(latitude),
+                  // 'longitude' : parseFloat(longitude),
                   'image'     : dataURL
                 },
                 success:function(data){
