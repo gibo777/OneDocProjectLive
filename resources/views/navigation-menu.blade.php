@@ -798,12 +798,12 @@ $(document).ready(function() {
   // Event handler for the capture button
     $('#btnTimeIn').click(function() {
         $("#logEvent").val("TimeIn");
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(getCoordinates, showError);
-        }
-        else {
-          Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
-        }
+        // if (navigator.geolocation) {
+        //   navigator.geolocation.getCurrentPosition(getCoordinates, showError);
+        // }
+        // else {
+        //   Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
+        // }
 
     });
 
