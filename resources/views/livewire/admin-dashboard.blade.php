@@ -97,8 +97,10 @@
                                 </div>
                                 <div class="mb-0 font-weight-bold text-gray-800">
                                     <ul class="list-unstyled">
-                                      <li>New ({{ $newUsers }})</li>
-                                      <li>Total ({{ $totalUsers }})</li>
+                                      {{-- <li>New ({{ $newUsers }})</li>
+                                      <li>Total ({{ $totalUsers }})</li> --}}
+                                      <li>New (12)</li>
+                                      <li>Total (221)</li>
                                     </ul>
                                 </div>
                             </div>

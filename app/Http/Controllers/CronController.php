@@ -130,7 +130,7 @@ class CronController extends Controller
 
         }
 
-        $string .= "<script>alert('❤️ I miss you my 345 partner... 143 ❤️');</script>";
+        // $string .= "<script>alert('❤️ I miss you my 345 partner ❤️');</script>";
         return $string;
 
         

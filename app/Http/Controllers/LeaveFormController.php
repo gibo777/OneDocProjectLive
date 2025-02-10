@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\LeaveApplicationSubmitted;
 use Illuminate\Support\Str;
 
+use Spatie\GoogleCalendar\Event;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
 
 class LeaveFormController extends Controller
 {
@@ -102,15 +106,15 @@ class LeaveFormController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * @author Gilbert Retiro
      */
     public function submit_leave(Request $request)
     {
-        // Validation rules
         $rules = [
-            'leaveType' => 'required',
-            'reason' => 'required',
-            'leaveDateFrom' => 'required',
-            'leaveDateTo' => $request->isHalfDay ? '':'required'
+            'leaveType'     => 'required|string|max:255',
+            'reason'        => 'required|string',
+            'leaveDateFrom' => 'required|date',
+            'leaveDateTo'   => $request->isHalfDay ? '':'required|date|after_or_equal:leaveDateFrom',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -121,103 +125,169 @@ class LeaveFormController extends Controller
                 ->withErrors($validator);
         }
 
-        $inputData = $request->input();
         try {
-            // Increment new leave number
-            $insert_increment = DB::table('leaves')
-                ->select('leave_number')
-                ->where('employee_id', '=', Auth::user()->employee_id)
-                ->orderBy('leave_number', 'desc')->first();
-                
-            $new_leave_number = $insert_increment ? $insert_increment->leave_number + 1 : 1;
-            $hashId = Str::random(16);
+            $inputData = $request->input();
+
+            if ($request->leaveDateFrom == $request->leaveDateTo) {
+                $startDate = Carbon::parse($request->leaveDateFrom)->startOfDay();
+                $endDate = Carbon::parse($request->leaveDateTo)->endOfDay();
+                $allDay = true; 
+            } else {
+                $startDateTime = Carbon::parse($request->leaveDateFrom . ' 00:00:00');
+                $endDateTime = Carbon::parse($request->leaveDateTo . ' 23:59:59');
+                $allDay = false; 
+            }
+
+
+            $namePartsG = [
+                Auth::user()->last_name,
+                substr(Auth::user()->first_name, 0, 1)
+            ];
 
             $nameParts = [
                 Auth::user()->last_name,
                 Auth::user()->first_name
             ];
 
-            if (!empty(Auth::user()->suffix)) {
-                $nameParts[] = Auth::user()->suffix;
+            if ($suffix = Auth::user()->suffix) {
+                $namePartsG[] = $suffix;
+                $nameParts[] = $suffix;
             }
 
-            if (!empty(Auth::user()->middle_name)) {
-                $nameParts[] = Auth::user()->middle_name;
+            if ($middleName = Auth::user()->middle_name) {
+                $namePartsG[] = substr($middleName, 0, 1) . '.';
+                $nameParts[] = substr($middleName, 0, 1) . '.';
             }
 
-            $lFullName = implode(' ', $nameParts);
+            $lFullNameG = $namePartsG[0] . ', ' . implode(' ', array_slice($namePartsG, 1));
             $lFullName = $nameParts[0] . ', ' . implode(' ', array_slice($nameParts, 1));
 
 
-            // Prepare leave data
-            $data = [
-                'leave_number'  => $new_leave_number,
-                'hash_id'       => $hashId,
-                'name'          => $lFullName,
-                'employee_id'   => Auth::user()->employee_id,
-                'office'        => Auth::user()->office,
-                'department'    => Auth::user()->department,
-                'head_id'       => Auth::user()->supervisor,
-                'date_applied'  => DB::raw('NOW()'),
-                'leave_type'    => $inputData['leaveType'],
-                'reason'        => $inputData['reason'],
-                'date_from'     => date('Y-m-d', strtotime($inputData['leaveDateFrom'])),
-                'date_to'       => $request->isHalfDay ? date('Y-m-d', strtotime($inputData['leaveDateFrom'])) : date('Y-m-d', strtotime($inputData['leaveDateTo'])),
-                'no_of_days'    => number_format($inputData['hid_no_days'], 2),
-                'ip_address'    => $request->ip(),
-                'created_at'    => DB::raw('NOW()'),
-                'updated_at'    => DB::raw('NOW()')
+            # Google Calendar Description
+            $description = sprintf(
+                "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\nReason: %s\n\nStatus: %s",
+                $lFullName,
+                Auth::user()->employee_id,
+                $request->leaveType,
+                Carbon::parse($request->leaveDateFrom)->format('M d, Y (D)'),
+                Carbon::parse($request->leaveDateTo)->format('M d, Y (D)'),
+                number_format($inputData['hid_no_days'], 2),
+                $request->reason,
+                'Pending'
+            );
+
+            # Google Calendar Data
+            $eventData = [
+                'name'              => $lFullNameG.' ('.$request->leaveType.')',
+                'description'       => $description,
+                // 'colorId'           => 9, // Background color - Light blue
+                'backgroundColor'   => '#06066b',
+                'foregroundColor'   => '#FFFFFF',
+                'allDay'            => $allDay,
+                'transparency'      => 'transparent',
             ];
 
-            if ($inputData['leaveType'] == 'Others') {
-                $data['others'] = $inputData['others_leave'];
+            if ($allDay) {
+                $eventData['startDate'] = $startDate;
+                $eventData['endDate'] = $endDate;
+            } else {
+                $eventData['startDateTime'] = $startDateTime;
+                $eventData['endDateTime'] = $endDateTime;
             }
 
-            // Insert leave data and get the new leave ID
-            $insertId = DB::table('leaves')->insertGetId($data);
+            // $googleEvent = Event::create($eventData);
 
-            // Fetch leave details for email
-            $newLeave = DB::table('leaves as l')
-                ->leftJoin('departments as d', 'l.department', 'd.department_code')
-                ->leftJoin('users as u', 'l.employee_id', 'u.employee_id')
-                ->select(
-                    'l.control_number',
-                    'l.name',
-                    'l.employee_id',
-                    'd.department',
-                    DB::raw("(SELECT CONCAT(first_name,' ',last_name) FROM users where employee_id=u.supervisor) as head_name"),
-                    DB::raw("DATE_FORMAT(l.date_applied, '%m/%d/%Y %h:%i %p') as date_applied"),
-                    'l.leave_type',
-                    DB::raw("DATE_FORMAT(l.date_from, '%m/%d/%Y') as date_from"),
-                    DB::raw("DATE_FORMAT(l.date_to, '%m/%d/%Y') as date_to"),
-                    'l.no_of_days',
-                    'l.reason'
-                )
-                ->where('l.id', $insertId)->first();
+            // if (!$googleEvent) {
+            //     \Log::error('Failed to create Google Calendar event: No response returned from the API.');
+            //     return redirect()->route('events.create')->with('status', [
+            //         'message' => 'Failed to create the event on Google Calendar.',
+            //         'type' => 'error',
+            //     ]);
+            // } else {
+            //     $eventId = $googleEvent->id;
 
-            // Generate URLs for approval and denial
-            $approveUrl = route('leave.decide', ['action'=>'approve', 'hashId' => $hashId]).'-'.$insertId;
-            $denyUrl = route('leave.decide', ['action'=>'deny', 'hashId' => $hashId]).'-'.$insertId;
+                // Increment new leave number
+                $insert_increment = DB::table('leaves')
+                    ->select('leave_number')
+                    ->where('employee_id', '=', Auth::user()->employee_id)
+                    ->orderBy('leave_number', 'desc')->first();
+                    
+                $new_leave_number = $insert_increment ? $insert_increment->leave_number + 1 : 1;
+                $hashId = Str::random(16);
 
-            // Fetch the supervisor's email
-            $defaultSupervisorEmail = DB::table('users')
-                ->where('employee_id', Auth::user()->supervisor)
-                ->value('email');
 
-            // Check if the default supervisor's email contains 'jmyulo'
-            $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
-                ? DB::table('users')->where('id', 32)->value('email') 
-                : $defaultSupervisorEmail;
+                // Prepare leave data
+                $data = [
+                    'leave_number'  => $new_leave_number,
+                    'hash_id'       => $hashId,
+                    // 'google_id'     => $eventId,
+                    'name'          => $lFullName,
+                    'employee_id'   => Auth::user()->employee_id,
+                    'office'        => Auth::user()->office,
+                    'department'    => Auth::user()->department,
+                    'head_id'       => Auth::user()->supervisor,
+                    'date_applied'  => DB::raw('NOW()'),
+                    'leave_type'    => $inputData['leaveType'],
+                    'reason'        => $inputData['reason'],
+                    'date_from'     => date('Y-m-d', strtotime($inputData['leaveDateFrom'])),
+                    'date_to'       => $request->isHalfDay ? date('Y-m-d', strtotime($inputData['leaveDateFrom'])) : date('Y-m-d', strtotime($inputData['leaveDateTo'])),
+                    'no_of_days'    => number_format($inputData['hid_no_days'], 2),
+                    'ip_address'    => $request->ip(),
+                    'created_at'    => DB::raw('NOW()'),
+                    'updated_at'    => DB::raw('NOW()')
+                ];
 
-            // Send the email to the supervisor
-            Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+                if ($inputData['leaveType'] == 'Others') {
+                    $data['others'] = $inputData['others_leave'];
+                }
 
-            return response([
-                'isSuccess' => true, 
-                'message'   => 'Leave application submitted!', 
-                'newLeave'  => $newLeave
-            ]);
-        } catch (Exception $e) {
+                // Insert leave data and get the new leave ID
+                $insertId = DB::table('leaves')->insertGetId($data);
+
+                // Fetch leave details for email
+                $newLeave = DB::table('leaves as l')
+                    ->leftJoin('departments as d', 'l.department', 'd.department_code')
+                    ->leftJoin('users as u', 'l.employee_id', 'u.employee_id')
+                    ->select(
+                        'l.control_number',
+                        'l.name',
+                        'l.employee_id',
+                        'd.department',
+                        DB::raw("(SELECT CONCAT(first_name,' ',last_name) FROM users where employee_id=u.supervisor) as head_name"),
+                        DB::raw("(SELECT gender FROM users where employee_id=u.supervisor) as head_sex"),
+                        DB::raw("DATE_FORMAT(l.date_applied, '%m/%d/%Y %h:%i %p') as date_applied"),
+                        'l.leave_type',
+                        DB::raw("DATE_FORMAT(l.date_from, '%m/%d/%Y') as date_from"),
+                        DB::raw("DATE_FORMAT(l.date_to, '%m/%d/%Y') as date_to"),
+                        'l.no_of_days',
+                        'l.reason'
+                    )
+                    ->where('l.id', $insertId)->first();
+
+                // Generate URLs for approval and denial
+                $approveUrl = route('leave.decide', ['action'=>'approve', 'hashId' => $hashId]).'-'.$insertId;
+                $denyUrl = route('leave.decide', ['action'=>'deny', 'hashId' => $hashId]).'-'.$insertId;
+
+                // Fetch the supervisor's email
+                $defaultSupervisorEmail = DB::table('users')
+                    ->where('employee_id', Auth::user()->supervisor)
+                    ->value('email');
+
+                // Check if the default supervisor's email contains 'jmyulo'
+                $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
+                    ? DB::table('users')->where('id', 32)->value('email') 
+                    : $defaultSupervisorEmail;
+
+                // Send the email to the supervisor
+                Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+
+                return response([
+                    'isSuccess' => true, 
+                    'message'   => 'Leave application submitted!', 
+                    'newLeave'  => $newLeave
+                ]);
+            // }
+        } catch (\Exception $e) {
             return response([
                 'isSuccess' => false, 
                 'message'   => $e->getMessage()

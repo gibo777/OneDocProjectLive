@@ -57,12 +57,12 @@
 
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-pd" role="tabpanel" aria-labelledby="pills-pd-tab">
-                                <div class="row bg-light">
-                                    <div class="col-md-3 my-1 p-2">
+                                <div class="row">
+                                    <div class="col-md-3 my-1 p-2 border-1">
                                         <div class="flex justify-center my-1 w-100">
                                             {{-- <img id="imgProfile" src="" alt="" class="rounded h-id w-id object-cover"> --}}
 
-                    <div x-data="{photoName: null, photoPreview: null}" class="col-md-12 d-block nopadding">
+                    <div x-data="{photoName: null, photoPreview: null}" class="col-md-12 d-block nopadding border-1">
                         
                         <!-- START Profile Photo File Input -->
                         <input id="hidden_profile_photo" type="file" class="hidden"
@@ -139,7 +139,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-9">
+                                    <div class="col-md-9 bg-light">
                                         <div class="row my-1 pt-1 inset-shadow">
                                                 <div class="col-md-6 px-1">
                                                         <x-jet-label id="fullName" class="w-full text-md" />
@@ -232,14 +232,14 @@
                                                     <x-jet-input-error for="birthDate" class="mt-2" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 px-1">
+                                            <div class="col-md-4 px-1 inset-shadow">
                                                     <x-jet-label id="birthPlace" class="w-full text-md" />
                                             </div>
                                         </div>
 
 
                                         <div class="row my-1 pt-1">
-                                            <div class="col-md-3 px-1 my-1">
+                                            <div class="col-md-5 px-1 my-1">
                                                     <div class="form-floating">
                                                         <select name="office" id="office" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                                             <option value=""></option>
@@ -250,7 +250,7 @@
                                                         <x-jet-label for="office" value="{{ __('Office') }}" class="text-black-50 w-full" />
                                                     </div>
                                             </div>
-                                            <div class="col-md-5 px-1 my-1">
+                                            <div class="col-md-7 px-1 my-1">
                                                     <div class="form-floating">
                                                         <select name="department" id="department" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
                                                             <option value="">Select Department</option>
@@ -261,17 +261,6 @@
                                                         <x-jet-label for="department" value="{{ __('Department') }}" class="text-black-50 w-full" />
                                                         <x-jet-input-error for="department" class="mt-2" />
                                                         <x-jet-input id="hid_dept" name="hid_dept" type="hidden" value="{{ Auth::user()->department }}" />
-                                                    </div>
-                                            </div>
-                                            <div class="col-md-4 px-1 my-1">
-                                                    <div class="form-floating">
-                                                        <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
-                                                            <option value=""></option>
-                                                            @foreach ($heads as $head)
-                                                            <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <x-jet-label for="supervisor" value="{{ __('Supervisor') }}" class="text-black-50 w-full" />
                                                     </div>
                                             </div>
                                         </div>
@@ -332,6 +321,39 @@
                                                     <x-jet-input id="position" type="text" class="form-control block w-full" autocomplete="position"/>
                                                     <x-jet-label for="position" value="{{ __('Position') }}" class="text-black-50 w-full" />
                                                     <x-jet-input-error for="position" class="mt-2" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row my-1 pt-1">
+
+                                            {{-- <div class="col-md-2 px-3 my-1">
+                                                {{ __('Level 1 Approver') }}
+                                            </div> --}}
+                                            <div class="col-md-4 px-1 my-1">
+                                                    <div class="form-floating">
+                                                        <select name="supervisor" id="supervisor" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                                            <option value=""></option>
+                                                            @foreach ($heads as $head)
+                                                            <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <x-jet-label for="supervisor" value="{{ __('Level 1 Approver') }}" class="text-black-50 w-full" />
+                                                    </div>
+                                            </div>
+
+                                            {{-- <div class="col-md-2 px-3 my-1">
+                                                {{ __('Level 2 Approver') }}
+                                            </div> --}}
+                                            <div class="col-md-4 px-1 my-1">
+                                                    <div class="form-floating">
+                                                        <select name="manager" id="manager" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm block w-full">
+                                                            <option value=""></option>
+                                                            @foreach ($heads as $head)
+                                                            <option value="{{ $head->employee_id }}">{{ join(' ',[$head->last_name, $head->suffix.', ',$head->first_name,$head->middle_name]) }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <x-jet-label for="manager" value="{{ __('Level 2 Approver') }}" class="text-black-50 w-full" />
+                                                    </div>
                                             </div>
                                         </div>
 

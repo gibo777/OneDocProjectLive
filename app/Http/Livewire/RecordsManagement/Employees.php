@@ -292,9 +292,9 @@ class Employees extends Component
         //     ]);
         // }
 
-        return response()->json(['message' => 'No file uploaded.'], 400);
+        // return response()->json(['message' => 'No file uploaded.'], 400);
 
-        	// return '<pre>'.var_dump($request->all()).'</pre>';
+        	return '<pre>'.var_dump($request->all()).'</pre>';
 
 	    /*$data = $request->all();
 	    return response()->json(['data' => $data]);*/

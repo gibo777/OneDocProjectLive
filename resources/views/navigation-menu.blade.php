@@ -329,9 +329,8 @@
                       <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
                       @endif --}}
                 </div>
-
                 @if (Auth::user()->role_type=='ADMIN' || Auth::user()->role_type=='SUPER ADMIN')
-                    @if (str_contains(Auth::user()->department, 'ACCTG')==1 || Auth::user()->id==1)
+                    @if (str_contains(Auth::user()->department, 'ACCTG')==1)
                     <div class="dropdown mt-3 mx-1">
                         <button class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover" type="button" id="dropdownProcess" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         PROCESS
@@ -611,9 +610,41 @@ $(document).ready(function() {
   var video = document.getElementById('video-element');
   var canvas = document.getElementById('canvas-element');
   var stream = null;
+  let latitude, longitude;
 
   // Function to start the webcam
   function startWebcam() {
+    /*var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    Swal.fire({ 
+          html: `<a id="mapsLink" href="#">${latitude},${longitude}</a>`,
+          didOpen: () => {
+            document.getElementById('mapsLink').addEventListener('click', () => {
+              window.open(googleMapsUrl, '_blank');
+            });
+          }
+    }); return false;*/
+
+    $("#modalTimeLogCam").modal("show");
+
+    const isMobile = window.innerWidth <= 768;
+    const webcamWidth = isMobile ? 320 : 430;
+    const webcamHeight = isMobile ? 240 : 350;
+
+    Webcam.set({
+        width: webcamWidth,
+        height: webcamHeight,
+        image_format: 'jpeg',
+        jpeg_quality: 90,
+        constraints: {
+            video: {
+                facingMode: "user",
+                mirror: true
+            }
+        }
+    });
+
+    Webcam.attach( '#logCamera' );
+
     // Access the user's webcam
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(function(mediaStream) {
@@ -669,40 +700,52 @@ $(document).ready(function() {
         // title: 'Captured Image',
         imageUrl: dataURL,
         imageAlt: 'Captured Image',
+        allowOutsideClick: false,
         showCancelButton: true,
         cancelButtonText: 'Close',
         confirmButtonText: 'Save',
       }).then(function(result) {
         if (result.isConfirmed) {
             $("#modalTimeLogCam").modal("hide");
-          // Handle saving the image (e.g., send to server, download, etc.)
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: "{{ route('save.timelogs') }}",
-            method: 'post',
-            data: {'logEvent':$("#logEvent").val(), 'image':dataURL},
-            success:function(data){
-                if (data.isSuccess==true) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Image saved successfully!',
-                  });
-                  video.currentTime = 0;
-                  video.style.display = "none";
-                  setTimeout(function() {
-                    location.reload();
-                  }, 5000);
+            /*Swal.fire({ 
+              allowOutsideClick: false,
+              html: `Event: ${$("#logEvent").val()}<br>Coords: ${latitude},${longitude}`
+            }); return false;*/
 
-                  $("#btnTimeIn").prop('disabled', true);
-                  $("#btnTimeOut").prop('disabled', false);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            }
-        });
+            });
+            $.ajax({
+                url: "{{ route('save.timelogs') }}",
+                method: 'post',
+                data: {
+                  'logEvent'  : $("#logEvent").val(), 
+                  'latitude'  : parseFloat(latitude),
+                  'longitude' : parseFloat(longitude),
+                  'image'     : dataURL
+                },
+                success:function(data){
+                  // Swal.fire({ html: data }); return false;
+                    if (data.isSuccess==true) {
+                      // Display a success message using Swal
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Image saved successfully!',
+                      });
+                      video.currentTime = 0;
+                      video.style.display = "none";
+                      setTimeout(function() {
+                        location.reload();
+                      }, 5000);
+
+                      $("#btnTimeIn").prop('disabled', true);
+                      $("#btnTimeOut").prop('disabled', false);
+                    }
+                }
+            });
 
 
         } else {
@@ -713,35 +756,54 @@ $(document).ready(function() {
     }
   }
 
+    function getCoordinates(position) {
+        latitude = position.coords.latitude.toFixed(7);
+        longitude = position.coords.longitude.toFixed(7);
+        // var coords = position.coords.latitude.toFixed(7)+','+position.coords.longitude.toFixed(7);
+        // var googleMapsUrl = `https://www.google.com/maps?q=${position.coords.latitude.toFixed(7)},${position.coords.longitude.toFixed(7)}`;
+        /*Swal.fire({
+          html: `<a id="mapsLink" href="#">${coords}</a>`,
+          didOpen: () => {
+            document.getElementById('mapsLink').addEventListener('click', () => {
+              window.open(googleMapsUrl, '_blank');
+              Swal.close(); // Optionally close the modal after opening the link
+            });
+          }
+        });*/
+
+
+          // Start the webcam when the page loads
+          startWebcam();
+          // $("#modalTimeLogCam").modal("show")
+        
+    }
+
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                Swal.fire({ html: "User denied the request for Geolocation."});
+                break;
+            case error.POSITION_UNAVAILABLE:
+                Swal.fire({ html: "Location information is unavailable."});
+                break;
+            case error.TIMEOUT:
+                Swal.fire({ html: "The request to get user location timed out."});
+                break;
+            case error.UNKNOWN_ERROR:
+                Swal.fire({ html: "An unknown error occurred."});
+                break;
+        } return false;
+    }
+
   // Event handler for the capture button
     $('#btnTimeIn').click(function() {
-
-        $("#modalTimeLogCam").modal("show");
         $("#logEvent").val("TimeIn");
-
-        const isMobile = window.innerWidth <= 768;
-        const webcamWidth = isMobile ? 320 : 430;
-        const webcamHeight = isMobile ? 240 : 350;
-
-        Webcam.set({
-            // width: 430,
-            width: webcamWidth,
-            height: webcamHeight,
-            image_format: 'jpeg',
-            jpeg_quality: 90,
-            constraints: {
-                video: {
-                    facingMode: "user",
-                    mirror: true
-                }
-            }
-        });
-
-        Webcam.attach( '#logCamera' );
-
-        // Start the webcam when the page loads
-        startWebcam();
-        // $("#modalTimeLogCam").modal("show");
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(getCoordinates, showError);
+        }
+        else {
+          Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
+        }
 
     });
 
@@ -776,14 +838,25 @@ $(document).ready(function() {
 
     // Capture image for Time Logs
     $('#takeSnapshot').click(function() {
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(getCoordinates, showError);;
+        }
+        else {
+          Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
+        }
         captureImage();
     });
 
     // Closing Camera Modal
     $("#closeLogCamModal").click(function() {
+      closeCam();
+    });
+
+    function closeCam() {
         Webcam.reset( '#logCamera' );
         location.reload();
-    });
+    }
 
 });
 </script>

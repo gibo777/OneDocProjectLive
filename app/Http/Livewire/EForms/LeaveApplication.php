@@ -16,6 +16,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\LeaveApplicationSubmitted;
 
+use Spatie\GoogleCalendar\Event;
+
 class LeaveApplication extends Component
 {
     use WithPagination;
@@ -94,14 +96,19 @@ class LeaveApplication extends Component
 	            'u.supervisor',
 	            'l.created_at',
 	            'u.supervisor',
-	            DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as head_name"),
+	            DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as approver1"),
+                DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2"),
 	            'l.leave_status as status',
 	            'l.leave_status'
 	        )
 	        ->leftJoin('offices as o', 'l.office', '=', 'o.id')
 	        ->leftJoin('departments as d', 'l.department', '=', 'd.department_code')
 	        ->leftJoin('users as u', 'u.employee_id', '=', 'l.employee_id')
-	        ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor');
+            ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor')
+            ->leftJoin('users as u3', function ($join) {
+                $join->on('u3.employee_id', '=', 'u.manager')
+                     ->whereNotNull('u.manager');
+            });
 	    $leaves = $leaves->where(function ($query) {
 		            $query->where('l.is_deleted', 0)
 		                ->orWhereNull('l.is_deleted');
@@ -288,8 +295,25 @@ class LeaveApplication extends Component
 		    $lId = $lData['lID'] ?? '';
 		    $lType = $lData['lType'] ?? '';
 		    $lOthers = $lData['lOthers'] ?? '';
+            $newStatus = 'Head Approved';
 
             try {
+                $googleEventId = DB::table('leaves')
+                ->where('id', $lId)
+                ->where('hash_id', $lHash)
+                ->value('google_id');
+
+                $event = Event::find($googleEventId);
+
+                if (!$event) {
+                    return response()->json(['error' => 'Event not found'], 404);
+                } else {
+                    $description        = $event->description;
+                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                    $event->description = $description;
+                    $event->save();
+                }
+                
                 $dataArray = array(
                     'leave_status'          => 'Head Approved',
                     'is_head_approved'      => 1,
@@ -407,7 +431,25 @@ class LeaveApplication extends Component
                 $lId = $request->lID;
                 $action = $request->lAction;
                 $reason = $request->lReason;
-                $date = DB::raw('NOW()');
+                $date = DB::raw('NOW()'); // Carbon::now('Asia/Manila')
+
+                $googleEventId = DB::table('leaves')
+                ->where('id', $lId)
+                ->value('google_id');
+
+                $event = Event::find($googleEventId);
+
+                if (!$event) {
+                    return response()->json(['error' => 'Event not found'], 404);
+                } else {
+                    $description        = $event->description;
+                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                    $event->description = $description;
+                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                        $event->status = 'cancelled';
+                    }
+                    $event->save();
+                }
 
                 if ($action=="Cancelled") {
                     $data_array = array(
@@ -519,13 +561,14 @@ class LeaveApplication extends Component
 
 
     function linkHeadApproveLeave (Request $request) {
-        // return var_dump($request->all());
+
         if($request->ajax()){
             $lData = $request->input('lData', []);
             $lId = $lData['lId'] ?? '';
             $lHash = $lData['lHash'] ?? '';
             $lType = $lData['lType'] ?? '';
             $lOthers = $lData['lOthers'] ?? '';
+            $newStatus = 'Head Approved';
 
             $headId = DB::table('leaves as l')
             ->leftJoin('users as u','l.employee_id','u.employee_id')
@@ -534,11 +577,25 @@ class LeaveApplication extends Component
             ->where('l.id',$lId)
             ->where('l.hash_id',$lHash)->first();
 
-            // return var_dump($headId);
-
             try {
+                $googleEventId = DB::table('leaves')
+                ->where('id', $lId)
+                ->where('hash_id', $lHash)
+                ->value('google_id');
+
+                $event = Event::find($googleEventId);
+
+                if (!$event) {
+                    return response()->json(['error' => 'Event not found'], 404);
+                } else {
+                    $description        = $event->description;
+                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                    $event->description = $description;
+                    $event->save();
+                }
+
                 $dataArray = array(
-                    'leave_status'          => 'Head Approved',
+                    'leave_status'          => $newStatus,
                     'is_head_approved'      => 1,
                     'approved_by'           => $headId->head_id,
                     'head_name'             => $headId->head_name,
@@ -555,7 +612,7 @@ class LeaveApplication extends Component
                 $update = $update->update($dataArray);
                 
                 if ($update > 0) {
-                    $action = "Head Approved";
+                    $action = $newStatus;
                     $reason = "N/A";
 
                     $leaveInsert = DB::table('leaves as L')
@@ -654,6 +711,27 @@ class LeaveApplication extends Component
                 $action = $request->lAction;
                 $reason = $request->lReason;
                 $date = DB::raw('NOW()');
+                $newStatus = 'Denied';
+
+
+                $googleEventId = DB::table('leaves')
+                ->where('id', $lId)
+                ->where('hash_id', $lHash)
+                ->value('google_id');
+
+                $event = Event::find($googleEventId);
+
+                if (!$event) {
+                    return response()->json(['error' => 'Event not found'], 404);
+                } else {
+                    $description        = $event->description;
+                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                    $event->description = $description;
+                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                        $event->status = 'cancelled';
+                    }
+                    $event->save();
+                }
                 
                 $headId = DB::table('leaves as l')
                 ->leftJoin('users as u','l.employee_id','u.employee_id')

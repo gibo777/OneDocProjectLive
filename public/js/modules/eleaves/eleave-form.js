@@ -377,6 +377,7 @@ $(document).ready(function(){
                         method: 'post',
                         data: $('#leave-form').serialize(), // prefer use serialize method
                         success:function(data){
+                            // Swal.fire({ html: data }); return false;
                             console.log(data);
                             const {isSuccess,message,newLeave} = data;
 

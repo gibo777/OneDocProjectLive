@@ -159,7 +159,7 @@
                                     <th class="py-1" style="width: 8%">Begin Date</th>
                                     <th class="py-1" style="width: 8%">End Date</th>
                                     <th class="py-1" style="width: 5%">Day/s</th>
-                                    <th class="py-1">Supervisor</th>
+                                    <th class="py-1">Approver</th>
                                     <th class="py-1">Status</th>
                                 </tr>
                             </thead>
@@ -183,7 +183,14 @@
                                     @if (url('/')=='http://localhost')
                                     	<td>xxx, xxx x.</td>
                                     @else
-                                    	<td>{{ $record->head_name }}</td>
+                                        <td>
+                                            @if ($record->approver1)
+                                                {{ $record->approver1 }}
+                                                    @if ($record->approver2)
+                                                    {{ ' / '. $record->approver2 }}
+                                                    @endif
+                                            @endif
+                                        </td>
                                     @endif
                                     
 								    <td value="{{ $record->id }}" class="open_leave {{ $record->status!='Pending' ? (($record->status == 'Cancelled' || $record->status == 'Denied') ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500">

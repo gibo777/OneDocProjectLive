@@ -201,6 +201,7 @@
             method: 'POST',
             data: { 'lData': dataObject },
             success: function(data) {
+            	// Swal.fire({ html: data }); return false;
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,

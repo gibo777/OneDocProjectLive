@@ -5,7 +5,12 @@
 </head>
 <body>
     <h4>Employee Leave Application Submitted for Your Review</h4>
-    <p><strong><em>Dear Sir/Ma'am {{ $newLeave->head_name }}</em></strong>,</p>
+    <p><strong><em>Dear 
+        @if ($newLeave->head_sex=='F') Ma'am
+        @elseif ($newLeave->head_sex=='M') Sir
+        @else Sir/Ma'am
+        @endif
+         {{ $newLeave->head_name }},</em></strong></p>
     <p>The employee's leave request under your supervision has been successfully submitted. Here are the details of the application:</p>
     <ul>
         <li><em>Name:</em>&nbsp;<strong>{{ $newLeave->name }}</strong></li>

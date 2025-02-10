@@ -25,6 +25,13 @@ class EmployeesController extends Controller
     public function index() {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
         {
+            /*if (str_contains(Auth::user()->department, 'ACCTG')==1 || Auth::user()->id==1)
+            {
+                return "Accounting";
+            } else {
+                return "Other Department";
+            }*/
+
 
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
@@ -33,7 +40,10 @@ class EmployeesController extends Controller
             if (Auth::user()->id != 1) {
                 $employees = $employees->where('id','!=',1);
             }
+            // $employees = $employees->where('employee_id','7777-7777');
             $employees = $employees->get();
+
+            // return var_dump($employees);
 
             // $employees = DB::table('users as u');
             // $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
@@ -186,6 +196,8 @@ class EmployeesController extends Controller
                 'weekly_schedule'   => join('|',$request->update_weekly_schedule),
                 'office'            => $request->office,
                 'supervisor'        => $request->supervisor,
+                'manager'           => $request->manager,
+
                 'date_regularized'  => $request->dateRegularized ? date('Y-m-d',strtotime($request->dateRegularized)) : null,
                 'updated_at'        => Carbon::now('Asia/Manila'),
                 'updated_by'        => Auth::user()->employee_id
@@ -414,9 +426,7 @@ class EmployeesController extends Controller
 
             $heads = DB::table('users')
                 ->select('employee_id','last_name','first_name','middle_name','suffix')
-                ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
-                // ->where('id','!=',Auth::user()->id)->orWhere('employee_id','2000-0001')
-                // ->where('employee_id','2000-0001')
+                ->where('is_head',1)
                 ->where('id','!=',1)
                 ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();

@@ -71,8 +71,8 @@
                                 </div>
                                 <div class="mb-0 font-weight-bold text-gray-800">
                                     <ul class="list-unstyled">
-                                      <li>New (5)</li>
-                                      <li>Total (238)</li>
+                                      <li>New (12)</li>
+                                      <li>Total (221)</li>
                                     </ul>
                                 </div>
                             </div>

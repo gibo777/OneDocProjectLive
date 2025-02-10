@@ -137,9 +137,24 @@
                                                     <td>{{ $employee->position }}</td>
 
                                                     @if (url('/')=='http://localhost')
-                                                    <td>xxx, xxx x.</td>
+                                                    <td>
+                                                    {{-- xxx, xxx x. --}}
+                                                        @if ($employee->approver1)
+                                                            xxx, xxx x
+                                                                @if ($employee->approver2)
+                                                                 / xxx, xxx x.
+                                                                @endif
+                                                        @endif
+                                                    </td>
                                                     @else
-                                                    <td>{{ $employee->head_name }}</td>
+                                                    <td>
+                                                        @if ($employee->approver1)
+                                                            {{ $employee->approver1 }}
+                                                                @if ($employee->approver2)
+                                                                {{ ' / '. $employee->approver2 }}
+                                                                @endif
+                                                        @endif
+                                                    </td>
                                                     @endif
                                                     {{-- <td>{{ $employee->role_type }}</td> --}}
                                                     <td>{{ $employee->employment_status }}</td>
@@ -236,9 +251,6 @@
 $(document).ready(function() {
 
     var tableEmployee = $('#dataViewEmployees').DataTable({
-        /*"columnDefs": [
-          { width: '120px', targets: [0] }, 
-        ],*/
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
@@ -392,6 +404,7 @@ $(document).ready(function() {
                 // $("input[name='weekly_schedule']").val(1);
                 $("#office").val(getemployee.office);
                 $("#supervisor").val(getemployee.supervisor);
+                $("#manager").val(getemployee.manager || '');
 
                 $("#updateRoleType").val(getemployee.role_type);
                 // $("#EmployeesModal #updateRoleType").val(getemployee.role_type);
@@ -469,9 +482,12 @@ $(document).ready(function() {
    
     /* Button to update Employee details */
     $('#updateEmployee > button').on('click', function() {
+        // Swal.fire({ html: `Supervisor: ${$("#supervisor").val()}<br>Manager: ${$('#manager').val()}` }); return false;
 
         var isHead = 0;
+        var manager = $('#manager').val() || null;
         $("#isHead").is(':checked') ? isHead = 1 : isHead = 0;
+
         const uD = {
             'id'        : $(this).attr('id'),
             'roleType'  : $("#updateRoleType").val(),
@@ -485,6 +501,7 @@ $(document).ready(function() {
             'office'        : $("#office").val(),
             'department'    : $("#department").val(),
             'supervisor'    : $("#supervisor").val(),
+            'manager'       : manager,
 
             'date_hired'            : $("#date_hired").val(),
             'employment_status'     : $("#employment_status").val(),

@@ -303,7 +303,7 @@ class HRManagementController extends Controller
                     'department_code'   => $request->department_code,
                     'department'        => strtoupper($request->department),
                     'updated_by'        => Auth::user()->employee_id,
-                    'updated_at'        => date('Y-m-d H:i:s')
+                    'updated_at'        => Carbon::now()
                 );
 
                 $update = DB::table('departments');

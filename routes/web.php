@@ -185,6 +185,13 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/fullcalender', [FullCalenderController::class, 'index'])->name('calendar');
     Route::post('/fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
+
+    // Google Calendar Intergration
+    Route::get('/testCalendar', [TestController::class, 'testCalendar'])->name('test.calendar');
+    Route::get('/events/create', [TestController::class, 'createEventForm'])->name('events.create');
+    Route::post('/events/store', [TestController::class, 'storeEvent'])->name('events.store');
+    
+
     /* WEBCAM CAPTURE PHOTO */
     Route::get('webcam', [WebcamController::class, 'index'])->name('webcam');
     Route::get('webcam-capture', [WebcamController::class, 'index'])->name('webcam-capture');
