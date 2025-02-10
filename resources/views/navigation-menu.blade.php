@@ -839,12 +839,12 @@ $(document).ready(function() {
     // Capture image for Time Logs
     $('#takeSnapshot').click(function() {
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(getCoordinates, showError);;
-        }
-        else {
-          Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
-        }
+        // if (navigator.geolocation) {
+        //   navigator.geolocation.getCurrentPosition(getCoordinates, showError);;
+        // }
+        // else {
+        //   Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
+        // }
         captureImage();
     });
 
