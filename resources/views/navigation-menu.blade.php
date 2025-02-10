@@ -798,6 +798,7 @@ $(document).ready(function() {
   // Event handler for the capture button
     $('#btnTimeIn').click(function() {
         $("#logEvent").val("TimeIn");
+        startWebcam();
         // if (navigator.geolocation) {
         //   navigator.geolocation.getCurrentPosition(getCoordinates, showError);
         // }
