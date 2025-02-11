@@ -315,7 +315,7 @@ class LeaveApplication extends Component
                 // }
                 
                 $dataArray = array(
-                    'leave_status'          => 'Head Approved',
+                    'leave_status'          => $newStatus,
                     'is_head_approved'      => 1,
                     'head_name'             => Auth::user()->first_name.' '. Auth::user()->last_name,
                     'approved_by'           => Auth::user()->employee_id,
@@ -331,7 +331,7 @@ class LeaveApplication extends Component
                 $update = $update->update($dataArray);
                 
                 if ($update > 0) {
-	                $action = "Head Approved";
+	                $action = $newStatus;
 	                $reason = "N/A";
 
                     $leaveInsert = DB::table('leaves as L')
@@ -578,21 +578,21 @@ class LeaveApplication extends Component
             ->where('l.hash_id',$lHash)->first();
 
             try {
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->where('hash_id', $lHash)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->where('hash_id', $lHash)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    $event->save();
-                }
+                // if (!$event) {
+                //     return response()->json(['error' => 'Event not found'], 404);
+                // } else {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     $event->save();
+                // }
 
                 $dataArray = array(
                     'leave_status'          => $newStatus,
@@ -714,24 +714,24 @@ class LeaveApplication extends Component
                 $newStatus = 'Denied';
 
 
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->where('hash_id', $lHash)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->where('hash_id', $lHash)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                        $event->status = 'cancelled';
-                    }
-                    $event->save();
-                }
+                // if (!$event) {
+                //     return response()->json(['error' => 'Event not found'], 404);
+                // } else {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                //         $event->status = 'cancelled';
+                //     }
+                //     $event->save();
+                // }
                 
                 $headId = DB::table('leaves as l')
                 ->leftJoin('users as u','l.employee_id','u.employee_id')
