@@ -298,21 +298,21 @@ class LeaveApplication extends Component
             $newStatus = 'Head Approved';
 
             try {
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->where('hash_id', $lHash)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->where('hash_id', $lHash)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    $event->save();
-                }
+                // if (!$event) {
+                //     return response()->json(['error' => 'Event not found'], 404);
+                // } else {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     $event->save();
+                // }
                 
                 $dataArray = array(
                     'leave_status'          => 'Head Approved',
@@ -433,23 +433,23 @@ class LeaveApplication extends Component
                 $reason = $request->lReason;
                 $date = DB::raw('NOW()'); // Carbon::now('Asia/Manila')
 
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                        $event->status = 'cancelled';
-                    }
-                    $event->save();
-                }
+                // if (!$event) {
+                //     return response()->json(['error' => 'Event not found'], 404);
+                // } else {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                //         $event->status = 'cancelled';
+                //     }
+                //     $event->save();
+                // }
 
                 if ($action=="Cancelled") {
                     $data_array = array(
