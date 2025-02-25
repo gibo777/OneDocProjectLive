@@ -92,15 +92,17 @@ class Timelogs extends Component
 		        }
 
 		        // Apply search query if search term is provided
-		        if (!empty($this->search)) {
-				    $searchTerms = explode(' ', $this->search);
-				    $query->where(function ($q) use ($searchTerms) {
-				        foreach ($searchTerms as $term) {
-				            $q->where('th.full_name', 'like', '%' . $term . '%');
-				        }
-				    })
-				    ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
-				}
+                if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
+    		        if (!empty($this->search)) {
+    				    $searchTerms = explode(' ', $this->search);
+    				    $query->where(function ($q) use ($searchTerms) {
+    				        foreach ($searchTerms as $term) {
+    				            $q->where('th.full_name', 'like', '%' . $term . '%');
+    				        }
+    				    })
+    				    ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
+    				}
+                }
 
 		        // Filter by date range
 		        if (!empty($this->fTLdtFrom) && !empty($this->fTLdtTo)) {
