@@ -491,8 +491,11 @@
                         <div id="results" class="hidden rounded-md"></div>
                     </div>
                 </div>
-                <div class="row pt-2">
-                    <div class="col-md-12 text-center">
+                <div class="row my-1">
+                    <div class="col-md-8 text-justify text-sm font-weight-bold font-italic text-wrap w-100 inset-shadow px-2 my-1">
+                      &nbsp;&nbsp;In compliance with company policy, ensure that your picture clearly shows your office location.
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center justify-content-center">
                         <input id="logEvent" hidden>
                         <input type="button" id="takeSnapshot" value="Take Snapshot" class="btn btn-primary ">
                     </div>
