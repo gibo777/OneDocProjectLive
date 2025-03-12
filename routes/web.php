@@ -283,3 +283,4 @@ Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoCo
 
 
 Route::get('/test', [TestController::class,'test_view']);
+Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);

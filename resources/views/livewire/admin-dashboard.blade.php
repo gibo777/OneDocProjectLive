@@ -3,6 +3,14 @@
         {{ __('ADMIN DASHBOARD') }}
     </x-slot>
 
+    <style type="text/css">
+        .custom-title {
+          font-size: 14px;
+          line-height: 1.5;
+          padding-bottom: 2px;
+        }
+    </style>
+
     <div class="max-w-8xl mx-auto m-1 sm:px-6 lg:px-8 p-2">
         <div class="row">
 
@@ -51,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="col-auto">
-                            	<i class="fa-solid fa-calendar-days fa-4x text-primary"></i>
+                            	<i id="gCalendar" class="fa-solid fa-calendar-days fa-4x text-primary hover"></i>
                             	{{-- <i class="fa-solid fa-sheet-plastic fa-4x text-primary"></i> --}}
                             </div>
                         </div>
@@ -380,3 +388,21 @@
     <script src="{{ asset('sb-admin/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('sb-admin/demo/chart-bar-demo.js') }}"></script>
     <script src="{{ asset('sb-admin/demo/chart-pie-demo.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).on('click','#gCalendar', function (e) {
+        Swal.fire({ 
+            width: '100%',
+            allowOutsideClick: false,
+            // confirmButtonText: 'Close Calendar',
+            showConfirmButton: false,
+            showCloseButton: true,
+            customClass: {
+                title: 'custom-title'
+            },
+            title: 'Google Calendar Integration of Leaves',
+            // html: `<iframe src="https://calendar.google.com/calendar/embed?src=5be3de62c935b7c9d0c1a00efc90e540d12911a0fd034b048ce4a6ab0f7e859e%40group.calendar.google.com&ctz=Asia%2FManila" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>`
+            html: `<iframe src="https://calendar.google.com/calendar/embed?src=3c87eiuludrrdasrmr3qc0b8hs%40group.calendar.google.com&ctz=Asia%2FManila" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>`
+        }); return false;
+    });
+</script>
