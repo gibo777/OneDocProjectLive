@@ -141,17 +141,19 @@ class CronController extends Controller
     public function cronAutoPendingLeaveNotification () {
 
         $pendingLeaves = DB::table('leaves as l')
-            ->select(
-                'l.head_id',
-                DB::raw('COUNT(*) as n'),
-                DB::raw("(SELECT email FROM users WHERE employee_id=l.head_id) as email")
-            )
-            ->leftJoin('users as u','l.head_id','u.supervisor')
-            ->where('l.leave_status','Pending')
-            ->whereNotNull('l.head_id')
-            ->groupBy('l.head_id')
-            ->get()
-        ;
+        ->select(
+            'l.head_id',
+            DB::raw("(SELECT name FROM users WHERE employee_id = l.head_id) as head"),
+            DB::raw("(SELECT email FROM users WHERE employee_id = l.head_id) as email"),
+            DB::raw('COUNT(*) as n')
+        )
+        ->where('l.leave_status', 'Pending')
+        ->whereNotNull('l.head_id')
+        ->where('l.head_id', '!=', '')
+        ->groupBy('l.head_id')
+        ->orderByDesc('n')
+        ->get();
+
 
         dd($pendingLeaves->all());
         // foreach ($pendingLeaves as $key => $value) {
