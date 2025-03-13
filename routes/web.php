@@ -281,6 +281,10 @@ Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeav
 /*======= CRON / SCHEDULER =====*/
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
 
+Route::get('/cron-pending-leave-notification', [CronController::class, 'cronAutoPendingLeaveNotification'])->name('cron.pending.leave.notification');
+
+
+
 
 Route::get('/test', [TestController::class,'test_view']);
 Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);

@@ -13,6 +13,10 @@ use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LeaveApplicationSubmitted;
+
 class CronController extends Controller
 {
     /**
@@ -132,7 +136,40 @@ class CronController extends Controller
 
         // $string .= "<script>alert('❤️ I miss you my 345 partner ❤️');</script>";
         return $string;
+    }
 
-        
+    public function cronAutoPendingLeaveNotification () {
+
+        $pendingLeaves = DB::table('leaves as l')
+            ->select(
+                'l.head_id',
+                DB::raw('COUNT(*) as n'),
+                DB::raw("(SELECT email FROM users WHERE employee_id=l.head_id) as email")
+            )
+            ->leftJoin('users as u','l.head_id','u.supervisor')
+            ->where('l.leave_status','Pending')
+            ->whereNotNull('l.head_id')
+            ->groupBy('l.head_id')
+            ->get()
+        ;
+
+        dd($pendingLeaves->all());
+        // foreach ($pendingLeaves as $key => $value) {
+
+        // }
+
+        // $defaultHeadEmail = DB::table('users')
+        //     ->where('employee_id', Auth::user()->supervisor)
+        //     ->value('email');
+
+        // // Check if the default supervisor's email contains 'jmyulo'
+        // $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
+        //     ? DB::table('users')->where('id', 32)->value('email') 
+        //     : $defaultSupervisorEmail;
+
+        // Send the email to the supervisor
+        // Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+
+        return "test";
     }
 }
