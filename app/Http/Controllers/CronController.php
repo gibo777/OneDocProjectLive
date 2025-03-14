@@ -15,7 +15,7 @@ use Carbon\Carbon;
 
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\LeaveApplicationSubmitted;
+use App\Mail\PendingLeaveNotification;
 
 class CronController extends Controller
 {
@@ -141,36 +141,40 @@ class CronController extends Controller
     public function cronAutoPendingLeaveNotification () {
 
         $pendingLeaves = DB::table('leaves as l')
+        ->join('users as u', 'u.employee_id', '=', 'l.head_id')
         ->select(
             'l.head_id',
-            DB::raw("(SELECT name FROM users WHERE employee_id = l.head_id) as head"),
-            DB::raw("(SELECT email FROM users WHERE employee_id = l.head_id) as email"),
+            'u.name as head',
+            'u.email',
+            'u.gender as sex',
             DB::raw('COUNT(*) as n')
         )
         ->where('l.leave_status', 'Pending')
         ->whereNotNull('l.head_id')
         ->where('l.head_id', '!=', '')
-        ->groupBy('l.head_id')
+        ->groupBy('l.head_id', 'u.name', 'u.email', 'u.gender')
         ->orderByDesc('n')
         ->get();
 
 
-        dd($pendingLeaves->all());
-        // foreach ($pendingLeaves as $key => $value) {
 
-        // }
+        foreach ($pendingLeaves as $key => $value) {
+            // dd($value);
+            // $defaultHeadEmail = DB::table('users')
+            //     ->where('employee_id', Auth::user()->supervisor)
+            //     ->value('email');
 
-        // $defaultHeadEmail = DB::table('users')
-        //     ->where('employee_id', Auth::user()->supervisor)
-        //     ->value('email');
+            // Check if the default supervisor's email contains 'jmyulo'
+            $supervisorEmail = strpos($value->email, 'jmyulo') !== false 
+                ? DB::table('users')->where('id', 32)->value('email') 
+                : $value->email;
 
-        // // Check if the default supervisor's email contains 'jmyulo'
-        // $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
-        //     ? DB::table('users')->where('id', 32)->value('email') 
-        //     : $defaultSupervisorEmail;
+                echo $supervisorEmail."<br>";
 
-        // Send the email to the supervisor
-        // Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+            // Send the email to the supervisor
+            // Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+        }
+
 
         return "test";
     }
