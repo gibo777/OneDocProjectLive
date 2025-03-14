@@ -144,7 +144,7 @@ class CronController extends Controller
         ->join('users as u', 'u.employee_id', '=', 'l.head_id')
         ->select(
             'l.head_id',
-            'u.name as head',
+            'u.name as head_name',
             'u.email',
             'u.gender as sex',
             DB::raw('COUNT(*) as n')
@@ -159,23 +159,14 @@ class CronController extends Controller
 
 
         foreach ($pendingLeaves as $key => $value) {
-            // dd($value);
-            // $defaultHeadEmail = DB::table('users')
-            //     ->where('employee_id', Auth::user()->supervisor)
-            //     ->value('email');
-
             // Check if the default supervisor's email contains 'jmyulo'
             $supervisorEmail = strpos($value->email, 'jmyulo') !== false 
                 ? DB::table('users')->where('id', 32)->value('email') 
                 : $value->email;
 
-                echo $supervisorEmail."<br>";
-
             // Send the email to the supervisor
-            // Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
+            Mail::to($supervisorEmail)->send(new PendingLeaveNotification($value->head_id, $value->head_name, $value->sex, $value->n));
         }
 
-
-        return "test";
     }
 }
