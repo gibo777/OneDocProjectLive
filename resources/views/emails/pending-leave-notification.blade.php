@@ -14,7 +14,7 @@
     <p>This is a friendly reminder that as of this moment, there {!! $n > 1 ? 'are <b><i>' . $n . ' leave requests</i></b>' : 'is <b><i>a leave request</i></b>' !!} awaiting your decision.</p>
     <p>
         Kindly login to our Employee Portal using the link below to view the pending requests:<br>
-        <a href="{{ env('APP_URL') }}">{{ env('APP_URL') }}</a>
+        <a href="{{ route('eforms.leaves-listing') }}">{{ route('eforms.leaves-listing') }}</a>
     </p>
     <p>If you have any questions or need further information, feel free to contact HR.</p>
     <p>Thank you!</p>
