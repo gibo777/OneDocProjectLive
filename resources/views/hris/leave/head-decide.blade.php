@@ -183,25 +183,29 @@
 		let lOthers = $('#dLOthers').val();
 
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
         let dataObject = {
             'lId': lId,
             'lHash': lHash,
             'lType': lType,
             'lOthers': lOthers
         };
+        
+        $('#dataProcess').css({
+            'display': 'flex',
+            'position': 'absolute',
+        });
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $.ajax({
             url: `${window.location.origin}/leave-link/head-approve`,
             method: 'POST',
             data: { 'lData': dataObject },
             success: function(data) {
-            	// Swal.fire({ html: data }); return false;
+            	$('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,
@@ -261,6 +265,12 @@
 
     function handleRevokeConfirmation(lId, lHash, lReason, lAction) {
         const url = window.location.origin+"/leave-link/head-deny";
+
+        $('#dataProcess').css({
+            'display': 'flex',
+            'position': 'absolute',
+        });
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -276,6 +286,7 @@
                 lAction: lAction
             },
             success: function(data) {
+            	$('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,

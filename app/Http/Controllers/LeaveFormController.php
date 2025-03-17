@@ -117,6 +117,30 @@ class LeaveFormController extends Controller
             'leaveDateTo'   => $request->isHalfDay ? '':'required|date|after_or_equal:leaveDateFrom',
         ];
 
+        $overlapping = DB::table('leaves')
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('date_from', [$request->leaveDateFrom, $request->leaveDateTo])
+                      ->orWhereBetween('date_to', [$request->leaveDateFrom, $request->leaveDateTo])
+                      ->orWhere(function ($query) use ($request) {
+                          $query->where('date_from', '<=', $request->leaveDateFrom)
+                                ->where('date_to', '>=', $request->leaveDateTo);
+                      });
+            })
+            ->where('employee_id',Auth::user()->employee_id)
+            ->count();
+
+        if ($overlapping > 0) {
+            return response()->json([
+                'isSuccess' => false, 
+                'message'   => 'Your requested leave overlaps with a previously filed leave. Please review your existing leave records.'
+            ]);
+        } /*else {
+            return response()->json([
+                'isSuccess' => false, 
+                'message'   => 'Success'
+            ]);
+        }*/
+
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
@@ -172,8 +196,8 @@ class LeaveFormController extends Controller
                 Carbon::parse($request->leaveDateFrom)->format('M d, Y (D)'),
                 Carbon::parse($request->leaveDateTo)->format('M d, Y (D)'),
                 number_format($inputData['hid_no_days'], 2),
-                $request->reason,
-                'Pending'
+                strtoupper($request->reason),
+                'PENDING'
             );
 
             # Google Calendar Data
@@ -195,16 +219,16 @@ class LeaveFormController extends Controller
                 $eventData['endDateTime'] = $endDateTime;
             }
 
-            // $googleEvent = Event::create($eventData);
+            $googleEvent = Event::create($eventData);
 
-            // if (!$googleEvent) {
-            //     \Log::error('Failed to create Google Calendar event: No response returned from the API.');
-            //     return redirect()->route('events.create')->with('status', [
-            //         'message' => 'Failed to create the event on Google Calendar.',
-            //         'type' => 'error',
-            //     ]);
-            // } else {
-            //     $eventId = $googleEvent->id;
+            if (!$googleEvent) {
+                \Log::error('Failed to create Google Calendar event: No response returned from the API.');
+                return redirect()->route('events.create')->with('status', [
+                    'message' => 'Failed to create the event on Google Calendar.',
+                    'type' => 'error',
+                ]);
+            } else {
+                $eventId = $googleEvent->id;
 
                 // Increment new leave number
                 $insert_increment = DB::table('leaves')
@@ -220,7 +244,7 @@ class LeaveFormController extends Controller
                 $data = [
                     'leave_number'  => $new_leave_number,
                     'hash_id'       => $hashId,
-                    // 'google_id'     => $eventId,
+                    'google_id'     => $eventId,
                     'name'          => $lFullName,
                     'employee_id'   => Auth::user()->employee_id,
                     'office'        => Auth::user()->office,
@@ -286,7 +310,7 @@ class LeaveFormController extends Controller
                     'message'   => 'Leave application submitted!', 
                     'newLeave'  => $newLeave
                 ]);
-            // }
+            }
         } catch (\Exception $e) {
             return response([
                 'isSuccess' => false, 
