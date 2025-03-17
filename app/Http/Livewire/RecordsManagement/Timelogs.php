@@ -94,7 +94,7 @@ class Timelogs extends Component
 
 		        // Apply search query if search term is provided
                 if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
-                    \Log::info('Search Query Applied for Role: ' . Auth::user()->role_type);
+                    // \Log::info('Search Query Applied for Role: ' . Auth::user()->role_type);
     		        if (!empty($this->search)) {
     				    $searchTerms = explode(' ', $this->search);
     				    $query->where(function ($q) use ($searchTerms) {

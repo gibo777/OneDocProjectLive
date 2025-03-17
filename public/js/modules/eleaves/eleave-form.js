@@ -146,21 +146,23 @@ $(document).ready(function(){
     }
 
 
+
+
     $(document).on('click', '.half-day', function() {
         $('#isHalfDay').is(':checked') ? $('#isHalfDay').prop('checked',false) : $('#isHalfDay').prop('checked',true);
-        $('#isHalfDay').is(':checked') ? $('#leaveDateTo').prop('disabled', true) : $('#leaveDateTo').prop('disabled', false);
+        $('#isHalfDay').is(':checked') ? $('#leaveDateTo').prop('readonly', true) : $('#leaveDateTo').prop('readonly', false);
         if ($('#isHalfDay').is(':checked')) {
             $("#leaveDateTo").val($("#leaveDateFrom").val());
         }
         leaveValidation(
-            $('#leaveDateFrom').val(),
+            $('#leaveDateFrom').val(), document.getElementById('leaveDateFrom').value,
             $('#leaveDateTo').val(),
             $('#leaveType').val()
         );
     });
     
     $(document).on('change', '#isHalfDay', function() {
-        $(this).is(':checked') ? $('#leaveDateTo').prop('disabled', true) : $('#leaveDateTo').prop('disabled', false);
+        $(this).is(':checked') ? $('#leaveDateTo').prop('readonly', true) : $('#leaveDateTo').prop('readonly', false);
         if ($('#isHalfDay').is(':checked')) {
             $("#leaveDateTo").val($("#leaveDateFrom").val());
         }
@@ -301,13 +303,64 @@ $(document).ready(function(){
             );
     });
 
+    $(document).ready(function () {
+        // Restore Leave Type
+        let leaveType = sessionStorage.getItem('leaveType');
+        if (leaveType) {
+            $("#leaveType").val(leaveType);
+        }
+
+        // Restore Leave Dates
+        let leaveDateFrom = sessionStorage.getItem('leaveDateFrom');
+        let leaveDateTo = sessionStorage.getItem('leaveDateTo');
+        if (leaveDateFrom) {
+            $("#leaveDateFrom").val(leaveDateFrom);
+        }
+        if (leaveDateTo) {
+            $("#leaveDateTo").val(leaveDateTo);
+        }
+
+        // Restore Half-Day Checkbox
+        let isHalfDay = sessionStorage.getItem('isHalfDay') === 'true';
+        $("#isHalfDay").prop('checked', isHalfDay);
+
+        // If isHalfDay is checked, make leaveDateTo readonly
+        if (isHalfDay) {
+            $("#leaveDateTo").prop('readonly', true);
+        }
+
+        // Restore Hidden Number of Days Input
+        let hidNoDays = sessionStorage.getItem('hid_no_days');
+        if (hidNoDays) {
+            $("#hid_no_days").val(hidNoDays);
+        }
+
+        // Restore Reason
+        let reason = sessionStorage.getItem('reason');
+        if (reason) {
+            $("#reason").val(reason);
+        }
+
+
+        $("#submitLeave").prop("disabled", 
+            ["#leaveType", "#leaveDateFrom", "#leaveDateTo", "#reason"].some(id => !$.trim($(id).val())) || 
+            ($("#leaveType").val() === "Others" && !$.trim($("#others_leave").val()))
+        );
+
+        // Clear sessionStorage after restoring values
+        sessionStorage.removeItem('leaveType');
+        sessionStorage.removeItem('leaveDateFrom');
+        sessionStorage.removeItem('leaveDateTo');
+        sessionStorage.removeItem('isHalfDay');
+        sessionStorage.removeItem('hid_no_days');
+        sessionStorage.removeItem('reason');
+    });
+
+
+
+
     /* SUBMIT LEAVE FORM begin*/
     $(document).on('click','#submitLeave',function (){
-        ctrSubmit++;
-
-        if (ctrSubmit>1){
-            Swal.fire({ html: 'Please wait for the leave to be submitted...'}); return false;
-        }
 
         // Swal.fire({ html: 'I miss you my 345 partner...'}); return false;
 
@@ -315,7 +368,12 @@ $(document).ready(function(){
         .then(function(overlap) {
             // Handle the response asynchronously
             if (overlap==1 || overlap==true) {
-                Swal.fire({ icon: 'error', title: 'Overlapping Dates', text: 'Leave date/s already filed' });
+                Swal.fire({ 
+                    icon: 'error', 
+                    allowOutsideClick: false,
+                    title: 'Overlapping Dates', 
+                    text: 'Leave date/s already filed' 
+                });
             } else {
                 var empty_fields=0;
                 if ($("#leaveType").val()==""){
@@ -362,6 +420,16 @@ $(document).ready(function(){
 
                       });
                 } else {
+                    ctrSubmit++;
+
+                    if (ctrSubmit>1){
+                        Swal.fire({ 
+                            html: 'Please wait for the leave to be submitted...'
+                        }).then(() => {
+                            location.reload();
+                        });
+                        return false;
+                    }
                     $('#dataProcess').css({
                         'display': 'flex',
                         'position': 'absolute',
@@ -406,8 +474,8 @@ $(document).ready(function(){
                                             <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
                                             <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
                                             <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
-                                            <tr> <td class='text-right'># of Day/s:</td> <td>`+newLeave.no_of_days+`</td> </tr>
-                                            <tr> <td class='text-right'>Reason:</td> <td>`         +newLeave.reason+`</td> </tr>
+                                            <tr> <td class='text-right'># of Day/s:</td> <td>`           +newLeave.no_of_days+`</td> </tr>
+                                            <tr> <td class='text-right'>Reason:</td> <td>`               +newLeave.reason+`</td> </tr>
                                         </tbody>
                                         </table>
                                     </div>
@@ -424,12 +492,27 @@ $(document).ready(function(){
                                 });
 
                             } else {
+                                $('#dataProcess').hide();
+
+                                // Store values in sessionStorage before reload
+                                sessionStorage.setItem('leaveType', $("#leaveType").val());
+                                sessionStorage.setItem('leaveDateFrom', $("#leaveDateFrom").val());
+                                sessionStorage.setItem('leaveDateTo', $("#leaveDateTo").val());
+                                sessionStorage.setItem('isHalfDay', $("#isHalfDay").prop('checked'));
+                                sessionStorage.setItem('hid_no_days', $("#hid_no_days").val());
+                                sessionStorage.setItem('reason', $("#reason").val());
+
                                 Swal.fire({
-                                    icon:'error',
-                                    title:'Error',
-                                    text:JSON.stringify(message)
-                                })
+                                    icon: 'error',
+                                    title: 'Submission Failed',
+                                    allowOutsideClick: false,
+                                    text: message || 'An error occurred while submitting your leave form.',
+                                }).then(() => {
+                                    location.reload();
+                                });
+
                             }
+
                         }
                     });
                 }

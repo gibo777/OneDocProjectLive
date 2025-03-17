@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Copy Text on Click</title>
+<x-app-layout>
+
+
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 <script>
@@ -26,12 +23,18 @@ $(document).ready(function(){
     });
 });
 </script>
-</head>
-<body>
 
-<input type="text" id="autoFillText">
-<p class="copy-text">Click here to copy this text</p>
-{{ phpinfo() }}
+<x-slot name="header">
+    {{ __('Google Calendar Integration (TEST)') }}
+</x-slot>
 
-</body>
-</html>
+<div class="max-w-8xl mx-auto m-1 sm:px-6 lg:px-8 p-2 shadow-sm">
+
+{{-- <input type="text" id="autoFillText"> --}}
+{{-- <p class="copy-text">Click here to copy this text</p> --}}
+<iframe src="https://calendar.google.com/calendar/embed?src=5be3de62c935b7c9d0c1a00efc90e540d12911a0fd034b048ce4a6ab0f7e859e%40group.calendar.google.com&ctz=Asia%2FManila" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+{{-- {{ phpinfo() }} --}}
+
+</div>
+
+</x-app-layout>
