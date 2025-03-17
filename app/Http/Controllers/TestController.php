@@ -168,10 +168,7 @@ class TestController extends Controller
             $query->whereYear('l.date_from', 2025)
                   ->orWhereYear('l.date_to', 2025);
         })
-<<<<<<< HEAD
         ->where('l.emloyee_id','!=','7777-7777')
-=======
->>>>>>> fdad0f9d2d73eadabcd6b49c62cf0c46c92d4397
         ->whereNotIn('l.leave_status',['Cancelled','Denied'])
         ->get();
 
