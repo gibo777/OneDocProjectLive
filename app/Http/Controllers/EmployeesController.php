@@ -25,14 +25,6 @@ class EmployeesController extends Controller
     public function index() {
         if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
         {
-            /*if (str_contains(Auth::user()->department, 'ACCTG')==1 || Auth::user()->id==1)
-            {
-                return "Accounting";
-            } else {
-                return "Other Department";
-            }*/
-
-
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
@@ -40,10 +32,7 @@ class EmployeesController extends Controller
             if (Auth::user()->id != 1) {
                 $employees = $employees->where('id','!=',1);
             }
-            // $employees = $employees->where('employee_id','7777-7777');
             $employees = $employees->get();
-
-            // return var_dump($employees);
 
             // $employees = DB::table('users as u');
             // $employees = $employees->leftJoin('departments as d', 'u.department', '=', 'd.department_code');
