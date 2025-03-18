@@ -18,8 +18,12 @@ use App\Http\Livewire\EForms\LeaveApplication;
 /* Records Management */
 use App\Http\Livewire\RecordsManagement\Timelogs;
 use App\Http\Livewire\RecordsManagement\Employees;
+use App\Http\Livewire\RecordsManagement\AttendanceMonitoring;
 use App\Http\Livewire\ServerStatus;
 use App\Http\Livewire\AdminDashboard;
+/* Setup */
+use App\Http\Livewire\Setup\AuthorizeView;
+
 
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
@@ -159,6 +163,9 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/update-offices', [OfficesController::class, 'update_offices'])->name('hr.management.update-offices');
     Route::get('/getoffice',[OfficesController::class,'geOfficeDetails'])->name('hr.management.getoffice-details');
 
+    /* AUTHORIZE VIEWING */
+    Route::get('/authorize-view', AuthorizeView::class);
+
     /* COUNTRIES, PROVINCES, CITIES */
     Route::get('/provinces', [CountriesController::class, 'provinces'])->name('provinces');
     Route::get('/cities', [CountriesController::class, 'cities'])->name('cities');
@@ -266,6 +273,9 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
     Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
+
+    /* ATTENDANCE MONITORING */
+    Route::get('/attendance-monitoring', AttendanceMonitoring::class)->name('attendance-monitoring');
 
 
     /*======= SERVER STATUS =====*/
