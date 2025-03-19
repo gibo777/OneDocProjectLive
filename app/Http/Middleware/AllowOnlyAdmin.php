@@ -9,10 +9,10 @@
     {
         public function handle($request, Closure $next)
         {
-            if (Auth::user()->role_type=='SUPER ADMIN') {
+            if (Auth::user()->role_type=='SUPER ADMIN' || Auth::user()->role_type=='ADMIN') {
                 return $next($request);
             }
             
-            abort(403);
+            return redirect('/');
         }
     }

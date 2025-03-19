@@ -274,12 +274,15 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/timelogslisting', [EmployeesController::class, 'timeLogsListing'])->name('timelogslisting');
     Route::get('/timelogs-detailed',[EmployeesController::class, 'timeLogsDetailed'])->name('timelogs.detailed');
 
-    /* ATTENDANCE MONITORING */
-    Route::get('/attendance-monitoring', AttendanceMonitoring::class)->name('attendance-monitoring');
 
 
     /*======= SERVER STATUS =====*/
     Route::get('/server-status', ServerStatus::class)->name('server-status');
+
+    Route::middleware(['allowOnlyAdmin',config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->group(function() {
+        /* ATTENDANCE MONITORING */
+        Route::get('/attendance-monitoring', AttendanceMonitoring::class)->name('attendance-monitoring');
+    });
 });
 
 
@@ -292,9 +295,6 @@ Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeav
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
 
 Route::get('/cron-pending-leave-notification', [CronController::class, 'cronAutoPendingLeaveNotification'])->name('cron.pending.leave.notification');
-
-
-
 
 Route::get('/test', [TestController::class,'test_view']);
 Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);
