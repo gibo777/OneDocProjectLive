@@ -15,7 +15,7 @@
 
         <div class="px-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
             <div class="col-span-8 sm:col-span-8 sm:justify-center">
-				    {{-- <div class="row pb-1 mx-1 inset-shadow">
+				    <div class="row pb-1 mx-1 inset-shadow">
 				        <div class="col-md-2 py-2">
 				            <div class="form-floating w-full" id="divfilterEmpOffice">
 				                <select wire:model="fTLOffice" name="fTLOffice" id="fTLOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
@@ -56,14 +56,14 @@
 			            <div class="col-md-2 py-2"></div>
 
 				        <div class="col-md-3 text-center mt-2 py-2">
-				            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==58 || Auth::user()->id==287)
+				            {{-- @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==58 || Auth::user()->id==287)
 				                <div class="form-group btn btn-outline-success d-inline-block shadow-sm p-2 rounded capitalize hover w-75">
 				                    <i class="fas fa-table"></i>
 				                    <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
 				                </div>
-				            @endif
+				            @endif --}}
 				        </div>
-				    </div> --}}
+				    </div>
 				</div>
 
 
@@ -148,8 +148,8 @@
                                     <td>{{ date('D', strtotime($record->log_date)) }}</td>
                                     <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}</td>
                                     <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}</td>
-                                    <td> </td>
-                                    <td> </td>
+                                    <td>{{ $record->leave_type ?? '' }}</td>
+                                    <td>{{ $record->control_number ?? '' }}</td>
                                     @if (url('/')=='http://localhost')
                                     	<td>xxx, xxx x.</td>
                                     @else
@@ -188,4 +188,4 @@
 <script type="text/javascript">
     const uID = `{{ Auth::user()->id }}`;
 </script>
-<script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs-listings.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ asset('app-modules/timekeeping/timelogs-listings.js') }}"></script> --}}

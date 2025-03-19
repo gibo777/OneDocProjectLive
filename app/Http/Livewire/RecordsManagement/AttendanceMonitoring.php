@@ -62,132 +62,84 @@ class AttendanceMonitoring extends Component
     private function fetchTimeLogs()
 	{
 		$timeLogs = DB::table('time_logs_header as th')
-		    ->select(
-		    	'th.id',
-		        'th.full_name',
-		        'th.employee_id',
-		        'o.company_name as office',
-		        'd.department',
-		        'th.log_date',
-		        'th.time_in',
-		        'th.time_out',
-		        'th.supervisor'
-		    )
-		    ->leftJoin('users as u', 'th.employee_id', '=', 'u.employee_id')
-		    ->leftJoin('departments as d', 'th.department', '=', 'd.department_code')
-		    ->leftJoin('offices as o', 'th.office', '=', 'o.id')
-		    ->where(function ($query) {
-		        // Apply office filter if selected
-		        if (!empty($this->fTLOffice)) {
-		            $query->where('th.office', $this->fTLOffice);
-		        }
+        ->select(
+            'th.id',
+            'th.full_name',
+            'th.employee_id',
+            'o.company_name as office',
+            'd.department',
+            'th.log_date',
+            DB::raw("(SELECT control_number FROM leaves WHERE employee_id=th.employee_id AND '$this->fTLdtFrom' BETWEEN date_from AND date_to) AS control_number"),
+            DB::raw("(SELECT leave_type FROM leaves WHERE employee_id=th.employee_id AND '$this->fTLdtFrom' BETWEEN date_from AND date_to) AS leave_type"),
+            DB::raw("(SELECT leave_status FROM leaves WHERE employee_id=th.employee_id AND '$this->fTLdtFrom' BETWEEN date_from AND date_to) AS leave_status"),
+            'th.time_in',
+            'th.time_out',
+            'th.supervisor'
+        )
+        ->leftJoin('users as u', 'th.employee_id', '=', 'u.employee_id')
+        ->leftJoin('departments as d', 'th.department', '=', 'd.department_code')
+        ->leftJoin('offices as o', 'th.office', '=', 'o.id')
+        ->when(!empty($this->fTLdtFrom), fn($q) => $q->where('th.log_date', $this->fTLdtFrom))
 
-		        // Apply department filter if selected
-		        if (!empty($this->fTLDept)) {
-		            $query->where('th.department', $this->fTLDept);
-		        }
+        ->when(!in_array(Auth::user()->role_type, ['SUPER ADMIN', 'ADMIN']), function ($q) {
+            $q->where(fn($query) => 
+                $query->where('th.employee_id', Auth::user()->employee_id)
+                      ->orWhere('u.supervisor', Auth::user()->employee_id)
+            );
+        })
+        ->when(!in_array(Auth::user()->id, [1, 2]), fn($q) => $q->where('u.id', '!=', 1))
+        ->when(Auth::user()->is_head == 1, function ($q) {
+            $q->where(fn($query) => 
+                $query->where('u.employee_id', Auth::user()->employee_id)
+                      ->orWhere('u.supervisor', Auth::user()->employee_id)
+            );
+        }, fn($q) => 
+            $q->where('u.employee_id', Auth::user()->employee_id)
+        )
+        
+        ->where(fn($q) => $q->where('u.is_deleted', 0)->orWhereNull('u.is_deleted'))
+        ->union(
+            DB::table('users as u')
+            ->select(
+                DB::raw("NULL as id"),
+                'l.name',
+                'u.employee_id',
+                'o.company_name as office',
+                'd.department',
+                DB::raw("? as log_date"),
+                'l.control_number',
+                'l.leave_type',
+                'l.leave_status',
+                DB::raw("NULL as time_in"),
+                DB::raw("NULL as time_out"),
+                'u.supervisor'
+            )
+            ->addBinding([$this->fTLdtFrom], 'select') // Bind log_date
+            ->leftJoin('leaves as l', function ($join) {
+                $join->on('u.employee_id', '=', 'l.employee_id')
+                     ->whereRaw("? BETWEEN l.date_from AND l.date_to", [$this->fTLdtFrom]);
+            })
+            ->leftJoin('departments as d', 'u.department', '=', 'd.department_code')
+            ->leftJoin('offices as o', 'u.office', '=', 'o.id')
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                      ->from('time_logs_header')
+                      ->whereColumn('time_logs_header.employee_id', 'u.employee_id')
+                      ->where('time_logs_header.log_date', '=', DB::raw("?"))
+                      ->addBinding($this->fTLdtFrom);
+            })
+            ->whereNotIn('l.leave_status', ['Denied', 'Cancelled'])
+            ->where(function ($query) {
+                $query->whereNull('u.is_deleted')
+                      ->orWhere('u.is_deleted', '!=', 1);
+            })
+        )
+        ->orderBy('log_date', 'desc')
+        ->orderBy('full_name', 'asc')
+        ->paginate($this->pageSize);
 
-		        // Apply search query if search term is provided
-                if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
-    		        if (!empty($this->search)) {
-    				    $searchTerms = explode(' ', $this->search);
-    				    $query->where(function ($q) use ($searchTerms) {
-    				        foreach ($searchTerms as $term) {
-    				            $q->where('th.full_name', 'like', '%' . $term . '%');
-    				        }
-    				    })
-    				    ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
-    				}
-                }
+        return $timeLogs;
 
-                if (!empty($this->fTLdtFrom)) {
-		            $query->where('th.log_date', $this->fTLdtFrom);
-		        }
-
-		        // Additional conditional check for user role
-		        if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
-		            $query->where(function ($q) {
-		                $q->where('th.employee_id', Auth::user()->employee_id)
-		                  ->orWhere('u.supervisor', Auth::user()->employee_id);
-		            });
-		        }
-
-		        // Exclude specific user IDs
-		        if (Auth::user()->id != 1 && Auth::user()->id != 2) {
-		            $query->where('u.id', '!=', 1);
-		        }
-		        if  (Auth::user()->is_head==1) {
-		        	switch (Auth::user()->id) {
-		        		case 1: case 8: case 18: case 58: break; case 287: break;
-		        		case 124:
-		        			$query->where(function($q) {
-		        				return $q->where('u.office', Auth::user()->office)
-		        						->orWhereIn('u.office',[6,8,12,14,15]);
-		        			});
-		        			break;
-		        		case 86: case 126: case 222:
-		        			$query->where(function($q) {
-		        				return $q->where('u.office', Auth::user()->office)
-		        						->orWhereIn('u.office',[8,12,14,15]);
-		        			});
-		        			break;
-                        case 72:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[12]);
-                            });
-                            break;
-                        case 135:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[8,12]);
-                            });
-                            break;
-                        case 223:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[8,14]);
-                            });
-                            break;
-                        case 131: case 238:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[14]);
-                            });
-                            break;
-                        case 155: case 159:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[15]);
-                            });
-                            break;
-                        case 174: case 290: case 315:
-                            $query->where(function($q) {
-                                return $q->where('u.office', Auth::user()->office);
-                            });
-                            break;
-		        		default:
-		        			$query->where(function($q) {
-		        				return $q->where('u.employee_id', Auth::user()->employee_id)
-		        						->orWhere('u.supervisor',Auth::user()->employee_id);
-		        			});
-		        			break;
-		        	}
-		        } else {
-		        	$query->where('u.employee_id', Auth::user()->employee_id);
-		        }
-
-		        // Filter by deleted users
-		        $query->where(function ($q) {
-		            $q->where('u.is_deleted', 0)
-		              ->orWhereNull('u.is_deleted');
-		        });
-		    })
-		    ->orderBy('th.log_date', 'desc')
-		    ->orderBy('th.full_name', 'asc')
-		    ->paginate($this->pageSize);
-
-	    return $timeLogs;
 	}
 
 
