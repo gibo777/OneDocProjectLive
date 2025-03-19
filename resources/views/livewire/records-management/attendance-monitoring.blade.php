@@ -40,16 +40,16 @@
 				            </div>
 				        </div>
 
-				        <div class="col-md-3 pt-2 px-3 text-center">
+				        <div class="col-md-2 pt-2 px-3 text-center">
 						    <div class="flex justify-between items-center">
-						        <x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
-						        <span id="clearFilter" wire:click="clearDateFilters" class="hover text-primary text-sm px-1" style="font-weight: 500;">{{ __('Clear Date Filter') }}</span>
+						        <x-jet-label class="py-0 my-0" value="{{ __('Search Date') }}" />
+						        {{-- <span id="clearFilter" wire:click="clearDateFilters" class="hover text-primary text-sm px-1" style="font-weight: 500;">{{ __('Clear Date Filter') }}</span> --}}
 						    </div>
 
 						    <div class="flex justify-center items-center">
-					            <x-jet-input wire:model.debounce.500ms="fTLdtFrom" type="date" id="fTLdtFrom" name="fTLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1" />
-					            to
-					            <x-jet-input wire:model.debounce.500ms="fTLdtTo" type="date" id="fTLdtTo" name="fTLdtTo" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1"/>
+					            <x-jet-input wire:model.debounce.500ms="fTLdtFrom" type="date" id="fTLdtFrom" name="fTLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1 w-full" />
+					            {{-- to
+					            <x-jet-input wire:model.debounce.500ms="fTLdtTo" type="date" id="fTLdtTo" name="fTLdtTo" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1"/> --}}
 					        </div>
 				        </div>
 
@@ -88,12 +88,12 @@
 						    	<div class="col-md-3">
 						    		<div class="row">
 						        		<div class="col-md-4">
-						            		<x-jet-label for="search" value="{{ __('Search Date') }}" class="px-1 justify-content-end"/>
+						            		{{-- <x-jet-label for="search" value="{{ __('Search Date') }}" class="px-1 justify-content-end"/> --}}
 						        		</div>
 						        		<div class="col-md-8">
 						        			{{-- <x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search" class="w-full"  placeholder="Name/Employee ID">
 						        			</x-jet-input> --}}
-						        			<x-jet-input wire:model.debounce.500ms="fTLdtFrom" type="date" id="fTLdtFrom" name="fTLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="px-2 w-full"/>
+						        			{{-- <x-jet-input wire:model.debounce.500ms="fTLdtFrom" type="date" id="fTLdtFrom" name="fTLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="px-2 w-full"/> --}}
 						        		</div>
 						    		</div>
 						    	</div>
