@@ -350,6 +350,7 @@
                                   Time Keeping </a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                         <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
+                                        <a class="dropdown-item" href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
                                   </div>
                               </div>
                               @if (Auth::user()->id==1 || Auth::user()->id==2)
