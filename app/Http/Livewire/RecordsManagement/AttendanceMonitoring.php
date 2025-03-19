@@ -114,7 +114,7 @@ class AttendanceMonitoring extends Component
                 DB::raw("NULL as time_out"),
                 'u.supervisor'
             )
-            ->addBinding([$this->fTLdtFrom], 'select') // Bind log_date
+            ->addBinding([$this->fTLdtFrom], 'select')
             ->leftJoin('leaves as l', function ($join) {
                 $join->on('u.employee_id', '=', 'l.employee_id')
                      ->whereRaw("? BETWEEN l.date_from AND l.date_to", [$this->fTLdtFrom]);
@@ -133,6 +133,21 @@ class AttendanceMonitoring extends Component
                 $query->whereNull('u.is_deleted')
                       ->orWhere('u.is_deleted', '!=', 1);
             })
+            ->when(!in_array(Auth::user()->role_type, ['SUPER ADMIN', 'ADMIN']), function ($q) {
+                $q->where(fn($query) => 
+                    $query->where('u.employee_id', Auth::user()->employee_id)
+                          ->orWhere('u.supervisor', Auth::user()->employee_id)
+                );
+            })
+            ->when(!in_array(Auth::user()->id, [1, 2]), fn($q) => $q->where('u.id', '!=', 1))
+            ->when(Auth::user()->is_head == 1, function ($q) {
+                $q->where(fn($query) => 
+                    $query->where('u.employee_id', Auth::user()->employee_id)
+                          ->orWhere('u.supervisor', Auth::user()->employee_id)
+                );
+            }, fn($q) => 
+                $q->where('u.employee_id', Auth::user()->employee_id)
+            )
         )
         ->orderBy('log_date', 'desc')
         ->orderBy('full_name', 'asc')
