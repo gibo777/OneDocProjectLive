@@ -126,9 +126,10 @@
                                     <th class="py-1" style="width: 8%">Day</th>
                                     <th class="py-1" style="width: 8%">Time In</th>
                                     <th class="py-1" style="width: 8%">Time Out</th>
-                                    <th class="py-1" style="width: 12%">Leave</th>
-                                    <th class="py-1" style="width: 12%">Control #</th>
+                                    {{-- <th class="py-1" style="width: 12%">Leave</th> --}}
+                                    <th class="py-1" style="width: 12%">Leave Control #</th>
                                     <th class="py-1">Supervisor</th>
+                                    <th class="py-1" style="width: 12%">Status</th>
                                 </tr>
                             </thead>
                             <tbody class="data hover custom-text-xs" id="viewEmployee">
@@ -148,13 +149,13 @@
                                     <td>{{ date('D', strtotime($record->log_date)) }}</td>
                                     <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}</td>
                                     <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}</td>
-                                    <td>{{ $record->leave_type ?? '' }}</td>
                                     <td>{{ $record->control_number ?? '' }}</td>
                                     @if (url('/')=='http://localhost')
                                     	<td>xxx, xxx x.</td>
                                     @else
                                     	<td>{{ $record->supervisor }}</td>
                                     @endif
+                                    <td>{{ $record->leave_type ?? ($record->time_in === null ? '-' : '') }}</td>
                                 </tr>
                                 @endforeach
                                 @else

@@ -354,7 +354,7 @@
                                   </div>
                               </div>
                               @if (Auth::user()->id==1 || Auth::user()->id==2)
-                              <div class="dropdown dropend">
+                              {{-- <div class="dropdown dropend">
                                   <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Employee Clearance </a>
                                   <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
@@ -365,7 +365,7 @@
                                             {{ __('View Clearances') }}
                                         </a>
                                   </div>
-                              </div>
+                              </div> --}}
                               @endif
                               {{-- <a class="dropdown-item" href="{{ route('hr.management.memos') }}">
                                   {{ __('Memo') }}
