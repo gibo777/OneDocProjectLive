@@ -127,6 +127,11 @@ class LeaveFormController extends Controller
                       });
             })
             ->where('employee_id',Auth::user()->employee_id)
+            ->where(function ($query) {
+                $query->whereNull('is_deleted')
+                ->orWhere('is_deleted','');
+            })
+            ->whereNotIn('leave_status', ['Cancelled', 'Denied'])
             ->count();
 
         if ($overlapping > 0) {
