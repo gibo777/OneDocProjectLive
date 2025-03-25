@@ -12,13 +12,10 @@
     .zoom-image {
         position: absolute;
         top: 0;
-        left: 100%; 
-        transform: translateX(80%); 
-        width: 400px;
-        /*height: 250px;*/ 
-        background-color: none; 
-        /*border: 1px solid #ccc; */
-        /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
+        left: 90%; 
+        transform: translateX(40%);
+        width: 360px;
+        background-color: none;
         pointer-events: none; 
     }
 
@@ -143,21 +140,17 @@
 
             </div>
 
-<div class="row px-3 image-container">
-    <div class="col-md-3"></div>
-    <div class="col-md-3 text-md-end align-items-center d-flex justify-content-center">
-        <img src="img/company/onedoc-logo.png" class="img-fluid">
-    </div>
-    <div id="firstImage" class="col-md-2 justify-content-center align-items-center position-relative">
-        <img src="img/company/1doc_dpo_dps.png" class="main-image">
-        <div id="secondImage" class="zoom-image hidden">
-            <img src="img/company/1doc_dpo_dps_lg.png">
-        </div>
-    </div>
-    {{-- <div class="col-md-4"></div> --}}
-</div>
-
-
+            <div class="row px-3 image-container justify-content-center align-items-center text-center">
+                <div class="col-md-3 d-flex justify-content-center">
+                    <img src="img/company/onedoc-logo.png" class="img-fluid">
+                </div>
+                <div id="firstImage" class="col-md-2 d-flex justify-content-center position-relative">
+                    <img src="img/company/2025Feb18_NPC_DPOSeal.png" width="180px" class="main-image">
+                    <div id="secondImage" class="zoom-image hidden">
+                        <img src="img/company/2025Feb18_NPC_DPOSeal.png">
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
