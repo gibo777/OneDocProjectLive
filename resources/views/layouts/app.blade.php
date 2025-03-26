@@ -79,7 +79,7 @@
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header id="module_header" class="bg-white shadow banner-blue font-white-bold hover">
+            <header id="module_header" class="bg-white shadow banner-blue font-white-bold">
                 <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
                 <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 fw-bold">
                     {{ $header }}
@@ -155,11 +155,11 @@
 
     {{-- DAGDAG NI MARK FOR PRINT FUNCTION --}}
     <script>
-        $(document).ready(function() {
+        /*$(document).ready(function() {
             $("#module_header").click(function() {
                 $("#nav_header").toggle();
             });
-        });
+        });*/
         (function($) {
 
             function appendContent($el, content) {
