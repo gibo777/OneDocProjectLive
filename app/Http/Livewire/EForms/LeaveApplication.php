@@ -303,15 +303,14 @@ class LeaveApplication extends Component
                 ->where('id', $lId)
                 ->value('google_id');
 
-                $event = Event::find($googleEventId);
-
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    $event->save();
+                if (!empty($googleEventId)) {
+                    $event = Event::find($googleEventId);
+                    if ($event) {
+                        $description        = $event->description;
+                        $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                        $event->description = $description;
+                        $event->save();
+                    }
                 }
                 
                 $dataArray = array(
@@ -438,18 +437,17 @@ class LeaveApplication extends Component
                 ->where('id', $lId)
                 ->value('google_id');
 
-                $event = Event::find($googleEventId);
-
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                        $event->status = 'cancelled';
+                if (!empty($googleEventId)) {
+                    $event = Event::find($googleEventId);
+                    if ($event) {
+                        $description        = $event->description;
+                        $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                        $event->description = $description;
+                        if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                            $event->status = 'cancelled';
+                        }
+                        $event->save();
                     }
-                    $event->save();
                 }
 
                 if ($action=="Cancelled") {
@@ -586,9 +584,7 @@ class LeaveApplication extends Component
 
                 $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
+                if ($event) {
                     $description        = $event->description;
                     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
                     $event->description = $description;
@@ -722,9 +718,7 @@ class LeaveApplication extends Component
 
                 $event = Event::find($googleEventId);
 
-                if (!$event) {
-                    return response()->json(['error' => 'Event not found'], 404);
-                } else {
+                if ($event) {
                     $description        = $event->description;
                     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
                     $event->description = $description;
