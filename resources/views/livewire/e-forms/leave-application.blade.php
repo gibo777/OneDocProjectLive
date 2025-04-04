@@ -193,7 +193,7 @@
                                         </td>
                                     @endif
                                     
-                                    <td value="{{ Auth::user()->id == 1 ? $record->id : '' }}" class="{{ $record->status != 'Pending' ? ($record->status == 'Cancelled' || $record->status == 'Denied' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 {{ Auth::user()->id == 1 ? 'open_leave' : '' }}">
+                                    <td value="{{ Auth::user()->id == 1 ? $record->id : '' }}" class="{{ $record->status != 'Pending' ? ($record->status == 'Cancelled' || $record->status == 'Denied' || $record->status == 'Expired' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 {{ Auth::user()->id == 1 ? 'open_leave' : '' }}">
 									    {{ $record->status }}
 									</td>
 
