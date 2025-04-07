@@ -215,6 +215,7 @@ class LeaveApplication extends Component
     }
 
     public function fetchDetailedLeave (Request $request) {
+        $year = Carbon::now('Asia/Manila')->year;
     	$dLeave = DB::table('leaves as l')
     	->select(
     		'l.id',
@@ -261,7 +262,11 @@ class LeaveApplication extends Component
                 })
                 ->where('is_head_approved', 1)
                 ->where('employee_id', $dLeave->employee_id)
-                ->where(DB::raw('YEAR(date_from)'), Carbon::now('Asia/Manila')->format('Y'))
+                ->where(function ($q) use ($year) {
+                    $q->whereYear('date_from', $year)
+                      ->orWhereYear('date_to', $year);
+                })
+                ->where('date_to','<=',Carbon::now('Asia/Manila')->format('Y-m-d'))
                 ->groupBy('employee_id')
                 ->first();
 
