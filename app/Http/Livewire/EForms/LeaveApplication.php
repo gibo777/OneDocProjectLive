@@ -36,13 +36,12 @@ class LeaveApplication extends Component
     protected $listeners = ['pageSizeChanged', 'refreshComponent'];
 
 
-    public function mount()
-    {
+    public function mount() {
+        
         $this->loadDropdowns();
     }
 
-    public function render()
-    {
+    public function render() {
         $leaves = $this->fetchLeavesListing();
         $this->loadDropdowns();
 
@@ -53,14 +52,13 @@ class LeaveApplication extends Component
         ]);
     }
 
-    public function refreshComponent()
-    {
+    public function refreshComponent() {
+
     	$this->reset('page');
     }
 
 
-    private function loadDropdowns()
-    {
+    private function loadDropdowns() {
         $this->offices = DB::table('offices')->orderBy('company_name')->get();
         $this->departments = DB::table('departments')->orderBy('department')->get();
         $this->lTypes = DB::table('leave_types')->get();
@@ -68,14 +66,12 @@ class LeaveApplication extends Component
     }
 
     
-    public function clearDateFilters()
-    {
+    public function clearDateFilters() {
         $this->fLdtFrom = null;
         $this->fLdtTo = null;
     }
 
-    private function fetchLeavesListing()
-	{
+    private function fetchLeavesListing() {
 
 	    $leaves = DB::table('leaves as l')
 	        ->select(
@@ -168,6 +164,7 @@ class LeaveApplication extends Component
 		            $query->where('u.id', '!=', 1);
 		        }
 		        if  (Auth::user()->is_head==1) {
+                    // This will be changed or removed if a new module for user authorization viewing is created.
 		        	switch (Auth::user()->id) {
 		        		case 1: case 8: case 18: case 58: break;
 		        		case 124:
@@ -176,10 +173,15 @@ class LeaveApplication extends Component
 		        						->orWhere('l.office',6);
 		        			});
 		        			break;
-
                         case 126:
                             $query->where(function($q) {
                                 return $q->whereIn('l.office', [8,12,13,14,15]);
+                            });
+                            break;
+                        case 337:
+                            $query->where(function($q) {
+                                return $q->where('l.office', Auth::user()->office)
+                                        ->orWhere('l.office',17);
                             });
                             break;
 		        		default:
@@ -190,7 +192,7 @@ class LeaveApplication extends Component
 		        			break;
 		        	}
 		        } else {
-		        	$query->where('l.employee_id', Auth::user()->employee_id);
+		        	$query->where('u.id', Auth::user()->id);
 		        }
 
 		        // Filter by deleted users
@@ -205,11 +207,8 @@ class LeaveApplication extends Component
 	    return $leaves;
 	}
 
-
-
     // Method to handle changing page size
-    public function pageSizeChanged($size)
-    {
+    public function pageSizeChanged($size) {
         $this->pageSize = $size;
         $this->resetPage();
     }
@@ -294,7 +293,7 @@ class LeaveApplication extends Component
     		]);
     }
 
-    function headApproveLeave (Request $request) {
+    public function headApproveLeave (Request $request) {
     	if($request->ajax()){
 	    	$lData = $request->input('lData', []);
 
@@ -304,19 +303,19 @@ class LeaveApplication extends Component
             $newStatus = 'Head Approved';
 
             try {
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->value('google_id');
 
-                if (!empty($googleEventId)) {
-                    $event = Event::find($googleEventId);
-                    if ($event) {
-                        $description        = $event->description;
-                        $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                        $event->description = $description;
-                        $event->save();
-                    }
-                }
+                // if (!empty($googleEventId)) {
+                //     $event = Event::find($googleEventId);
+                //     if ($event) {
+                //         $description        = $event->description;
+                //         $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //         $event->description = $description;
+                //         $event->save();
+                //     }
+                // }
                 
                 $dataArray = array(
                     'leave_status'          => $newStatus,
@@ -407,12 +406,11 @@ class LeaveApplication extends Component
 
                     if ($history>0) {
                         $newLeave = $leaveInsert->first();
-                        $lEmail = DB::table('users')
-                        ->where('employee_id',$newLeave->employee_id)
-                        ->value('email');
-
-                        Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
-                    	return response()->json(['isSuccess'=>true,'message' => "Head Approval Successful!"]);
+                    	return response()->json([
+                            'isSuccess' => true,
+                            'message'   => "Head Approval Successful!",
+                            'dataLeave' => $newLeave,
+                        ]);
                     } else {
                         DB::rollback();
                     	return response()->json(['isSuccess'=>false,'message' => "Failed to Approve Leave"]);
@@ -429,7 +427,7 @@ class LeaveApplication extends Component
     }
 
 
-    function revokeLeave (Request $request) {
+    public function revokeLeave (Request $request) {
         if($request->ajax()){
             try {
                 $lId = $request->lID;
@@ -438,33 +436,33 @@ class LeaveApplication extends Component
                 $date = DB::raw('NOW()'); // Carbon::now('Asia/Manila')
                 $newStatus = $request->lAction;
 
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->value('google_id');
 
-                if (!empty($googleEventId)) {
-                    $event = Event::find($googleEventId);
-                    if ($event) {
-                        $description        = $event->description;
-                        $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                        $event->description = $description;
-                        if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                            $event->status = 'cancelled';
-                        }
-                        $event->save();
-                    }
-                }
+                // if (!empty($googleEventId)) {
+                //     $event = Event::find($googleEventId);
+                //     if ($event) {
+                //         $description        = $event->description;
+                //         $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //         $event->description = $description;
+                //         if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                //             $event->status = 'cancelled';
+                //         }
+                //         $event->save();
+                //     }
+                // }
 
                 if ($action=="Cancelled") {
                     $data_array = array(
-                        'leave_status'    => 'Cancelled',
+                        'leave_status'    => $action,
                         'is_cancelled'    => 1,
                         'cancelled_by'    => Auth::user()->employee_id,
                         'date_cancelled'  => DB::raw('NOW()')
                     );
                 } else if ($action=="Denied") {
                     $data_array = array(
-                        'leave_status' => 'Denied',
+                        'leave_status' => $action,
                         'is_denied'    => 1,
                         'denied_by'    => Auth::user()->employee_id,
                         'date_denied'  => DB::raw('NOW()')
@@ -544,9 +542,15 @@ class LeaveApplication extends Component
                             $lEmail = DB::table('users')
                             ->where('employee_id',$newLeave->employee_id)
                             ->value('email');
-                            Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
+                            // Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
+                        } else {
+                            $newLeave='';
                         }
-                    	return response()->json(['isSuccess'=>true,'message' => "Leave ".$action." Successfuly!"]);
+                    	return response()->json([
+                            'isSuccess' => true,
+                            'message'   => "Leave ".$action." Successfuly!",
+                            'dataLeave' => $newLeave,
+                        ]);
                     } else {
                         DB::rollback();
                     	return response()->json(['isSuccess'=>false,'message' => "Action Failed!"]);
@@ -562,9 +566,7 @@ class LeaveApplication extends Component
         }
     }
 
-
-
-    function linkHeadApproveLeave (Request $request) {
+    public function linkHeadApproveLeave (Request $request) {
 
         if($request->ajax()){
             $lData = $request->input('lData', []);
@@ -582,19 +584,19 @@ class LeaveApplication extends Component
             ->where('l.hash_id',$lHash)->first();
 
             try {
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->where('hash_id', $lHash)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->where('hash_id', $lHash)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if ($event) {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    $event->save();
-                }
+                // if ($event) {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     $event->save();
+                // }
 
                 $dataArray = array(
                     'leave_status'          => $newStatus,
@@ -687,8 +689,12 @@ class LeaveApplication extends Component
                     if ($history>0) {
                         $newLeave = $leaveInsert->first();
                         // Email Notification to User/Employee after approved by the Head/Supervisor
-                        Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
-                        return response()->json(['isSuccess'=>true,'message' => "Head Approval Successful!"]);
+                        // Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
+                        return response()->json([
+                            'isSuccess' => true,
+                            'message'   => "Head Approval Successful!",
+                            'dataLeave' => $newLeave,
+                        ]);
                     } else {
                         DB::rollback();
                         return response()->json(['isSuccess'=>false,'message' => "Failed to Approve Leave"]);
@@ -704,8 +710,7 @@ class LeaveApplication extends Component
         }
     }
 
-
-    function linkHeadDenyLeave (Request $request) {
+    public function linkHeadDenyLeave (Request $request) {
         if($request->ajax()){
             try {
                 $lId = $request->lId;
@@ -716,22 +721,22 @@ class LeaveApplication extends Component
                 $newStatus = 'Denied';
 
                 # Google Calendar Integration - Revoke by Head using link from email
-                $googleEventId = DB::table('leaves')
-                ->where('id', $lId)
-                ->where('hash_id', $lHash)
-                ->value('google_id');
+                // $googleEventId = DB::table('leaves')
+                // ->where('id', $lId)
+                // ->where('hash_id', $lHash)
+                // ->value('google_id');
 
-                $event = Event::find($googleEventId);
+                // $event = Event::find($googleEventId);
 
-                if ($event) {
-                    $description        = $event->description;
-                    $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                    $event->description = $description;
-                    if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                        $event->status = 'cancelled';
-                    }
-                    $event->save();
-                }
+                // if ($event) {
+                //     $description        = $event->description;
+                //     $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
+                //     $event->description = $description;
+                //     if (in_array($newStatus, ['Denied', 'Cancelled'])) {
+                //         $event->status = 'cancelled';
+                //     }
+                //     $event->save();
+                // }
                 
                 $headId = DB::table('leaves as l')
                 ->leftJoin('users as u','l.employee_id','u.employee_id')
@@ -819,8 +824,12 @@ class LeaveApplication extends Component
                     if ($history>0) {
                         $newLeave = $leaveInsert->first();
                         // Email Notification to User/Employee after denied by the Head/Supervisor
-                        Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
-                        return response()->json(['isSuccess'=>true,'message' => "Leave ".$action." Successfuly!"]);
+                        // Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
+                        return response()->json([
+                            'isSuccess' => true,
+                            'message'   => "Leave ".$action." Successfuly!",
+                            'dataLeave' => $newLeave,
+                        ]);
                     } else {
                         DB::rollback();
                         return response()->json(['isSuccess'=>false,'message' => "Action Failed!"]);
@@ -832,6 +841,61 @@ class LeaveApplication extends Component
             catch(Exception $e){
                 DB::rollback();
                 return response()->json(['isSuccess'=>false,'message' => $e]);
+            }
+        }
+    }
+
+    public function gCalendarAndMail (Request $request) {
+        
+        $dLinkApprove   = $request->has('dLinkApprove') ? $request->dLinkApprove : '';
+        $dLinkDeny      = $request->has('dLinkDeny') ? $request->dLinkDeny : '';
+        $dAction = $request->has('dAction') ? ($request->dAction === 'Approved' ? 'Head ' . $request->dAction : $request->dAction) : '';
+
+        $lEmail = DB::table('users')
+        ->where('employee_id',$request->input('dMail.employee_id'))
+        ->value('email');
+        
+        Mail::to($lEmail)->send(new LeaveApplicationSubmitted($request->dMail, $dLinkApprove, $dLinkDeny, $request->dAction));
+
+        $googleEvent = DB::table('leaves as L')
+            ->where('L.id', $request->lID)
+            ->first();
+
+        if (!empty($googleEvent->google_id)) {
+            $event = Event::find($googleEvent->google_id);
+
+            // $namePartsG = [
+            //     Auth::user()->last_name,
+            //     substr(Auth::user()->first_name, 0, 1)
+            // ];
+            // if ($suffix = Auth::user()->suffix) {
+            //     $namePartsG[] = $suffix;
+            // }
+
+            // if ($middleName = Auth::user()->middle_name) {
+            //     $namePartsG[] = substr($middleName, 0, 1) . '.';
+            // }
+            // $lFullNameG = $namePartsG[0] . ', ' . implode(' ', array_slice($namePartsG, 1));
+
+            if ($event) {
+                if ($request->dAction === 'Approved') {
+                    $description = sprintf(
+                        "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\nReason: %s\n\nStatus: %s",
+                        $googleEvent->name,
+                        $googleEvent->employee_id,
+                        $googleEvent->leave_type,
+                        Carbon::parse($googleEvent->date_from)->format('M d, Y (D)'),
+                        Carbon::parse($googleEvent->date_to)->format('M d, Y (D)'),
+                        number_format($googleEvent->no_of_days, 2),
+                        strtoupper($googleEvent->reason),
+                        $dAction
+                    );
+                    $event->description = $description;
+                    $event->save();
+                } else {
+                    $event->status = 'cancelled';
+                    $event->save();
+                }
             }
         }
     }

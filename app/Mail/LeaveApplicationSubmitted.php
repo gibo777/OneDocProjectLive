@@ -39,7 +39,7 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        switch ($this->event) {
+        switch (strtolower($this->event)) {
             case 'approved':
                 return $this->view('emails.leave-application-decided')
                             ->subject('Leave Application Approved')
@@ -48,9 +48,10 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
                                 'decide' => $this->event,
                             ]);
                 break;
-            case 'denied':
+            case 'denied': 
+            // case 'cancelled':
                 return $this->view('emails.leave-application-decided')
-                            ->subject('Leave Application Denied')
+                            ->subject('Leave Application '.$this->event)
                             ->with([
                                 'dLeave' => $this->newLeave,
                                 'decide' => $this->event,

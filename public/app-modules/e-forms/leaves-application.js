@@ -188,13 +188,38 @@ $(document).ready(function () {
             url: `${window.location.origin}/e-forms/head-approve`,
             method: 'POST',
             data: { 'lData': dataObject },
+            beforeSend: function() {
+                $('#dataProcess').css({
+                    'display'   : 'flex',
+                    'position'  : 'fixed',
+                    'top'       : '50%',
+                    'left'      : '50%',
+                    'transform' : 'translate(-50%, -50%)'
+                });
+
+            },
             success: function(data) {
+                $('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
+                        let leaveData = data.dataLeave;
                         Livewire.emit('refreshComponent');
+                        // Email Notification
+                        $.ajax({
+                            url     : `${window.location.origin}/e-forms/notify-leave-action`,
+                            method  : 'POST',
+                            data    : { 
+                                'lID'       : lID,
+                                'dMail'     : data.dataLeave,
+                                'dAction'   : 'Approved',
+                            },
+                            success : function(dataMail) {
+                                // Swal.fire({ html: dataMail }); return false;
+                            }
+                        });
                     });
                     console.log('Approve Leave Data:', data);
                 } else {
@@ -280,6 +305,7 @@ $(document).ready(function () {
     }
 
     function handleRevokeConfirmation(lID, lReason, lAction) {
+        // Swal.fire({ html: lAction }); return false;
         const url = window.location.origin+"/e-forms/revoke-leave";
         $.ajaxSetup({
             headers: {
@@ -289,18 +315,39 @@ $(document).ready(function () {
         $.ajax({
             url: url,
             method: 'POST',
-            data: {
-                lID: lID,
-                lReason: lReason,
-                lAction: lAction
+            data: { lID: lID, lReason: lReason, lAction: lAction },
+            beforeSend: function() {
+                $('#dataProcess').css({
+                    'display'   : 'flex',
+                    'position'  : 'fixed',
+                    'top'       : '50%',
+                    'left'      : '50%',
+                    'transform' : 'translate(-50%, -50%)'
+                });
+
             },
             success: function(data) {
+                $('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
                         Livewire.emit('refreshComponent');
+                        if (lAction=='Denied') {
+                            $.ajax({
+                                url     : `${window.location.origin}/e-forms/notify-leave-action`,
+                                method  : 'POST',
+                                data    : {
+                                    'lID'       : lID,
+                                    'dMail'     : data.dataLeave,
+                                    'dAction'   : lAction,
+                                },
+                                success : function(dataMail) {
+                                    // Swal.fire({ html: dataMail }); return false
+                                }
+                            });
+                        }
                     });
                 } else {
                     Swal.fire({

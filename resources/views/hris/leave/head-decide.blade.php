@@ -189,11 +189,6 @@
             'lType': lType,
             'lOthers': lOthers
         };
-        
-        $('#dataProcess').css({
-            'display': 'flex',
-            'position': 'absolute',
-        });
 
         $.ajaxSetup({
             headers: {
@@ -204,6 +199,16 @@
             url: `${window.location.origin}/leave-link/head-approve`,
             method: 'POST',
             data: { 'lData': dataObject },
+            beforeSend: function() {
+                $('#dataProcess').css({
+                    'display'   : 'flex',
+                    'position'  : 'fixed',
+                    'top'       : '50%',
+                    'left'      : '50%',
+                    'transform' : 'translate(-50%, -50%)'
+                });
+
+            },
             success: function(data) {
             	$('#dataProcess').hide();
                 if (data.isSuccess) {
@@ -211,6 +216,19 @@
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
+                        let leaveData = data.dataLeave;
+                        $.ajax({
+                            url     : `${window.location.origin}/e-forms/notify-leave-action`,
+                            method  : 'POST',
+                            data    : { 
+                                'lID'       : lId,
+                                'dMail'     : data.dataLeave,
+                                'dAction'   : 'Approved',
+                            },
+                            success : function(dataMail) {
+                            	// Swal.fire({ html: dataMail }); return false;
+                            }
+                        });
                         location.reload();
                     });
                     console.log('Approve Leave Data:', data);
@@ -285,6 +303,16 @@
                 lReason: lReason,
                 lAction: lAction
             },
+            beforeSend: function() {
+                $('#dataProcess').css({
+                    'display'   : 'flex',
+                    'position'  : 'fixed',
+                    'top'       : '50%',
+                    'left'      : '50%',
+                    'transform' : 'translate(-50%, -50%)'
+                });
+
+            },
             success: function(data) {
             	$('#dataProcess').hide();
                 if (data.isSuccess) {
@@ -292,6 +320,18 @@
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
+                        $.ajax({
+                            url     : `${window.location.origin}/e-forms/notify-leave-action`,
+                            method  : 'POST',
+                            data    : {
+                                'lID'       : lId,
+                                'dMail'     : data.dataLeave,
+                                'dAction'   : lAction,
+                            },
+                            success : function(dataMail) {
+                            	// Swal.fire({ html: dataMail }); return false;
+                            }
+                        });
                         location.reload();
                     });
                 } else {

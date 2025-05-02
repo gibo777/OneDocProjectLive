@@ -89,8 +89,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     /*======= E-LEAVE APPLICATION ======*/
     Route::get('/e-forms/leaves-listing', LeaveApplication::class)->name('eforms.leaves-listing');
     Route::get('/e-forms/leave-detailed', [LeaveApplication::class, 'fetchDetailedLeave'])->name('eforms.leaves-detailed');
+
     Route::post('/e-forms/head-approve', [LeaveApplication::class, 'headApproveLeave'])->name('eforms.head-approve-leave');
     Route::post('/e-forms/revoke-leave', [LeaveApplication::class, 'revokeLeave'])->name('eforms.revoke-leave');
+
+
 
     Route::get('/hris/eleave', [LeaveFormController::class, 'index'])->name('hris.leave.eleave');
     Route::post('/hris/eleave', [LeaveFormController::class, 'submit_leave']);
@@ -279,14 +282,16 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     /*======= SERVER STATUS =====*/
     Route::get('/server-status', ServerStatus::class)->name('server-status');
 
-    Route::middleware(['allowOnlyAdmin',config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->group(function() {
+    // Route::middleware(['allowOnlyAdmin',config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])->group(
+        // function() {
         /* ATTENDANCE MONITORING */
         Route::get('/attendance-monitoring', AttendanceMonitoring::class)->name('attendance-monitoring');
-    });
+    // });
 });
 
 
 /*======= Leave from the link sent via email =====*/
+Route::post('/e-forms/notify-leave-action',[LeaveApplication::class, 'gCalendarAndMail']);
 Route::get('/leave/{action}/{hashId}', [LeaveFormController::class, 'leaveHeadDecide'])->name('leave.decide');
 Route::post('/leave-link/head-approve', [LeaveApplication::class, 'linkHeadApproveLeave'])->name('leave-link.head-approve-leave');
 Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeave'])->name('leave-link.head-deny-leave');
@@ -297,4 +302,6 @@ Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoCo
 Route::get('/cron-pending-leave-notification', [CronController::class, 'cronAutoPendingLeaveNotification'])->name('cron.pending.leave.notification');
 
 Route::get('/test', [TestController::class,'test_view']);
-Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);
+// Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);
+
+Route::get('/sample-sidebar-navigation', [TestController::class,'sampleSidebar']);

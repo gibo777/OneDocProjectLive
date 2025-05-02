@@ -52,6 +52,16 @@
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
+        
+
+    <!-- Loading Indicator -->
+    <div id="dataLoad" style="display: none">
+        <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
+    </div>
+
+    <div id="dataProcess" style="display: none">
+        <img src="{{ asset('/img/misc/processing.gif') }}">
+    </div>
 
     </body>
 </html>
