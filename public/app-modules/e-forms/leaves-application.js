@@ -333,8 +333,9 @@ $(document).ready(function () {
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
+                        // Swal.fire({ html: lAction }); return false;
                         Livewire.emit('refreshComponent');
-                        if (lAction=='Denied') {
+                        // if (lAction=='Denied') {
                             $.ajax({
                                 url     : `${window.location.origin}/e-forms/notify-leave-action`,
                                 method  : 'POST',
@@ -347,7 +348,7 @@ $(document).ready(function () {
                                     // Swal.fire({ html: dataMail }); return false
                                 }
                             });
-                        }
+                        // }
                     });
                 } else {
                     Swal.fire({

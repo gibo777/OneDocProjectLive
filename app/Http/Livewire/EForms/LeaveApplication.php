@@ -855,7 +855,9 @@ class LeaveApplication extends Component
         ->where('employee_id',$request->input('dMail.employee_id'))
         ->value('email');
         
-        Mail::to($lEmail)->send(new LeaveApplicationSubmitted($request->dMail, $dLinkApprove, $dLinkDeny, $request->dAction));
+        if (strtolower($request->dAction)!='cancelled') {
+            Mail::to($lEmail)->send(new LeaveApplicationSubmitted($request->dMail, $dLinkApprove, $dLinkDeny, $request->dAction));
+        }
 
         $googleEvent = DB::table('leaves as L')
             ->where('L.id', $request->lID)

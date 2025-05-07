@@ -49,7 +49,7 @@ class LeaveApplicationSubmitted extends Mailable implements ShouldQueue
                             ]);
                 break;
             case 'denied': 
-            // case 'cancelled':
+            case 'cancelled':
                 return $this->view('emails.leave-application-decided')
                             ->subject('Leave Application '.$this->event)
                             ->with([
