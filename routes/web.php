@@ -167,7 +167,9 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/getoffice',[OfficesController::class,'geOfficeDetails'])->name('hr.management.getoffice-details');
 
     /* AUTHORIZE VIEWING */
-    Route::get('/authorize-view', AuthorizeView::class);
+    Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
+    Route::get('/authorize-user-detail', [AuthorizeView::class,'fetchDetailedUser'])->name('authorize.user.detail');
+
 
     /* COUNTRIES, PROVINCES, CITIES */
     Route::get('/provinces', [CountriesController::class, 'provinces'])->name('provinces');
