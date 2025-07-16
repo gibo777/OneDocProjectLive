@@ -11,7 +11,8 @@ class EducationalBackground extends Component
 {
     public function render()
     {
-	    $users = DB::table('users')->get();
-        return view('livewire.profile.educational-background', ['users'=> $users]);
+        // $users = DB::table('users')->get();
+        // return view('livewire.profile.educational-background', ['users' => $users]);
+        return view('livewire.profile.educational-background');
     }
 }

@@ -54,7 +54,7 @@ class Timelogs extends Component
         $this->departments = DB::table('departments')->orderBy('department')->get();
     }
 
-    
+
     public function clearDateFilters()
     {
         $this->fTLdtFrom = null;
@@ -62,144 +62,156 @@ class Timelogs extends Component
     }
 
     private function fetchTimeLogs()
-	{
-		/*if (empty($this->fTLdtTo) && !empty($this->fTLdtFrom)) {
+    {
+        /*if (empty($this->fTLdtTo) && !empty($this->fTLdtFrom)) {
 	        $this->fTLdtTo = $this->fTLdtFrom;
 	    }*/
-		$timeLogs = DB::table('time_logs_header as th')
-		    ->select(
-		    	'th.id',
-		        'th.full_name',
-		        'th.employee_id',
-		        'o.company_name as office',
-		        'd.department',
-		        'th.log_date',
-		        'th.time_in',
-		        'th.time_out',
-		        'th.supervisor'
-		    )
-		    ->leftJoin('users as u', 'th.employee_id', '=', 'u.employee_id')
-		    ->leftJoin('departments as d', 'th.department', '=', 'd.department_code')
-		    ->leftJoin('offices as o', 'th.office', '=', 'o.id')
-		    ->where(function ($query) {
-		        // Apply office filter if selected
-		        if (!empty($this->fTLOffice)) {
-		            $query->where('th.office', $this->fTLOffice);
-		        }
-
-		        // Apply department filter if selected
-		        if (!empty($this->fTLDept)) {
-		            $query->where('th.department', $this->fTLDept);
-		        }
-
-		        // Apply search query if search term is provided
-                if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
-                    // \Log::info('Search Query Applied for Role: ' . Auth::user()->role_type);
-    		        if (!empty($this->search)) {
-    				    $searchTerms = explode(' ', $this->search);
-    				    $query->where(function ($q) use ($searchTerms) {
-    				        foreach ($searchTerms as $term) {
-    				            $q->where('th.full_name', 'like', '%' . $term . '%');
-    				        }
-    				    })
-    				    ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
-    				}
+        $timeLogs = DB::table('time_logs_header as th')
+            ->select(
+                'th.id',
+                'th.full_name',
+                'th.employee_id',
+                'o.company_name as office',
+                'd.department',
+                'th.log_date',
+                'th.time_in',
+                'th.time_out',
+                'th.supervisor'
+            )
+            ->leftJoin('users as u', 'th.employee_id', '=', 'u.employee_id')
+            ->leftJoin('departments as d', 'th.department', '=', 'd.department_code')
+            ->leftJoin('offices as o', 'th.office', '=', 'o.id')
+            ->where(function ($query) {
+                // Apply office filter if selected
+                if (!empty($this->fTLOffice)) {
+                    $query->where('th.office', $this->fTLOffice);
                 }
 
-		        // Filter by date range
-		        if (!empty($this->fTLdtFrom) && !empty($this->fTLdtTo)) {
-		            $query->whereBetween('th.log_date', [$this->fTLdtFrom, $this->fTLdtTo]);
-		        } elseif (!empty($this->fTLdtFrom)) {
-		            $query->where('th.log_date', $this->fTLdtFrom);
-		        } elseif (!empty($this->fTLdtTo)) {
-		            $query->where('th.log_date', $this->fTLdtTo);
-		        }
+                // Apply department filter if selected
+                if (!empty($this->fTLDept)) {
+                    $query->where('th.department', $this->fTLDept);
+                }
 
-		        // Additional conditional check for user role
-		        if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
-		            $query->where(function ($q) {
-		                $q->where('th.employee_id', Auth::user()->employee_id)
-		                  ->orWhere('u.supervisor', Auth::user()->employee_id);
-		            });
-		        }
+                // Apply search query if search term is provided
+                if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
+                    // \Log::info('Search Query Applied for Role: ' . Auth::user()->role_type);
+                    if (!empty($this->search)) {
+                        $searchTerms = explode(' ', $this->search);
+                        $query->where(function ($q) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $q->where('th.full_name', 'like', '%' . $term . '%');
+                            }
+                        })
+                            ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
+                    }
+                }
 
-		        // Exclude specific user IDs
-		        if (Auth::user()->id != 1 && Auth::user()->id != 2) {
-		            $query->where('u.id', '!=', 1);
-		        }
-		        if  (Auth::user()->is_head==1) {
-		        	switch (Auth::user()->id) {
-		        		case 1: case 8: case 18: case 58: break; case 287: break;
-		        		case 124:
-		        			$query->where(function($q) {
-		        				return $q->where('u.office', Auth::user()->office)
-		        						->orWhereIn('u.office',[6,8,12,14,15]);
-		        			});
-		        			break;
-		        		case 86: case 126: case 222:
-		        			$query->where(function($q) {
-		        				return $q->where('u.office', Auth::user()->office)
-		        						->orWhereIn('u.office',[8,12,14,15]);
-		        			});
-		        			break;
-                        case 72:
-                            $query->where(function($q) {
+                // Filter by date range
+                if (!empty($this->fTLdtFrom) && !empty($this->fTLdtTo)) {
+                    $query->whereBetween('th.log_date', [$this->fTLdtFrom, $this->fTLdtTo]);
+                } elseif (!empty($this->fTLdtFrom)) {
+                    $query->where('th.log_date', $this->fTLdtFrom);
+                } elseif (!empty($this->fTLdtTo)) {
+                    $query->where('th.log_date', $this->fTLdtTo);
+                }
+
+                // Additional conditional check for user role
+                if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
+                    $query->where(function ($q) {
+                        $q->where('th.employee_id', Auth::user()->employee_id)
+                            ->orWhere('u.supervisor', Auth::user()->employee_id);
+                    });
+                }
+
+                // Exclude specific user IDs
+                if (Auth::user()->id != 1 && Auth::user()->id != 2) {
+                    $query->where('u.id', '!=', 1);
+                }
+                if (Auth::user()->is_head == 1) {
+                    switch (Auth::user()->id) {
+                        case 1:
+                        case 8:
+                        case 18:
+                        case 58:
+                            break;
+                        case 287:
+                            break;
+                        case 124:
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[12]);
+                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15]);
+                            });
+                            break;
+                        case 86:
+                        case 126:
+                        case 222:
+                            $query->where(function ($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                    ->orWhereIn('u.office', [8, 12, 14, 15]);
+                            });
+                            break;
+                        case 72:
+                            $query->where(function ($q) {
+                                return $q->where('u.office', Auth::user()->office)
+                                    ->orWhereIn('u.office', [12]);
                             });
                             break;
                         case 135:
-                            $query->where(function($q) {
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[8,12]);
+                                    ->orWhereIn('u.office', [8, 12]);
                             });
                             break;
                         case 223:
-                            $query->where(function($q) {
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[8,14]);
+                                    ->orWhereIn('u.office', [8, 14]);
                             });
                             break;
-                        case 131: case 238:
-                            $query->where(function($q) {
+                        case 131:
+                        case 238:
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[14]);
+                                    ->orWhereIn('u.office', [14]);
                             });
                             break;
-                        case 155: case 159:
-                            $query->where(function($q) {
+                        case 155:
+                        case 159:
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office',[15]);
+                                    ->orWhereIn('u.office', [15]);
                             });
                             break;
-                        case 174: case 290: case 315:
-                            $query->where(function($q) {
+                        case 174:
+                        case 290:
+                        case 315:
+                            $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office);
                             });
                             break;
-		        		default:
-		        			$query->where(function($q) {
-		        				return $q->where('u.employee_id', Auth::user()->employee_id)
-		        						->orWhere('u.supervisor',Auth::user()->employee_id);
-		        			});
-		        			break;
-		        	}
-		        } else {
-		        	$query->where('u.employee_id', Auth::user()->employee_id);
-		        }
+                        default:
+                            $query->where(function ($q) {
+                                return $q->where('u.employee_id', Auth::user()->employee_id)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                            break;
+                    }
+                } else {
+                    $query->where('u.employee_id', Auth::user()->employee_id);
+                }
 
-		        // Filter by deleted users
-		        $query->where(function ($q) {
-		            $q->where('u.is_deleted', 0)
-		              ->orWhereNull('u.is_deleted');
-		        });
-		    })
-		    ->orderBy('th.log_date', 'desc')
-		    ->orderBy('th.full_name', 'asc')
-		    ->paginate($this->pageSize);
+                // Filter by deleted users
+                $query->where(function ($q) {
+                    $q->where('u.is_deleted', 0)
+                        ->orWhereNull('u.is_deleted');
+                });
+            })
+            ->orderBy('th.log_date', 'desc')
+            ->orderBy('th.full_name', 'asc')
+            ->paginate($this->pageSize);
 
-	    return $timeLogs;
-	}
+        return $timeLogs;
+    }
 
 
 
@@ -217,7 +229,7 @@ class Timelogs extends Component
      * @return view for modal
      * @author Gilbert L. Retiro
      **/
-    public function timelogsPerday (Request $request)
+    public function timelogsPerday(Request $request)
     {
         $employees = DB::select(DB::raw("CALL sp_timelogs_perday('$request->id')"));
         return $employees;
@@ -230,18 +242,19 @@ class Timelogs extends Component
      * @return view to generate Excel File
      * @author Gilbert L. Retiro
      **/
-    public function timeLogsExcel (Request $request)
+    public function timeLogsExcel(Request $request)
     {
         // return var_dump($request->input());
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
-            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
-        {
+        if (
+            Auth::check() && (Auth::user()->email_verified_at != NULL)
+            && (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
+        ) {
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
             $currentDate = Carbon::now('Asia/Manila');
             $formattedDateTime = $currentDate->format('YmdHis');
 
-            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type == 'SUPER ADMIN' ||  Auth::user()->role_type == 'ADMIN') {
                 $tlSummary = DB::select("CALL sp_timelogs_header(?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
@@ -250,8 +263,6 @@ class Timelogs extends Component
                     $request->timeOut
                 ]);
 
-                // return var_dump($tlSummary);
-
                 $tlDetailed = DB::select("CALL sp_timelogs_detailed_xls(?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
@@ -259,27 +270,23 @@ class Timelogs extends Component
                     $request->timeIn,
                     $request->timeOut
                 ]);
-
-                // return var_dump($tlDetailed);
-
-                
             } else {
-                $tlSummary = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+                $tlSummary = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
             }
 
 
             return response()->json([
-                'tlSummary'     => $tlSummary, 
-                'tlDetailed'    => $tlDetailed, 
+                'tlSummary'     => $tlSummary,
+                'tlDetailed'    => $tlDetailed,
                 'currentDate'   => $formattedDateTime
             ]);
 
             // $offices = DB::table('offices')->orderBy('company_name')->get();
             // $departments = DB::table('departments')->orderBy('department')->get();
 
-            // return view('/reports/excel/timelogs-excel', 
+            // return view('/reports/excel/timelogs-excel',
             //     [
-            //         'employees'     => $employees, 
+            //         'employees'     => $employees,
             //         'offices'       => $offices,
             //         'departments'   => $departments,
             //         'currentDate'   => $formattedDateTime

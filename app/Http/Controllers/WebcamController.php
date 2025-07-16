@@ -85,6 +85,7 @@ class WebcamController extends Controller
     }
 
     function saveTimeLogs (Request $request) {
+        // return var_dump($request->all());
         // return $request->ip();
         try{
             $curDate = Carbon::now('Asia/Manila');
@@ -170,6 +171,8 @@ class WebcamController extends Controller
             $uploadStorage=Storage::disk('public')->put( '/timelogs/'.$file,$image);
 
 
+            // return $request->latitude.','.$request->longitude;
+            // \Log::info("Latitude: {$request->latitude}, Longitude: {$request->longitude}");
 
             $data = [
                 'ref_id'                => $logId,
@@ -181,8 +184,8 @@ class WebcamController extends Controller
                 'office'                => Auth::user()->office,
                 'department'            => Auth::user()->department,
                 'supervisor'            => Auth::user()->supervisor,
-                // 'latitude' => ,
-                // 'longitude' => ,
+                'latitude'              => (float) $request->latitude,
+                'longitude'             => (float) $request->longitude,
                 // 'country_name' => ,
                 // 'country_code' => ,
                 // 'region_name' => ,
@@ -199,9 +202,12 @@ class WebcamController extends Controller
                 $data['time_out'] = now();
             }
             // return var_dump($data);
-            DB::table('time_logs')->insert($data);
-
-            return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
+            $id = DB::table('time_logs')->insertGetId($data);
+            if ($id) {
+                return response(['isSuccess' => true,'message'=>'Timelog Successful!']);
+            } else {
+                return response(['isSuccess' => false,'message'=>'Timelog Failed!']);
+            }
 
         }catch(\Error $e){
             return response(['isSuccess'=>false,'message'=>$e]);

@@ -1,35 +1,36 @@
+
 <x-app-layout>
+
     <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
-
     <style type="text/css">
-        /* Hide the "Show" text and adjust layout for DataTables elements */
-        .dataTables_wrapper .dataTables_length label {
-            padding-left: 15px;
-        }
-        /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
-        .dataTables_wrapper .dataTables_length select,
-        .dataTables_wrapper .dataTables_info, 
-        .dataTables_wrapper .dataTables_filter {
-            margin-top: 10px;
-            display: inline-block;
-        }
-        .dataTables_wrapper thead th {
-            padding: 1px 5px !important; /* Adjust the padding value as needed */
-        }
-        .dataTables_length select {
-            width: 60px; /* Adjust the width as needed */
-        }
-        #dataViewEmployees thead th {
-            text-align: center; /* Center-align the header text */
-        }
+        
+    /* Hide the "Show" text and adjust layout for DataTables elements */
+    .dataTables_wrapper .dataTables_length label {
+        padding-left: 15px;
+    }
+    /* Display the "Show entries" dropdown and "Showing [entries] info" inline */
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_info, 
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 10px;
+        display: inline-block;
+    }
+    .dataTables_wrapper thead th {
+        padding: 1px 5px !important; /* Adjust the padding value as needed */
+    }
+    .dataTables_length select {
+        width: 60px; /* Adjust the width as needed */
+    }
+    #dataViewEmployees thead th {
+        text-align: center; /* Center-align the header text */
+    }
+
     </style>
-
     <x-slot name="header">
-        {{ __('VIEW ALL EMPLOYEES') }}
+                {{ __('VIEW ALL EMPLOYEES') }}
     </x-slot>
-
     <div id="viewLeaves">
-        <div class="w-full mx-auto p-1  sm:px-6 lg:px-8">
+        <div class="w-full mx-auto py-1 sm:px-6 lg:px-8">
             <!-- FORM start -->
 
             @if (session('status'))
@@ -37,252 +38,222 @@
                     {{ session('status') }}
                 </div>
             @endif
+            {{-- <form id="leave-form" action="{{ route('hris.leave.view-leave-details') }}" method="POST"> --}}
             @csrf
+
 
             <div class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
 
                 <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                    <div id="filter_fields" class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
-                        <div class="row pb-1">
-                            <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
-                                <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
-                            </div>
+                        <div id="filter_fields" class="form-group border-0 col-md-12 py-1 gap-2 inset-shadow">
+                            <div class="row pb-1">
+                                <div class="col-sm-1 h-full d-flex justify-content-center align-items-center">
+                                    <x-jet-label for="name" id="show_filter" value="{{ __('FILTER') }}" class="hover"/>
+                                </div>
 
-                            <!-- Filter by Office -->
-                            <div class="col-md-2">
-                                <div class="form-floating" id="divfilterEmpOffice">
-                                    <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                        <option value="">All Offices</option>
-                                        @foreach ($offices as $office)
+                                <div class="col-md-2">
+                                    <!-- FILTER by Leave Type -->
+                                    <div class="form-floating" id="divfilterEmpOffice">
+                                        <select name="filterEmpOffice" id="filterEmpOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <option value="">All Offices</option>
+                                            @foreach ($offices as $office)
                                             <option>{{ $office->company_name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="filterEmpOffice" value="{{ __('OFFICE') }}" />
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterEmpOffice" value="{{ __('OFFICE') }}" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Filter by Department -->
-                            <div class="col-md-2">
-                                <div class="form-floating" id="divfilterEmpDepartment">
-                                    <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                        <option value="">All Departments</option>
-                                        @foreach ($departments as $dept)
-                                            <option>{{ $dept->department }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="filterEmpDepartment" value="{{ __('DEPARTMENT') }}" />
+                                <div class="col-md-2">
+                                        <!-- FILTER by Department -->
+                                    <div class="form-floating" id="divfilterEmpDepartment">
+                                        <select name="filterEmpDepartment" id="filterEmpDepartment" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <option value="">All Departments</option>
+                                            @foreach ($departments as $dept)
+                                            <option >{{ $dept->department }}</option>
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterEmpDepartment" value="{{ __('DEPARTMENT') }}" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Filter by Employment Status -->
-                            <div class="col-md-2">
-                                <div class="form-floating" id="divfilterEmpStatus">
-                                    <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
-                                        <option value="">All Statuses</option>
-                                        @foreach ($employment_statuses as $estat)
+                                <div class="col-md-2">
+                                        <!-- FILTER by Department -->
+                                    <div class="form-floating" id="divfilterEmpDepartment">
+                                        <select name="filterEmpStatus" id="filterEmpStatus" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md mt-1 block w-full">
+                                            <option value="">All Statuses</option>
+                                            @foreach ($employment_statuses as $estat)
                                             <option>{{ $estat->employment_status }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-jet-label for="filterEmpStatus" value="{{ __('STATUS') }}" />
+                                            @endforeach
+                                        </select>
+                                        <x-jet-label for="filterEmpStatus" value="{{ __('STATUS') }}" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Action Buttons -->
-                            <div class="col-md-2 mt-2 text-center">
-                                @if(Auth::user()->id == 1)
+                                <div class="col-md-2 mt-2 text-center">
+                                    @if(Auth::user()->id==1)
                                     <x-jet-button id="downloadQR" name="downloadQR" value="Scan QR">
                                         <i class="fa-solid fa-qrcode pr-2"></i>
                                         Download QR
                                     </x-jet-button>
-                                @endif
-                            </div>
-                            <div class="col-md-3 py-2 text-center">
-                                <x-jet-button id="registerEmployee">
-                                    <i class="fa-solid fa-user-plus pr-2"></i>
-                                    Register Employee
-                                </x-jet-button>
+                                    @endif
+                                </div>
+                                <div class="col-md-3 py-2 text-center">
+                                    <x-jet-button  id="registerEmployee">
+                                        <i class="fa-solid fa-user-plus pr-2"></i>
+                                        Register Employee
+                                    </x-jet-button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Table Data -->
-                    <div id="table_data">
-                        <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-
-                            <table id="dataViewEmployees" class="view-employees table table-bordered table-striped sm:justify-center table-hover">
-                                <thead class="thead">
-                                    <tr class="dt-head-center">
-                                        <th>Name</th>
-                                        <th>Emp. ID</th>
-                                        <th>Office</th>
-                                        <th>Department</th>
-                                        <th>Position</th>
-                                        <th>Supervisor</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="data hover" id="viewEmployee">
-                                    @forelse($employees as $employee)
-                                        <tr id="{{ $employee->id }}">
-                                            @if (url('/') == 'http://localhost')
-                                                <td>xxx, xxx x.</td>
-                                            @else
-                                                <td>{{ join(' ', [$employee->last_name . ' ' . $employee->suffix . ',', $employee->first_name, $employee->middle_name]) }}</td>
-                                            @endif
-                                            <td>{{ $employee->employee_id }}</td>
-                                            <td>{{ $employee->company_name }}</td>
-                                            <td>{{ $employee->department }}</td>
-                                            <td>{{ $employee->position }}</td>
-
-                                            @if (url('/') == 'http://localhost')
-                                                <td>
-                                                    @if ($employee->approver1)
-                                                        xxx, xxx x
-                                                        @if ($employee->approver2)
-                                                            / xxx, xxx x.
-                                                        @endif
-                                                    @endif
-                                                </td>
-                                            @else
-                                                <td>
-                                                    @if ($employee->approver1)
-                                                        {{ $employee->approver1 }}
-                                                        @if ($employee->approver2)
-                                                            {{ ' / ' . $employee->approver2 }}
-                                                        @endif
-                                                    @endif
-                                                </td>
-                                            @endif
-                                            <td>{{ $employee->employment_status }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7">There are no users.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-
-                            {{-- <table id="dataViewEmployees" class="view-employees table table-bordered table-striped sm:justify-center table-hover">
-                                <thead class="thead">
-                                    <tr class="dt-head-center">
-                                        <th>Name</th>
-                                        <th>Emp. ID</th>
-                                        <th>Office</th>
-                                        <th>Department</th>
-                                        <th>Position</th>
-                                        <th>Supervisor</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div style="max-height: 260px; overflow-y: auto;">
-                                <table class="table table-bordered table-striped table-hover mb-0">
-                                    <tbody class="data hover" id="viewEmployee">
-                                        @forelse($employees as $employee)
-                                            <tr id="{{ $employee->id }}">
-                                                @if (url('/') == 'http://localhost')
+                            <div id="table_data">
+                                <!-- Name -->
+                                <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
+                                    <table id="dataViewEmployees" class="view-employees table table-bordered table-striped sm:justify-center table-hover">
+                                        <thead class="thead">
+                                            <tr class="dt-head-center">
+                                                <th>Name</th>
+                                                <th>Emp. ID</th>
+                                                <th>Office</th>
+                                                <th>Department</th>
+                                                <th>Position</th>
+                                                <th>Supervisor</th>
+                                                {{-- <th>Role</th> --}}
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="data hover" id="viewEmployee">
+                                            @forelse($employees as $employee)
+                                                <tr id="{{ $employee->id }}">
+                                                    @if (url('/')=='http://localhost')
                                                     <td>xxx, xxx x.</td>
-                                                @else
-                                                    <td>{{ join(' ', [$employee->last_name . ' ' . $employee->suffix . ',', $employee->first_name, $employee->middle_name]) }}</td>
-                                                @endif
-                                                <td>{{ $employee->employee_id }}</td>
-                                                <td>{{ $employee->company_name }}</td>
-                                                <td>{{ $employee->department }}</td>
-                                                <td>{{ $employee->position }}</td>
+                                                    @else
+                                                    <td>{{ join(' ',[$employee->last_name.' '.$employee->suffix.',',$employee->first_name,$employee->middle_name]) }}</td>
+                                                    @endif
+                                                    <td>{{ $employee->employee_id}}</td>
+                                                    <td>{{ $employee->company_name }}</td>
+                                                    <td>{{ $employee->department }}</td>
+                                                    <td>{{ $employee->position }}</td>
 
-                                                @if (url('/') == 'http://localhost')
+                                                    @if (url('/')=='http://localhost')
                                                     <td>
+                                                    {{-- xxx, xxx x. --}}
                                                         @if ($employee->approver1)
                                                             xxx, xxx x
-                                                            @if ($employee->approver2)
-                                                                / xxx, xxx x.
-                                                            @endif
+                                                                @if ($employee->approver2)
+                                                                 / xxx, xxx x.
+                                                                @endif
                                                         @endif
                                                     </td>
-                                                @else
+                                                    @else
                                                     <td>
                                                         @if ($employee->approver1)
                                                             {{ $employee->approver1 }}
-                                                            @if ($employee->approver2)
-                                                                {{ ' / ' . $employee->approver2 }}
-                                                            @endif
+                                                                @if ($employee->approver2)
+                                                                {{ ' / '. $employee->approver2 }}
+                                                                @endif
                                                         @endif
                                                     </td>
-                                                @endif
-                                                <td>{{ $employee->employment_status }}</td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="7">There are no users.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div> --}}
+                                                    @endif
+                                                    {{-- <td>{{ $employee->role_type }}</td> --}}
+                                                    <td>{{ $employee->employment_status }}</td>
+                                                    {{-- <td id="action_buttons">
+                                                        <button
+                                                            id="view-{{ $employee->employee_id }}"
+                                                            value="{{ $employee->id }}"
+                                                            title="View {{ $employee->employee_id }}"
+                                                            class="open_leave fa fa-edit green-color inline-flex items-center text-sm leading-4 font-medium rounded-md text-gray-500 focus:outline-none transition hover"
+                                                            >
+                                                            {{ __('View') }}
+                                                        </button>
+                                                        <!-- <button id="delete-{{ $employee->id }}"
+                                                            value="{{ $employee->id }}"
+                                                            title="Delete {{ $employee->employee_id }}"
+                                                            class="fa fa-trash-o red-color inline-flex items-center  text-sm leading-4 font-medium rounded-md text-gray-500 focus:outline-none transition hover">
+                                                            {{ __('Delete') }}
+                                                        </button> -->
+                                                    </td> --}}
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="7">There are no users.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-center" id="pagination">
+                                        <?php //{!! $employees->links() !!} ?>
+                                    </div>
 
-
-                            <div class="d-flex justify-content-center" id="pagination">
-                                <?php // {!! $employees->links() !!} ?>
-                            </div>
-                        </div>
+                                </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Form End -->
+{{--
+            </form> --}}
+            <!-- FORM end -->
+                </div>
+            </div>
         </div>
     </div>
 
-    @include('modals/m-view-employee')
+<!-- =========================================== -->
+<!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch Modal window
+</button> -->
+
+@include('modals/m-view-employee')
+
+                </div>
 
 
-    <!-- Loading and Popups -->
-    <div id="dataLoad" style="display: none">
-        <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
+                <div class="row mt-2">
+                    <div class="col-md-12 text-center" id="updateEmployee">
+                        <x-jet-button>{{ __('Save') }} 
+                        </x-jet-button>
+                        <!-- <button class="btn btn-success">Submit</button> -->
+                    </div>
+                </div>
+
+                            
+        </div>
+        {{-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div> --}}
+      </div>
     </div>
+  </div>
+  
+<!-- =========================================== -->
+<!-- Load Data -->
+<div id="dataLoad" style="display: none">
+    <img src="{{asset('/img/misc/loading-blue-circle.gif')}}">
+</div>
 
-    <div id="popup">
-        <p id="pop_content" class="text-justify px-2"></p>
-    </div>
+<!-- =========================================== -->
 
-    <div id="dialog">
-        <p id="dialog_content" class="text-justify px-2"></p>
-    </div>
+<div id="popup">
+  <p id="pop_content" class="text-justify px-2"></p>
+</div>
+
+<div id="dialog">
+  <p id="dialog_content" class="text-justify px-2"></p>
+</div>
+
 
 </x-app-layout>
-
 
 <script type="text/javascript">
 $(document).ready(function() {
 
-    /*var tableEmployee = $('#dataViewEmployees').DataTable({
+    var tableEmployee = $('#dataViewEmployees').DataTable({
         "ordering": false,
         "lengthMenu": [ 5,10, 15, 25, 50, 75, 100 ], // Customize the options in the dropdown
         "iDisplayLength": 15, // Set the default number of entries per page
         "dom": '<<"top"ilpf>rt<"bottom"ilp><"clear">>', // Set Info, Search, and Pagination both top and bottom of the table
-      });*/
-
-    /*var tableEmployee = $('#dataViewEmployees').DataTable({
-        ordering: false,
-        scrollY: "360px",
-        scrollCollapse: true,
-        paging: false,
-        dom: '<<"top"ilpf>rt<"bottom"ilp><"clear">>'
-    });*/
-
-    var tableEmployee = $('#dataViewEmployees').DataTable({
-        ordering: false,
-        // scrollY: "270px",
-        scrollCollapse: true,
-        paging: true,
-        iDisplayLength: 15,
-        lengthMenu: [5, 10, 15, 25, 50, 75, 100],
-        dom: '<<"top"ilpf>rt<"bottom"ilp><"clear">>'
-    });
-
-
-
+      });
 
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             var sO = $('#filterEmpOffice').val();

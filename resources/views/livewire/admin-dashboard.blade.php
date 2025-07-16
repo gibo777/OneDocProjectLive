@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 mb-1 px-1">
+            {{-- <div class="col-xl-3 col-md-6 mb-1 px-1">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -134,6 +134,32 @@
                             </div>
                             <div class="col-auto mt-3">
                                 <i class="fas fa-table fa-4x text-gray-300 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
+            <div class="col-xl-3 col-md-6 mb-1 px-1">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Setup and Tools
+                                </div>
+                                <div class="mb-0 font-weight-bold text-gray-800">
+                                    <a href="{{ route('authorize.user.list') }}" class="text-dark">Authorize User</a>
+                                </div>
+                                <div class="mb-0 font-weight-bold text-gray-800">
+                                    <a href="{{ route('server-status') }}" class="text-dark">Server Status</a>
+                                </div>
+                                <div class="mb-0 font-weight-bold text-gray-800">
+                                    <a href="{{ route('module.list') }}" class="text-dark">Module Creation</a>
+                                </div>
+                            </div>
+                            <div class="col-auto mt-3">
+                                <i class="fas fa-tools fa-4x text-gray-700"></i>
                             </div>
                         </div>
                     </div>
@@ -239,7 +265,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" hidden="">
             <!-- Content Column -->
             <div class="col-lg-6 mb-4">
                 <!-- Project Card Example -->

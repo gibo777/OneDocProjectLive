@@ -74,6 +74,7 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
         method: 'get',
         data: {'id':$(this).attr('id')},
         success: function(data){
+            // $('#dataLoad').hide(); Swal.fire({ html: data }); return false;
             let tableStructure = `<table id="dataDetailedTimeLogs" class="table table-bordered data-table sm:justify-center table-hover">
                     <thead class="thead">
                         <tr>
@@ -87,8 +88,14 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
             // Function to fetch content and return a promise
             function fetchContent(n) {
                 return new Promise((resolve, reject) => {
-                    var imagePath = data[n]['image_path'];
-                    var fullFilePath = '/storage/timelogs/' + imagePath + '.txt';
+                    var imagePath = data[n]['image_path'] ?? '';
+                    var fullFilePath = `/storage/timelogs/${imagePath}.txt`;
+                    var withGeoLoc = (data[n]['latitude'] && data[n]['longitude']) ? 1 : 0;
+                    // var googleMapsUrl = `https://www.google.com/maps?q=${data[n]['latitude'].toFixed(7)},${data[n]['longitude'].toFixed(7)}`;
+                    
+                    if (withGeoLoc) {
+                        var googleMapsUrl = `https://www.google.com/maps?q=${data[n]['latitude'].toFixed(7)},${data[n]['longitude'].toFixed(7)}`;
+                    }
 
                     fetch(fullFilePath)
                         .then(response => {
@@ -98,8 +105,11 @@ $(document).on('dblclick','.view-detailed-timelogs tr', async function(){
                             return response.text();
                         })
                         .then(fileContent => {
-                            resolve(`<tr>
-                                        <td><img width="124px" src="${fileContent}" /></td>
+                            var viewOnMap = `<td>
+                                                <img width="124px" src="${fileContent}" />
+                                                ${withGeoLoc ? `<a href="${googleMapsUrl}" class="text-sm text-primary" target="_blank">view on map</a>` : ''}
+                                            </td>`;
+                            resolve(`<tr>${viewOnMap}
                                         <td>${data[n]['time_in']}</td>
                                         <td>${data[n]['time_out']}</td>
                                     </tr>`);

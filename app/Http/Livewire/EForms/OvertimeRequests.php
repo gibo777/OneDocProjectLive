@@ -21,7 +21,7 @@ use App\Mail\LeaveApplicationSubmitted;
 
 use Spatie\GoogleCalendar\Event;
 
-class LeaveApplication extends Component
+class OvertimeRequests extends Component
 {
     use WithPagination;
 
@@ -50,10 +50,10 @@ class LeaveApplication extends Component
 
     public function render()
     {
-        $leaves = $this->fetchLeavesListing();
+        $leaves = $this->fetchOvertimeListing();
         $this->loadDropdowns();
 
-        return view('livewire.e-forms.leave-application', [
+        return view('livewire.e-forms.overtime-requests', [
             'leaves' => $leaves,
             'offices' => $this->offices,
             'departments' => $this->departments,
@@ -81,45 +81,44 @@ class LeaveApplication extends Component
         $this->fLdtTo = null;
     }
 
-    private function fetchLeavesListing()
+    private function fetchOvertimeListing()
     {
-        $leaves = DB::table('leaves as l')
+        $leaves = DB::table('overtimes as ot')
             ->select(
-                'l.id',
-                'u.id as u_id',
-                'l.leave_number',
-                'l.leave_type',
-                'l.control_number',
-                'l.name as full_name',
-                'l.employee_id',
-                'l.date_applied',
-                'l.date_from',
-                'l.date_to',
-                'l.no_of_days',
+                'ot.id',
+                'ot.u_id',
+                'ot.name as full_name',
                 'o.company_name as office',
                 'd.department',
+                'u.supervisor',
                 'd.department_code as dept',
-                'u.supervisor',
-                'l.created_at',
-                'u.supervisor',
+                'ot.ot_control_number',
+                'ot.ot_location',
+                DB::raw("CONCAT(
+                    DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_from, '%h:%i %p'), ' - ',
+                    DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
+                ) as ot_schedule"),
+                'ot.ot_hrmins',
+                'ot.ot_status',
+                'ot.employee_id',
+                'ot.created_at as date_applied',
                 DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as approver1"),
-                DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2"),
-                'l.leave_status as status',
-                'l.leave_status'
+                DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2")
             )
-            ->leftJoin('offices as o', 'l.office', '=', 'o.id')
-            ->leftJoin('departments as d', 'l.department', '=', 'd.department_code')
-            ->leftJoin('users as u', 'u.employee_id', '=', 'l.employee_id')
+            ->leftJoin('offices as o', 'ot.office', '=', 'o.id')
+            ->leftJoin('departments as d', 'ot.department', '=', 'd.department_code')
+            ->leftJoin('users as u', 'u.employee_id', '=', 'ot.employee_id')
             ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor')
             ->leftJoin('users as u3', function ($join) {
                 $join->on('u3.employee_id', '=', 'u.manager')
                     ->whereNotNull('u.manager');
             });
-        $leaves = $leaves->where(function ($query) {
-            $query->where('l.is_deleted', 0)
-                ->orWhereNull('l.is_deleted');
-        });
-        (Auth::user()->id != 1 && Auth::user()->id != 2) ? $leaves = $leaves->where('u.id', '<>', 1) : '';
+
+        if (Auth::user()->id != 1 && Auth::user()->id != 2 && Auth::user()->id != 233) {
+            $leaves = $leaves->where('u.id', '<>', 1);
+        }
         $leaves = $leaves->where(function ($query) {
 
             // Apply office filter if selected
@@ -139,43 +138,32 @@ class LeaveApplication extends Component
                 $query->where('l.leave_status', $this->fLStatus);
             }
 
-            if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'ADMIN') {
-                // Apply search query if search term is provided
-                if (!empty($this->search)) {
-                    $searchTerms = explode(' ', $this->search);
-                    $query->where(function ($q) use ($searchTerms) {
-                        foreach ($searchTerms as $term) {
-                            $q->where('l.name', 'like', '%' . $term . '%');
-                        }
-                    })
-                        ->orWhere('l.employee_id', 'like', '%' . $this->search . '%')
-                        ->orWhere('l.control_number', 'like', '%' . $this->search . '%');
-                }
-            }
+            // if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'ADMIN') {
+            //     // Apply search query if search term is provided
+            //     if (!empty($this->search)) {
+            //         $searchTerms = explode(' ', $this->search);
+            //         $query->where(function ($q) use ($searchTerms) {
+            //             foreach ($searchTerms as $term) {
+            //                 $q->where('l.name', 'like', '%' . $term . '%');
+            //             }
+            //         })
+            //             ->orWhere('l.employee_id', 'like', '%' . $this->search . '%')
+            //             ->orWhere('l.control_number', 'like', '%' . $this->search . '%');
+            //     }
+            // }
+
             // Filter by date range
-            if (!empty($this->fLdtFrom) && !empty($this->fLdtTo)) {
-                $query->where(function ($q) {
-                    $q->where('l.date_from', '>=', $this->fLdtFrom)
-                        ->where('l.date_to', '<=', $this->fLdtTo);
-                });
-            } elseif (!empty($this->fLdtFrom)) {
-                $query->where('l.date_from', $this->fLdtFrom);
-            } elseif (!empty($this->fLdtTo)) {
-                $query->where('l.date_to', $this->fLdtTo);
-            }
+            // if (!empty($this->fLdtFrom) && !empty($this->fLdtTo)) {
+            //     $query->where(function ($q) {
+            //         $q->where('l.date_from', '>=', $this->fLdtFrom)
+            //             ->where('l.date_to', '<=', $this->fLdtTo);
+            //     });
+            // } elseif (!empty($this->fLdtFrom)) {
+            //     $query->where('l.date_from', $this->fLdtFrom);
+            // } elseif (!empty($this->fLdtTo)) {
+            //     $query->where('l.date_to', $this->fLdtTo);
+            // }
 
-            // Additional conditional check for user role
-            /*if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
-                    $query->where(function ($q) {
-                        $q->where('th.employee_id', Auth::user()->employee_id)
-                            ->orWhere('u.supervisor', Auth::user()->employee_id);
-                    });
-                }*/
-
-            // Exclude specific user IDs
-            if (Auth::user()->id != 1 && Auth::user()->id != 2) {
-                $query->where('u.id', '!=', 1);
-            }
             if (Auth::user()->is_head == 1) {
                 // This will be changed or removed if a new module for user authorization viewing is created.
                 switch (Auth::user()->id) {
@@ -186,25 +174,26 @@ class LeaveApplication extends Component
                         break;
                     case 124:
                         $query->where(function ($q) {
-                            return $q->where('l.office', Auth::user()->office)
-                                ->orWhere('l.office', 6);
+                            return $q->where('ot.office', Auth::user()->office)
+                                ->orWhere('ot.office', 6);
                         });
                         break;
                     case 126:
                         $query->where(function ($q) {
-                            return $q->whereIn('l.office', [8, 12, 13, 14, 15]);
+                            return $q->whereIn('ot.office', [8, 12, 13, 14, 15]);
                         });
                         break;
                     case 337:
                         $query->where(function ($q) {
-                            return $q->where('l.office', Auth::user()->office)
-                                ->orWhere('l.office', 17);
+                            return $q->where('ot.office', Auth::user()->office)
+                                ->orWhere('ot.office', 17);
                         });
                         break;
                     default:
                         $query->where(function ($q) {
-                            return $q->where('l.employee_id', Auth::user()->employee_id)
-                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            return $q->where('ot.employee_id', Auth::user()->employee_id)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id)
+                                ->orWhere('u.manager', Auth::user()->employee_id);
                         });
                         break;
                 }
@@ -218,7 +207,7 @@ class LeaveApplication extends Component
                     ->orWhereNull('u.is_deleted');
             });
         });
-        $leaves = $leaves->orderBy('l.created_at', 'desc')
+        $leaves = $leaves->orderBy('ot.created_at', 'desc')
             ->paginate($this->pageSize);
 
         return $leaves;
@@ -233,90 +222,20 @@ class LeaveApplication extends Component
 
     public function fetchDetailedLeave(Request $request)
     {
-        $year = Carbon::now('Asia/Manila')->year;
-        $dLeave = DB::table('leaves as l')
-            ->select(
-                'l.id',
-                'l.control_number',
-                'l.name',
-                'u.gender',
-                'l.employee_id',
-                'u.supervisor',
-                'lt.leave_type_name',
-                'l.leave_type',
-                'l.others',
-                'o.company_name as office',
-                'd.department',
-                'l.date_applied',
-                'l.date_from',
-                'l.date_to',
-                'l.no_of_days',
-                'l.reason',
-                'l.leave_status'
-            )
-            ->leftJoin('users as u', 'l.employee_id', 'u.employee_id')
-            ->leftJoin('offices as o', 'l.office', 'o.id')
-            ->leftJoin('departments as d', 'l.department', 'd.department_code')
-            ->leftJoin('leave_types as lt', 'l.leave_type', 'lt.leave_type')
-            ->where('l.id', $request->id)
+        $otDtls = DB::table('v_overtime_details')
+            ->where('id', $request->id)
             ->first();
 
-        $leaveCredits = DB::table('leaves')
-            ->select(
-                'employee_id',
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "SL" THEN no_of_days ELSE 0 END), 0) as SL'),
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "VL" THEN no_of_days ELSE 0 END), 0) as VL'),
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "EL" THEN no_of_days ELSE 0 END), 0) as EL'),
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "ML" THEN no_of_days ELSE 0 END), 0) as ML'),
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "PL" THEN no_of_days ELSE 0 END), 0) as PL'),
-                DB::raw('COALESCE(SUM(CASE WHEN leave_type = "Others" THEN no_of_days ELSE 0 END), 0) as OTS')
-            )
-            ->where(function ($query) {
-                $query->whereNull('is_deleted')
-                    ->orWhere('is_deleted', 0);
-            })
-            ->where(function ($query) {
-                $query->whereNull('is_cancelled')
-                    ->orWhere('is_cancelled', 0);
-            })
-            ->where('is_head_approved', 1)
-            ->where('employee_id', $dLeave->employee_id)
-            ->where(function ($q) use ($year) {
-                $q->whereYear('date_from', $year)
-                    ->orWhereYear('date_to', $year);
-            })
-            ->where('date_to', '<=', Carbon::now('Asia/Manila')->format('Y-m-d'))
-            ->groupBy('employee_id')
-            ->first();
-
-
-        if (!$leaveCredits) {
-            $leaveCredits = (object) [
-                'SL' => '0.0',
-                'VL' => '0.0',
-                'EL' => '0.0',
-                'ML' => '0.0',
-                'PL' => '0.0',
-                'OTS' => '0.0'
-            ];
-        }
-
-        $leaveTypes = DB::table('leave_types');
-        ($dLeave->gender == 'F') ? $leaveTypes = $leaveTypes->where('leave_type', '!=', 'PL') : $leaveTypes = $leaveTypes->where('leave_type', '!=', 'ML');
-        $leaveTypes = $leaveTypes->get();
-
-        return view(
-            'modals/m-view-leave-detailed',
-            [
-                'dLeave'        => $dLeave,
-                'leaveTypes'    => $leaveTypes,
-                'leaveCredits'    => $leaveCredits
-            ]
-        );
+        return response()->json([
+            'status' => 'success',
+            'html' => view('modals.e-forms.m-overtime-detailed', ['otDtls' => $otDtls])->render(),
+            'otDtls' => $otDtls
+        ]);
     }
 
     public function headApproveLeave(Request $request)
     {
+        // return var_dump($request->all());
         if ($request->ajax()) {
             $lData = $request->input('lData', []);
 

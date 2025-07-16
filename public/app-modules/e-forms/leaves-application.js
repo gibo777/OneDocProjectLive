@@ -2,7 +2,7 @@ $(document).ready(function () {
     let parentSwalOpen = false;
 
     /* EXPORT TO EXCEL TIMELOGS */
-    $(document).on('click', '#exportExcelLeaves', async function() {
+    $(document).on('click', '#exportExcelLeaves', async function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -13,7 +13,7 @@ $(document).ready(function () {
             url: '/leaves-excel',
             method: 'GET',
             data: { 'id': $(this).attr('id') },
-            success: function(html) {
+            success: function (html) {
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
 
@@ -32,7 +32,7 @@ $(document).ready(function () {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error exporting to Excel:', error);
             }
         });
@@ -41,12 +41,12 @@ $(document).ready(function () {
     });
 
     /* Reroute to Leave Form */
-    $(document).on('click', '#createNewLeave', function() {
+    $(document).on('click', '#createNewLeave', function () {
         window.location.href = lReq;
     });
 
     /* Viewing Leave Details per Control Number - Gibs */
-    $(document).on('dblclick', '.view-leave', function() {
+    $(document).on('dblclick', '.view-leave', function () {
         let modalWidth = $(window).width() <= 768 ? '100%' : '75%';
         let clickCtr = 0;
         const lID = $(this).attr('id');
@@ -55,7 +55,7 @@ $(document).ready(function () {
             url: '/e-forms/leave-detailed',
             method: 'GET',
             data: { 'id': lID },
-            success: function(html) {
+            success: function (html) {
                 parentSwalOpen = true;
                 Swal.fire({
                     html: html,
@@ -64,14 +64,16 @@ $(document).ready(function () {
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     width: modalWidth,
+                    showClass: { popup: '' },
+                    // hideClass: { popup: '' },
                     didOpen: () => {
-                        $("#bApproveLeave").click(function() {
+                        $("#bApproveLeave").click(function () {
                             const lType = $('#dLtype').val() || '';
                             const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
                             approveLeave(lID, lType, lOthers);
                         });
 
-                        $('#bDenyLeave').click(function() {
+                        $('#bDenyLeave').click(function () {
                             if (clickCtr === 0) {
                                 const lType = $('#dLtype').val() || '';
                                 const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
@@ -80,7 +82,7 @@ $(document).ready(function () {
                             clickCtr++;
                         });
 
-                        $('#bCancelLeave').click(function() {
+                        $('#bCancelLeave').click(function () {
                             if (clickCtr === 0) {
                                 const lType = $('#dLtype').val() || '';
                                 const lOthers = lType === 'Others' ? $('#dLOthers').val() : '';
@@ -94,24 +96,24 @@ $(document).ready(function () {
                     }
                 });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error fetching leave details:', error);
             }
         });
     });
 
-    $(document).on('click', '#leave_form', function() {
+    $(document).on('click', '#leave_form', function () {
         let leave_id = $('#hid_leave_id').val();
         window.location.href = `/hris/view-leave/form-leave/${leave_id}`;
     });
 
-    $("#date_from").change(function() {
+    $("#date_from").change(function () {
         $("#number_of_days").html('');
         let dateFrom = $(this).val();
         $("#date_to").val(dateFrom || $("#date_to").val());
     });
 
-    $(document).on('click', '.open_leave', function(e) {
+    $(document).on('click', '.open_leave', function (e) {
         try {
             e.preventDefault();
             let modalWidth = $(window).width() <= 768 ? '100%' : '50%';
@@ -126,9 +128,9 @@ $(document).ready(function () {
                 url: `${window.location.origin}/hris/view-history`,
                 method: 'GET',
                 data: { 'leave_reference': $(this).attr('value') },
-                success: function(data) {
+                success: function (data) {
                     let dLHistory = `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
-                        <thead class="thead">
+                        <thead class="bg-gray-500 text-white">
                             <tr class="dt-head-center">
                                 <th class="py-1">Status</th>
                                 <th class="py-1">Reason</th>
@@ -147,7 +149,11 @@ $(document).ready(function () {
 
                     Swal.fire({
                         width: modalWidth,
-                        confirmButtonText: "Close",
+                        showClass: { popup: '' },
+                        // hideClass: { popup: '' },
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        // confirmButtonText: "Close",
                         html: `<div class="banner-blue pl-2 p-1 text-md text-left">
                                     Leave History (<strong>${data[0]['control_number']}</strong>)
                                 </div>
@@ -158,7 +164,7 @@ $(document).ready(function () {
                                 ${dLHistory}`
                     });
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error('Error fetching leave history:', error);
                 }
             });
@@ -167,16 +173,11 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('change', '#dLtype', function() {
+    $(document).on('change', '#dLtype', function () {
         $('#divLOthers').prop('hidden', $(this).val() !== 'Others');
     });
 
     function approveLeave(lID, lType, lOthers) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
 
         let dataObject = {
             'lID': lID,
@@ -184,21 +185,26 @@ $(document).ready(function () {
             'lOthers': lOthers
         };
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $.ajax({
             url: `${window.location.origin}/e-forms/head-approve`,
             method: 'POST',
             data: { 'lData': dataObject },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#dataProcess').css({
-                    'display'   : 'flex',
-                    'position'  : 'fixed',
-                    'top'       : '50%',
-                    'left'      : '50%',
-                    'transform' : 'translate(-50%, -50%)'
+                    'display': 'flex',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
                 });
 
             },
-            success: function(data) {
+            success: function (data) {
                 $('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
@@ -206,22 +212,42 @@ $(document).ready(function () {
                         icon: 'success',
                     }).then(() => {
                         let leaveData = data.dataLeave;
+                        // Swal.fire({ html: `${data.apiURL}` }); return false;
                         Livewire.emit('refreshComponent');
                         // Email Notification
                         $.ajax({
-                            url     : `${window.location.origin}/e-forms/notify-leave-action`,
-                            method  : 'POST',
-                            data    : { 
-                                'lID'       : lID,
-                                'dMail'     : data.dataLeave,
-                                'dAction'   : 'Approved',
+                            url: `${window.location.origin}/e-forms/notify-leave-action`,
+                            method: 'POST',
+                            data: {
+                                'lID': lID,
+                                'dMail': leaveData,
+                                'dAction': 'Approved',
                             },
-                            success : function(dataMail) {
-                                // Swal.fire({ html: dataMail }); return false;
+                            success: function (dataMail) {
+                                // log notification response
                             }
                         });
+
+                        // Send (API payload) to HRIS using $.ajax / JSON
+                        $.ajaxSetup({
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        });
+                        $.ajax({
+                            url: `${window.location.origin}/send-leave-to-hris`,
+                            method: 'POST',
+                            data: {
+                                'lID': lID,
+                            },
+                            success: function (apiResponse) {
+                                console.log('API response:', JSON.stringify(apiResponse));
+                            },
+                            error: function (xhr) {
+                                console.error('API error:', xhr.responseText);
+                            }
+                        });
+
                     });
-                    console.log('Approve Leave Data:', data);
+                    // console.log('Approved Leave Data:', data);
                 } else {
                     Swal.fire({
                         title: data.message,
@@ -229,7 +255,7 @@ $(document).ready(function () {
                     });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error approving leave:', error);
             }
         });
@@ -264,7 +290,7 @@ $(document).ready(function () {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                handleRevokeConfirmation(lID, result.value,"Denied");
+                handleRevokeConfirmation(lID, result.value, "Denied");
             }
         });
     }
@@ -299,14 +325,14 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Call a function to handle the cancellation of the leave
-                handleRevokeConfirmation(lID, result.value,"Cancelled");
+                handleRevokeConfirmation(lID, result.value, "Cancelled");
             }
         });
     }
 
     function handleRevokeConfirmation(lID, lReason, lAction) {
         // Swal.fire({ html: lAction }); return false;
-        const url = window.location.origin+"/e-forms/revoke-leave";
+        const url = window.location.origin + "/e-forms/revoke-leave";
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -316,17 +342,17 @@ $(document).ready(function () {
             url: url,
             method: 'POST',
             data: { lID: lID, lReason: lReason, lAction: lAction },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#dataProcess').css({
-                    'display'   : 'flex',
-                    'position'  : 'fixed',
-                    'top'       : '50%',
-                    'left'      : '50%',
-                    'transform' : 'translate(-50%, -50%)'
+                    'display': 'flex',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
                 });
 
             },
-            success: function(data) {
+            success: function (data) {
                 $('#dataProcess').hide();
                 if (data.isSuccess) {
                     Swal.fire({
@@ -336,19 +362,38 @@ $(document).ready(function () {
                         // Swal.fire({ html: lAction }); return false;
                         Livewire.emit('refreshComponent');
                         // if (lAction=='Denied') {
+                        $.ajax({
+                            url: `${window.location.origin}/e-forms/notify-leave-action`,
+                            method: 'POST',
+                            data: {
+                                'lID': lID,
+                                'dMail': data.dataLeave,
+                                'dAction': lAction,
+                            },
+                            success: function (dataMail) {
+                                // Swal.fire({ html: dataMail }); return false
+                            }
+                        });
+
+                        if (lAction == 'Cancelled') {
+                            // Send (API payload) to HRIS using $.ajax / JSON
+                            $.ajaxSetup({
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            });
                             $.ajax({
-                                url     : `${window.location.origin}/e-forms/notify-leave-action`,
-                                method  : 'POST',
-                                data    : {
-                                    'lID'       : lID,
-                                    'dMail'     : data.dataLeave,
-                                    'dAction'   : lAction,
+                                url: `${window.location.origin}/send-leave-to-hris`,
+                                method: 'POST',
+                                data: {
+                                    'lID': lID,
                                 },
-                                success : function(dataMail) {
-                                    // Swal.fire({ html: dataMail }); return false
+                                success: function (apiResponse) {
+                                    console.log('API response:', JSON.stringify(apiResponse));
+                                },
+                                error: function (xhr) {
+                                    console.error('API error:', xhr.responseText);
                                 }
                             });
-                        // }
+                        }
                     });
                 } else {
                     Swal.fire({

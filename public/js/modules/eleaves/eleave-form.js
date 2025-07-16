@@ -1,14 +1,14 @@
-$(document).ready(function(){
+$(document).ready(function () {
     var ctrSubmit = 0;
 
     function currentDate() {
         var d = new Date(),
-            month = d.getMonth()+1,
+            month = d.getMonth() + 1,
             day = d.getDate();
 
         var current_date =
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day
+            (month < 10 ? '0' : '') + month + '/' +
+            (day < 10 ? '0' : '') + day
             + '/' + d.getFullYear()
             ;
         return current_date;
@@ -26,20 +26,20 @@ $(document).ready(function(){
         while (d1 <= d2) {
             var day = d1.getDay();
             var dday = d1.getDate(),
-                dmonth = d1.getMonth()+1,
+                dmonth = d1.getMonth() + 1,
                 dyear = d1.getFullYear();
-                if (dmonth<10) { dmonth = "0"+dmonth; }
-                if (dday<10) { dday = "0"+dday; }
-            var ddate1 = dyear+ "-" +dmonth +"-"+ dday;
+            if (dmonth < 10) { dmonth = "0" + dmonth; }
+            if (dday < 10) { dday = "0" + dday; }
+            var ddate1 = dyear + "-" + dmonth + "-" + dday;
 
-            for (var h=0; h<holidays.length; h++) {
+            for (var h = 0; h < holidays.length; h++) {
                 if (ddate1 == holidays[h]) {
                     count++;
                 }
             }
-            for (var d=0; d<7; d++) {
-                if(jQuery.inArray(d.toString(), schedules) === -1) {
-                    if (day==d) {
+            for (var d = 0; d < 7; d++) {
+                if (jQuery.inArray(d.toString(), schedules) === -1) {
+                    if (day == d) {
                         count++;
                     }
                 }
@@ -49,45 +49,45 @@ $(document).ready(function(){
         return count;
     }
 
-    function overlapValidation (datefrom, dateto) {
-         return $.ajax({
+    function overlapValidation(datefrom, dateto) {
+        return $.ajax({
             url: window.location.origin + '/leave-overlapping',
             method: 'get',
             data: { 'dateFrom': datefrom, 'dateTo': dateto },
-            success: function(response) {
+            success: function (response) {
                 return response === 'true' ? 1 : 0;
             }
         });
     }
 
-    function leaveValidation (datefrom, dateto, leavetype="") {
+    function leaveValidation(datefrom, dateto, leavetype = "") {
         var div_upload = $("#div_upload");
-        var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
-        var weekends_count =  isWeekendandHolidays(datefrom,dateto);
+        var date_range = (Date.parse(dateto) - Date.parse(datefrom)) / (1000 * 3600 * 24) + 1;
+        var weekends_count = isWeekendandHolidays(datefrom, dateto);
         var number_of_days = parseInt(date_range) - parseInt(weekends_count);
 
-        if (leavetype=='ML' || leavetype=='PL') { number_of_days = date_range; }
-        if ( Date.parse(dateto) < Date.parse(datefrom)) {
+        if (leavetype == 'ML' || leavetype == 'PL') { number_of_days = date_range; }
+        if (Date.parse(dateto) < Date.parse(datefrom)) {
             $('#leaveDateTo').val($('#leaveDateFrom').val());
         } else {
 
             $("#range_notice").html("");
             if (isNaN(number_of_days) == false) {
-                if (number_of_days>0 && $('#isHalfDay').is(':checked')) {
+                if (number_of_days > 0 && $('#isHalfDay').is(':checked')) {
                     $("#hid_no_days").val(0.5);
                 } else {
                     $("#hid_no_days").val(number_of_days);
                 }
             }
 
-            if (parseInt(number_of_days) >=3) {
-                $("#hid_no_days").css('color','#FF0000');
+            if (parseInt(number_of_days) >= 3) {
+                $("#hid_no_days").css('color', '#FF0000');
             } else {
-                $("#hid_no_days").css('color','#008000');
+                $("#hid_no_days").css('color', '#008000');
             }
 
-            if (leavetype=="SL" && dateto != "" && datefrom != "" && parseInt(number_of_days) >=3) {
-                $("#div_upload").attr('hidden',false);
+            if (leavetype == "SL" && dateto != "" && datefrom != "" && parseInt(number_of_days) >= 3) {
+                $("#div_upload").attr('hidden', false);
                 $("#div_upload").show();
                 $("#div_upload").focus();
             } else {
@@ -97,36 +97,36 @@ $(document).ready(function(){
     }
 
 
-    function priorLeaveValidation (datefrom, dateto, leavetype="") {
-        var date_range = (Date.parse(dateto) - Date.parse(datefrom) ) / (1000 * 3600 * 24) +1;
-        var weekends_count =  isWeekendandHolidays ($("#leaveDateFrom").val(),$("#leaveDateTo").val());
+    function priorLeaveValidation(datefrom, dateto, leavetype = "") {
+        var date_range = (Date.parse(dateto) - Date.parse(datefrom)) / (1000 * 3600 * 24) + 1;
+        var weekends_count = isWeekendandHolidays($("#leaveDateFrom").val(), $("#leaveDateTo").val());
         var number_of_days = (parseInt(date_range) - parseInt(weekends_count)) - 1;
 
         return parseInt(number_of_days);
     }
 
-    function leaveBalance () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: window.location.origin+'/hris/eleave/balance',
-                method: 'get',
-                data: { 
-                    'employeeId': empID, 
-                    'type': $("#leaveType").val() 
-                    }, // prefer use serialize method
-                success:function(data){
-                    // $("#td_balance").html(data); //Do not remove this (Uncomment this when autocompute is ready)
+    function leaveBalance() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: window.location.origin + '/hris/eleave/balance',
+            method: 'get',
+            data: {
+                'employeeId': empID,
+                'type': $("#leaveType").val()
+            }, // prefer use serialize method
+            success: function (data) {
+                // $("#td_balance").html(data); //Do not remove this (Uncomment this when autocompute is ready)
 
-                }
-            });
-            return false;
+            }
+        });
+        return false;
     }
 
-    function submitLeaveValidation (leaveType='',others_leave='', leaveDateFrom='', leaveDateTo='',reason='') {
+    function submitLeaveValidation(leaveType = '', others_leave = '', leaveDateFrom = '', leaveDateTo = '', reason = '') {
         var empty_fields = 0;
 
         if (leaveType == "Others" && $.trim(others_leave) == "") {
@@ -146,35 +146,51 @@ $(document).ready(function(){
     }
 
 
+    // $(document).on('click', '.half-day', function () {
+    //     $('#isHalfDay').is(':checked') ? $('#isHalfDay').prop('checked', false) : $('#isHalfDay').prop('checked', true);
+    //     $('#isHalfDay').is(':checked') ? $('#leaveDateTo').prop('readonly', true) : $('#leaveDateTo').prop('readonly', false);
+    //     if ($('#isHalfDay').is(':checked')) {
+    //         $('#leaveDateTo').val($("#leaveDateFrom").val());
+    //         $('#timeDesignator').prop('hidden', false);
+    //     }
+    //     leaveValidation(
+    //         $('#leaveDateFrom').val(), document.getElementById('leaveDateFrom').value,
+    //         $('#leaveDateTo').val(),
+    //         $('#leaveType').val()
+    //     );
+    // });
 
+    function handleHalfDayToggle() {
+        const isChecked = $('#isHalfDay').is(':checked');
+        $('#leaveDateTo').prop('readonly', isChecked);
+        $('#timeDesignator').prop('hidden', !isChecked);
 
-    $(document).on('click', '.half-day', function() {
-        $('#isHalfDay').is(':checked') ? $('#isHalfDay').prop('checked',false) : $('#isHalfDay').prop('checked',true);
-        $('#isHalfDay').is(':checked') ? $('#leaveDateTo').prop('readonly', true) : $('#leaveDateTo').prop('readonly', false);
-        if ($('#isHalfDay').is(':checked')) {
-            $("#leaveDateTo").val($("#leaveDateFrom").val());
+        if (isChecked) {
+            $('#leaveDateTo').val($('#leaveDateFrom').val());
         }
-        leaveValidation(
-            $('#leaveDateFrom').val(), document.getElementById('leaveDateFrom').value,
-            $('#leaveDateTo').val(),
-            $('#leaveType').val()
-        );
-    });
-    
-    $(document).on('change', '#isHalfDay', function() {
-        $(this).is(':checked') ? $('#leaveDateTo').prop('readonly', true) : $('#leaveDateTo').prop('readonly', false);
-        if ($('#isHalfDay').is(':checked')) {
-            $("#leaveDateTo").val($("#leaveDateFrom").val());
-        }
+
         leaveValidation(
             $('#leaveDateFrom').val(),
+            document.getElementById('leaveDateFrom').value,
             $('#leaveDateTo').val(),
             $('#leaveType').val()
         );
+    }
+
+    // Toggle checkbox state when .half-day is clicked, then handle
+    $(document).on('click', '.half-day', function () {
+        $('#isHalfDay').prop('checked', !$('#isHalfDay').is(':checked'));
+        handleHalfDayToggle();
+    });
+
+    // Handle changes to the checkbox directly (user interaction)
+    $(document).on('change', '#isHalfDay', function () {
+        handleHalfDayToggle();
     });
 
 
-    $(document).on('change','#leaveType', function(){
+
+    $(document).on('change', '#leaveType', function () {
         // $(this).removeClass('empty');
         leaveValidation(
             $("#leaveDateFrom").val(),
@@ -182,7 +198,7 @@ $(document).ready(function(){
             $(this).val()
         );
 
-        if ($(this).val()=="Others") {
+        if ($(this).val() == "Others") {
             // alert('gilbert'); return false;
             $("#div_others").show();
             $("#div_others").removeAttr('hidden');
@@ -196,9 +212,9 @@ $(document).ready(function(){
 
         leaveBalance(); // This will show current Leave Balance/s
 
-        if ($(this).val()=="VL") {
+        if ($(this).val() == "VL") {
             // alert(priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val())); return false;
-            if (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $(this).val()!="") {
+            if (priorLeaveValidation(curDateLeave, $("#leaveDateFrom").val()) < 3 && $(this).val() != "") {
                 $('#leaveDateFrom').val("");
                 $('#leaveDateTo').val("");
                 $('#hid_no_days').val("");
@@ -207,46 +223,46 @@ $(document).ready(function(){
                     icon: 'warning',
                     title: 'INVALID',
                     text: 'Application for leave of absence must be filed at the latest, three (3) working days prior to the date of leave.',
-                  });
+                });
             }
         }
-        submitLeaveValidation (
+        submitLeaveValidation(
             $(this).val(),
             $("#others_leave").val(),
             $("#leaveDateFrom").val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
-            );
+        );
     });
 
-    $(document).on('keyup','#others_leave',function () {
+    $(document).on('keyup change', '#others_leave', function () {
         /*if ($.trim($(this).val())=="") {
             $(this).addClass('empty');
         } else {
             $(this).removeClass('empty');
         }*/
-        submitLeaveValidation (
+        submitLeaveValidation(
             $("#leaveType").val(),
             $(this).val(),
             $("#leaveDateFrom").val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
-            );
+        );
     });
 
 
-    $(document).on('change','#leaveDateFrom',function(){
+    $(document).on('change', '#leaveDateFrom', function () {
 
         $("#number_of_days").html('');
         if ($('#isHalfDay').is(':checked')) {
             $("#leaveDateTo").val($(this).val());
         } else {
-            $("#leaveDateTo").val()=='' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
+            $("#leaveDateTo").val() == '' ? $("#leaveDateTo").val($(this).val()) : $("#leaveDateTo").val();
         }
 
-        if ($('#leaveType').val()=="VL" && (priorLeaveValidation(curDateLeave,$("#leaveDateFrom").val()) <3 && $('#leaveType').val()!="") ) {
+        if ($('#leaveType').val() == "VL" && (priorLeaveValidation(curDateLeave, $("#leaveDateFrom").val()) < 3 && $('#leaveType').val() != "")) {
             $('#leaveDateFrom').val("");
             $('#leaveDateTo').val("");
             $('#hid_no_days').val("");
@@ -254,61 +270,69 @@ $(document).ready(function(){
             Swal.fire({
                 icon: 'warning',
                 title: 'INVALID',
-                text: `Application for leave of absence must be filed at the latest, 
+                text: `Application for leave of absence must be filed at the latest,
                 three (3) working days prior to the date of leave.`,
-              });
+            });
         }
 
-        leaveValidation (
+        leaveValidation(
             $(this).val(),
             $("#leaveDateTo").val(),
             $("#leaveType").val()
-            );
-        submitLeaveValidation (
+        );
+        submitLeaveValidation(
             $("#leaveType").val(),
             $("#others_leave").val(),
             $(this).val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
-            );
+        );
     });
 
 
-    $(document).on('change','#leaveDateTo',function(){
+    $(document).on('change', '#leaveDateTo', function () {
         $("#number_of_days").html('');
         leaveValidation(
             $("#leaveDateFrom").val(),
             $(this).val(),
             $("#leaveType").val()
-            );
-        submitLeaveValidation (
+        );
+        submitLeaveValidation(
             $("#leaveType").val(),
             $("#others_leave").val(),
             $("#leaveDateFrom").val(),
             $(this).val(),
             // $("input[name='leave_notification[]']:checked").length,
             $("#reason").val()
-            );
+        );
     });
 
-    $(document).on('keyup','#reason',function () {
-        submitLeaveValidation (
+    $(document).on('keyup', '#reason', function () {
+        submitLeaveValidation(
             $("#leaveType").val(),
             $("#others_leave").val(),
             $("#leaveDateFrom").val(),
             $("#leaveDateTo").val(),
             // $("input[name='leave_notification[]']:checked").length,
             $(this).val()
-            );
+        );
     });
 
     $(document).ready(function () {
         // Restore Leave Type
         let leaveType = sessionStorage.getItem('leaveType');
+        let othersLeave = sessionStorage.getItem('others_leave');
         if (leaveType) {
             $("#leaveType").val(leaveType);
+            if (leaveType == 'Others') {
+                $('#div_others').prop('hidden', false);
+                $('#others_leave').val(othersLeave);
+            } else {
+                $('#div_others').prop('hidden', true);
+            }
         }
+
 
         // Restore Leave Dates
         let leaveDateFrom = sessionStorage.getItem('leaveDateFrom');
@@ -320,14 +344,41 @@ $(document).ready(function(){
             $("#leaveDateTo").val(leaveDateTo);
         }
 
-        // Restore Half-Day Checkbox
+
+        /*======= Half-day and Time Designator - Start =======*/
         let isHalfDay = sessionStorage.getItem('isHalfDay') === 'true';
+        let timeDesignator = sessionStorage.getItem('timeDesignator');
+
+        // Set checkbox state
         $("#isHalfDay").prop('checked', isHalfDay);
 
-        // If isHalfDay is checked, make leaveDateTo readonly
         if (isHalfDay) {
             $("#leaveDateTo").prop('readonly', true);
+            $('#timeDesignator').prop('hidden', false);
+            $('#timeDesignator').val(timeDesignator);
         }
+
+        // On checkbox change
+        $("#isHalfDay").on("change", function () {
+            let checked = $(this).is(':checked');
+            sessionStorage.setItem('isHalfDay', checked);
+
+            if (checked) {
+                $("#leaveDateTo").prop('readonly', true);
+                $('#timeDesignator').prop('hidden', false);
+            } else {
+                $("#leaveDateTo").prop('readonly', false);
+                $('#timeDesignator').prop('hidden', true);
+            }
+        });
+
+        // // On dropdown change
+        $("#timeDesignator").on("change", function () {
+            sessionStorage.setItem('timeDesignator', $(this).val());
+        });
+        /*======= Half-day and Time Designator - End =======*/
+
+
 
         // Restore Hidden Number of Days Input
         let hidNoDays = sessionStorage.getItem('hid_no_days');
@@ -342,16 +393,18 @@ $(document).ready(function(){
         }
 
 
-        $("#submitLeave").prop("disabled", 
-            ["#leaveType", "#leaveDateFrom", "#leaveDateTo", "#reason"].some(id => !$.trim($(id).val())) || 
+        $("#submitLeave").prop("disabled",
+            ["#leaveType", "#leaveDateFrom", "#leaveDateTo", "#reason"].some(id => !$.trim($(id).val())) ||
             ($("#leaveType").val() === "Others" && !$.trim($("#others_leave").val()))
         );
 
         // Clear sessionStorage after restoring values
         sessionStorage.removeItem('leaveType');
+        sessionStorage.removeItem('others_leave');
         sessionStorage.removeItem('leaveDateFrom');
         sessionStorage.removeItem('leaveDateTo');
         sessionStorage.removeItem('isHalfDay');
+        sessionStorage.removeItem('timeDesignator');
         sessionStorage.removeItem('hid_no_days');
         sessionStorage.removeItem('reason');
     });
@@ -360,168 +413,166 @@ $(document).ready(function(){
 
 
     /* SUBMIT LEAVE FORM begin*/
-    $(document).on('click','#submitLeave',function (){
-
-        // Swal.fire({ html: 'I miss you my 345 partner...'}); return false;
-
+    $(document).on('click', '#submitLeave', function () {
         overlapValidation($("#leaveDateFrom").val(), $("#leaveDateTo").val())
-        .then(function(overlap) {
-            // Handle the response asynchronously
-            if (overlap==1 || overlap==true) {
-                Swal.fire({ 
-                    icon: 'error', 
-                    allowOutsideClick: false,
-                    title: 'Overlapping Dates', 
-                    text: 'Leave date/s already filed' 
-                });
-            } else {
-                var empty_fields=0;
-                if ($("#leaveType").val()==""){
-                    $("#leaveType").addClass('empty');
-                    empty_fields++;
-                } else {
-                    $("#leaveType").removeClass('empty');
-                    if ($("#leaveType").val()=="Others") {
-                        if ($.trim($("#others_leave").val())=="") {
-                            $("#others_leave").addClass('empty');
-                            empty_fields++;
-                        } else {
-                            $("#others_leave").removeClass('empty');
-                        }
-                    }
-                }
-
-                if ($("#leaveDateFrom").val()=="") {
-                    $("#leaveDateFrom").addClass('empty');
-                    empty_fields++;
-                } else {
-                    $("#leaveDateFrom").removeClass('empty');
-                }
-
-                if ($("#leaveDateTo").val()=="") {
-                    $("#leaveDateTo").addClass('empty');
-                    empty_fields++;
-                } else {
-                    $("#leaveDateTo").removeClass('empty');
-                }
-
-                if ($.trim($("#reason").val())=="") {
-                    $("#reason").addClass('empty');
-                    empty_fields++;
-                } else {
-                    $("#reason").removeClass('empty');
-                }
-
-                if (empty_fields>0) {
+            .then(function (overlap) {
+                // Handle the response asynchronously
+                if (overlap == 1 || overlap == true) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'NOTIFICATION',
-                        text: 'Kindly fill-up all required fields',
-
-                      });
+                        allowOutsideClick: false,
+                        title: 'Overlapping Dates',
+                        text: 'Leave date/s already filed'
+                    });
                 } else {
-                    ctrSubmit++;
-
-                    if (ctrSubmit>1){
-                        Swal.fire({ 
-                            html: 'Please wait for the leave to be submitted...'
-                        }).then(() => {
-                            location.reload();
-                        });
-                        return false;
-                    }
-                    $('#dataProcess').css({
-                        'display': 'flex',
-                        'position': 'absolute',
-                    });
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    var empty_fields = 0;
+                    if ($("#leaveType").val() == "") {
+                        $("#leaveType").addClass('empty');
+                        empty_fields++;
+                    } else {
+                        $("#leaveType").removeClass('empty');
+                        if ($("#leaveType").val() == "Others") {
+                            if ($.trim($("#others_leave").val()) == "") {
+                                $("#others_leave").addClass('empty');
+                                empty_fields++;
+                            } else {
+                                $("#others_leave").removeClass('empty');
+                            }
                         }
-                    });
-                    $.ajax({
-                        url: '/hris/eleave',
-                        method: 'post',
-                        data: $('#leave-form').serialize(), // prefer use serialize method
-                        success:function(data){
-                            // Swal.fire({ html: data }); return false;
-                            console.log(data);
-                            const {isSuccess,message,newLeave} = data;
+                    }
 
-                            if (isSuccess==true) {
-                                var notificationslev = [];
-                                $("input:checkbox[name='leave_notification[]']:checked").each(function(){
-                                    notificationslev.push($(this).val());
-                                });
-                                $('#dataProcess').hide();
+                    if ($("#leaveDateFrom").val() == "") {
+                        $("#leaveDateFrom").addClass('empty');
+                        empty_fields++;
+                    } else {
+                        $("#leaveDateFrom").removeClass('empty');
+                    }
 
-                                Swal.fire({
-                                    // width: '640px',
-                                    scrollbarPadding: false,
-                                    html: 
-                                    `<div class="table-responsive">
+                    if ($("#leaveDateTo").val() == "") {
+                        $("#leaveDateTo").addClass('empty');
+                        empty_fields++;
+                    } else {
+                        $("#leaveDateTo").removeClass('empty');
+                    }
+
+                    if ($.trim($("#reason").val()) == "") {
+                        $("#reason").addClass('empty');
+                        empty_fields++;
+                    } else {
+                        $("#reason").removeClass('empty');
+                    }
+
+                    if (empty_fields > 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'NOTIFICATION',
+                            text: 'Kindly fill-up all required fields',
+
+                        });
+                    } else {
+                        ctrSubmit++;
+
+                        if (ctrSubmit > 1) {
+                            Swal.fire({
+                                html: 'Please wait for the leave to be submitted...'
+                            }).then(() => {
+                                location.reload();
+                            });
+                            return false;
+                        }
+                        $('#dataProcess').css({
+                            'display': 'flex',
+                            'position': 'absolute',
+                        });
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $.ajax({
+                            url: '/hris/submit-leave',
+                            method: 'post',
+                            data: $('#leave-form').serialize(), // prefer use serialize method
+                            success: function (data) {
+                                // Swal.fire({ html: data }); return false;
+                                console.log(data);
+                                const { isSuccess, message, newLeave } = data;
+
+                                if (isSuccess == true) {
+                                    var notificationslev = [];
+                                    $("input:checkbox[name='leave_notification[]']:checked").each(function () {
+                                        notificationslev.push($(this).val());
+                                    });
+                                    $('#dataProcess').hide();
+
+                                    Swal.fire({
+                                        // width: '640px',
+                                        scrollbarPadding: false,
+                                        html:
+                                            `<div class="table-responsive">
                                         <table id="leaveSummary" class="table table-bordered data-table sm:justify-center table-hover">
                                         <thead class="thead">
                                             <tr class='text-center'>
-                                                <th colspan='2'>Control Number: `+newLeave.control_number+`</th>
+                                                <th colspan='2'>Control Number: `+ newLeave.control_number + `</th>
                                             </tr>
                                         </thead>
                                         <tbody class="data text-center" id="data">
-                                            <tr> <td class='text-right col-4'>Name:</td> <td>`           +newLeave.name+`</td> </tr>
-                                            <tr> <td class='text-right col-4'>Employee #:</td> <td>`     +newLeave.employee_id+`</td> </tr>
-                                            <tr> <td class='text-right col-4'>Department:</td> <td>`     +newLeave.department+`</td> </tr>
-                                            <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   +newLeave.date_applied+`</td> </tr>
-                                            <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     +newLeave.leave_type+`</td> </tr>
-                                            <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   +newLeave.date_from+` to `+newLeave.date_to+`</td> </tr>
-                                            <tr> <td class='text-right'># of Day/s:</td> <td>`           +newLeave.no_of_days+`</td> </tr>
-                                            <tr> <td class='text-right'>Reason:</td> <td>`               +newLeave.reason+`</td> </tr>
+                                            <tr> <td class='text-right col-4'>Name:</td> <td>`           + newLeave.name + `</td> </tr>
+                                            <tr> <td class='text-right col-4'>Employee #:</td> <td>`     + newLeave.employee_id + `</td> </tr>
+                                            <tr> <td class='text-right col-4'>Department:</td> <td>`     + newLeave.department + `</td> </tr>
+                                            <tr> <td class='text-right col-4'>Date Applied:</td> <td>`   + newLeave.date_applied + `</td> </tr>
+                                            <tr> <td class='text-right col-4'>Leave Type:</td> <td>`     + newLeave.leave_type + `</td> </tr>
+                                            <tr> <td class='text-right col-4'>Date Covered:</td> <td>`   + newLeave.date_from + ` to ` + newLeave.date_to + `</td> </tr>
+                                            <tr> <td class='text-right'># of Day/s:</td> <td>`           + newLeave.no_of_days + `</td> </tr>
+                                            <tr> <td class='text-right'>Reason:</td> <td>`               + newLeave.reason + `</td> </tr>
                                         </tbody>
                                         </table>
                                     </div>
                                     `,
-                                }).then(function(){
-                                    $('#PreviewModal').modal('hide');
-                                         Swal.fire(
-                                        'LEAVE FORM successfully submitted!',
-                                        '',
-                                        'success'
-                                      ).then(function(){
-                                        window.location = window.location.origin+"/e-forms/leaves-listing";
-                                      });
-                                });
+                                    }).then(function () {
+                                        $('#PreviewModal').modal('hide');
+                                        Swal.fire(
+                                            'LEAVE FORM successfully submitted!',
+                                            '',
+                                            'success'
+                                        ).then(function () {
+                                            window.location = window.location.origin + "/e-forms/leaves-listing";
+                                        });
+                                    });
 
-                            } else {
-                                $('#dataProcess').hide();
+                                } else {
+                                    $('#dataProcess').hide();
+                                    // Store values in sessionStorage before reload
+                                    sessionStorage.setItem('leaveType', $("#leaveType").val());
+                                    sessionStorage.setItem('leaveDateFrom', $("#leaveDateFrom").val());
+                                    sessionStorage.setItem('leaveDateTo', $("#leaveDateTo").val());
+                                    sessionStorage.setItem('isHalfDay', $("#isHalfDay").prop('checked'));
+                                    sessionStorage.setItem('hid_no_days', $("#hid_no_days").val());
+                                    sessionStorage.setItem('reason', $("#reason").val());
+                                    sessionStorage.setItem('timeDesignator', $("#timeDesignator").val());
+                                    sessionStorage.setItem('others_leave', $("#others_leave").val());
 
-                                // Store values in sessionStorage before reload
-                                sessionStorage.setItem('leaveType', $("#leaveType").val());
-                                sessionStorage.setItem('leaveDateFrom', $("#leaveDateFrom").val());
-                                sessionStorage.setItem('leaveDateTo', $("#leaveDateTo").val());
-                                sessionStorage.setItem('isHalfDay', $("#isHalfDay").prop('checked'));
-                                sessionStorage.setItem('hid_no_days', $("#hid_no_days").val());
-                                sessionStorage.setItem('reason', $("#reason").val());
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Submission Failed',
+                                        allowOutsideClick: false,
+                                        text: message || 'An error occurred while submitting your leave form.',
+                                    }).then(() => {
+                                        location.reload();
+                                    });
 
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Submission Failed',
-                                    allowOutsideClick: false,
-                                    text: message || 'An error occurred while submitting your leave form.',
-                                }).then(() => {
-                                    location.reload();
-                                });
+                                }
 
                             }
-
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        })
-        .catch(function(error) {
-            // Handle errors here
-            console.error(error);
-        });
+            })
+            .catch(function (error) {
+                // Handle errors here
+                console.error(error);
+            });
 
         return false;
     });

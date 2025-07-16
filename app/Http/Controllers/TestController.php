@@ -279,6 +279,8 @@ class TestController extends Controller
     }
 
 
-
+    public function sampleSidebar() {
+        return view('sample-sidebar');
+    }
 
 }

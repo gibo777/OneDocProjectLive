@@ -51,8 +51,10 @@ class NavigationMenu extends Component
         }
 
         $serverStatus = DB::table('server_status')->where('id', 1)->value('status');
-        
-        return view('navigation-menu', 
+
+        // $navMenu = Auth::user()->id == 1 ? 'sample-sidebar' : 'navigation-menu';
+        $navMenu = 'navigation-menu';
+        return view($navMenu, 
             [
                 'notification_count'    => $counter, 
                 'timeIn'                => $timeIn, 

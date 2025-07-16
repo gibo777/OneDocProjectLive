@@ -74,27 +74,82 @@
 <body class="font-sans antialiased">
     <x-jet-banner />
 
-    <div class="min-h-screen bg-gray-100" id="module_content">
-        @livewire('navigation-menu')
-
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header id="module_header" class="bg-white shadow banner-blue font-white-bold">
-                <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
-                <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 fw-bold">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
-
-        <!-- Page Content -->
-        <main>
-            <div class="overflow-auto max-h-[500px]">
-                {{ $slot }}
+    {{-- @if (Auth::user()->id==1)
+    
+        <div class="min-h-screen bg-gray-100 flex" id="module_content">
+            <aside id="sideBar" class="w-64 bg-gray-800 shadow">
+                @livewire('navigation-menu')
+            </aside>
+            <div class="flex-1 flex flex-col">
+                @if (isset($header))
+                    <header id="module_header" class="banner-blue font-white-bold">
+                        <div class="px-4 sm:px-6 lg:px-8 text-md-left pt-2 text-left">
+                            <h5 class="text-white fw-bold">
+                                <i id="toggleFullMenu" class="fa-solid fa-caret-left pr-3"></i>
+                                {{ $header }}
+                            </h5>
+                        </div>
+                    </header>
+                @endif
+                <main class="flex-1 overflow-auto max-h-[500px] px-4 py-2">
+                    {{ $slot }}
+                </main>
             </div>
-        </main>
+        </div>
 
-    </div>
+        <script type="text/javascript">
+            function toggleMenu(event, menuId) {
+                event.preventDefault();
+                $('.submenu').each(function () {
+                    if (this.id !== menuId) {
+                        $(this).slideUp('slow');
+                    }
+                });
+                const $menu = $('#' + menuId);
+                if ($menu.is(':visible')) {
+                    $menu.slideUp('slow');
+                } else {
+                    $menu.slideDown('slow');
+                }
+            }
+
+            $('#toggleFullMenu').on('click', function (e) {
+                $('#sideBar').toggle('medium', function () {
+                    if ($(this).is(':visible')) {
+                        $('#toggleFullMenu')
+                            .removeClass('fa-solid fa-bars')
+                            .addClass('fa-solid fa-caret-left');
+                    } else {
+                        $('#toggleFullMenu')
+                            .removeClass('fa-solid fa-caret-left')
+                            .addClass('fa-solid fa-bars');
+                    }
+                });
+            });
+        </script>
+
+    @else --}}
+        <div class="min-h-screen bg-gray-100" id="module_content">
+            @livewire('navigation-menu')
+
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header id="module_header" class="bg-white shadow banner-blue font-white-bold">
+                    <!-- <div class="max-w-7xl mx-auto py-2 px-2 sm:px-6 lg:px-8"> -->
+                    <div class="mx-auto px-4 sm:px-6 lg:px-8 text-xl py-1 fw-bold">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
+
+            <!-- Page Content -->
+            <main>
+                <div class="overflow-auto max-h-[500px]">
+                    {{ $slot }}
+                </div>
+            </main>
+        </div>
+    {{-- @endif --}}
 
     <!-- Loading Indicator -->
     <div id="dataLoad" style="display: none">

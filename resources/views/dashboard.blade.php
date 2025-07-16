@@ -14,9 +14,10 @@
         top: 0;
         left: 90%; 
         transform: translateX(40%);
-        width: 360px;
+        width: 480px;
         background-color: none;
-        pointer-events: none; 
+        pointer-events: none;
+        z-index: 100;
     }
 
     .zoom-image img {

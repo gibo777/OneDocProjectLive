@@ -849,6 +849,7 @@ class ViewLeavesController extends Controller
                 DB::raw("DATE_FORMAT(L.date_applied, '%m-%d-%Y %h:%i %p') as date_applied"),
                 'L.leave_status as status')
             ->where('u.id','!=',1)
+            // ->where('l.')
             ->orderBy('L.name')
             ->orderBy('L.id')
             ->get();

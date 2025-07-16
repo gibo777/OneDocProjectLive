@@ -1,5 +1,5 @@
 <x-slot name="header">
-	{{ __('ASSIGNED VIEWING') }}
+	{{ __('MODULE CREATION') }}
 </x-slot>
 
 
@@ -20,7 +20,7 @@
 				    <div class="row mx-1 inset-shadow py-1">
 
                         <div class="col-md-4 row my-2">
-			        		<div class="col-md-2 text-right">
+			        		<div class="col-md-2 text-center">
 			            		<x-jet-label for="search" value="{{ __('Search') }}" class="my-0 pt-1 text-sm"/>
 			        		</div>
 			        		<div class="col-md-9">
@@ -41,7 +41,7 @@
 				            </div>
 				        </div>
 
-				        <div class="col-md-3 px-1">
+				        <div class="col-md-2 px-1">
 				            <div class="form-floating w-full">
 				                <select wire:model="fUserDept" name="fUserDept" id="fUserDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
 				                    <option value="">All Departments</option>
@@ -64,6 +64,11 @@
 				                <x-jet-label for="fUserRole" value="{{ __('ROLES') }}" />
 				            </div>
 				        </div>
+				        <div class="col-md-2 p-2 d-flex justify-content-center align-items-center">
+                            <x-jet-button  id="createNewModule" class="w-full justify-content-center">
+                                {{ __('Create New Menu') }}
+                            </x-jet-button>
+				        </div>
 
 				    </div>
 				</div>
@@ -83,7 +88,7 @@
 								        </select>
 								        <span class="mx-2">entries</span>
 								        <div class=" sm:col-span-7 sm:justify-center scrollable">
-							        	{{ $authorizeUser->links('pagination.custom') }}
+							        	{{ $moduleList->links('pagination.custom') }}
 								        </div>
 						    		</div>
 							    </div>
@@ -106,26 +111,22 @@
                         <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
                             <thead class="thead">
                                 <tr class="dt-head-center">
-                                    <th class="py-1">Name</th>
-                                    <th class="py-1">Employee #</th>
-                                    <th class="py-1" style="width: 28%">Office</th>
-                                    <th class="py-1" style="width: 36%">Department</th>
-                                    <th class="py-1">Role</th>
+                                    <th class="py-1">Nav Order</th>
+                                    <th class="py-1">Module Name</th>
+                                    <th class="py-1">Parent Module</th>
+                                    <th class="py-1">Category</th>
+                                    <th class="py-1">Status</th>
                                 </tr>
                             </thead>
                             <tbody class="data hover custom-text-xs" id="viewEmployee">
-                            	@if ($authorizeUser->isNotEmpty())
-	                                @foreach ($authorizeUser as $record)
-	                                <tr id="{{ $record->id }}" class="view-user">
-	                                    @if (url('/')=='http://localhost')
-	                                    	<td>xxx, xxx x.</td>
-	                                    @else
-	                                    	<td>{{ $record->name }}</td>
-	                                    @endif
-	                                    <td>{{ $record->employee_id }}</td>
-	                                    <td>{{ $record->office }}</td>
-	                                    <td>{{ $record->department }}</td>
-	                                    <td>{{ $record->role_type }}</td>
+                            	@if ($moduleList->isNotEmpty())
+	                                @foreach ($moduleList as $record)
+	                                <tr id="{{ $record->id }}" class="view-module">
+	                                    <td>{{ $record->nav_order }}</td>
+	                                	<td>{{ $record->module_name }}</td>
+	                                    <td>{{ $record->parent_module }}</td>
+	                                    <td>{{ $record->module_category }}</td>
+	                                    <td>{{ $record->module_status }}</td>
 	                                    {{-- @if (url('/')=='http://localhost')
 	                                    	<td>xxx, xxx x.</td>
 	                                    @else
@@ -164,7 +165,7 @@
 							        </select>
 							        <span class="mx-2">entries</span>
 							        <div class=" sm:col-span-7 sm:justify-center scrollable">
-						        	{{ $authorizeUser->links('pagination.custom') }}
+						        	{{ $moduleList->links('pagination.custom') }}
 							        </div>
 					    		</div>
 						    </div>
@@ -177,9 +178,10 @@
 </div>
 
 <!-- =========================================== -->
+
 {{-- <script type="text/javascript">
     const uID = `{{ Auth::user()->id }}`;
     const lReq = `{{ route('hris.leave.eleave') }}`;
 </script> --}}
-<script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
-<script type="text/javascript" src="{{ asset('app-modules/setup/user-authorization.js') }}"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script> --}}
+<script type="text/javascript" src="{{ asset('app-modules/setup/module-creation.js') }}"></script>

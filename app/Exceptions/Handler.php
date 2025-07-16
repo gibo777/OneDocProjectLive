@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -37,5 +38,23 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * Redirects to the root URL if the exception is a TokenMismatchException (usually caused by session timeout).
+     *
+     * @param \Illuminate\Http\Request $request The current HTTP request instance.
+     * @param \Throwable $exception The exception that was thrown.
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof TokenMismatchException) {
+            return redirect('/');
+        }
+
+        return parent::render($request, $exception);
     }
 }

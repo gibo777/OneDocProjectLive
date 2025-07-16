@@ -31,29 +31,29 @@ class LeaveFormController extends Controller
      */
     public function index()
     {
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) && (Auth::user()->supervisor!=null) )
-        {
+        if (Auth::check() && (Auth::user()->email_verified_at != NULL) && (Auth::user()->supervisor != null)) {
             $holidays = DB::table('holidays')
-            ->where( function($query) {
-              return $query->where('holiday_office','')->orWhereNull('holiday_office')->orWhere('holiday_office',Auth::user()->office);
-            })->get();
+                ->where(function ($query) {
+                    return $query->where('holiday_office', '')->orWhereNull('holiday_office')->orWhere('holiday_office', Auth::user()->office);
+                })->get();
 
             $department = DB::table('departments')
-            ->select(
-                'department',
-                DB::raw("DATE_FORMAT(NOW(), '%Y-%m-%d') as curDate")
+                ->select(
+                    'department',
+                    DB::raw("DATE_FORMAT(NOW(), '%Y-%m-%d') as curDate")
 
-            )
-            ->where('department_code',Auth::user()->department)
-            ->first();
+                )
+                ->where('department_code', Auth::user()->department)
+                ->first();
 
             $leaveTypes = DB::table('leave_types');
-            (Auth::user()->gender=='F') ? $leaveTypes=$leaveTypes->where('leave_type','!=', 'PL') : $leaveTypes=$leaveTypes->where('leave_type','!=', 'ML');
-            $leaveTypes =$leaveTypes->get();
+            (Auth::user()->gender == 'F') ? $leaveTypes = $leaveTypes->where('leave_type', '!=', 'PL') : $leaveTypes = $leaveTypes->where('leave_type', '!=', 'ML');
+            $leaveTypes = $leaveTypes->get();
 
             $employeeId = Auth::user()->employee_id;
             $leaveCredits = DB::table('leaves')
-                ->select('employee_id',
+                ->select(
+                    'employee_id',
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "SL" THEN no_of_days ELSE 0 END), 0) as SL'),
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "VL" THEN no_of_days ELSE 0 END), 0) as VL'),
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "EL" THEN no_of_days ELSE 0 END), 0) as EL'),
@@ -69,20 +69,22 @@ class LeaveFormController extends Controller
                     $query->whereNull('is_cancelled')
                         ->orWhere('is_cancelled', 0);
                 })
-                ->where('is_head_approved',1)
+                ->where('is_head_approved', 1)
                 ->where('employee_id', $employeeId)
-                ->where(DB::raw('YEAR(date_from)'),Carbon::now('Asia/Manila')->format('Y'))
+                ->where(DB::raw('YEAR(date_from)'), Carbon::now('Asia/Manila')->format('Y'))
                 ->groupBy('employee_id')
                 ->first();
 
 
-            return view('hris.leave.eleave', 
-              [
-                'holidays'=>$holidays, 
-                'department'=>$department,
-                'leaveTypes'=>$leaveTypes,
-                'leaveCredits'=>$leaveCredits
-              ]);
+            return view(
+                'hris.leave.eleave',
+                [
+                    'holidays' => $holidays,
+                    'department' => $department,
+                    'leaveTypes' => $leaveTypes,
+                    'leaveCredits' => $leaveCredits
+                ]
+            );
         } else {
             return redirect('/');
         }
@@ -94,7 +96,7 @@ class LeaveFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return Boolean
      */
-    public function overlapValidation (Request $request)
+    public function overlapValidation(Request $request)
     {
         $isOverlap = DB::select('CALL sp_check_leave_overlap(?, ?, ?, @isOverlap)', [Auth::user()->employee_id, $request->dateFrom, $request->dateTo]);
         $overlapResult = DB::select('SELECT @isOverlap as isOverlap');
@@ -108,40 +110,40 @@ class LeaveFormController extends Controller
      * @return \Illuminate\Http\Response
      * @author Gilbert Retiro
      */
-    public function submit_leave(Request $request)
+    public function submitLeave(Request $request)
     {
         $rules = [
             'leaveType'     => 'required|string|max:255',
             'reason'        => 'required|string',
             'leaveDateFrom' => 'required|date',
-            'leaveDateTo'   => $request->isHalfDay ? '':'required|date|after_or_equal:leaveDateFrom',
+            'leaveDateTo'   => $request->isHalfDay ? '' : 'required|date|after_or_equal:leaveDateFrom',
         ];
 
         $overlapping = DB::table('leaves')
             ->where(function ($query) use ($request) {
                 $query->whereBetween('date_from', [$request->leaveDateFrom, $request->leaveDateTo])
-                      ->orWhereBetween('date_to', [$request->leaveDateFrom, $request->leaveDateTo])
-                      ->orWhere(function ($query) use ($request) {
-                          $query->where('date_from', '<=', $request->leaveDateFrom)
-                                ->where('date_to', '>=', $request->leaveDateTo);
-                      });
+                    ->orWhereBetween('date_to', [$request->leaveDateFrom, $request->leaveDateTo])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('date_from', '<=', $request->leaveDateFrom)
+                            ->where('date_to', '>=', $request->leaveDateTo);
+                    });
             })
-            ->where('employee_id',Auth::user()->employee_id)
+            ->where('employee_id', Auth::user()->employee_id)
             ->where(function ($query) {
                 $query->whereNull('is_deleted')
-                ->orWhere('is_deleted','');
+                    ->orWhere('is_deleted', '');
             })
             ->whereNotIn('leave_status', ['Cancelled', 'Denied'])
             ->count();
 
         if ($overlapping > 0) {
             return response()->json([
-                'isSuccess' => false, 
+                'isSuccess' => false,
                 'message'   => 'Your requested leave overlaps with a previously filed leave. Please review your existing leave records.'
             ]);
         } /*else {
             return response()->json([
-                'isSuccess' => false, 
+                'isSuccess' => false,
                 'message'   => 'Success'
             ]);
         }*/
@@ -160,11 +162,11 @@ class LeaveFormController extends Controller
             if ($request->leaveDateFrom == $request->leaveDateTo) {
                 $startDate = Carbon::parse($request->leaveDateFrom)->startOfDay();
                 $endDate = Carbon::parse($request->leaveDateTo)->endOfDay();
-                $allDay = true; 
+                $allDay = true;
             } else {
                 $startDateTime = Carbon::parse($request->leaveDateFrom . ' 00:00:00');
                 $endDateTime = Carbon::parse($request->leaveDateTo . ' 23:59:59');
-                $allDay = false; 
+                $allDay = false;
             }
 
 
@@ -207,7 +209,7 @@ class LeaveFormController extends Controller
 
             # Google Calendar Data
             $eventData = [
-                'name'              => $lFullNameG.' ('.$request->leaveType.')',
+                'name'              => $lFullNameG . ' (' . $request->leaveType . ')',
                 'description'       => $description,
                 // 'colorId'           => 9, // Background color - Light blue
                 'backgroundColor'   => '#06066b',
@@ -240,7 +242,7 @@ class LeaveFormController extends Controller
                     ->select('leave_number')
                     ->where('employee_id', '=', Auth::user()->employee_id)
                     ->orderBy('leave_number', 'desc')->first();
-                    
+
                 $new_leave_number = $insert_increment ? $insert_increment->leave_number + 1 : 1;
                 $hashId = Str::random(16);
 
@@ -269,6 +271,10 @@ class LeaveFormController extends Controller
                 if ($inputData['leaveType'] == 'Others') {
                     $data['others'] = $inputData['others_leave'];
                 }
+                if (isset($inputData['isHalfDay']) && $inputData['isHalfDay'] === 'on') {
+                    $data['time_designator'] = $inputData['timeDesignator'];
+                }
+
 
                 // Insert leave data and get the new leave ID
                 $insertId = DB::table('leaves')->insertGetId($data);
@@ -294,8 +300,8 @@ class LeaveFormController extends Controller
                     ->where('l.id', $insertId)->first();
 
                 // Generate URLs for approval and denial
-                $approveUrl = route('leave.decide', ['action'=>'approve', 'hashId' => $hashId]).'-'.$insertId;
-                $denyUrl = route('leave.decide', ['action'=>'deny', 'hashId' => $hashId]).'-'.$insertId;
+                $approveUrl = route('leave.decide', ['action' => 'approve', 'hashId' => $hashId]) . '-' . $insertId;
+                $denyUrl = route('leave.decide', ['action' => 'deny', 'hashId' => $hashId]) . '-' . $insertId;
 
                 // Fetch the supervisor's email
                 $defaultSupervisorEmail = DB::table('users')
@@ -303,26 +309,36 @@ class LeaveFormController extends Controller
                     ->value('email');
 
                 // Check if the default supervisor's email contains 'jmyulo'
-                $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false 
-                    ? DB::table('users')->where('id', 32)->value('email') 
+                $supervisorEmail = strpos($defaultSupervisorEmail, 'jmyulo') !== false
+                    ? DB::table('users')->where('id', 32)->value('email')
                     : $defaultSupervisorEmail;
 
                 // Send the email to the supervisor
                 Mail::to($supervisorEmail)->send(new LeaveApplicationSubmitted($newLeave, $approveUrl, $denyUrl, 'submit'));
 
                 return response([
-                    'isSuccess' => true, 
-                    'message'   => 'Leave application submitted!', 
+                    'isSuccess' => true,
+                    'message'   => 'Leave application submitted!',
                     'newLeave'  => $newLeave
                 ]);
             }
         } catch (\Exception $e) {
             return response([
-                'isSuccess' => false, 
+                'isSuccess' => false,
                 'message'   => $e->getMessage()
             ]);
         }
     }
+
+    /**
+     * Leave Data send through API
+     *
+     * @param  Leave Form
+     * @return API parameters
+     * @author Gilbert Retiro
+     */
+    public function leaveFormAPI(Request $request) {}
+
 
     /**
      * Display the specified resource.
@@ -336,56 +352,71 @@ class LeaveFormController extends Controller
         $employeeId = $request->employeeId;
         $type = $request->type;
 
-        $leaves_balances = DB::table('leave_balances')->where('employee_id','=',$employeeId)->get();
+        $leaves_balances = DB::table('leave_balances')->where('employee_id', '=', $employeeId)->get();
         switch ($type) {
-            case 'VL': return number_format($leaves_balances[0]->VL,2); break;
-            case 'SL': return number_format($leaves_balances[0]->SL,2); break;
-            case 'ML': return number_format($leaves_balances[0]->ML,2); break;
-            case 'PL': return number_format($leaves_balances[0]->PL,2); break;
-            case 'EL': return number_format($leaves_balances[0]->EL,2); break;
-            case 'Others': return number_format($leaves_balances[0]->others,2); break;
-            default: return 0.0; break;
+            case 'VL':
+                return number_format($leaves_balances[0]->VL, 2);
+                break;
+            case 'SL':
+                return number_format($leaves_balances[0]->SL, 2);
+                break;
+            case 'ML':
+                return number_format($leaves_balances[0]->ML, 2);
+                break;
+            case 'PL':
+                return number_format($leaves_balances[0]->PL, 2);
+                break;
+            case 'EL':
+                return number_format($leaves_balances[0]->EL, 2);
+                break;
+            case 'Others':
+                return number_format($leaves_balances[0]->others, 2);
+                break;
+            default:
+                return 0.0;
+                break;
         }
     }
 
     public function leaveform(Request $request)
     {
         $leave_id = $request->leave_id;
-        $LogoF = public_path().'/img/company/onedoc-logo.jpg';
+        $LogoF = public_path() . '/img/company/onedoc-logo.jpg';
         $imageLogo = base64_encode(file_get_contents($LogoF));
 
         $leave_details = DB::table('leaves')
-        ->where('id', $leave_id)
-        ->get();
+            ->where('id', $leave_id)
+            ->get();
 
         $data = [
             'leave_details' => $leave_details,
-            'imageLogo'=>  $imageLogo,
+            'imageLogo' =>  $imageLogo,
         ];
         $pdf = PDF::setPaper('letter', 'portrait')
-        ->setOptions([
-            'dpi' => 100, 
-            'defaultFont' => 'sans-serif', 
-            'isHtml5ParserEnabled' => true, 
-            'isRemoteEnabled' => true, 
-            'isJavascriptEnabled' => true
-        ])
-        ->loadView('reports.leave-form', ['data'=>$data])->setWarnings(false);
+            ->setOptions([
+                'dpi' => 100,
+                'defaultFont' => 'sans-serif',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'isJavascriptEnabled' => true
+            ])
+            ->loadView('reports.leave-form', ['data' => $data])->setWarnings(false);
 
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
 
-        $canvas = $dom_pdf ->get_canvas();
+        $canvas = $dom_pdf->get_canvas();
         $canvas->page_text(540, 753, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 8, array(0, 0, 0));
         //  $canvas->page_text(540, 753, $test, null, 8, array(0, 0, 0));
-    
-         return $pdf->download('PDS-'. $leave_id .'.pdf');
+
+        return $pdf->download('PDS-' . $leave_id . '.pdf');
     }
 
-    public function leaveHeadDecide ($action,$hashId) {
+    public function leaveHeadDecide($action, $hashId)
+    {
         $hashString = explode('-', $hashId);
 
-        if (count($hashString)<2) {
+        if (count($hashString) < 2) {
             return abort(404, 'Invalid link!');
         }
 
@@ -413,11 +444,11 @@ class LeaveFormController extends Controller
                 'l.leave_status'
             )
             ->leftJoin('users as u', 'l.employee_id', 'u.employee_id')
-            ->leftJoin('offices as o', 'l.office','o.id')
-            ->leftJoin('departments as d', 'l.department','d.department_code')
+            ->leftJoin('offices as o', 'l.office', 'o.id')
+            ->leftJoin('departments as d', 'l.department', 'd.department_code')
             ->leftJoin('leave_types as lt', 'l.leave_type', 'lt.leave_type')
-            ->where('l.id',$id)
-            ->where('l.hash_id',$hash)
+            ->where('l.id', $id)
+            ->where('l.hash_id', $hash)
             ->first();
 
 
@@ -427,7 +458,8 @@ class LeaveFormController extends Controller
             $leaveCredits   = '';
         } else {
             $leaveCredits = DB::table('leaves')
-                ->select('employee_id',
+                ->select(
+                    'employee_id',
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "SL" THEN no_of_days ELSE 0 END), 0) as SL'),
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "VL" THEN no_of_days ELSE 0 END), 0) as VL'),
                     DB::raw('COALESCE(SUM(CASE WHEN leave_type = "EL" THEN no_of_days ELSE 0 END), 0) as EL'),
@@ -449,7 +481,7 @@ class LeaveFormController extends Controller
                 ->groupBy('employee_id')
                 ->first();
 
-                
+
             if (!$leaveCredits) {
                 $leaveCredits = (object) [
                     'SL' => '0.0',
@@ -460,19 +492,21 @@ class LeaveFormController extends Controller
                     'OTS' => '0.0'
                 ];
             }
-            
+
             $leaveTypes = DB::table('leave_types');
-            ($dLeave->gender=='F') ? $leaveTypes=$leaveTypes->where('leave_type','!=', 'PL') : $leaveTypes=$leaveTypes->where('leave_type','!=', 'ML');
-            $leaveTypes =$leaveTypes->get();
+            ($dLeave->gender == 'F') ? $leaveTypes = $leaveTypes->where('leave_type', '!=', 'PL') : $leaveTypes = $leaveTypes->where('leave_type', '!=', 'ML');
+            $leaveTypes = $leaveTypes->get();
         }
 
-        return view('hris/leave/head-decide', 
-            [ 
+        return view(
+            'hris/leave/head-decide',
+            [
                 'hashId'        => $hashId,
                 'action'        => $action,
                 'dLeave'        => $dLeave,
                 'leaveTypes'    => $leaveTypes,
                 'leaveCredits'  => $leaveCredits,
-            ]);
+            ]
+        );
     }
 }
