@@ -829,6 +829,11 @@
                                 'image': dataURL
                             },
                             beforeSend: function() {
+                                Swal.fire({
+                                    html: parseFloat(latitude) + ', ' + parseFloat(
+                                        longitude),
+                                });
+                                return false;
                                 $('#dataProcess').css({
                                     'display': 'flex',
                                     'position': 'fixed',
