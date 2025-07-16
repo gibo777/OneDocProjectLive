@@ -606,10 +606,10 @@
          */
         $("#saveTempPhoto").click(function() {
 
-            Swal.fire({
-                html: JSON.stringify($("#formWebCam").serialize())
-            });
-            return false;
+            // Swal.fire({
+            //     html: JSON.stringify($("#formWebCam").serialize())
+            // });
+            // return false;
 
             var data_uri = $("#capturedPhoto").attr("src");
             Webcam.reset('#logCamera');
