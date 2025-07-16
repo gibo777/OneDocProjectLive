@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Log;
+
 use Adrianorosa\GeoLocation\GeoLocation;
 
 class WebcamController extends Controller
@@ -88,12 +90,14 @@ class WebcamController extends Controller
 
     function saveTimeLogs(Request $request)
     {
-        return var_dump($request->all());
+        // return var_dump($request->all());
         // return $request->ip();
         try {
             $curDate = Carbon::now('Asia/Manila');
 
             $exists = $this->checkTimeLogExists(Auth::user()->employee_id, $curDate);
+
+            \Log::info("Received latitude: {$request->latitude}, longitude: {$request->longitude}");
 
             if ($exists) { // If exist, new time log will only update time_in (if NULL) /time_out (latest)
                 // return "Log Date Exists...";
@@ -143,6 +147,7 @@ class WebcamController extends Controller
                     'created_at'    => $curDate,
                     'updated_at'    => $curDate
                 ];
+
                 if ($request->logEvent == 'TimeIn') {
                     $header['time_in'] = $curDate->format('H:i:s');
                 } else {

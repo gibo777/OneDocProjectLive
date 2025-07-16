@@ -606,11 +606,6 @@
          */
         $("#saveTempPhoto").click(function() {
 
-            // Swal.fire({
-            //     html: JSON.stringify($("#formWebCam").serialize())
-            // });
-            // return false;
-
             var data_uri = $("#capturedPhoto").attr("src");
             Webcam.reset('#logCamera');
 
@@ -840,12 +835,7 @@
                             },
                             success: function(data) {
                                 $('#dataProcess').hide();
-                                Swal.fire({
-                                    html: JSON.stringify(data)
-                                });
-                                return false;
-
-                                /* if (data.isSuccess == true) {
+                                if (data.isSuccess == true) {
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Image saved successfully!',
@@ -863,7 +853,7 @@
                                         icon: 'error',
                                         title: data.message,
                                     });
-                                } */
+                                }
                             }
                         });
 
