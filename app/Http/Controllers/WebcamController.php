@@ -1,5 +1,5 @@
 <?php
-    
+
 namespace App\Http\Controllers;
 
 use Auth;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
 
 use Adrianorosa\GeoLocation\GeoLocation;
-  
+
 class WebcamController extends Controller
 {
     /**
@@ -27,7 +27,7 @@ class WebcamController extends Controller
     {
         return view('utilities/webcam');
     }
-  
+
     /**
      * Write code on Method
      *
@@ -38,28 +38,29 @@ class WebcamController extends Controller
         $img = $request->image;
         $folderPath = "profile-photos/";
         // dd($folderPath);
-        
+
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
-        
+
         $image_base64 = base64_decode($image_parts[1]);
         // $fileName = generateRandomString(40) . '.png';
         $fileName = $this->generateRandomString(40) . '.jpg';
-        
+
         $file = $folderPath . $fileName;
 
         Storage::put($file, $image_base64);
 
-        $webcamPhotoLocation = asset("storage/".$file);
+        $webcamPhotoLocation = asset("storage/" . $file);
 
         return $webcamPhotoLocation;
         // dd($webcamPhotoLocation);
-        
+
         // dd('Image uploaded successfully: '.$fileName);
     }
 
-    function generateRandomString($length = 13) {
+    function generateRandomString($length = 13)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -69,7 +70,8 @@ class WebcamController extends Controller
         return $randomString;
     }
 
-    function timeLogs(Request $reqeust) {
+    function timeLogs(Request $reqeust)
+    {
         return view('time_logs/time-logs');
     }
 
@@ -77,17 +79,18 @@ class WebcamController extends Controller
     {
         $logDate = $curDate->format('Y-m-d');
         $checkExists = DB::table('time_logs_header')
-                ->where('employee_id', $empId)
-                ->where('log_date', $logDate)
-                ->exists();
+            ->where('employee_id', $empId)
+            ->where('log_date', $logDate)
+            ->exists();
 
         return $checkExists ? 1 : 0;
     }
 
-    function saveTimeLogs (Request $request) {
-        // return var_dump($request->all());
+    function saveTimeLogs(Request $request)
+    {
+        return var_dump($request->all());
         // return $request->ip();
-        try{
+        try {
             $curDate = Carbon::now('Asia/Manila');
 
             $exists = $this->checkTimeLogExists(Auth::user()->employee_id, $curDate);
@@ -95,29 +98,28 @@ class WebcamController extends Controller
             if ($exists) { // If exist, new time log will only update time_in (if NULL) /time_out (latest)
                 // return "Log Date Exists...";
                 $updateLog = DB::table('time_logs_header');
-                if ($request->logEvent=='TimeIn') {
-                    $updateLog->where('employee_id',Auth::user()->employee_id)
-                    ->where('log_date',$curDate->format('Y-m-d'))
-                    ->whereNull('time_in')
-                    ->update([
-                        'time_in'=>$curDate->format('H:i:s'),
-                        'updated_at'=>$curDate
-                    ]);
+                if ($request->logEvent == 'TimeIn') {
+                    $updateLog->where('employee_id', Auth::user()->employee_id)
+                        ->where('log_date', $curDate->format('Y-m-d'))
+                        ->whereNull('time_in')
+                        ->update([
+                            'time_in' => $curDate->format('H:i:s'),
+                            'updated_at' => $curDate
+                        ]);
                 } else {
-                    $updateLog->where('employee_id',Auth::user()->employee_id)
-                    ->where('log_date',$curDate->format('Y-m-d'))
-                    ->update([
-                        'time_out'=>$curDate->format('H:i:s'),
-                        'updated_at'=>$curDate
-                    ]);
+                    $updateLog->where('employee_id', Auth::user()->employee_id)
+                        ->where('log_date', $curDate->format('Y-m-d'))
+                        ->update([
+                            'time_out' => $curDate->format('H:i:s'),
+                            'updated_at' => $curDate
+                        ]);
                 }
                 $logId = DB::table('time_logs_header')
-                ->select('id')
-                ->where('employee_id',Auth::user()->employee_id)
-                ->whereDate('log_date',$curDate->format('Y-m-d'))->first();
+                    ->select('id')
+                    ->where('employee_id', Auth::user()->employee_id)
+                    ->whereDate('log_date', $curDate->format('Y-m-d'))->first();
 
                 ($logId) ? $logId = $logId->id : $logId = null;
-
             } else { // Insert new header for time logs if not existing yet.
                 // return "New Log Date...";
                 $supervisor = DB::table('users')
@@ -126,29 +128,28 @@ class WebcamController extends Controller
 
                 $header = [
                     'full_name'     => Auth::user()->last_name
-                                        . (empty(Auth::user()->suffix) ? ', ' : ' ' . Auth::user()->suffix . ', ')
-                                        . Auth::user()->first_name
-                                        . (empty(Auth::user()->middle_name) ? '' : ' ' . Auth::user()->middle_name),
-                    'employee_id'   => Auth::user()->employee_id, 
+                        . (empty(Auth::user()->suffix) ? ', ' : ' ' . Auth::user()->suffix . ', ')
+                        . Auth::user()->first_name
+                        . (empty(Auth::user()->middle_name) ? '' : ' ' . Auth::user()->middle_name),
+                    'employee_id'   => Auth::user()->employee_id,
                     'office'        => Auth::user()->office,
                     'department'    => Auth::user()->department,
                     'supervisor'    => $supervisor ? $supervisor->last_name
-                                        . (empty($supervisor->suffix) ? ', ' : ' ' . $supervisor->suffix . ', ')
-                                        . $supervisor->first_name
-                                        . (empty($supervisor->middle_name) ? '' : ' ' . $supervisor->middle_name)
-                                    : '',
+                        . (empty($supervisor->suffix) ? ', ' : ' ' . $supervisor->suffix . ', ')
+                        . $supervisor->first_name
+                        . (empty($supervisor->middle_name) ? '' : ' ' . $supervisor->middle_name)
+                        : '',
                     'log_date'      => $curDate->format('Y-m-d'),
                     'created_at'    => $curDate,
                     'updated_at'    => $curDate
                 ];
-                if ($request->logEvent=='TimeIn') {
+                if ($request->logEvent == 'TimeIn') {
                     $header['time_in'] = $curDate->format('H:i:s');
                 } else {
                     $header['time_out'] = $curDate->format('H:i:s');
                 }
 
                 $logId = DB::table('time_logs_header')->insertGetId($header);
-
             }
 
             // return $logId;
@@ -165,10 +166,10 @@ class WebcamController extends Controller
 
             $now = now()->format('Ymd');
             $fileName = Auth::user()->id . '_' . $now . substr(md5(uniqid('', true)), 0, 12);
-            $file = $fileName.'.txt';
-            
+            $file = $fileName . '.txt';
+
             $image = $request->image;
-            $uploadStorage=Storage::disk('public')->put( '/timelogs/'.$file,$image);
+            $uploadStorage = Storage::disk('public')->put('/timelogs/' . $file, $image);
 
 
             // return $request->latitude.','.$request->longitude;
@@ -176,7 +177,7 @@ class WebcamController extends Controller
 
             $data = [
                 'ref_id'                => $logId,
-                'employee_id'           => Auth::user()->employee_id, 
+                'employee_id'           => Auth::user()->employee_id,
                 // 'profile_photo_path'    => $request->image,
                 'image_path'            => $fileName,
                 'ip_address'            => $request->ip(),
@@ -196,7 +197,7 @@ class WebcamController extends Controller
                 'updated_at'            => now()
             ];
 
-            if ($request->logEvent=='TimeIn') {
+            if ($request->logEvent == 'TimeIn') {
                 $data['time_in'] = now();
             } else {
                 $data['time_out'] = now();
@@ -204,18 +205,18 @@ class WebcamController extends Controller
             // return var_dump($data);
             $id = DB::table('time_logs')->insertGetId($data);
             if ($id) {
-                return response(['isSuccess' => true,'message'=>'Timelog Successful!']);
+                return response(['isSuccess' => true, 'message' => 'Timelog Successful!']);
             } else {
-                return response(['isSuccess' => false,'message'=>'Timelog Failed!']);
+                return response(['isSuccess' => false, 'message' => 'Timelog Failed!']);
             }
-
-        }catch(\Error $e){
-            return response(['isSuccess'=>false,'message'=>$e]);
+        } catch (\Error $e) {
+            return response(['isSuccess' => false, 'message' => $e]);
         }
     }
 
-    function createNewImagePath () {
-        try{
+    function createNewImagePath()
+    {
+        try {
             $storagePath = public_path('storage/timelogs');
 
             if (!File::isDirectory($storagePath)) {
@@ -229,7 +230,7 @@ class WebcamController extends Controller
                 ->leftJoin('users as u', 't.employee_id', '=', 'u.employee_id')
                 ->where(function ($query) {
                     $query->where('t.image_path', null)
-                          ->orWhere('t.image_path', '');
+                        ->orWhere('t.image_path', '');
                 })
                 ->orderBy('t.id')->take(500)
                 ->chunk($batchSize, function ($userTimeLogs) use ($storagePath) {
@@ -238,7 +239,7 @@ class WebcamController extends Controller
                         $file = $fileName . '.txt';
 
                         echo "[ ID: $value->uID ] [ File Name: $fileName] ";
-                        echo "[ File Name: ".$fileName." ] [ File: ".$file." ] ";
+                        echo "[ File Name: " . $fileName . " ] [ File: " . $file . " ] ";
 
                         $updateImagePath = DB::table('time_logs')
                             ->where('id', $value->id)
@@ -293,9 +294,9 @@ class WebcamController extends Controller
                     }
                 });
 
-            return response(['isSuccess' => true,'message'=>'Successfully Logged!']);
-        }catch(\Error $e){
-            return response(['isSuccess'=>false,'message'=>$e]);
+            return response(['isSuccess' => true, 'message' => 'Successfully Logged!']);
+        } catch (\Error $e) {
+            return response(['isSuccess' => false, 'message' => $e]);
         }
     }
 }

@@ -829,11 +829,6 @@
                                 'image': dataURL
                             },
                             beforeSend: function() {
-                                Swal.fire({
-                                    html: parseFloat(latitude) + ', ' + parseFloat(
-                                        longitude),
-                                });
-                                return false;
                                 $('#dataProcess').css({
                                     'display': 'flex',
                                     'position': 'fixed',
@@ -845,7 +840,12 @@
                             },
                             success: function(data) {
                                 $('#dataProcess').hide();
-                                if (data.isSuccess == true) {
+                                Swal.fire({
+                                    html: JSON.stringify(data)
+                                });
+                                return false;
+
+                                /* if (data.isSuccess == true) {
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Image saved successfully!',
@@ -863,7 +863,7 @@
                                         icon: 'error',
                                         title: data.message,
                                     });
-                                }
+                                } */
                             }
                         });
 
