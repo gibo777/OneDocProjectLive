@@ -203,7 +203,7 @@
         These images will be retained for six (6) months.</p>
 
     <p>1.5.4 Geo location Record</p>
-    <p> location refers to location capture during Time-in and Time-out during timekeeping, to verify the
+    <p> Geo location refers to location capture during Time-in and Time-out during timekeeping, to verify the
         location of the employee during time logging.</p>
 
     <p>1.6 Rights of Data Subjects:</p>
