@@ -139,7 +139,7 @@ class LeaveApplication extends Component
                 $query->where('l.leave_status', $this->fLStatus);
             }
 
-            if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'ADMIN') {
+            if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
                 // Apply search query if search term is provided
                 if (!empty($this->search)) {
                     $searchTerms = explode(' ', $this->search);
