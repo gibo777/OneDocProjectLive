@@ -2,7 +2,7 @@ $(document).ready(function () {
     let parentSwalOpen = false;
 
     /* EXPORT TO EXCEL TIMELOGS */
-    $(document).on('click', '#exportExcelLeaves', async function() {
+    $(document).on('click', '#exportExcelLeaves', async function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -13,7 +13,7 @@ $(document).ready(function () {
             url: '/leaves-excel',
             method: 'GET',
             data: { 'id': $(this).attr('id') },
-            success: function(html) {
+            success: function (html) {
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
 
@@ -32,7 +32,7 @@ $(document).ready(function () {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error exporting to Excel:', error);
             }
         });
@@ -41,12 +41,12 @@ $(document).ready(function () {
     });
 
     /* Reroute to Leave Form */
-    $(document).on('click', '#createNewLeave', function() {
+    $(document).on('click', '#createNewLeave', function () {
         window.location.href = lReq;
     });
 
     /* Viewing Leave Details per Control Number - Gibs */
-    $(document).on('dblclick', '.view-leave', function() {
+    $(document).on('dblclick', '.view-leave', function () {
         let modalWidth = $(window).width() <= 768 ? '100%' : '82%';
 
         $.ajaxSetup({
@@ -57,8 +57,8 @@ $(document).ready(function () {
         $.ajax({
             url: '/employee-detailed',
             method: 'get',
-            data: {'id':$(this).attr('id')}, // prefer use serialize method
-            beforeSend: function() {
+            data: { 'id': $(this).attr('id') }, // prefer use serialize method
+            beforeSend: function () {
                 $('#dataLoad').css({
                     'display': 'flex',
                     'position': 'fixed',
@@ -68,39 +68,40 @@ $(document).ready(function () {
                 });
 
             },
-            success:function(data){
-                $('#dataLoad').css('display','none');
-                Swal.fire({ 
+            success: function (html) {
+                $('#dataLoad').css('display', 'none');
+                Swal.fire({
                     width: modalWidth,
                     showConfirmButton: false,
                     showCloseButton: true,
                     allowOutsideClick: false,
-                    html: data,
+                    showClass: { popup: '' },
+                    html: html,
                     didOpen: () => {
                         var sched = $('#hidWeeklySched').val().split('|');
                         $("#update_weekly_schedule").val(sched);
                         $('#update_weekly_schedule').multiselect({
-                          enableFiltering: true,
-                          enableCaseInsensitiveFiltering: true,
-                          buttonWidth: '100%',
-                          dropRight: true
+                            enableFiltering: true,
+                            enableCaseInsensitiveFiltering: true,
+                            buttonWidth: '100%',
+                            dropRight: true
                         });
-                      },
+                    },
                 });
             }
         });
 
     });
 
-    $(document).on('click', '#updateEmployee', function(event) {
+    $(document).on('click', '#updateEmployee', function (event) {
         event.preventDefault();
-        
+
         // Create FormData object
         var formData = new FormData($('#fUpdateEmployee')[0]);
 
         // Log FormData contents
         for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
+            console.log(pair[0] + ', ' + pair[1]);
         }
 
         // Set up CSRF token
@@ -116,12 +117,12 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
-            success: function(response) {
-                Swal.fire({ 
+            success: function (response) {
+                Swal.fire({
                     html: response.message,
                 });
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 Swal.fire({
                     title: 'Error',
                     text: `An error occurred: ${xhr.statusText}`,
@@ -133,7 +134,7 @@ $(document).ready(function () {
 
 
 
-    $(document).on('click', '#leave_form', function() {
+    $(document).on('click', '#leave_form', function () {
         let leave_id = $('#hid_leave_id').val();
         window.location.href = `/hris/view-leave/form-leave/${leave_id}`;
     });

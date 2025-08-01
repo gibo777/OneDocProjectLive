@@ -311,6 +311,8 @@ Route::post('/leave-link/head-approve', [LeaveApplication::class, 'linkHeadAppro
 Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeave'])->name('leave-link.head-deny-leave');
 
 Route::post('/send-leave-to-hris', [LeaveApplication::class, 'sendToHRIS'])->name('send.to.hris');
+Route::post('/send-allleave-to-hris', [LeaveApplication::class, 'sendAllToHRIS'])->name('sendall.to.hris');
+
 
 /*======= CRON / SCHEDULER =====*/
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');

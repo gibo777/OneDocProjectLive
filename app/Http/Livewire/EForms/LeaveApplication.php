@@ -526,6 +526,95 @@ class LeaveApplication extends Component
         }
     }
 
+    public function sendAllToHRIS()
+    {
+        $leaves = DB::table('leaves as l')
+            ->select(
+                'l.control_number',
+                'l.name',
+                'l.employee_id',
+                'o.company_name as office',
+                'l.leave_status',
+                'l.leave_type',
+                'l.others',
+                'l.date_from',
+                'l.date_to',
+                'l.time_designator',
+                'l.reason',
+                'l.no_of_days',
+                'l.created_at',
+                'l.updated_at'
+            )
+            ->leftJoin('offices as o', 'l.office', 'o.id')
+            ->where('l.is_head_approved', 1)
+            ->where(function ($q) {
+                return $q->whereNull('l.is_cancelled')
+                    ->orWhere('l.is_cancelled', '!=', 1);
+            })
+            ->get();
+
+        // Log::info('Leave data:', $leaves->toArray());
+
+        if ($leaves->isEmpty()) {
+            return response()->json(['message' => 'No approved leave data to send.'], 200);
+        }
+
+        $success = 0;
+        $failed = 0;
+
+        foreach ($leaves as $leave) {
+            $payload = [
+                'CONTROL_NO'        => $leave->control_number,
+                'name'              => $leave->name,
+                'employee_id'       => $leave->employee_id,
+                'office'            => $leave->office,
+                'leave_status_no'   => $leave->leave_status == 'Head Approved' ? 1 : 2,
+                'leave_type'        => $leave->leave_type,
+                'others'            => $leave->others,
+                'date_from'         => $leave->date_from,
+                'date_to'           => $leave->date_to,
+                'time_designator'   => $leave->time_designator,
+                'reason'            => $leave->reason,
+                'no_of_days'        => $leave->no_of_days,
+                'created_at'        => $leave->created_at,
+                'updated_at'        => $leave->updated_at,
+                'updated_by'        => $leave->employee_id,
+            ];
+
+            // Log::debug(json_encode($payload, JSON_PRETTY_PRINT));
+
+
+            $response = Http::withHeaders([
+                'x-api-key' => env('API_KEY'),
+                'Accept' => 'application/json'
+            ])->withOptions([
+                'verify' => false
+            ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payload);
+
+            if ($response->successful()) {
+                $success++;
+                Log::channel('hris-api')->info('HRIS API Response', [
+                    'status'         => $response->status(),
+                    'control_number' => $leave->control_number,
+                    'body'           => $response->body(),
+                    'json'           => $response->json()
+                ]);
+            } else {
+                $failed++;
+                Log::channel('hris-api')->error('Failed to send to HRIS', [
+                    'status'         => $response->status(),
+                    'control_number' => $leave->control_number
+                ]);
+            }
+        }
+
+        return response()->json([
+            'isSuccess'    => true,
+            'message' => 'Leave data processing complete.',
+        ]);
+    }
+
+
 
     public function revokeLeave(Request $request)
     {
