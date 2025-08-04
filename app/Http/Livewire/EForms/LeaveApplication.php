@@ -569,7 +569,7 @@ class LeaveApplication extends Component
                 'name'              => $leave->name,
                 'employee_id'       => $leave->employee_id,
                 'office'            => $leave->office,
-                'leave_status_no'   => $leave->leave_status == 'Head Approved' ? 1 : 2,
+                'leave_status_no'   => ($leave->leave_status == 'Head Approved' || $leave->leave_status == 'Processed') ? 1 : 2,
                 'leave_type'        => $leave->leave_type,
                 'others'            => $leave->others,
                 'date_from'         => $leave->date_from,
@@ -604,7 +604,8 @@ class LeaveApplication extends Component
                 $failed++;
                 Log::channel('hris-api')->error('Failed to send to HRIS', [
                     'status'         => $response->status(),
-                    'control_number' => $leave->control_number
+                    'control_number' => $leave->control_number,
+                    'json'           => $response->json()
                 ]);
             }
         }
