@@ -551,7 +551,7 @@ class LeaveApplication extends Component
                 return $q->whereNull('l.is_cancelled')
                     ->orWhere('l.is_cancelled', '!=', 1);
             })
-            ->where('l.control_number', '2025-1D-IT-3562')
+            // ->where('l.control_number', '2025-1D-IT-3562')
             ->get();
 
         // Log::info('Leave data:', $leaves->toArray());
