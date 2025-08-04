@@ -596,16 +596,16 @@ class LeaveApplication extends Component
                 $success++;
                 Log::channel('hris-api')->info('HRIS API Response', [
                     'status'         => $response->status(),
-                    'control_number' => $leave->control_number,
-                    'body'           => $response->body(),
-                    'json'           => $response->json()
+                    'control_number' => $leave->control_number
+                    // 'body'           => $response->body(),
+                    // 'json'           => $response->json()
                 ]);
             } else {
                 $failed++;
                 Log::channel('hris-api')->error('Failed to send to HRIS', [
                     'status'         => $response->status(),
-                    'control_number' => $leave->control_number,
-                    'json'           => $response->json()
+                    'control_number' => $leave->control_number
+                    // 'json'           => $response->json()
                 ]);
             }
         }
