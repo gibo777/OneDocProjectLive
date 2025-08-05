@@ -91,13 +91,16 @@
                 ]) !!}
             </x-jet-label>
         </div>
+
         <div class="col-md-2 p-1">
             <x-jet-label class="text-secondary" for="no_of_days">
                 {!! __('<i class="text-sm">Number of Day/s:</i>&nbsp;<strong>:no_of_days</strong>', [
-                    'no_of_days' => strtoupper($dLeave->no_of_days),
+                    'no_of_days' =>
+                        strtoupper($dLeave->no_of_days) . ($dLeave->time_designator ? ' (' . $dLeave->time_designator . ')' : ''),
                 ]) !!}
             </x-jet-label>
         </div>
+
         <div class="col-md-2 p-1">
             <x-jet-label class="text-secondary" for="date_applied">
                 {!! __('<i class="text-sm">Date Applied:</i><br><strong>:date_applied</strong>', [

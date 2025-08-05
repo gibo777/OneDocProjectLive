@@ -96,6 +96,7 @@ class LeaveApplication extends Component
                 'l.date_from',
                 'l.date_to',
                 'l.no_of_days',
+                'l.time_designator',
                 'o.company_name as office',
                 'd.department',
                 'd.department_code as dept',
@@ -251,6 +252,7 @@ class LeaveApplication extends Component
                 'l.date_from',
                 'l.date_to',
                 'l.no_of_days',
+                'l.time_designator',
                 'l.reason',
                 'l.leave_status'
             )

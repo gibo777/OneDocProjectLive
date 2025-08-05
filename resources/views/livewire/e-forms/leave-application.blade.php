@@ -173,11 +173,11 @@
                                 {{-- <th style="width: 8%">Emp. ID</th> --}}
                                 <th class="py-1">Office</th>
                                 <th class="py-1" style="width: 16%">Department</th>
-                                <th class="py-1" style="width: 14%">Control#</th>
+                                <th class="py-1" style="width: 12%">Control#</th>
                                 <th class="py-1" style="width: 8%">Type</th>
                                 <th class="py-1" style="width: 16%">Date Covered</th>
                                 {{-- <th class="py-1" style="width: 8%">Utilized</th> --}}
-                                <th class="py-1" style="width: 5%">Day/s</th>
+                                <th class="py-1" style="width: 7%">Day/s</th>
                                 <th class="py-1">Approver</th>
                                 <th class="py-1">Status</th>
                             </tr>
@@ -200,7 +200,11 @@
                                             - {{ $record->date_to ? date('m/d/Y', strtotime($record->date_to)) : '' }}
                                         </td>
                                         {{-- <td></td> --}}
-                                        <td>{{ $record->no_of_days }}</td>
+                                        <td>{{ $record->no_of_days }}
+                                            @if ($record->time_designator != null || $record->time_designator != '')
+                                                {{ ' (' . $record->time_designator . ')' }}
+                                            @endif
+                                        </td>
                                         @if (url('/') == 'http://localhost')
                                             <td>xxx, xxx x.</td>
                                         @else
