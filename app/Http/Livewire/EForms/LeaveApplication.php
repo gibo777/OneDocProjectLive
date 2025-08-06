@@ -431,6 +431,10 @@ class LeaveApplication extends Component
 
                     if ($history > 0) {
                         $newLeave = $leaveInsert->first();
+                        $uSex = DB::table('users')
+                            ->where('employee_id', $newLeave->employee_id)
+                            ->value('gender');
+                        $newLeave->sex = $uSex;
                         return response()->json([
                             'isSuccess' => true,
                             'message'   => "Head Approval Successful!",
@@ -528,7 +532,7 @@ class LeaveApplication extends Component
         }
     }
 
-    public function sendAllToHRIS()
+    /* public function sendAllToHRIS()
     {
         $leaves = DB::table('leaves as l')
             ->select(
@@ -616,7 +620,100 @@ class LeaveApplication extends Component
             'isSuccess'    => true,
             'message' => 'Leave data processing complete.',
         ]);
+    } */
+    public function sendAllToHRIS()
+    {
+        $leaves = DB::table('leaves as l')
+            ->select(
+                'l.control_number',
+                'l.name',
+                'l.employee_id',
+                'o.company_name as office',
+                'l.leave_status',
+                'l.leave_type',
+                'l.others',
+                'l.date_from',
+                'l.date_to',
+                'l.time_designator',
+                'l.reason',
+                'l.no_of_days',
+                'l.created_at',
+                'l.updated_at'
+            )
+            ->leftJoin('offices as o', 'l.office', 'o.id')
+            ->where('l.is_head_approved', 1)
+            ->where(function ($q) {
+                return $q->whereNull('l.is_cancelled')
+                    ->orWhere('l.is_cancelled', '!=', 1);
+            })
+            ->get();
+
+        if ($leaves->isEmpty()) {
+            return response()->json(['message' => 'No approved leave data to send.'], 200);
+        }
+
+        $success = 0;
+        $failed = 0;
+
+        // Recommended: 100 per minute => ~1.5 per second
+        $chunkSize = 10; // Process 10 leaves per chunk
+        $delayBetweenChunksInSeconds = 5; // Sleep 5 seconds per 10 records
+
+        $leaves->chunk($chunkSize)->each(function ($chunk) use (&$success, &$failed, $delayBetweenChunksInSeconds) {
+            foreach ($chunk as $leave) {
+                $payload = [
+                    'CONTROL_NO'        => $leave->control_number,
+                    'name'              => $leave->name,
+                    'employee_id'       => $leave->employee_id,
+                    'office'            => $leave->office,
+                    'leave_status_no'   => ($leave->leave_status == 'Head Approved' || $leave->leave_status == 'Processed') ? 1 : 2,
+                    'leave_type'        => $leave->leave_type,
+                    'others'            => $leave->others,
+                    'date_from'         => $leave->date_from,
+                    'date_to'           => $leave->date_to,
+                    'time_designator'   => $leave->time_designator,
+                    'reason'            => $leave->reason,
+                    'no_of_days'        => $leave->no_of_days,
+                    'created_at'        => $leave->created_at,
+                    'updated_at'        => $leave->updated_at,
+                    'updated_by'        => $leave->employee_id,
+                ];
+
+                $response = Http::withHeaders([
+                    'x-api-key' => env('API_KEY'),
+                    'Accept' => 'application/json'
+                ])->withOptions([
+                    'verify' => false
+                ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payload);
+
+                if ($response->successful()) {
+                    $success++;
+                    Log::channel('hris-api')->info('HRIS API Response', [
+                        'status'         => $response->status(),
+                        'control_number' => $leave->control_number,
+                        'isExisting' => $response->json('isExisting')
+
+                    ]);
+                } else {
+                    $failed++;
+                    Log::channel('hris-api')->error('Failed to send to HRIS', [
+                        'status'         => $response->status(),
+                        'control_number' => $leave->control_number,
+                        'isExisting' => $response->json('isExisting')
+                    ]);
+                }
+            }
+
+            // Wait 5 seconds after each 10 records
+            sleep($delayBetweenChunksInSeconds);
+        });
+
+        return response()->json([
+            'isSuccess' => true,
+            'message'   => "Leave data processing complete. Success: {$success}, Failed: {$failed}",
+        ]);
     }
+
 
 
 
@@ -733,9 +830,10 @@ class LeaveApplication extends Component
                     if ($history > 0) {
                         if ($action == "Denied") {
                             $newLeave = $leaveInsert->first();
-                            $lEmail = DB::table('users')
+                            $uSex = DB::table('users')
                                 ->where('employee_id', $newLeave->employee_id)
-                                ->value('email');
+                                ->value('gender');
+                            $newLeave->sex = $uSex;
                             // Mail::to($lEmail)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
                         } else {
                             $newLeave = '';
@@ -884,6 +982,10 @@ class LeaveApplication extends Component
 
                     if ($history > 0) {
                         $newLeave = $leaveInsert->first();
+                        $uSex = DB::table('users')
+                            ->where('employee_id', $newLeave->employee_id)
+                            ->value('gender');
+                        $newLeave->sex = $uSex;
                         // Email Notification to User/Employee after approved by the Head/Supervisor
                         // Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'approved'));
                         return response()->json([
@@ -1021,6 +1123,10 @@ class LeaveApplication extends Component
 
                     if ($history > 0) {
                         $newLeave = $leaveInsert->first();
+                        $uSex = DB::table('users')
+                            ->where('employee_id', $newLeave->employee_id)
+                            ->value('gender');
+                        $newLeave->sex = $uSex;
                         // Email Notification to User/Employee after denied by the Head/Supervisor
                         // Mail::to($headId->email)->send(new LeaveApplicationSubmitted($newLeave, '', '', 'denied'));
                         return response()->json([
