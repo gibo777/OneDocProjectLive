@@ -455,7 +455,7 @@
                 'id': $(this).attr('id')
             },  */
             beforeSend: function() {
-                $('#dataLoad').css({
+                $('#dataProcess').css({
                     'display': 'flex',
                     'position': 'fixed',
                     'top': '50%',
@@ -465,7 +465,7 @@
 
             },
             success: function(data) {
-                $('#dataLoad').css('display', 'none');
+                $('#dataProcess').css('display', 'none');
                 Swal.fire({
                     title: data.message
                 });
