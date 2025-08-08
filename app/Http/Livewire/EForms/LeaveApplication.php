@@ -646,6 +646,11 @@ class LeaveApplication extends Component
                 return $q->whereNull('l.is_cancelled')
                     ->orWhere('l.is_cancelled', '!=', 1);
             })
+            ->where(function ($q) {
+                $q->where(DB::raw('YEAR(l.date_from)'), '>=', 2024)
+                    ->orWhere(DB::raw('YEAR(l.date_to)'), '>=', 2024);
+            })
+            ->whereNotNull('l.office')
             ->get();
 
         if ($leaves->isEmpty()) {
@@ -711,7 +716,7 @@ class LeaveApplication extends Component
 
         return response()->json([
             'isSuccess' => true,
-            'message'   => "Leave data processing complete. Success: {$success}, Failed: {$failed}",
+            'message'   => "Leave data processing complete. <br>Success: {$success}, <br>Failed: {$failed}",
         ]);
     }
 
