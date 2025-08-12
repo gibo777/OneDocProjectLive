@@ -1,23 +1,23 @@
 <x-app-layout>
-{{-- <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/js/jquery-3.6.0.min.js') }}"></script> --}}
 
-<link rel="stylesheet" href="{{ asset('/full-calendar/css/fullcalendar.css') }}" />
-{{-- <link rel="stylesheet" href="{{ asset('/full-calendar/css/toastr.min.css') }}" /> --}}
-<script src="{{ asset('/full-calendar/js/jquery.min.js') }}"></script>
-<script src="{{ asset('/full-calendar/js/moment.min.js') }}"></script>
-<script src="{{ asset('/full-calendar/js/fullcalendar.js') }}"></script>
-{{-- <script src="{{ asset('/full-calendar/js/toastr.min.js') }}"></script> --}}
+    <link rel="stylesheet" href="{{ asset('/full-calendar/css/fullcalendar.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('/full-calendar/css/toastr.min.css') }}" /> --}}
+    <script src="{{ asset('/full-calendar/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('/full-calendar/js/moment.min.js') }}"></script>
+    <script src="{{ asset('/full-calendar/js/fullcalendar.js') }}"></script>
+    {{-- <script src="{{ asset('/full-calendar/js/toastr.min.js') }}"></script> --}}
 
-{{-- <script type="text/javascript" src="{{ asset('/js/bootstrap.min.js') }}"></script> --}}
-{{-- <script type="text/javascript" src="{{ asset('/js/dataTables.bootstrap4.min.js') }}"></script> --}}
-{{-- <script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('/js/bootstrap.min.js') }}"></script> --}}
+    {{-- <script type="text/javascript" src="{{ asset('/js/dataTables.bootstrap4.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.js') }}"></script>
 <script src="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('/js/hris-jquery.js') }}"></script> --}}
 
 
     <x-slot name="header">
-            {{ __('LEAVE APPLICATION CALENDAR') }}
+        {{ __('LEAVE APPLICATION CALENDAR') }}
     </x-slot>
     <div>
         <div class="max-w-7xl mx-auto mt-2 sm:px-6 lg:px-8">
@@ -28,11 +28,12 @@
                     {{ session('status') }}
                 </div>
             @endif
-                <form id="leave-form" action="{{ route('calendar') }}" method="POST">
+            <form id="leave-form" action="{{ route('calendar') }}" method="POST">
                 @csrf
 
 
-                <div class="px-4 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
+                <div
+                    class="px-4 py-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
                     <div class="grid grid-cols-5 gap-6 sm:justify-center">
                         <!-- Name -->
                         <div id="table_data" class="col-span-5 sm:col-span-5 sm:justify-center text-center scrollable">
@@ -44,192 +45,203 @@
                         </div>
                     </div>
                 </div>
-                    
-                </form>
+
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+    <!-- =========================================== -->
+    <!-- Modal for History -->
+    <div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="calendarLabel">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header banner-blue py-2">
+                    <h4 class="modal-title text-xl text-white" id="calendarLabel">
+                    </h4>
+                    <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"></span></button>
+                </div>
+                <div class="modal-body bg-gray-50">
+                    <div class="grid grid-cols-6 gap-6 ">
+                        <!-- Name -->
+                        <div class="col-span-6 sm:col-span-4 w-full">
+                            <x-jet-label for="calendar_name" value="{{ __('Name:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="calendar_name" class="text-base uppercase" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-1 font-semibold">
+                            <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="calendar_employee_id" class="text-base" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-1 font-semibold">
+                            <x-jet-label for="calendar_leave_type" value="{{ __('Leave Type:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="calendar_leave_type" class="text-base text-center" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-4 font-semibold">
+                            <x-jet-label for="calendar_date_range" value="{{ __('Date Covered:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="calendar_date_range" class="text-base" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-1 font-semibold">
+                            <x-jet-label for="calendar_date_range" value="{{ __('Number of Day/s:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="no_of_days" class="text-base text-center" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-4 font-semibold">
+                            <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="calendar_reason" class="text-base" />
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-2 font-semibold">
+                            <x-jet-label for="leave_status" value="{{ __('Status:') }}"
+                                class="font-semibold text-xs leading-tight uppercase" />
+                            <x-jet-label id="leave_status" class="text-base" />
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- =========================================== -->
+
+    <script>
+        $(document).ready(function() {
+
+            var SITEURL = "{{ url('/') }}";
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
 
-<!-- =========================================== -->
-<!-- Modal for History -->
-<div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="calendarLabel" >
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header banner-blue py-2">
-        <h4 class="modal-title text-xl text-white" id="calendarLabel">
-        </h4>
-        <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-      </div>
-      <div class="modal-body bg-gray-50">
-        <div class="grid grid-cols-6 gap-6 ">
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4 w-full">
-                <x-jet-label for="calendar_name" value="{{ __('Name:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="calendar_name" class="text-base uppercase"/>
-            </div>
+            // alert(JSON.stringify(holidayEvents));
 
-            <div class="col-span-6 sm:col-span-1 font-semibold">
-                <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="calendar_employee_id" class="text-base" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-1 font-semibold">
-                <x-jet-label for="calendar_leave_type" value="{{ __('Leave Type:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="calendar_leave_type" class="text-base text-center" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-4 font-semibold">
-                <x-jet-label for="calendar_date_range" value="{{ __('Date Covered:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="calendar_date_range" class="text-base" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-1 font-semibold">
-                <x-jet-label for="calendar_date_range" value="{{ __('Number of Day/s:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="no_of_days" class="text-base text-center" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-4 font-semibold">
-                <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="calendar_reason" class="text-base" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-2 font-semibold">
-                <x-jet-label for="leave_status" value="{{ __('Status:') }}" class="font-semibold text-xs leading-tight uppercase" />
-                <x-jet-label id="leave_status" class="text-base" />
-            </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- =========================================== -->
-
-      <script>
-         $(document).ready(function () {
-            
-         var SITEURL = "{{ url('/') }}";
-           
-         $.ajaxSetup({
-             headers: {
-             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-             }
-         });
-
-
-        // alert(JSON.stringify(holidayEvents));
-           
-         var calendar = $('#calendar').fullCalendar({
-                 events: SITEURL + "/fullcalender",
-                 displayEventTime: false,
-                 editable: true,
-                 weekMode: 'variable', // allow the number of weeks to change dynamically
-                 weekNumbers: false, // show week numbers
-                 fixedWeekCount: false,
-                 contentHeight: function() {
+            var calendar = $('#calendar').fullCalendar({
+                events: SITEURL + "/fullcalendar",
+                displayEventTime: false,
+                editable: true,
+                weekMode: 'variable', // allow the number of weeks to change dynamically
+                weekNumbers: false, // show week numbers
+                fixedWeekCount: false,
+                contentHeight: function() {
                     // calculate the content height based on the number of weeks displayed
                     var numWeeks = $('#calendar').fullCalendar('getView').end.diff(
-                      $('#calendar').fullCalendar('getView').start, 'weeks'
+                        $('#calendar').fullCalendar('getView').start, 'weeks'
                     );
                     return numWeeks * 100; // set the height to be 100 pixels per week
                 },
-                 eventTextColor: '#fff',
-                 eventBackgroundColor: '#206CCE',
-                 eventRender: function (event, element, view) {
-                     if (event.allDay === 'true') {
-                             event.allDay = true;
-                     } else {
-                             event.allDay = false;
-                     }
-                     element.attr('title', event.title);
-                 },
-                 // selectable: true,
-                 selectHelper: true,
-                 /*select: function (start, end, allDay) {
-                     var title = prompt('Event Title:');
-                     if (title) {
-                         var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
-                         var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
-                         $.ajax({
-                             url: SITEURL + "/fullcalenderAjax",
-                             data: {
-                                 title: title,
-                                 start: start,
-                                 end: end,
-                                 type: 'add'
-                             },
-                             type: "POST",
-                             success: function (data) {
-                                 displayMessage("Event Created Successfully");
-
-                                 calendar.fullCalendar('renderEvent',
-                                     {
-                                         id: data.id,
-                                         title: title,
-                                         start: start,
-                                         end: end,
-                                         allDay: allDay
-                                     },true);
-
-                                 calendar.fullCalendar('unselect');
-                             }
-                         });
-                     }
-                 },*/
-                 eventDrop: function (event, delta) {
-                     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
-                     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
-
-                     $.ajax({
-                         url: SITEURL + '/fullcalenderAjax',
-                         data: {
-                             title: event.title,
-                             start: start,
-                             end: end,
-                             id: event.id,
-                             type: 'update'
-                         },
-                         type: "POST",
-                         success: function (response) {
-                             displayMessage("Event Updated Successfully");
-                         }
-                     });
-                 },
-                 eventClick: function (event) {
-                        if (event.color === 'red') { return false; }
+                eventTextColor: '#fff',
+                eventBackgroundColor: '#206CCE',
+                eventRender: function(event, element, view) {
+                    if (event.allDay === 'true') {
+                        event.allDay = true;
+                    } else {
+                        event.allDay = false;
+                    }
+                    element.attr('title', event.title);
+                },
+                // selectable: true,
+                selectHelper: true,
+                /*select: function (start, end, allDay) {
+                    var title = prompt('Event Title:');
+                    if (title) {
+                        var start = $.fullCalendar.formatDate(start, "Y-MM-DD");
+                        var end = $.fullCalendar.formatDate(end, "Y-MM-DD");
                         $.ajax({
-                            type: "POST",
-                            url: SITEURL + '/fullcalenderAjax',
+                            url: SITEURL + "/fullcalenderAjax",
                             data: {
-                                 id: event.id,
-                                 type: 'view'
+                                title: title,
+                                start: start,
+                                end: end,
+                                type: 'add'
                             },
-                            success: function (response) {
+                            type: "POST",
+                            success: function (data) {
+                                displayMessage("Event Created Successfully");
+
+                                calendar.fullCalendar('renderEvent',
+                                    {
+                                        id: data.id,
+                                        title: title,
+                                        start: start,
+                                        end: end,
+                                        allDay: allDay
+                                    },true);
+
+                                calendar.fullCalendar('unselect');
+                            }
+                        });
+                    }
+                },*/
+                eventDrop: function(event, delta) {
+                    var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
+                    var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
+
+                    $.ajax({
+                        url: SITEURL + '/fullcalenderAjax',
+                        data: {
+                            title: event.title,
+                            start: start,
+                            end: end,
+                            id: event.id,
+                            type: 'update'
+                        },
+                        type: "POST",
+                        success: function(response) {
+                            displayMessage("Event Updated Successfully");
+                        }
+                    });
+                },
+                eventClick: function(event) {
+                    if (event.color === 'red') {
+                        return false;
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: SITEURL + '/fullcalenderAjax',
+                        data: {
+                            id: event.id,
+                            type: 'view'
+                        },
+                        success: function(response) {
                             // prompt('',JSON.stringify(response));
-                            $("#calendarLabel").html(('Control #'+ response['control_number']).toUpperCase());
+                            $("#calendarLabel").html(('Control #' + response[
+                                'control_number']).toUpperCase());
                             $("#calendar_name").html(response['name']);
                             $("#calendar_employee_id").html(response['employee_id']);
                             $("#calendar_leave_type").html(response['leave_type']);
-                            $("#calendar_reason").html("<pre>"+response['reason']+"</pre>");
-                            $("#calendar_date_range").html([response['date_from'],response['date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
+                            $("#calendar_reason").html("<pre>" + response['reason'] +
+                                "</pre>");
+                            $("#calendar_date_range").html([response['date_from'], response[
+                                'date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
                             $("#no_of_days").html(response['no_of_days']),
-                            $("#leave_status").html(response['leave_status']),
-                            $("#modalCalendar").modal('show');
+                                $("#leave_status").html(response['leave_status']),
+                                $("#modalCalendar").modal('show');
 
-                            }
-                        });
-                 }
+                        }
+                    });
+                }
 
-             });
-          
-         });
-          
-         function displayMessage(message) {
-             toastr.success(message, 'Event');
-         } 
-           
-      </script>
-   </x-app-layout>
+            });
 
+        });
+
+        function displayMessage(message) {
+            toastr.success(message, 'Event');
+        }
+    </script>
+</x-app-layout>
