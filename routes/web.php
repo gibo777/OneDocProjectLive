@@ -206,7 +206,7 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     /*======= UTILITIES =======*/
     /* FULL CALENDAR */
-    Route::get('/fullcalender', [FullCalenderController::class, 'index'])->name('calendar');
+    Route::get('/fullcalendar', [FullCalenderController::class, 'index'])->name('calendar');
     Route::post('/fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
 
