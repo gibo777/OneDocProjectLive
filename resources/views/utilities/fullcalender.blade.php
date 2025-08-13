@@ -228,9 +228,12 @@
                                 "</pre>");
                             $("#calendar_date_range").html([response['date_from'], response[
                                 'date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
-                            $("#no_of_days").html(response['no_of_days']),
-                                $("#leave_status").html(response['leave_status']),
-                                $("#modalCalendar").modal('show');
+                            $("#no_of_days").html(
+                                response['no_of_days'] + (response['time_designator'] ?
+                                    ' (' + response['time_designator'] + ')' : '')
+                            );
+                            $("#leave_status").html(response['leave_status']);
+                            $("#modalCalendar").modal('show');
 
                         }
                     });
