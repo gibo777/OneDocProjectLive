@@ -236,9 +236,7 @@
                             $("#calendar_leave_type").html(
                                 response['leave_type'] + (response['others'] ? ' - ' +
                                     response['others'] : ''));
-                            $("#calendar_reason").html(
-                                "<pre class='m-0 text-wrap text-break'>" + response[
-                                    'reason'] + "</pre>");
+                            $("#calendar_reason").html(response['reason']);
                             $("#calendar_date_range").html([response['date_from'], response[
                                 'date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
                             $("#no_of_days").html(
