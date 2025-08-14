@@ -54,66 +54,76 @@
 
 
     <!-- =========================================== -->
-    <!-- Modal for History -->
     <div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="calendarLabel">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header banner-blue py-2">
-                    <h4 class="modal-title text-xl text-white" id="calendarLabel">
-                    </h4>
+                    <h4 class="modal-title text-xl text-white" id="calendarLabel"></h4>
                     <button type="button" class="close btn fa fa-close" data-bs-dismiss="modal"
                         aria-label="Close"><span aria-hidden="true"></span></button>
                 </div>
+
                 <div class="modal-body bg-gray-50">
-                    <div class="grid grid-cols-6 gap-6 ">
-                        <!-- Name -->
-                        <div class="col-span-6 sm:col-span-4 w-full">
-                            <x-jet-label for="calendar_name" value="{{ __('Name:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="calendar_name" class="text-base uppercase" />
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-md-5 pr-5">
+                                <x-jet-label for="calendar_name" value="{{ __('Name:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="calendar_name"
+                                    class="d-block text-base uppercase text-start font-semibold" />
+                            </div>
+                            <div class="col-md-3 pr-5">
+                                <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="calendar_employee_id"
+                                    class="d-block text-base text-start font-semibold" />
+                            </div>
+                            <div class="col-md-4">
+                                <x-jet-label for="calendar_leave_type" value="{{ __('Leave Type:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="calendar_leave_type"
+                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
+                            </div>
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1 font-semibold">
-                            <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="calendar_employee_id" class="text-base" />
+                        <div class="row mt-3">
+                            <div class="col-md-8 pr-5">
+                                <x-jet-label for="calendar_date_range" value="{{ __('Date Covered:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="calendar_date_range"
+                                    class="d-block text-base text-start font-semibold" />
+                            </div>
+                            <div class="col-md-4">
+                                <x-jet-label for="no_of_days" value="{{ __('Number of Day/s:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="no_of_days" class="d-block text-base text-start font-semibold" />
+                            </div>
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1 font-semibold">
-                            <x-jet-label for="calendar_leave_type" value="{{ __('Leave Type:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="calendar_leave_type" class="text-base text-center" />
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-4 font-semibold">
-                            <x-jet-label for="calendar_date_range" value="{{ __('Date Covered:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="calendar_date_range" class="text-base" />
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-1 font-semibold">
-                            <x-jet-label for="calendar_date_range" value="{{ __('Number of Day/s:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="no_of_days" class="text-base text-center" />
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-4 font-semibold">
-                            <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="calendar_reason" class="text-base" />
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-2 font-semibold">
-                            <x-jet-label for="leave_status" value="{{ __('Status:') }}"
-                                class="font-semibold text-xs leading-tight uppercase" />
-                            <x-jet-label id="leave_status" class="text-base" />
+                        <div class="row mt-3">
+                            <div class="col-md-8 pr-5">
+                                <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="calendar_reason"
+                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
+                            </div>
+                            <div class="col-md-4">
+                                <x-jet-label for="leave_status" value="{{ __('Status:') }}"
+                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
+                                <x-jet-label id="leave_status"
+                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
+                            </div>
                         </div>
 
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
+
     <!-- =========================================== -->
 
     <script>
@@ -222,10 +232,13 @@
                             $("#calendarLabel").html(('Control #' + response[
                                 'control_number']).toUpperCase());
                             $("#calendar_name").html(response['name']);
-                            $("#calendar_employee_id").html(response['employee_id']);
-                            $("#calendar_leave_type").html(response['leave_type']);
-                            $("#calendar_reason").html("<pre>" + response['reason'] +
-                                "</pre>");
+                            $("#calendar_employee_id").text(response['employee_id']);
+                            $("#calendar_leave_type").html(
+                                response['leave_type'] + (response['others'] ? ' - ' +
+                                    response['others'] : ''));
+                            $("#calendar_reason").html(
+                                "<pre class='m-0 text-wrap text-break'>" + response[
+                                    'reason'] + "</pre>");
                             $("#calendar_date_range").html([response['date_from'], response[
                                 'date_to']].join('&nbsp;&nbsp;to&nbsp;&nbsp;'));
                             $("#no_of_days").html(
