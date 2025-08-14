@@ -71,7 +71,7 @@
                                 <x-jet-label for="calendar_name" value="{{ __('Name:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="calendar_name"
-                                    class="d-block text-base uppercase text-start font-semibold" />
+                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
                             </div>
                             <div class="col-md-3 pr-5">
                                 <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}"
