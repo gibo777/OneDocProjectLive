@@ -32,6 +32,10 @@ class FullCalenderController extends Controller
                         'date as start',
                         'date as end'
                     )
+                    ->where(function ($q) {
+                        return $q->whereNull('holiday_office')
+                            ->orWhere('holiday_office', '=', Auth::user()->office);
+                    })
                     ->get()
                     ->map(function ($event) {
                         // Add a custom property 'color' to the event object
@@ -58,9 +62,7 @@ class FullCalenderController extends Controller
 
                 $data = $data->get([
                     'id',
-                    DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ',
-                          SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.',
-                          ' (',leave_type,')') as title"),
+                    DB::raw("concat(SUBSTRING_INDEX(name,',',1), ', ', SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(name,',',2),',',-1),2,1), '.', ' (',leave_type,')') as title"),
                     'date_from as start',
                     'date_to as end'
                 ]);
