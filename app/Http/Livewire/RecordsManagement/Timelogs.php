@@ -254,21 +254,24 @@ class Timelogs extends Component
             $currentDate = Carbon::now('Asia/Manila');
             $formattedDateTime = $currentDate->format('YmdHis');
 
+
             if (Auth::user()->is_head == 1 || Auth::user()->role_type == 'SUPER ADMIN' ||  Auth::user()->role_type == 'ADMIN') {
-                $tlSummary = DB::select("CALL sp_timelogs_header(?, ?, ?, ?, ?)", [
+                $tlSummary = DB::select("CALL sp_timelogs_header(?, ?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
                     $request->department,
                     $request->timeIn,
-                    $request->timeOut
+                    $request->timeOut,
+                    $request->search
                 ]);
 
-                $tlDetailed = DB::select("CALL sp_timelogs_detailed_xls(?, ?, ?, ?, ?)", [
+                $tlDetailed = DB::select("CALL sp_timelogs_detailed_xls(?, ?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
                     $request->department,
                     $request->timeIn,
-                    $request->timeOut
+                    $request->timeOut,
+                    $request->search
                 ]);
             } else {
                 $tlSummary = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
