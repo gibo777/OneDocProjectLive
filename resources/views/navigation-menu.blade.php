@@ -391,6 +391,12 @@
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Time Keeping </a>
                                     <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                        @if (Auth::user()->id == 1)
+                                            <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
+                                                Registration</a>
+                                            <a class="dropdown-item"
+                                                href="{{ route('face.registered.listing') }}">View User Faces</a>
+                                        @endif
                                         <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
                                         <a class="dropdown-item"
                                             href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
@@ -765,6 +771,57 @@
                 });
         }
 
+        /* function startWebcam() {
+            const isMobile = window.innerWidth <= 768;
+            // const webcamWidth = isMobile ? 320 : 430;
+            // const webcamHeight = isMobile ? 240 : 350;
+            const webcamWidth = isMobile ? 365 : 430;
+            const webcamHeight = 350;
+
+            Swal.fire({
+                title: 'Capture Image for Timelog',
+                html: `
+            <div id="swalLogCam"></div>
+            <input type="hidden" name="image" class="image-tag" id="imageTag">
+            <div class="my-2 text-sm font-weight-bold font-italic">
+                In compliance with company policy, ensure that your picture clearly shows your office location.
+            </div>
+            <button type="button" id="takeSnapshot" class="btn btn-primary">Take Snapshot</button>
+            <div id="results" class="mt-2"></div>
+        `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                didOpen: () => {
+                    Webcam.set({
+                        width: webcamWidth,
+                        height: webcamHeight,
+                        image_format: 'jpeg',
+                        jpeg_quality: 90,
+                        constraints: {
+                            video: {
+                                facingMode: "user",
+                                mirror: true
+                            }
+                        }
+                    });
+                    Webcam.attach('#swalLogCam');
+
+                    document.getElementById('takeSnapshot').addEventListener('click', function() {
+                        Webcam.snap(function(data_uri) {
+                            document.getElementById('results').innerHTML =
+                                '<img src="' + data_uri +
+                                '" class="img-fluid rounded-md"/>';
+                            document.getElementById('imageTag').value = data_uri;
+                        });
+                    });
+                },
+                willClose: () => {
+                    Webcam.reset();
+                }
+            });
+        } */
+
+
         // Function to capture an image
         function captureImage() {
 
@@ -848,6 +905,27 @@
 
                                     $("#btnTimeIn").prop('disabled', true);
                                     $("#btnTimeOut").prop('disabled', false);
+
+                                    // Send Timelog to HRIS using API
+                                    $.ajaxSetup({
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                            .attr('content')
+                                    });
+                                    $.ajax({
+                                        url: `${window.location.origin}/send-timelogs-to-hris`,
+                                        method: 'POST',
+                                        data: {
+                                            'tID': data.tID,
+                                        },
+                                        success: function(apiResponse) {
+                                            console.log('API response:', JSON
+                                                .stringify(apiResponse));
+                                        },
+                                        error: function(xhr) {
+                                            console.error('API error:', xhr
+                                                .responseText);
+                                        }
+                                    });
                                 } else {
                                     Swal.fire({
                                         icon: 'error',

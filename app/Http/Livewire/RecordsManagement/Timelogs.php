@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\RecordsManagement;
 
 use Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -12,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+
 
 class Timelogs extends Component
 {
@@ -233,6 +237,71 @@ class Timelogs extends Component
     {
         $employees = DB::select(DB::raw("CALL sp_timelogs_perday('$request->id')"));
         return $employees;
+    }
+
+
+    /**
+     * Sending Timelogs payload to HRIS using API
+     *
+     * @return
+     * @author Gilbert L. Retiro
+     **/
+    public function sendTimelogsAPIHRIS(Request $request)
+    {
+
+        $timelog = DB::table('time_logs as t')
+            ->leftJoin('users as u', 't.employee_id', 'u.employee_id')
+            ->leftJoin('offices as o', 't.office', 'o.id')
+            ->select(
+                't.id',
+                't.employee_id',
+                'u.biometrics_id',
+                DB::raw('(CASE WHEN t.time_in IS NOT NULL THEN t.time_in ELSE t.time_out END) as time_log'),
+                'o.company_name as office',
+                't.created_at',
+                't.updated_at'
+            )
+            ->where('t.id', $request->tID)
+            ->first();
+
+        if ($timelog) {
+            $payloads = [
+                'employeeid'    => $timelog->employee_id,
+                'biometricsid'  => $timelog->biometrics_id ?? $timelog->employee_id,
+                'date'          => Carbon::parse($timelog->time_log)->format('Y-m-d'),
+                'time'          => Carbon::parse($timelog->time_log)->format('H:i:s'),
+                'officename'    => $timelog->office,
+                'created_at'    => $timelog->created_at,
+                'updated_at'    => $timelog->updated_at
+            ];
+
+            $response = Http::withHeaders([
+                'x-api-key' => env('API_KEY'),
+                'Accept' => 'application/json'
+            ])->withOptions([
+                'verify' => false
+            ])->post(env('HRIS_URL') . '/api/fetchPortalTimeLogs', $payloads);
+
+            if ($response->successful()) {
+                $dataArray = array(
+                    'api_sent'  => 1,
+                    'api_date'  => DB::raw('NOW()'),
+                    'api_refno' => $response->json('apiNo')
+                );
+
+                Log::channel('hris-api-timelogs')->info('Timelogs - HRIS API Response', [
+                    'status'            => $response->status(),
+                    'control_number'    => $timelog->id,
+                    'body'              => $response->body()
+                    // ,json'              => $response->json()
+                    // ,payloads'          => json_encode($payloads)
+                ]);
+
+                $utAPI = DB::table('time_logs')
+                    ->where('id', $request->tID)
+                    ->update($dataArray);
+            }
+        }
     }
 
 
