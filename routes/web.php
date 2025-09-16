@@ -19,7 +19,7 @@ use App\Http\Livewire\EForms\OvertimeRequests;
 /* Records Management */
 use App\Http\Livewire\RecordsManagement\Timelogs;
 use App\Http\Livewire\RecordsManagement\Employees;
-use App\Http\Livewire\RecordsManagement\FaceRegistration;
+// use App\Http\Livewire\RecordsManagement\FaceRegistration;
 use App\Http\Livewire\RecordsManagement\AttendanceMonitoring;
 use App\Http\Livewire\ServerStatus;
 use App\Http\Livewire\AdminDashboard;
@@ -27,7 +27,7 @@ use App\Http\Livewire\AdminDashboard;
 use App\Http\Livewire\Setup\AuthorizeView;
 use App\Http\Livewire\Setup\ModuleCreation;
 
-use App\Http\Controllers\FaceRegistrationController;
+// use App\Http\Controllers\FaceRegistrationController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
 use App\Http\Controllers\ClearancesController;
@@ -282,11 +282,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/send-timelogs-to-hris', [Timelogs::class, 'sendTimelogsAPIHRIS'])->name('send.timelogs.to.hris');
 
     # FACE RECOGNITION AND VALIDATION #
-    Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
-    Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
-    Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
-    Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
-    Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
+    // Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
+    // Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
+    // Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
+    // Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
+    // Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
 
 
     /*======= EMPLOYEES =======*/
