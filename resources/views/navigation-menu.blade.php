@@ -391,12 +391,12 @@
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Time Keeping </a>
                                     <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        @if (Auth::user()->id == 1)
+                                        {{-- @if (Auth::user()->id == 1)
                                             <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
                                                 Registration</a>
                                             <a class="dropdown-item"
                                                 href="{{ route('face.registered.listing') }}">View User Faces</a>
-                                        @endif
+                                        @endif --}}
                                         <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
                                         <a class="dropdown-item"
                                             href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
