@@ -32,9 +32,9 @@ class OvertimeRequests extends Component
     public $fTLOffice = ''; // Office filter variable
     public $fTLDept = '';   // Office filter variable
     public $fLType = '';    // Office Leave Type variable
-    public $fLStatus = '';  // Office Leave Status variable
-    public $fLdtFrom = '';  // Date From filter variable
-    public $fLdtTo = '';    // Date To filter variable
+    public $fOTStatus = '';  // Office Leave Status variable
+    public $fOTdtFrom = '';  // Date From filter variable
+    public $fOTdtTo = '';    // Date To filter variable
 
     public $lTypes = '';
     public $lStatus = '';
@@ -50,11 +50,11 @@ class OvertimeRequests extends Component
 
     public function render()
     {
-        $leaves = $this->fetchOvertimeListing();
+        $overtimes = $this->fetchOvertimeListing();
         $this->loadDropdowns();
 
         return view('livewire.e-forms.overtime-requests', [
-            'leaves' => $leaves,
+            'overtimes' => $overtimes,
             'offices' => $this->offices,
             'departments' => $this->departments,
         ]);
@@ -77,13 +77,13 @@ class OvertimeRequests extends Component
 
     public function clearDateFilters()
     {
-        $this->fLdtFrom = null;
-        $this->fLdtTo = null;
+        $this->fOTdtFrom = null;
+        $this->fOTdtTo = null;
     }
 
     private function fetchOvertimeListing()
     {
-        $leaves = DB::table('overtimes as ot')
+        $overtimes = DB::table('overtimes as ot')
             ->select(
                 'ot.id',
                 'ot.u_id',
@@ -104,6 +104,8 @@ class OvertimeRequests extends Component
                 'ot.ot_status',
                 'ot.employee_id',
                 'ot.created_at as date_applied',
+                'ot.is_head_approved',
+                'ot.is_head2_approved',
                 DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as approver1"),
                 DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2")
             )
@@ -117,52 +119,49 @@ class OvertimeRequests extends Component
             });
 
         if (Auth::user()->id != 1 && Auth::user()->id != 2 && Auth::user()->id != 233) {
-            $leaves = $leaves->where('u.id', '<>', 1);
+            $overtimes = $overtimes->where('u.id', '<>', 1);
         }
-        $leaves = $leaves->where(function ($query) {
+        $overtimes = $overtimes->where(function ($query) {
 
             // Apply office filter if selected
             if (!empty($this->fTLOffice)) {
-                $query->where('l.office', $this->fTLOffice);
+                $query->where('ot.office', $this->fTLOffice);
             }
             // Apply department filter if selected
             if (!empty($this->fTLDept)) {
-                $query->where('l.department', $this->fTLDept);
+                $query->where('ot.department', $this->fTLDept);
             }
-            // Apply Leave Type filter if selected
-            if (!empty($this->fLType)) {
-                $query->where('l.leave_type', $this->fLType);
-            }
-            // Apply Leave Status filter if selected
-            if (!empty($this->fLStatus)) {
-                $query->where('l.leave_status', $this->fLStatus);
+            // Apply OT Status filter if selected
+            if (!empty($this->fOTStatus)) {
+                $query->where('ot.ot_status', $this->fOTStatus);
             }
 
-            // if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'ADMIN') {
-            //     // Apply search query if search term is provided
-            //     if (!empty($this->search)) {
-            //         $searchTerms = explode(' ', $this->search);
-            //         $query->where(function ($q) use ($searchTerms) {
-            //             foreach ($searchTerms as $term) {
-            //                 $q->where('l.name', 'like', '%' . $term . '%');
-            //             }
-            //         })
-            //             ->orWhere('l.employee_id', 'like', '%' . $this->search . '%')
-            //             ->orWhere('l.control_number', 'like', '%' . $this->search . '%');
-            //     }
-            // }
+            if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
+                // Apply search query if search term is provided
+                if (!empty($this->search)) {
+                    $searchTerms = explode(' ', $this->search);
+                    $query->where(function ($q) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $q->where('ot.name', 'like', '%' . $term . '%');
+                        }
+                    })
+                        ->orWhere('ot.employee_id', 'like', '%' . $this->search . '%')
+                        ->orWhere('ot.ot_control_number', 'like', '%' . $this->search . '%');
+                }
+            }
+
 
             // Filter by date range
-            // if (!empty($this->fLdtFrom) && !empty($this->fLdtTo)) {
-            //     $query->where(function ($q) {
-            //         $q->where('l.date_from', '>=', $this->fLdtFrom)
-            //             ->where('l.date_to', '<=', $this->fLdtTo);
-            //     });
-            // } elseif (!empty($this->fLdtFrom)) {
-            //     $query->where('l.date_from', $this->fLdtFrom);
-            // } elseif (!empty($this->fLdtTo)) {
-            //     $query->where('l.date_to', $this->fLdtTo);
-            // }
+            if (!empty($this->fOTdtFrom) && !empty($this->fOTdtTo)) {
+                $query->where(function ($q) {
+                    $q->where('ot.ot_date_from', '>=', $this->fOTdtFrom)
+                        ->where('ot.ot_date_to', '<=', $this->fOTdtTo);
+                });
+            } elseif (!empty($this->fOTdtFrom)) {
+                $query->where('ot.ot_date_from', $this->fOTdtFrom);
+            } elseif (!empty($this->fOTdtTo)) {
+                $query->where('ot.ot_date_to', $this->fOTdtTo);
+            }
 
             if (Auth::user()->is_head == 1) {
                 // This will be changed or removed if a new module for user authorization viewing is created.
@@ -207,10 +206,10 @@ class OvertimeRequests extends Component
                     ->orWhereNull('u.is_deleted');
             });
         });
-        $leaves = $leaves->orderBy('ot.created_at', 'desc')
+        $overtimes = $overtimes->orderBy('ot.created_at', 'desc')
             ->paginate($this->pageSize);
 
-        return $leaves;
+        return $overtimes;
     }
 
     // Method to handle changing page size
@@ -226,11 +225,36 @@ class OvertimeRequests extends Component
             ->where('id', $request->id)
             ->first();
 
+        $isAdmin = Auth::user()->id == 1;
+        $isApprover1 = Auth::user()->employee_id == $otDtls->approver1;
+        $isApprover2 = Auth::user()->employee_id == $otDtls->approver2 && $otDtls->approver2 != null;
+        $isHead = Auth::user()->employee_id == $otDtls->head_id;
+        $isOwner = Auth::user()->employee_id == $otDtls->employee_id;
+        $status = strtolower($otDtls->ot_status);
+
         return response()->json([
             'status' => 'success',
-            'html' => view('modals.e-forms.m-overtime-detailed', ['otDtls' => $otDtls])->render(),
+            'html' => view('modals.e-forms.m-overtime-detailed', [
+                'otDtls'      => $otDtls,
+                'isAdmin'     => $isAdmin,
+                'isApprover1' => $isApprover1,
+                'isApprover2' => $isApprover2,
+                'isHead'      => $isHead,
+                'isOwner'     => $isOwner,
+                'status'      => $status,
+            ])->render(),
             'otDtls' => $otDtls
         ]);
+
+        // $otDtls = DB::table('v_overtime_details')
+        //     ->where('id', $request->id)
+        //     ->first();
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'html' => view('modals.e-forms.m-overtime-detailed', ['otDtls' => $otDtls])->render(),
+        //     'otDtls' => $otDtls
+        // ]);
     }
 
     public function headApproveLeave(Request $request)
@@ -245,19 +269,6 @@ class OvertimeRequests extends Component
             $newStatus = 'Head Approved';
 
             try {
-                // $googleEventId = DB::table('leaves')
-                // ->where('id', $lId)
-                // ->value('google_id');
-
-                // if (!empty($googleEventId)) {
-                //     $event = Event::find($googleEventId);
-                //     if ($event) {
-                //         $description        = $event->description;
-                //         $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                //         $event->description = $description;
-                //         $event->save();
-                //     }
-                // }
 
                 $dataArray = array(
                     'leave_status'          => $newStatus,
@@ -369,81 +380,81 @@ class OvertimeRequests extends Component
         }
     }
 
-    public function sendToHRIS(Request $request)
-    {
-        if (!is_numeric($request->lID)) {
-            return response()->json(['error' => 'Invalid ID'], 400);
-        }
+    // public function sendToHRIS(Request $request)
+    // {
+    //     if (!is_numeric($request->lID)) {
+    //         return response()->json(['error' => 'Invalid ID'], 400);
+    //     }
 
-        $leave = DB::table('leaves as l')
-            ->select(
-                'l.control_number',
-                'l.name',
-                'l.employee_id',
-                'o.company_name as office',
-                'l.leave_status',
-                'l.leave_type',
-                'l.others',
-                'l.date_from',
-                'l.date_to',
-                'l.time_designator',
-                'l.reason',
-                'l.no_of_days',
-                'l.created_at'
-            )
-            ->leftJoin('offices as o', 'l.office', 'o.id')
-            ->where('l.id', $request->lID)
-            ->where('l.is_head_approved', 1)
-            ->first();
+    //     $leave = DB::table('leaves as l')
+    //         ->select(
+    //             'l.control_number',
+    //             'l.name',
+    //             'l.employee_id',
+    //             'o.company_name as office',
+    //             'l.leave_status',
+    //             'l.leave_type',
+    //             'l.others',
+    //             'l.date_from',
+    //             'l.date_to',
+    //             'l.time_designator',
+    //             'l.reason',
+    //             'l.no_of_days',
+    //             'l.created_at'
+    //         )
+    //         ->leftJoin('offices as o', 'l.office', 'o.id')
+    //         ->where('l.id', $request->lID)
+    //         ->where('l.is_head_approved', 1)
+    //         ->first();
 
-        if ($leave) {
-            $payloads = [
-                'CONTROL_NO'        => $leave->control_number,
-                'name'              => $leave->name,
-                'employee_id'       => $leave->employee_id,
-                'office'            => $leave->office,
-                'leave_status_no'   => $leave->leave_status == 'Head Approved' ? 1 : 2,
-                'leave_type'        => $leave->leave_type,
-                'others'            => $leave->others,
-                'date_from'         => $leave->date_from,
-                'date_to'           => $leave->date_to,
-                'time_designator'   => $leave->time_designator,
-                'reason'            => $leave->reason,
-                'no_of_days'        => $leave->no_of_days,
-                'created_at'        => $leave->created_at,
-                'updated_at'        => now()->format('Y-m-d H:i:s'),
-                'updated_by'        => Auth::user()->employee_id,
-            ];
+    //     if ($leave) {
+    //         $payloads = [
+    //             'CONTROL_NO'        => $leave->control_number,
+    //             'name'              => $leave->name,
+    //             'employee_id'       => $leave->employee_id,
+    //             'office'            => $leave->office,
+    //             'leave_status_no'   => $leave->leave_status == 'Head Approved' ? 1 : 2,
+    //             'leave_type'        => $leave->leave_type,
+    //             'others'            => $leave->others,
+    //             'date_from'         => $leave->date_from,
+    //             'date_to'           => $leave->date_to,
+    //             'time_designator'   => $leave->time_designator,
+    //             'reason'            => $leave->reason,
+    //             'no_of_days'        => $leave->no_of_days,
+    //             'created_at'        => $leave->created_at,
+    //             'updated_at'        => now()->format('Y-m-d H:i:s'),
+    //             'updated_by'        => Auth::user()->employee_id,
+    //         ];
 
-            $response = Http::withHeaders([
-                'x-api-key' => env('API_KEY'),
-                'Accept' => 'application/json'
-            ])->withOptions([
-                'verify' => false
-            ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payloads);
+    //         $response = Http::withHeaders([
+    //             'x-api-key' => env('API_KEY'),
+    //             'Accept' => 'application/json'
+    //         ])->withOptions([
+    //             'verify' => false
+    //         ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payloads);
 
-            if ($response->successful()) {
-                Log::channel('hris-api')->info('HRIS API Response', [
-                    'status'            => $response->status(),
-                    'control_number'    => $leave->control_number,
-                    'body'              => $response->body(),
-                    'json'              => $response->json()
-                ]);
-                return response()->json([
-                    'status'    => $response->status(),
-                    'response'  => $response->json()
-                ]);
-            } else {
-                Log::channel('hris-api')->info('Failed or No Response from HRIS API', [
-                    'status'            => $response->status(),
-                    'control_number'    => $leave->control_number
-                ]);
-                return response()->json(['response' => '']);
-            }
-        } else {
-            return response()->json(['response' => '']);
-        }
-    }
+    //         if ($response->successful()) {
+    //             Log::channel('hris-api')->info('HRIS API Response', [
+    //                 'status'            => $response->status(),
+    //                 'control_number'    => $leave->control_number,
+    //                 'body'              => $response->body(),
+    //                 'json'              => $response->json()
+    //             ]);
+    //             return response()->json([
+    //                 'status'    => $response->status(),
+    //                 'response'  => $response->json()
+    //             ]);
+    //         } else {
+    //             Log::channel('hris-api')->info('Failed or No Response from HRIS API', [
+    //                 'status'            => $response->status(),
+    //                 'control_number'    => $leave->control_number
+    //             ]);
+    //             return response()->json(['response' => '']);
+    //         }
+    //     } else {
+    //         return response()->json(['response' => '']);
+    //     }
+    // }
 
 
     public function revokeLeave(Request $request)
@@ -455,23 +466,6 @@ class OvertimeRequests extends Component
                 $reason = $request->lReason;
                 $date = DB::raw('NOW()'); // Carbon::now('Asia/Manila')
                 $newStatus = $request->lAction;
-
-                // $googleEventId = DB::table('leaves')
-                // ->where('id', $lId)
-                // ->value('google_id');
-
-                // if (!empty($googleEventId)) {
-                //     $event = Event::find($googleEventId);
-                //     if ($event) {
-                //         $description        = $event->description;
-                //         $description        = preg_replace('/Status: .*/', "Status: $newStatus", $description);
-                //         $event->description = $description;
-                //         if (in_array($newStatus, ['Denied', 'Cancelled'])) {
-                //             $event->status = 'cancelled';
-                //         }
-                //         $event->save();
-                //     }
-                // }
 
                 if ($action == "Cancelled") {
                     $data_array = array(
