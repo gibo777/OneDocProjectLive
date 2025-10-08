@@ -293,14 +293,26 @@ $(document).ready(function () {
                         url: '/hris/overtime',
                         method: 'post',
                         data: otData, // prefer use serialize method
+                        beforeSend: function () {
+                            $('#dataProcess').css({
+                                'display': 'flex',
+                                'position': 'fixed',
+                                'top': '50%',
+                                'left': '50%',
+                                'transform': 'translate(-50%, -50%)'
+                            });
+
+                        },
                         success: function (data) {
                             if (data.isSuccess) {
+                                $('#dataProcess').hide();
                                 Swal.fire({
                                     icon: 'success',
                                     title: data.message
                                 }).then(function () {
                                     window.location = window.location.origin + "/e-forms/overtime-listing";
                                 });
+                                sendOTNotification(data.otID);
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -311,12 +323,22 @@ $(document).ready(function () {
                     }); return false;
                     // Handle the submit action
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    // Handle the cancel action
                     // Swal.fire('Cancelled', 'Your overtime request has been cancelled.', 'info');
                 }
             });
         }
         return false;
     });
+    function sendOTNotification(otID) {
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+        $.ajax({
+            url: '/e-forms/notify-overtime-action',
+            method: 'post',
+            data: { 'otID': otID }, // prefer use serialize method
+            success: function (data) { }
+        });
+    }
     /* SUBMIT OT REQUEST FORM end*/
 });

@@ -5,9 +5,10 @@ namespace App\Http\Livewire\EForms;
 use Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ use \Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Mail;
 use App\Mail\LeaveApplicationSubmitted;
 
 use Spatie\GoogleCalendar\Event;
@@ -694,18 +694,18 @@ class LeaveApplication extends Component
                 if ($response->successful()) {
                     $success++;
                     Log::channel('hris-api')->info('HRIS API Response', [
-                        'status'            => $response->status(),
-                        'control_number'    => $leave->control_number,
-                        'isExisting'        => $response->json('isExisting')
+                        'status'        => $response->status(),
+                        'controlNumber' => $leave->control_number,
+                        'isExisting'    => $response->json('isExisting')
 
                     ]);
                 } else {
                     $failed++;
                     Log::channel('hris-api')->error('Failed to send to HRIS', [
-                        'status'            => $response->status(),
-                        'control_number'    => $leave->control_number,
-                        'isExisting'        => $response->json('isExisting'),
-                        'error_message'     => $response->json('message') ?? $response->body()
+                        'status'        => $response->status(),
+                        'controlNumber' => $leave->control_number,
+                        'isExisting'    => $response->json('isExisting'),
+                        'errorMessage'  => $response->json('message') ?? $response->body()
                     ]);
                 }
             }
@@ -751,23 +751,23 @@ class LeaveApplication extends Component
                 // }
 
                 if ($action == "Cancelled") {
-                    $data_array = array(
+                    $dataArray = array(
                         'leave_status'    => $action,
                         'is_cancelled'    => 1,
                         'cancelled_by'    => Auth::user()->employee_id,
                         'date_cancelled'  => DB::raw('NOW()')
                     );
                 } else if ($action == "Denied") {
-                    $data_array = array(
+                    $dataArray = array(
                         'leave_status' => $action,
                         'is_denied'    => 1,
                         'denied_by'    => Auth::user()->employee_id,
                         'date_denied'  => DB::raw('NOW()')
                     );
                 }
-                $update = DB::table('leaves');
-                $update = $update->where('id', $lId);
-                $update = $update->update($data_array);
+                $update = DB::table('leaves')
+                    ->where('id', $lId)
+                    ->update($dataArray);
 
                 if ($update > 0) {
                     $leaveInsert = DB::table('leaves as L')
@@ -1051,7 +1051,7 @@ class LeaveApplication extends Component
                     ->where('l.id', $lId)
                     ->where('l.hash_id', $lHash)->first();
 
-                $data_array = array(
+                $dataArray = array(
                     'leave_status'  => 'Denied',
                     'is_denied'     => 1,
                     'denied_by'     => $headId->head_id,
@@ -1061,7 +1061,7 @@ class LeaveApplication extends Component
 
                 $update = DB::table('leaves');
                 $update = $update->where('id', $lId);
-                $update = $update->update($data_array);
+                $update = $update->update($dataArray);
 
                 if ($update > 0) {
                     $leaveInsert = DB::table('leaves as L')
@@ -1161,7 +1161,7 @@ class LeaveApplication extends Component
 
         $dLinkApprove   = $request->has('dLinkApprove') ? $request->dLinkApprove : '';
         $dLinkDeny      = $request->has('dLinkDeny') ? $request->dLinkDeny : '';
-        $dAction = $request->has('dAction') ? ($request->dAction === 'Approved' ? 'Head ' . $request->dAction : $request->dAction) : '';
+        $dAction        = $request->has('dAction') ? ($request->dAction === 'Approved' ? 'Head ' . $request->dAction : $request->dAction) : '';
 
         $lEmail = DB::table('users')
             ->where('employee_id', $request->input('dMail.employee_id'))

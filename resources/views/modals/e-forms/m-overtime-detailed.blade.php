@@ -1,4 +1,138 @@
-<div class="table-responsive">
+<div class="banner-blue pl-2 p-1 text-md text-left">
+    Control No. <strong>{{ $otDtls->ot_control_number }}</strong>
+</div>
+
+
+<div class="modal-body text-left">
+    <div class="row border-1 px-2">
+        <div class="col-md-5 px-1 mt-1 text-wrap">
+            <x-jet-label id="name" class="text-secondary" for="name">
+                {!! __('<i class="text-sm">Name:</i>&nbsp;<strong>:name</strong>', ['name' => $otDtls->name]) !!}
+            </x-jet-label>
+        </div>
+        <div class="col-md-4 px-1 mt-1 text-wrap">
+            <x-jet-label class="text-secondary" for="employeeNumber">
+                {!! __('<i class="text-sm">Employee ID:</i>&nbsp;<strong>:employeeNumber</strong>', [
+                    'employeeNumber' => $otDtls->employee_id,
+                ]) !!}
+            </x-jet-label>
+        </div>
+        <div class="col-md-3 p-1 text-wrap">
+            <x-jet-label class="text-secondary" for="otDateApplied">
+                {!! __('<i class="text-sm">Date Applied:</i><br><strong>:otDateApplied</strong>', [
+                    'otDateApplied' => $otDtls->date_applied,
+                ]) !!}
+            </x-jet-label>
+        </div>
+    </div>
+
+
+    <div class="row border-1 px-2">
+        <div class="col-md-4 px-1 mt-1 text-wrap">
+            <x-jet-label id="otLocation" class="text-secondary" for="otLocation">
+                {!! __('<i class="text-sm">O.T. Location:</i>&nbsp;<strong>:otLocation</strong>', [
+                    'otLocation' => $otDtls->ot_location,
+                ]) !!}
+            </x-jet-label>
+        </div>
+        <div class="col-md-8 px-1 mt-1 text-wrap">
+            <x-jet-label class="text-secondary" for="otSchedule">
+                {!! __('<i class="text-sm">OT Schedule:</i>&nbsp;<strong>:otSchedule</strong>', [
+                    'otSchedule' =>
+                        date('D', strtotime($otDtls->ot_date_from)) .
+                        ', ' .
+                        $otDtls->begin_date .
+                        ' - ' .
+                        date('D', strtotime($otDtls->ot_date_to)) .
+                        ', ' .
+                        $otDtls->end_date,
+                ]) !!}
+            </x-jet-label>
+        </div>
+    </div>
+
+
+
+    <div class="row border-1 px-2">
+        <div class="col-md-8 px-1 mt-1 text-wrap">
+            <x-jet-label id="otReason" class="text-secondary" for="otReason">
+                {!! __('<i class="text-sm">O.T. Reason:</i><br><strong>:otReason</strong>', [
+                    'otReason' => nl2br(e($otDtls->ot_reason)),
+                ]) !!}
+            </x-jet-label>
+        </div>
+
+        <div class="col-md-4 px-1 mt-1 border-1">
+            <x-jet-label id="otHours" class="text-secondary" for="otHours">
+                {!! __('<i class="text-sm">Hours:</i>&nbsp;<strong>:otHours</strong>', [
+                    'otHours' => nl2br(e($otDtls->ot_hours)),
+                ]) !!}
+            </x-jet-label>
+            <x-jet-label id="otMinutes" class="text-secondary" for="otMinutes">
+                {!! __('<i class="text-sm">Minutes:</i>&nbsp;<strong>:otMinutes</strong>', [
+                    'otMinutes' => nl2br(e($otDtls->ot_minutes)),
+                ]) !!}
+            </x-jet-label>
+            <x-jet-label id="otTotalHours" class="text-secondary" for="otTotalHours">
+                {!! __('<i class="text-sm">Total Hours:</i>&nbsp;<strong>:otTotalHours</strong>', [
+                    'otTotalHours' => nl2br(e($otDtls->total_hours)),
+                ]) !!}
+            </x-jet-label>
+        </div>
+    </div>
+
+
+    <div class="flex items-center justify-center sm:px-2 sm:rounded-bl-md sm:rounded-br-md mt-1">
+        <div class="row text-center justify-content-center space-y-2">
+
+            @if ($status === 'pending' && ($isApprover1 || $isApprover2 || $isAdmin))
+                @if (($isApprover1 && $otDtls->is_head_approved != 1) || $isAdmin)
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otApproveRequest" value="{{ $otDtls->id }}" class="w-full">Approve
+                            O.T.</x-jet-button>
+                    </div>
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otDenyRequest" value="{{ $otDtls->id }}" class="w-full">Deny
+                            O.T.</x-jet-button>
+                    </div>
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otCancelRequest" value="{{ $otDtls->id }}" class="w-full">Cancel
+                            O.T.</x-jet-button>
+                    </div>
+                @elseif ($isApprover2 && $otDtls->is_head_approved == 1 && $otDtls->is_head2_approved != 1)
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otApproveRequest" value="{{ $otDtls->id }}" class="w-full">Approve
+                            O.T.</x-jet-button>
+                    </div>
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otDenyRequest" value="{{ $otDtls->id }}" class="w-full">Deny
+                            O.T.</x-jet-button>
+                    </div>
+                    <div class="col-md-4 px-1 my-1">
+                        <x-jet-button id="otCancelRequest" value="{{ $otDtls->id }}" class="w-full">Cancel
+                            O.T.</x-jet-button>
+                    </div>
+                @else
+                    <div class="col-md-12 px-1 my-1">
+                        <x-jet-button id="otCancelRequest" value="{{ $otDtls->id }}" class="w-full">Cancel
+                            O.T.</x-jet-button>
+                    </div>
+                @endif
+            @elseif ($status === 'head approved' && ($isApprover1 || $isApprover2 || $isOwner || $isAdmin))
+                <div class="col-md-12 px-1 my-1">
+                    <x-jet-button id="otCancelRequest" value="{{ $otDtls->id }}" class="w-full">Cancel
+                        O.T.</x-jet-button>
+                </div>
+            @endif
+
+        </div>
+    </div>
+
+</div>
+
+
+
+{{-- <div class="table-responsive">
     <table id="otSummary" class="table table-fixed table-bordered text-center text-md">
         <colgroup>
             <col style="width:25%">
@@ -60,4 +194,4 @@
             </x-jet-button>
         </div>
     </div>
-</div>
+</div> --}}

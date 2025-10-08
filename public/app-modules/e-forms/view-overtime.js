@@ -443,7 +443,7 @@ $(document).ready(function () {
                 $("#myModal").modal('hide');
 
                 isSuccess ?
-                    (Livewire.emit('refetchAcc'),
+                    (Livewire.emit('refreshComponent'),
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
@@ -494,7 +494,7 @@ $(document).ready(function () {
                     $("#myModal").modal('hide');
 
                     isSuccess ?
-                        (Livewire.emit('refetchAcc'),
+                        (Livewire.emit('refreshComponent'),
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
@@ -513,6 +513,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.open_overtime', function (e) {
+        Swal.fire({ html: 'test' }); return false;
         try {
             e.preventDefault();
             $.ajaxSetup({

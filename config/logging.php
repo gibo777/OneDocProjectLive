@@ -121,6 +121,18 @@ return [
             'level' => 'debug',
         ],
 
+        'hris-api-timelogs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/hris-api-timelogs.log'),
+            'level' => 'debug',
+        ],
+
+        'timelogs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/timelogs.log'),
+            'level' => 'debug',
+        ],
+
     ],
 
 ];

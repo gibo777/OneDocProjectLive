@@ -6,15 +6,17 @@ use Auth;
 use App\Models\TimeLogs;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use \Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Log;
 
 use Adrianorosa\GeoLocation\GeoLocation;
 
@@ -94,10 +96,10 @@ class WebcamController extends Controller
         // return $request->ip();
         try {
             $curDate = Carbon::now('Asia/Manila');
-
             $exists = $this->checkTimeLogExists(Auth::user()->employee_id, $curDate);
+            $empID = Auth::user()->employee_id;
 
-            \Log::info("Received latitude: {$request->latitude}, longitude: {$request->longitude}");
+            \Log::channel('timelogs')->info("Emp.#: {$empID} | Log: {$request->logEvent} | Date: {$curDate} | Received latitude: {$request->latitude}, longitude: {$request->longitude}");
 
             if ($exists) { // If exist, new time log will only update time_in (if NULL) /time_out (latest)
                 // return "Log Date Exists...";
@@ -178,7 +180,7 @@ class WebcamController extends Controller
 
 
             // return $request->latitude.','.$request->longitude;
-            // \Log::info("Latitude: {$request->latitude}, Longitude: {$request->longitude}");
+            // \Log::channel('hris-api-timelogs')->info("Latitude: {$request->latitude}, Longitude: {$request->longitude}");
 
             $data = [
                 'ref_id'                => $logId,
@@ -210,7 +212,7 @@ class WebcamController extends Controller
             // return var_dump($data);
             $id = DB::table('time_logs')->insertGetId($data);
             if ($id) {
-                return response(['isSuccess' => true, 'message' => 'Timelog Successful!']);
+                return response(['isSuccess' => true, 'tID' => $id, 'message' => 'Timelog Successful!']);
             } else {
                 return response(['isSuccess' => false, 'message' => 'Timelog Failed!']);
             }

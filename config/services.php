@@ -30,9 +30,16 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    
+
     'google' => [
         'calendar_id' => env('GOOGLE_CALENDAR_ID'),
     ],
+
+    'compreface' => [
+        'url' => env('COMPREFACE_URL', 'http://localhost:8000'),
+        'recognition_api_key' => env('COMPREFACE_RECOGNITION_API_KEY', null),
+        'detection_api_key' => env('COMPREFACE_DETECTION_API_KEY', null),
+    ],
+
 
 ];
