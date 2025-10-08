@@ -14,93 +14,81 @@
 
         <div
             class="px-4 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
-            <div class="col-span-8 sm:col-span-8 sm:justify-center">
-                <div class="row mx-1 inset-shadow">
 
-                    <div class="col-md-7 row py-2">
-                        <div class="col-md-3 px-1">
-                            <div class="form-floating w-full">
-                                <select wire:model="fTLOffice" name="fTLOffice" id="fTLOffice"
-                                    class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                    <option value="">All Offices</option>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                                <x-jet-label for="fTLOffice" value="{{ __('OFFICE') }}" />
-                            </div>
+
+            {{-- FILTERS AND FORM BUTTON - START --}}
+            <div class="container-fluid">
+                <div class="row g-2 pb-2 px-1 align-items-end inset-shadow">
+                    <!-- Office -->
+                    <div class="col-12 col-md-2 px-1">
+                        <div class="form-floating w-100">
+                            <select wire:model="fTLOffice" id="fTLOffice" class="form-select w-100">
+                                <option value="">All Offices</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->company_name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="fTLOffice">{{ __('OFFICE') }}</label>
                         </div>
+                    </div>
 
-                        <div class="col-md-3 px-1">
-                            <div class="form-floating w-full">
-                                <select wire:model="fTLDept" name="fTLDept" id="fTLDept"
-                                    class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                    <option value="">All Departments</option>
-                                    @foreach ($departments as $department)
-                                        <option value="{{ $department->department_code }}">{{ $department->department }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <x-jet-label for="fTLDept" value="{{ __('DEPARTMENT') }}" />
-                            </div>
+                    <!-- Department -->
+                    <div class="col-12 col-md-2 px-1">
+                        <div class="form-floating w-100">
+                            <select wire:model="fTLDept" id="fTLDept" class="form-select w-100">
+                                <option value="">All Departments</option>
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->department_code }}">{{ $department->department }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="fTLDept">{{ __('DEPARTMENT') }}</label>
                         </div>
+                    </div>
 
-                        {{-- <div class="col-md-3 px-1">
-                            <div class="form-floating w-full">
-                                <select wire:model="fLType" name="fLType" id="fLType"
-                                    class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                    <option value="">All Types</option>
-                                    @foreach ($lTypes as $type)
-                                        <option value="{{ $type->leave_type }}">{{ $type->leave_type_name }}</option>
-                                    @endforeach
-                                </select>
-                                <x-jet-label for="fTLOffice" value="{{ __('TYPE') }}" />
+                    <!-- Status -->
+                    <div class="col-12 col-md-2 px-1">
+                        <div class="form-floating w-100">
+                            <select wire:model="fOTStatus" id="fOTStatus" class="form-select w-100">
+                                <option value="">All Statuses</option>
+                                @foreach ($lStatus as $status)
+                                    <option>{{ $status->request_status }}</option>
+                                @endforeach
+                            </select>
+                            <label for="fOTStatus">{{ __('STATUS') }}</label>
+                        </div>
+                    </div>
+
+                    <!-- Search Dates + Clear Filter -->
+                    <div class="col-12 col-md-4 px-1">
+                        <div class="d-flex flex-column w-100">
+                            <div class="d-flex justify-content-between align-items-center mb-1 fw-bold text-sm">
+                                <label class="form-label mb-0">{{ __('Search Dates') }}</label>
+                                <span id="clearFilter" wire:click="clearDateFilters" class="text-primary"
+                                    style="cursor:pointer;">
+                                    {{ __('Clear Date Filter') }}
+                                </span>
                             </div>
-                        </div> --}}
-
-                        <div class="col-md-3 px-1">
-                            <div class="form-floating w-full">
-                                <select wire:model="fLStatus" name="fLStatus" id="fLStatus"
-                                    class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-                                    <option value="">All Statuses</option>
-                                    @foreach ($lStatus as $status)
-                                        <option>{{ $status->request_status }}</option>
-                                    @endforeach
-                                </select>
-                                <x-jet-label for="fTLOffice" value="{{ __('STATUS') }}" />
+                            <div class="d-flex align-items-center">
+                                <input wire:model.debounce.500ms="fOTdtFrom" type="date" id="fOTdtFrom"
+                                    name="fOTdtFrom" class="form-control form-control-sm me-1 w-100" />
+                                <span class="mx-1">to</span>
+                                <input wire:model.debounce.500ms="fOTdtTo" type="date" id="fOTdtTo" name="fOTdtTo"
+                                    class="form-control form-control-sm ms-1 w-100" />
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-5">
-                        <div class="row px-0 mx-0 w-full">
-                            <div class="col-md-8 pt-2 text-center">
-                                <div class="flex justify-between items-center">
-                                    <x-jet-label class="py-0 my-0" value="{{ __('Search Dates') }}" />
-                                    <span id="clearFilter" wire:click="clearDateFilters"
-                                        class="hover text-primary text-sm px-1" style="font-weight: 500;">
-                                        {{ __('Clear Date Filter') }}
-                                    </span>
-                                </div>
-
-                                <div class="flex justify-center items-center">
-                                    <x-jet-input wire:model.debounce.500ms="fLdtFrom" type="date" id="fLdtFrom"
-                                        name="fLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1" />
-                                    to
-                                    <x-jet-input wire:model.debounce.500ms="fLdtTo" type="date" id="fLdtTo"
-                                        name="fLdtTo" placeholder="mm/dd/yyyy" autocomplete="off" class="mx-1" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 text-center my-2">
-                                <x-jet-button id="createNewLeave">
-                                    <i class="fa-solid fa-sheet-plastic"></i>&nbsp;Request O.T.
-                                </x-jet-button>
-                            </div>
-                        </div>
+                    <!-- Request O.T. Button -->
+                    <div class="col-12 col-md-2 text-center px-1">
+                        <x-jet-button id="createNewLeave" class="w-100">
+                            <i class="fa-solid fa-sheet-plastic"></i>&nbsp;Request O.T.
+                        </x-jet-button>
                     </div>
+
                 </div>
             </div>
+            {{-- FILTERS AND FORM BUTTON - END --}}
 
 
             <div id="table_data">
@@ -118,12 +106,12 @@
                             </select>
                             <span class="mx-2">entries</span>
                             <div class=" sm:col-span-7 sm:justify-center scrollable">
-                                {{ $leaves->links('pagination.custom') }}
+                                {{ $overtimes->links('pagination.custom') }}
                             </div>
                         </div>
                     </div>
 
-                    @if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'ADMIN')
+                    @if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN')
                         <div class="col-md-4">
                             <div class="row mt-2">
                                 <div class="col-md-4 mt-2 px-0 text-center">
@@ -172,8 +160,8 @@
                             </tr>
                         </thead>
                         <tbody class="data hover custom-text-xs" id="viewEmployee">
-                            @if ($leaves->isNotEmpty())
-                                @foreach ($leaves as $record)
+                            @if ($overtimes->isNotEmpty())
+                                @foreach ($overtimes as $record)
                                     <tr id="{{ $record->id }}" class="view-overtime">
                                         {{-- @if (url('/') == 'http://localhost')
                                             <td>xxx, xxx x.</td>
@@ -201,10 +189,13 @@
                                         {{-- @endif --}}
 
                                         @if (strtolower($record->ot_status) == 'pending')
-                                            <td>{{ $record->ot_status }}</td>
+                                            <td data-record-id="{{ $record->id }}"
+                                                class="{{ $record->is_head_approved == 1 ? 'orange-color view_ot_status' : '' }} items-center text-sm font-medium text-gray-500">
+                                                {{ $record->ot_status }}
+                                            </td>
                                         @else
-                                            <td value="{{ Auth::user()->id == 1 ? $record->id : '' }}"
-                                                class="{{ $record->ot_status != 'Pending' ? ($record->ot_status == 'Cancelled' || $record->ot_status == 'Denied' || $record->ot_status == 'Expired' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 {{ Auth::user()->id == 1 ? 'open_overtime' : '' }}">
+                                            <td data-record-id="{{ $record->id }}"
+                                                class="{{ $record->ot_status != 'Pending' ? ($record->ot_status == 'Cancelled' || $record->ot_status == 'Denied' || $record->ot_status == 'Expired' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 view_ot_status }}">
                                                 {{ $record->ot_status }}
                                             </td>
                                         @endif
@@ -228,7 +219,7 @@
                                 <option value="50">50</option>
                             </select>
                             <span class="mx-2">entries</span>
-                            {{ $leaves->links('pagination.custom') }}
+                            {{ $overtimes->links('pagination.custom') }}
                         </div>
                     </div>
 

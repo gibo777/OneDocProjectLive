@@ -208,7 +208,7 @@
 
                 <!-- E-LEAVE -->
                 <div class="view_nav block px-4 py-2 text-xs text-gray-400">
-                    {{ __('E-FORMS') }}
+                    {{ __('E-Leave Application') }}
                 </div>
                 <div class="border-t border-gray-200" hidden>
                     <x-jet-responsive-nav-link href="{{ route('hris.leave.eleave') }}" id="nav_eleave">
@@ -219,6 +219,19 @@
                         {{ __('View Leaves') }}
                     </x-jet-responsive-nav-link>
                 </div>
+                <div class="view_nav block px-4 py-2 text-xs text-gray-400">
+                    {{ __('Overtime Request') }}
+                </div>
+                <div class="border-t border-gray-200" hidden>
+                    <x-jet-responsive-nav-link href="{{ route('hris.overtime') }}" id="nav_overtime">
+                        {{ __('Overtime Form') }}
+                    </x-jet-responsive-nav-link>
+
+                    <x-jet-responsive-nav-link href="{{ route('eforms.overtime-listing') }}" id="nav_view_overtimes">
+                        {{ __('View Overtimes') }}
+                    </x-jet-responsive-nav-link>
+                </div>
+
                 <div>
                     <a class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogs-listing') }}"
                         id="nav_time_logs">
@@ -306,37 +319,45 @@
                                     id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
                             </div>
                         </div>
+                        {{-- @if (Auth::user()->id == 1) --}}
+                        <div class="dropdown dropend">
+                            <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overtime</a>
+                            <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                <a class="dropdown-item" href="{{ route('hris.overtime') }}"
+                                    id="dNavOvertime">{{ __('Overtime Form') }} </a>
+                                <a class="dropdown-item" href="{{ route('eforms.overtime-listing') }}"
+                                    id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                            </div>
+                        </div>
+                        {{-- @endif --}}
+
                         @if (Auth::user()->id == 1)
                             <div class="dropdown dropend">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overtime</a>
+                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuWFH"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH
+                                    Setup</a>
                                 <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
                                     <a class="dropdown-item" href="{{ route('hris.overtime') }}"
-                                        id="dNavOvertime">{{ __('Overtime Form') }} </a>
-                                    <a class="dropdown-item" href="{{ route('eforms.overtime-listing') }}"
-                                        id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                                        id="dNavWFH">{{ __('WFH Form') }} </a>
+                                    <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"
+                                        id="nav_view_wfh">{{ __('View WFH') }} </a>
                                 </div>
                             </div>
-                        @endif
 
-                        {{-- @if (Auth::user()->id == 1)
-                                <div class="dropdown dropend">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuWFH" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH Setup</a>
+                            {{-- <div class="dropdown dropend">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement"
+                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">Reimbursement</a>
+                                @if (Auth::user()->id == 1)
                                     <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('hris.overtime') }}" id="dNavWFH" >{{ __('WFH Form') }} </a>
-                        <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}" id="nav_view_wfh">{{ __('View WFH') }} </a>
-                    </div>
-                </div>
-
-                <div class="dropdown dropend">
-                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reimbursement</a>
-                    @if (Auth::user()->id == 1)
-                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                        <a class="dropdown-item" href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement Form</a>
-                    </div>
-                    @endif
-                </div>
-                @endif --}}
+                                        <a class="dropdown-item"
+                                            href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement
+                                            Form</a>
+                                    </div>
+                                @endif
+                            </div> --}}
+                        @endif
 
                     </div>
                     {{-- @if ($notification_count > 0)
@@ -391,15 +412,15 @@
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Time Keeping </a>
                                     <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                        <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
+                                        <a class="dropdown-item"
+                                            href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
                                         {{-- @if (Auth::user()->id == 1)
                                             <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
                                                 Registration</a>
                                             <a class="dropdown-item"
-                                                href="{{ route('face.registered.listing') }}">View User Faces</a>
+                                                href="{{ route('face.registered.listing') }}">Face Registration</a>
                                         @endif --}}
-                                        <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
-                                        <a class="dropdown-item"
-                                            href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
                                     </div>
                                 </div>
                                 @if (Auth::user()->id == 1 || Auth::user()->id == 2)

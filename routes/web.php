@@ -130,6 +130,8 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/hris/approve-overtime', [OvertimesController::class, 'approveOvertime'])->name('approve.overtime');
 
 
+
+
     Route::get('/e-forms/overtime-listing', OvertimeRequests::class)->name('eforms.overtime-listing');
     Route::get('/e-forms/overtime-detailed', [OvertimeRequests::class, 'fetchDetailedLeave'])->name('eforms.overtime-detailed');
 
@@ -211,7 +213,7 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/fullcalenderAjax', [FullCalenderController::class, 'ajax']);
 
 
-    // Google Calendar Intergration
+    /*======= Google Calendar Intergration =======*/
     Route::get('/testCalendar', [TestController::class, 'testCalendar'])->name('test.calendar');
     Route::get('/events/create', [TestController::class, 'createEventForm'])->name('events.create');
     Route::post('/events/store', [TestController::class, 'storeEvent'])->name('events.store');
@@ -314,22 +316,30 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 });
 
 
-/*======= Leave from the link sent via email =====*/
+/*=======  EMAIL NOTIFICATION AND API(GOOGLE, HRIS) =======*/
+/*======= LEAVE APPLICATION =====*/
 Route::post('/e-forms/notify-leave-action', [LeaveApplication::class, 'gCalendarAndMail']);
 Route::get('/leave/{action}/{hashId}', [LeaveFormController::class, 'leaveHeadDecide'])->name('leave.decide');
 Route::post('/leave-link/head-approve', [LeaveApplication::class, 'linkHeadApproveLeave'])->name('leave-link.head-approve-leave');
 Route::post('/leave-link/head-deny', [LeaveApplication::class, 'linkHeadDenyLeave'])->name('leave-link.head-deny-leave');
 
+/*=======  OVERTIME REQUEST =======*/
+Route::post('/e-forms/notify-overtime-action', [OvertimesController::class, 'mailOvertimeRequest']);
+Route::get('/overtime/{action}/{hashId}', [OvertimesController::class, 'overtimeHeadDecide'])->name('overtime.decide');
+Route::post('/overtime-link/head-approve', [OvertimesController::class, 'linkHeadApproveOvertime'])->name('overtime-link.head-approve');
+Route::post('/overtime-link/head-deny', [OvertimesController::class, 'linkHeadDenyOvertime'])->name('overtime-link.head-deny');
+
+/*=======  HRIS API =======*/
 Route::post('/send-leave-to-hris', [LeaveApplication::class, 'sendToHRIS'])->name('send.to.hris');
 Route::post('/send-allleave-to-hris', [LeaveApplication::class, 'sendAllToHRIS'])->name('sendall.to.hris');
 
 
 /*======= CRON / SCHEDULER =====*/
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
-
 Route::get('/cron-pending-leave-notification', [CronController::class, 'cronAutoPendingLeaveNotification'])->name('cron.pending.leave.notification');
 
+
+/* test only */
 Route::get('/test', [TestController::class, 'test_view']);
 // Route::get('/dump-leaves-to-google-calendar', [TestController::class,'dumpLeavesToGoogleCalendar']);
-
 Route::get('/sample-sidebar-navigation', [TestController::class, 'sampleSidebar']);

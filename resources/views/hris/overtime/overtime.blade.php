@@ -57,14 +57,12 @@
                             <h6 id="otDepartment">{{ $otUser->department }}</h6>
                         </div>
                         <div class="col-md-4 pt-1">
-                            <x-jet-label for="otSupervisor" value="{{ __('SUPERVISOR') }}" class="w-full" />
+                            <x-jet-label for="otSupervisor"
+                                value="{{ $otUser->approver2 ? __('APPROVERS') : __('APPROVER') }}" class="w-full" />
                             <h6 id="otSupervisor">
-                                @if ($otUser->approver2 != null)
-                                    {{ $otUser->approver1 }} / {{ $otUser->approver2 }}
-                                @else
-                                    {{ $otUser->approver1 }}
-                                @endif
+                                {{ $otUser->approver2 ? $otUser->approver1 . ' / ' . $otUser->approver2 : $otUser->approver1 }}
                             </h6>
+
                         </div>
                     </div>
 

@@ -29,6 +29,73 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('click', '.view_ot_status', function (e) {
+        // Swal.fire({ html: `${$(this).attr('data-record-id')}<br>${window.location.origin}/hris/view-history` }); return false;
+        try {
+            e.preventDefault();
+            let modalWidth = $(window).width() <= 768 ? '100%' : '60%';
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: `${window.location.origin}/hris/view-othistory`,
+                method: 'GET',
+                data: { 'otRefID': $(this).attr('data-record-id') },
+                success: function (data) {
+                    let dLHistory = `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
+                        <thead class="bg-gray-500 text-white">
+                            <tr class="dt-head-center">
+                                <th class="py-1">Status</th>
+                                <th class="py-1">Action By</th>
+                                <th class="py-1">Reason</th>
+                                <th class="py-1">Date</th>
+                            </tr>
+                        </thead>`;
+
+                    data.forEach(item => {
+                        // const approvedBy = item['is_head2_approved'] == 1 ? item['head2_approved_by'] : item['head_approved_by'];
+                        const actionBy = item['action_by'];
+
+                        dLHistory += `<tr>
+                                        <td class="py-1">${item['action']}</td>
+                                        <td class="py-1">${actionBy}</td>
+                                        <td class="py-1">${item['action_reason']}</td>
+                                        <td class="py-1">${item['action_date']}</td>
+                                    </tr>`;
+                    });
+
+                    dLHistory += `</table>`;
+
+                    Swal.fire({
+                        width: modalWidth,
+                        showClass: { popup: '' },
+                        // hideClass: { popup: '' },
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        // confirmButtonText: "Close",
+                        html: `<div class="banner-blue pl-2 p-1 text-md text-left">
+                                    Overtime Status (<strong>${data[0]['ot_control_number']}</strong>)
+                                </div>
+                                <div class="row text-sm w-full text-left my-2">
+                                    <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
+                                    <div class="col-md-6"><em>Approver/s:</em> <strong>${data[0]['head_name']}</strong></div>
+                                </div>
+                                ${dLHistory}`
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching leave history:', error);
+                }
+            });
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    });
+
     function viewOvertime(otID) {
         $.ajaxSetup({
             headers: {
@@ -53,6 +120,7 @@ $(document).ready(function () {
                             approveOTRequest($(this).val(), $(this).text());
                         });
                         $(document).on('click', '#otDenyRequest,#otCancelRequest', async function () {
+                            // Swal.fire({ html: $(this).text() }); return false;
                             revokeOTRequest(otID, $(this).text(), data.otDtls);
                         });
                     }
@@ -75,6 +143,8 @@ $(document).ready(function () {
         let dateFrom = $(this).val();
         $("#date_to").val(dateFrom || $("#date_to").val());
     });
+
+
 
     function revokeOTRequest(otID, otAction, otData) {
         const ot = otData;
@@ -105,14 +175,14 @@ $(document).ready(function () {
             preConfirm: () => {
                 let reason = $('#confirmDenyLeave').val();
                 if (!reason) {
-                    Swal.showValidationMessage('Please enter your reason for denying leave');
+                    Swal.showVaotIDationMessage('Please enter your reason for denying leave');
                     Swal.getPopup().querySelector('#confirmDenyLeave').focus();
                 }
                 return reason;
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                handleRevokeConfirmation(lID, result.value, "Denied");
+                handleRevokeConfirmation(otID, result.value, otAction.trim().split(/\s+/)[0].toLowerCase());
             } else {
                 viewOvertime(otID);
             }
@@ -120,11 +190,12 @@ $(document).ready(function () {
     }
 
     function approveOTRequest(otID, btnAction) {
-        let otAction = btnAction.trim().split(' ')[0].toLowerCase();
+        let otAction = btnAction.trim().split(/\s+/)[0].toLowerCase();
         let otURL = window.location.origin;
         let otData = {
             'otID': otID,
         };
+
         switch (otAction) {
             case 'approve':
                 otURL = otURL + "/hris/approve-overtime";
@@ -139,6 +210,7 @@ $(document).ready(function () {
             default:
                 break;
         }
+
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
         $.ajax({
             url: otURL,
@@ -155,7 +227,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $('#dataProcess').hide();
-                Swal.fire({ html: JSON.stringify(data) }); return false;
+                // Swal.fire({ html: JSON.stringify(data) }); return false;
                 const { isSuccess, message } = data;
                 isSuccess ?
                     (Livewire.emit('refreshComponent'),
@@ -174,7 +246,7 @@ $(document).ready(function () {
         });
     }
 
-    /* function denyOTRequest(lID, lType, lOthers, dLName, dLDate, dHType) {
+    /* function denyOTRequest(otID, lType, lOthers, dLName, dLDate, dHType) {
         Swal.fire({
             allowOutsideClick: false,
             confirmButtonText: 'Confirm Deny',
@@ -196,19 +268,19 @@ $(document).ready(function () {
             preConfirm: () => {
                 let reason = $('#confirmDenyLeave').val();
                 if (!reason) {
-                    Swal.showValidationMessage('Please enter your reason for denying leave');
+                    Swal.showVaotIDationMessage('Please enter your reason for denying leave');
                     Swal.getPopup().querySelector('#confirmDenyLeave').focus();
                 }
                 return reason;
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                handleRevokeConfirmation(lID, result.value, "Denied");
+                handleRevokeConfirmation(otID, result.value, "Denied");
             }
         });
     } */
 
-    /* function cancelLeave(lID, lType, lOthers, dLName, dLDate, dHType) {
+    /* function cancelLeave(otID, lType, lOthers, dLName, dLDate, dHType) {
         Swal.fire({
             allowOutsideClick: false,
             confirmButtonText: 'Confirm Cancel',
@@ -230,7 +302,7 @@ $(document).ready(function () {
             preConfirm: () => {
                 let reason = $('#confirmCancelLeave').val();
                 if (!reason) {
-                    Swal.showValidationMessage('Please enter your reason for cancellation of leave');
+                    Swal.showVaotIDationMessage('Please enter your reason for cancellation of leave');
                     Swal.getPopup().querySelector('#confirmCancelLeave').focus();
                 }
                 return reason;
@@ -238,14 +310,16 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Call a function to handle the cancellation of the leave
-                handleRevokeConfirmation(lID, result.value, "Cancelled");
+                handleRevokeConfirmation(otID, result.value, "Cancelled");
             }
         });
     } */
 
-    /* function handleRevokeConfirmation(lID, lReason, lAction) {
-        // Swal.fire({ html: lAction }); return false;
-        const url = window.location.origin + "/e-forms/revoke-leave";
+    function handleRevokeConfirmation(otID, otReason, otAction) {
+        // Swal.fire({ html: otID + ' | ' + otReason + ' | ' + otAction }); return false;
+        let url = window.location.origin + (otAction === 'deny' ? '/hris/deny-overtime' : '/hris/cancel-overtime');
+
+        // Swal.fire({ html: url }); return false;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -254,7 +328,7 @@ $(document).ready(function () {
         $.ajax({
             url: url,
             method: 'POST',
-            data: { lID: lID, lReason: lReason, lAction: lAction },
+            data: { otID: otID, otReason: otReason, otAction: otAction },
             beforeSend: function () {
                 $('#dataProcess').css({
                     'display': 'flex',
@@ -266,47 +340,49 @@ $(document).ready(function () {
 
             },
             success: function (data) {
+
                 $('#dataProcess').hide();
+                // Swal.fire({ html: JSON.stringify(data) }); return false;
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,
                         icon: 'success',
                     }).then(() => {
-                        // Swal.fire({ html: lAction }); return false;
                         Livewire.emit('refreshComponent');
-                        // if (lAction=='Denied') {
-                        $.ajax({
-                            url: `${window.location.origin}/e-forms/notify-leave-action`,
-                            method: 'POST',
-                            data: {
-                                'lID': lID,
-                                'dMail': data.dataLeave,
-                                'dAction': lAction,
-                            },
-                            success: function (dataMail) {
-                                // Swal.fire({ html: dataMail }); return false
-                            }
-                        });
 
-                        if (lAction == 'Cancelled') {
-                            // Send (API payload) to HRIS using $.ajax / JSON
-                            $.ajaxSetup({
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            });
-                            $.ajax({
-                                url: `${window.location.origin}/send-leave-to-hris`,
-                                method: 'POST',
-                                data: {
-                                    'lID': lID,
-                                },
-                                success: function (apiResponse) {
-                                    console.log('API response:', JSON.stringify(apiResponse));
-                                },
-                                error: function (xhr) {
-                                    console.error('API error:', xhr.responseText);
-                                }
-                            });
-                        }
+                        // if (otAction=='Denied') {
+                        // $.ajax({
+                        //     url: `${window.location.origin}/e-forms/notify-overtime-action`,
+                        //     method: 'POST',
+                        //     data: {
+                        //         'otID': otID,
+                        //         'dMail': data.dataLeave,
+                        //         'dAction': otAction,
+                        //     },
+                        //     success: function (dataMail) {
+                        //         // Swal.fire({ html: dataMail }); return false
+                        //     }
+                        // });
+
+                        // if (otAction == 'Cancelled') {
+                        //     // Send (API payload) to HRIS using $.ajax / JSON
+                        //     $.ajaxSetup({
+                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        //     });
+                        //     $.ajax({
+                        //         url: `${window.location.origin}/send-leave-to-hris`,
+                        //         method: 'POST',
+                        //         data: {
+                        //             'otID': otID,
+                        //         },
+                        //         success: function (apiResponse) {
+                        //             console.log('API response:', JSON.stringify(apiResponse));
+                        //         },
+                        //         error: function (xhr) {
+                        //             console.error('API error:', xhr.responseText);
+                        //         }
+                        //     });
+                        // }
                     });
                 } else {
                     Swal.fire({
@@ -316,7 +392,7 @@ $(document).ready(function () {
                 }
             }
         });
-    } */
+    }
 
     /* EXPORT TO EXCEL TIMELOGS */
     $(document).on('click', '#exportExcelLeaves', async function () {
