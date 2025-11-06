@@ -217,18 +217,14 @@
                             Cancel Leave
                         </x-jet-button>
                     </div>
-                @else
-                    @if (
-                        $dLeave->leave_status == 'Head Approved' &&
-                            (Auth::user()->employee_id == $dLeave->supervisor ||
-                                Auth::user()->employee_id == $dLeave->employee_id ||
-                                Auth::user()->id == 1))
+                    {{-- @else
+                    @if ($dLeave->leave_status == 'Head Approved' && (Auth::user()->employee_id == $dLeave->supervisor || Auth::user()->employee_id == $dLeave->employee_id || Auth::user()->id == 1))
                         <div class="col-md-12 px-1 my-1">
                             <x-jet-button id="bCancelLeave" class="w-full">
                                 Cancel Leave
                             </x-jet-button>
                         </div>
-                    @endif
+                    @endif --}}
                 @endif
             @else
                 @if ($dLeave->leave_status == 'Head Approved')
