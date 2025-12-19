@@ -121,9 +121,27 @@ return [
             'level' => 'debug',
         ],
 
+        'hris-api-leaves' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/hris-api-leaves.log'),
+            'level' => 'debug',
+        ],
+
         'hris-api-timelogs' => [
             'driver' => 'single',
             'path' => storage_path('logs/hris-api-timelogs.log'),
+            'level' => 'debug',
+        ],
+
+        'hris-api-overtime' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/hris-api-overtime.log'),
+            'level' => 'debug',
+        ],
+
+        'hris-api-wfh' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/hris-api-wfh.log'),
             'level' => 'debug',
         ],
 

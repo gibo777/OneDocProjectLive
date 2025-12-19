@@ -182,67 +182,126 @@
     const otID = hashId[2];
     const otHash = hashId.slice(0, 2).join('-');
 
-    async function linkApproveOvertime(otID, otHash) {
 
-        let dataObject = {
-            'otID': otID,
-            'otHash': otHash
-        };
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: `${window.location.origin}/overtime-link/head-approve`,
-            method: 'POST',
-            data: {
-                'otData': dataObject
+    async function linkApproveOvertime(otID, otHash, dataObject) {
+        Swal.fire({
+            allowOutsideClick: false,
+            confirmButtonText: 'Confirm Approval',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            showCloseButton: true,
+            showClass: {
+                popup: ''
             },
-            beforeSend: function() {
+            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
+                    Approval (${$('#otLinkControlNumber').text()})
+                </div>
+                <div class="inset-shadow p-1 text-left text-sm">
+                    <div>Name: <b>${$('#otLinkName').text()}</b></div>
+                    <div>O.T. Schedule: <br><b>${$('#otLinkDateCovered').text()}</b></div>
+                    <div>Total Hours: <b>${$('#otLinkTotalHours').text()}</b></div>
+                    <div>O.T. Reason: <b>${$('#otLinkReason').text()}</b></div>
+                </div>
+                <div class="text-left text-sm fw-bold py-1"><em>Approval Comment:</em></div>
+                <textarea id="otComment" name="otComment"
+                class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
+                placeholder="Kindly specify your comment here.."></textarea>`,
+            preConfirm: () => {
+                let comment = $('#otComment').val();
+                if (!comment) {
+                    Swal.showValidationMessage('Please enter your comment for approval');
+                    Swal.getPopup().querySelector('#otComment').focus();
+                }
+                return comment;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const url = `${window.location.origin}/overtime-link/head-approve`;
+
                 $('#dataProcess').css({
                     'display': 'flex',
-                    'position': 'fixed',
-                    'top': '50%',
-                    'left': '50%',
-                    'transform': 'translate(-50%, -50%)'
+                    'position': 'absolute',
                 });
 
-            },
-            success: function(data) {
-                $('#dataProcess').hide();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
-                // Swal.fire({
-                //     html: JSON.stringify(data)
-                // });
-                // return false;
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        'otID': otID,
+                        'otHash': otHash,
+                        'otComment': result.value
+                    },
+                    beforeSend: function() {
+                        $('#dataProcess').css({
+                            'display': 'flex',
+                            'position': 'fixed',
+                            'top': '50%',
+                            'left': '50%',
+                            'transform': 'translate(-50%, -50%)'
+                        });
+                    },
+                    success: function(data) {
+                        $('#dataProcess').hide();
 
-                if (data.isSuccess) {
-                    Swal.fire({
-                        title: data.message,
-                        icon: 'success',
-                    }).then(() => {
-                        location.reload();
-                    });
-                    console.log('Approve Overtime Data:', data);
-                } else {
-                    Swal.fire({
-                        title: data.message,
-                        icon: 'error',
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error Approving Overtime:', error);
+                        if (data.isSuccess) {
+                            Swal.fire({
+                                title: data.message,
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+
+                            $.ajaxSetup({
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            });
+
+                            // Send (API payload) to HRIS using $.ajax / JSON
+                            $.ajax({
+                                url: `${window.location.origin}/send-overtime-to-hris`,
+                                method: 'POST',
+                                data: {
+                                    'otID': otID,
+                                },
+                                success: function(apiResponse) {
+                                    console.log('API response:', JSON.stringify(
+                                        apiResponse));
+
+                                },
+                                error: function(xhr) {
+                                    console.error('API error:', xhr.responseText);
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: data.message,
+                                icon: 'error'
+                            });
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $('#dataProcess').hide();
+                        console.error('Error approving overtime:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong while approving overtime.',
+                            icon: 'error'
+                        });
+                    }
+                });
             }
         });
-
     }
 
-    async function linkDenyLeave(otID, otHash, otAction) {
 
-        // const ot = otData;
+    async function linkDenyLeave(otID, otHash, otAction) {
         const actionWord = otAction.toLowerCase().replace(/^\w/, c => c.toUpperCase());
         const rAction = actionWord == 'Cancel' ? 'Cancelling' : 'Denying';
 
@@ -282,50 +341,11 @@
             }
         });
 
-        /* Swal.fire({
-            allowOutsideClick: false,
-            confirmButtonText: 'Confirm Deny',
-            showCancelButton: true,
-            cancelButtonText: 'Close',
-            showCloseButton: true,
-            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
-                        Confirmation to Deny Leave
-                    </div>
-                    <div class="inset-shadow p-1">
-                        <div class="text-left text-sm">Name:&nbsp;<strong>${dOTName}</strong></div>
-                        <div class="text-left text-sm">Date:&nbsp;<strong>${dLDate}</strong></div>
-                        <div class="text-left text-sm">Type:&nbsp;<strong>${lType}</strong></div>
-                    </div>
-                    <div class="text-left text-sm fw-bold py-1"><em>Reason for denying leave:</em></div>
-                    <textarea id="confirmDenyLeave" name="confirmDenyLeave"
-                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
-                    placeholder="Kindly specify your reason here.."></textarea>`,
-            preConfirm: () => {
-                let reason = $('#confirmDenyLeave').val();
-                if (!reason) {
-                    Swal.showVaotIDationMessage('Please enter your reason for denying leave');
-                    Swal.getPopup().querySelector('#confirmDenyLeave').focus();
-                }
-                return reason;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handleRevokeConfirmation(otID, otHash, result.value, "Denied");
-            }
-        }); */
     }
 
 
     function handleRevokeConfirmation(otID, otHash, otReason, otAction) {
         const url = window.location.origin + "/overtime-link/head-deny";
-
-        /* Swal.fire({
-            html: 'url: ' + url + '<br>otID: ' + otID + ' | otHash: ' + otHash + ' | otReason: ' + otReason +
-                ' | otAction: ' +
-                otAction
-
-        });
-        return false; */
 
         $('#dataProcess').css({
             'display': 'flex',
@@ -358,11 +378,6 @@
             },
             success: function(data) {
                 $('#dataProcess').hide();
-
-                // Swal.fire({
-                //     html: JSON.stringify(data)
-                // });
-                // return false;
 
                 if (data.isSuccess) {
                     Swal.fire({

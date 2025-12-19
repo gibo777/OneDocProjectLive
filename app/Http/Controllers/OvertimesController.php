@@ -53,9 +53,7 @@ class OvertimesController extends Controller
 
             return view(
                 'hris.overtime.overtime',
-                [
-                    'otUser' => $otUser,
-                ]
+                ['otUser' => $otUser]
             );
         } else {
             return redirect('/');
@@ -349,12 +347,13 @@ class OvertimesController extends Controller
             $data = array(
                 'ot_status'         => 'cancelled',
                 'is_cancelled'      => 1,
-                'cancelled_at'      => DB::raw('NOW()'),
+                'cancelled_at'      => Carbon::now()->format('Y-m-d H:i:s'),
                 'cancelled_by'      => Auth::user()->employee_id,
                 'cancelled_reason'  => $request->otReason,
-                'updated_at'        => DB::raw('NOW()'),
+                'updated_at'        => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_by'        => Auth::user()->employee_id
             );
+            // return response(['isSuccess' => false, 'otData' => $data]);
 
             $update = DB::table('overtimes')
                 ->where('id', $request->otID)
@@ -594,7 +593,7 @@ class OvertimesController extends Controller
         try {
             $otID = $request->otID;
             $action = "Head Approved";
-            $reason = "N/A";
+            $reason = $request->otComment;
             $currentDate = DB::raw('NOW()');
             $message = "";
 
@@ -962,10 +961,10 @@ class OvertimesController extends Controller
     public function linkHeadApproveOvertime(Request $request)
     {
         try {
-            $otID = $request->input('otData.otID');
-            $otHash = $request->input('otData.otHash');
+            $otID = $request->input('otID');
+            $otHash = $request->input('otHash');
             $action = "Head Approved";
-            $reason = "N/A";
+            $reason = $request->input('otComment');
             $currentDate = Carbon::now();
             $message = "";
 
@@ -977,354 +976,356 @@ class OvertimesController extends Controller
                 // ->whereNotNull('u.manager')
                 ->first();
 
-            if ($user->manager != null) {
-                if ($user->is_head_approved == NULL || $user->is_head_approved == 0) {
-                    $data = array(
-                        'is_head_approved'  => 1,
-                        'head_approved_at'  => $currentDate,
-                        'head_approved_by'  => $user->supervisor,
-                        'updated_at'        => $currentDate,
-                        'updated_by'        => $user->supervisor
-                    );
+            // if ($user->manager != null) {
+            //     if ($user->is_head_approved == NULL || $user->is_head_approved == 0) {
+            //         $data = array(
+            //             'ot_status'         => $action,
+            //             'is_head_approved'  => 1,
+            //             'head_approved_at'  => $currentDate,
+            //             'head_approved_by'  => $user->supervisor,
+            //             'updated_at'        => $currentDate,
+            //             'updated_by'        => $user->supervisor
+            //         );
 
-                    $update = DB::table('overtimes')
-                        ->where('id', $otID)
-                        ->where('hash_id', $otHash)
-                        ->update($data);
+            //         $update = DB::table('overtimes')
+            //             ->where('id', $otID)
+            //             ->where('hash_id', $otHash)
+            //             ->update($data);
 
-                    if ($update > 0) {
-                        $otData = DB::table('overtimes')
-                            ->select(
-                                'id',
-                                'u_id',
-                                'name',
-                                'employee_id',
-                                'ot_control_number',
-                                'ot_location',
-                                'ot_reason',
-                                'date_applied',
-                                'ot_date_from',
-                                'ot_date_to',
-                                'ot_time_from',
-                                'ot_time_to',
-                                'ot_hours',
-                                'ot_minutes',
-                                'ot_hrmins',
-                                'ot_status',
-                                'office',
-                                'department',
-                                'head_id',
-                                'head_name',
-                                'is_head_approved',
-                                'head_approved_at',
-                                'head_approved_by',
-                                'is_cancelled',
-                                'cancelled_at',
-                                'cancelled_reason',
-                                'cancelled_by',
-                                'is_denied',
-                                'denied_at',
-                                'denied_reason',
-                                'denied_by',
-                                'rcdversion',
-                                'ip_address',
-                                'created_at',
-                                'updated_at',
-                                'created_by',
-                                'updated_by',
-                                DB::raw("'{$action}' as action"),
-                                DB::raw("'{$reason}' as action_reason")
-                            )->where('id', $otID)->where('hash_id', $otHash);
+            //         if ($update > 0) {
+            //             $otData = DB::table('overtimes')
+            //                 ->select(
+            //                     'id',
+            //                     'u_id',
+            //                     'name',
+            //                     'employee_id',
+            //                     'ot_control_number',
+            //                     'ot_location',
+            //                     'ot_reason',
+            //                     'date_applied',
+            //                     'ot_date_from',
+            //                     'ot_date_to',
+            //                     'ot_time_from',
+            //                     'ot_time_to',
+            //                     'ot_hours',
+            //                     'ot_minutes',
+            //                     'ot_hrmins',
+            //                     'ot_status',
+            //                     'office',
+            //                     'department',
+            //                     'head_id',
+            //                     'head_name',
+            //                     'is_head_approved',
+            //                     'head_approved_at',
+            //                     'head_approved_by',
+            //                     'is_cancelled',
+            //                     'cancelled_at',
+            //                     'cancelled_reason',
+            //                     'cancelled_by',
+            //                     'is_denied',
+            //                     'denied_at',
+            //                     'denied_reason',
+            //                     'denied_by',
+            //                     'rcdversion',
+            //                     'ip_address',
+            //                     'created_at',
+            //                     'updated_at',
+            //                     'created_by',
+            //                     'updated_by',
+            //                     DB::raw("'{$action}' as action"),
+            //                     DB::raw("'{$reason}' as action_reason")
+            //                 )->where('id', $otID)->where('hash_id', $otHash);
 
-                        $otHistory = DB::table('overtimes_history')
-                            ->insertUsing([
-                                'ot_ref',
-                                'u_id',
-                                'name',
-                                'employee_id',
-                                'ot_control_number',
-                                'ot_location',
-                                'ot_reason',
-                                'date_applied',
-                                'ot_date_from',
-                                'ot_date_to',
-                                'ot_time_from',
-                                'ot_time_to',
-                                'ot_hours',
-                                'ot_minutes',
-                                'ot_hrmins',
-                                'ot_status',
-                                'office',
-                                'department',
-                                'head_id',
-                                'head_name',
-                                'is_head_approved',
-                                'head_approved_at',
-                                'head_approved_by',
-                                'is_cancelled',
-                                'cancelled_at',
-                                'cancelled_reason',
-                                'cancelled_by',
-                                'is_denied',
-                                'denied_at',
-                                'denied_reason',
-                                'denied_by',
-                                'rcdversion',
-                                'ip_address',
-                                'created_at',
-                                'updated_at',
-                                'created_by',
-                                'updated_by',
-                                'action',
-                                'action_reason'
-                            ], $otData);
+            //             $otHistory = DB::table('overtimes_history')
+            //                 ->insertUsing([
+            //                     'ot_ref',
+            //                     'u_id',
+            //                     'name',
+            //                     'employee_id',
+            //                     'ot_control_number',
+            //                     'ot_location',
+            //                     'ot_reason',
+            //                     'date_applied',
+            //                     'ot_date_from',
+            //                     'ot_date_to',
+            //                     'ot_time_from',
+            //                     'ot_time_to',
+            //                     'ot_hours',
+            //                     'ot_minutes',
+            //                     'ot_hrmins',
+            //                     'ot_status',
+            //                     'office',
+            //                     'department',
+            //                     'head_id',
+            //                     'head_name',
+            //                     'is_head_approved',
+            //                     'head_approved_at',
+            //                     'head_approved_by',
+            //                     'is_cancelled',
+            //                     'cancelled_at',
+            //                     'cancelled_reason',
+            //                     'cancelled_by',
+            //                     'is_denied',
+            //                     'denied_at',
+            //                     'denied_reason',
+            //                     'denied_by',
+            //                     'rcdversion',
+            //                     'ip_address',
+            //                     'created_at',
+            //                     'updated_at',
+            //                     'created_by',
+            //                     'updated_by',
+            //                     'action',
+            //                     'action_reason'
+            //                 ], $otData);
 
-                        if ($otHistory > 0) {
-                            $message = "O.T. Request Successfully Approved!";
-                        } else {
-                            $message = "Failed Approval!";
-                            DB::rollback();
-                        }
-                    } else {
-                        DB::rollback();
-                    }
+            //             if ($otHistory > 0) {
+            //                 $message = "O.T. Request Successfully Approved!";
+            //             } else {
+            //                 $message = "Failed Approval!";
+            //                 DB::rollback();
+            //             }
+            //         } else {
+            //             DB::rollback();
+            //         }
+            //     } else {
+            //         $data = array(
+            //             'ot_status'         => $action,
+            //             'is_head2_approved' => 1,
+            //             'head2_approved_at' => $currentDate,
+            //             'head2_approved_by' => $user->supervisor,
+            //             'updated_at'        => $currentDate,
+            //             'updated_by'        => $user->supervisor
+            //         );
+
+
+            //         //             $update = DB::table('overtimes')
+            //         //                 ->where('id', $request->otID)
+            //         //                 ->update($data);
+
+            //         //             if ($update > 0) {
+            //         //                 $otData = DB::table('overtimes')
+            //         //                     ->select(
+            //         //                         'id',
+            //         //                         'u_id',
+            //         //                         'name',
+            //         //                         'employee_id',
+            //         //                         'ot_control_number',
+            //         //                         'ot_location',
+            //         //                         'ot_reason',
+            //         //                         'date_applied',
+            //         //                         'ot_date_from',
+            //         //                         'ot_date_to',
+            //         //                         'ot_time_from',
+            //         //                         'ot_time_to',
+            //         //                         'ot_hours',
+            //         //                         'ot_minutes',
+            //         //                         'ot_hrmins',
+            //         //                         'ot_status',
+            //         //                         'office',
+            //         //                         'department',
+            //         //                         'head_id',
+            //         //                         'head_name',
+            //         //                         'is_head_approved',
+            //         //                         'head_approved_at',
+            //         //                         'head_approved_by',
+            //         //                         'is_head2_approved',
+            //         //                         'head2_approved_at',
+            //         //                         'head2_approved_by',
+            //         //                         'is_cancelled',
+            //         //                         'cancelled_at',
+            //         //                         'cancelled_reason',
+            //         //                         'cancelled_by',
+            //         //                         'is_denied',
+            //         //                         'denied_at',
+            //         //                         'denied_reason',
+            //         //                         'denied_by',
+            //         //                         'rcdversion',
+            //         //                         'ip_address',
+            //         //                         'created_at',
+            //         //                         'updated_at',
+            //         //                         'created_by',
+            //         //                         'updated_by',
+            //         //                         DB::raw("'{$action}' as action"),
+            //         //                         DB::raw("'{$reason}' as action_reason")
+            //         //                     )->where('id', '=', $request->otID);
+
+            //         //                 $otHistory = DB::table('overtimes_history')
+            //         //                     ->insertUsing([
+            //         //                         'ot_ref',
+            //         //                         'u_id',
+            //         //                         'name',
+            //         //                         'employee_id',
+            //         //                         'ot_control_number',
+            //         //                         'ot_location',
+            //         //                         'ot_reason',
+            //         //                         'date_applied',
+            //         //                         'ot_date_from',
+            //         //                         'ot_date_to',
+            //         //                         'ot_time_from',
+            //         //                         'ot_time_to',
+            //         //                         'ot_hours',
+            //         //                         'ot_minutes',
+            //         //                         'ot_hrmins',
+            //         //                         'ot_status',
+            //         //                         'office',
+            //         //                         'department',
+            //         //                         'head_id',
+            //         //                         'head_name',
+            //         //                         'is_head_approved',
+            //         //                         'head_approved_at',
+            //         //                         'head_approved_by',
+            //         //                         'is_head2_approved',
+            //         //                         'head2_approved_at',
+            //         //                         'head2_approved_by',
+            //         //                         'is_cancelled',
+            //         //                         'cancelled_at',
+            //         //                         'cancelled_reason',
+            //         //                         'cancelled_by',
+            //         //                         'is_denied',
+            //         //                         'denied_at',
+            //         //                         'denied_reason',
+            //         //                         'denied_by',
+            //         //                         'rcdversion',
+            //         //                         'ip_address',
+            //         //                         'created_at',
+            //         //                         'updated_at',
+            //         //                         'created_by',
+            //         //                         'updated_by',
+            //         //                         'action',
+            //         //                         'action_reason'
+            //         //                     ], $otData);
+
+            //         //                 if ($otHistory > 0) {
+            //         //                     $message = "O.T. Request Successfully Approved!";
+            //         //                 } else {
+            //         //                     $message = "Failed Approval!";
+            //         //                     DB::rollback();
+            //         //                 }
+            //         //             } else {
+            //         //                 DB::rollback();
+            //         //             }
+            //     }
+            // } else {
+
+            $data = array(
+                'ot_status'         => $action,
+                'is_head_approved'  => 1,
+                'head_approved_at'  => $currentDate,
+                'head_approved_by'  => $user->supervisor,
+                'updated_at'        => $currentDate,
+                'updated_by'        => $user->supervisor
+            );
+
+            $update = DB::table('overtimes')
+                ->where('id', $otID)
+                ->where('hash_id', $otHash)
+                ->update($data);
+
+            if ($update > 0) {
+                $otData = DB::table('overtimes')
+                    ->select(
+                        'id',
+                        'u_id',
+                        'name',
+                        'employee_id',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_reason',
+                        'date_applied',
+                        'ot_date_from',
+                        'ot_date_to',
+                        'ot_time_from',
+                        'ot_time_to',
+                        'ot_hours',
+                        'ot_minutes',
+                        'ot_hrmins',
+                        'ot_status',
+                        'office',
+                        'department',
+                        'head_id',
+                        'head_name',
+                        'is_head_approved',
+                        'head_approved_at',
+                        'head_approved_by',
+                        'is_head2_approved',
+                        'head2_approved_at',
+                        'head2_approved_by',
+                        'is_cancelled',
+                        'cancelled_at',
+                        'cancelled_reason',
+                        'cancelled_by',
+                        'is_denied',
+                        'denied_at',
+                        'denied_reason',
+                        'denied_by',
+                        'rcdversion',
+                        'ip_address',
+                        'created_at',
+                        'updated_at',
+                        'created_by',
+                        'updated_by',
+                        DB::raw("'{$action}' as action"),
+                        DB::raw("'{$reason}' as action_reason")
+                    )->where('id', $otID)->where('hash_id', $otHash);
+
+
+                $otHistory = DB::table('overtimes_history')
+                    ->insertUsing([
+                        'ot_ref',
+                        'u_id',
+                        'name',
+                        'employee_id',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_reason',
+                        'date_applied',
+                        'ot_date_from',
+                        'ot_date_to',
+                        'ot_time_from',
+                        'ot_time_to',
+                        'ot_hours',
+                        'ot_minutes',
+                        'ot_hrmins',
+                        'ot_status',
+                        'office',
+                        'department',
+                        'head_id',
+                        'head_name',
+                        'is_head_approved',
+                        'head_approved_at',
+                        'head_approved_by',
+                        'is_head2_approved',
+                        'head2_approved_at',
+                        'head2_approved_by',
+                        'is_cancelled',
+                        'cancelled_at',
+                        'cancelled_reason',
+                        'cancelled_by',
+                        'is_denied',
+                        'denied_at',
+                        'denied_reason',
+                        'denied_by',
+                        'rcdversion',
+                        'ip_address',
+                        'created_at',
+                        'updated_at',
+                        'created_by',
+                        'updated_by',
+                        'action',
+                        'action_reason'
+                    ], $otData);
+
+                if ($otHistory > 0) {
+                    $message = "O.T. Request Successfully Approved!";
                 } else {
-                    $data = array(
-                        'ot_status'         => $action,
-                        'is_head2_approved' => 1,
-                        'head2_approved_at' => $currentDate,
-                        'head2_approved_by' => $user->supervisor,
-                        'updated_at'        => $currentDate,
-                        'updated_by'        => $user->supervisor
-                    );
-
-
-                    //             $update = DB::table('overtimes')
-                    //                 ->where('id', $request->otID)
-                    //                 ->update($data);
-
-                    //             if ($update > 0) {
-                    //                 $otData = DB::table('overtimes')
-                    //                     ->select(
-                    //                         'id',
-                    //                         'u_id',
-                    //                         'name',
-                    //                         'employee_id',
-                    //                         'ot_control_number',
-                    //                         'ot_location',
-                    //                         'ot_reason',
-                    //                         'date_applied',
-                    //                         'ot_date_from',
-                    //                         'ot_date_to',
-                    //                         'ot_time_from',
-                    //                         'ot_time_to',
-                    //                         'ot_hours',
-                    //                         'ot_minutes',
-                    //                         'ot_hrmins',
-                    //                         'ot_status',
-                    //                         'office',
-                    //                         'department',
-                    //                         'head_id',
-                    //                         'head_name',
-                    //                         'is_head_approved',
-                    //                         'head_approved_at',
-                    //                         'head_approved_by',
-                    //                         'is_head2_approved',
-                    //                         'head2_approved_at',
-                    //                         'head2_approved_by',
-                    //                         'is_cancelled',
-                    //                         'cancelled_at',
-                    //                         'cancelled_reason',
-                    //                         'cancelled_by',
-                    //                         'is_denied',
-                    //                         'denied_at',
-                    //                         'denied_reason',
-                    //                         'denied_by',
-                    //                         'rcdversion',
-                    //                         'ip_address',
-                    //                         'created_at',
-                    //                         'updated_at',
-                    //                         'created_by',
-                    //                         'updated_by',
-                    //                         DB::raw("'{$action}' as action"),
-                    //                         DB::raw("'{$reason}' as action_reason")
-                    //                     )->where('id', '=', $request->otID);
-
-                    //                 $otHistory = DB::table('overtimes_history')
-                    //                     ->insertUsing([
-                    //                         'ot_ref',
-                    //                         'u_id',
-                    //                         'name',
-                    //                         'employee_id',
-                    //                         'ot_control_number',
-                    //                         'ot_location',
-                    //                         'ot_reason',
-                    //                         'date_applied',
-                    //                         'ot_date_from',
-                    //                         'ot_date_to',
-                    //                         'ot_time_from',
-                    //                         'ot_time_to',
-                    //                         'ot_hours',
-                    //                         'ot_minutes',
-                    //                         'ot_hrmins',
-                    //                         'ot_status',
-                    //                         'office',
-                    //                         'department',
-                    //                         'head_id',
-                    //                         'head_name',
-                    //                         'is_head_approved',
-                    //                         'head_approved_at',
-                    //                         'head_approved_by',
-                    //                         'is_head2_approved',
-                    //                         'head2_approved_at',
-                    //                         'head2_approved_by',
-                    //                         'is_cancelled',
-                    //                         'cancelled_at',
-                    //                         'cancelled_reason',
-                    //                         'cancelled_by',
-                    //                         'is_denied',
-                    //                         'denied_at',
-                    //                         'denied_reason',
-                    //                         'denied_by',
-                    //                         'rcdversion',
-                    //                         'ip_address',
-                    //                         'created_at',
-                    //                         'updated_at',
-                    //                         'created_by',
-                    //                         'updated_by',
-                    //                         'action',
-                    //                         'action_reason'
-                    //                     ], $otData);
-
-                    //                 if ($otHistory > 0) {
-                    //                     $message = "O.T. Request Successfully Approved!";
-                    //                 } else {
-                    //                     $message = "Failed Approval!";
-                    //                     DB::rollback();
-                    //                 }
-                    //             } else {
-                    //                 DB::rollback();
-                    //             }
-                }
-            } else {
-
-                $data = array(
-                    'ot_status'         => $action,
-                    'is_head_approved'  => 1,
-                    'head_approved_at'  => $currentDate,
-                    'head_approved_by'  => $user->supervisor,
-                    'updated_at'        => $currentDate,
-                    'updated_by'        => $user->supervisor
-                );
-
-                $update = DB::table('overtimes')
-                    ->where('id', $otID)
-                    ->where('hash_id', $otHash)
-                    ->update($data);
-
-                if ($update > 0) {
-                    $otData = DB::table('overtimes')
-                        ->select(
-                            'id',
-                            'u_id',
-                            'name',
-                            'employee_id',
-                            'ot_control_number',
-                            'ot_location',
-                            'ot_reason',
-                            'date_applied',
-                            'ot_date_from',
-                            'ot_date_to',
-                            'ot_time_from',
-                            'ot_time_to',
-                            'ot_hours',
-                            'ot_minutes',
-                            'ot_hrmins',
-                            'ot_status',
-                            'office',
-                            'department',
-                            'head_id',
-                            'head_name',
-                            'is_head_approved',
-                            'head_approved_at',
-                            'head_approved_by',
-                            'is_head2_approved',
-                            'head2_approved_at',
-                            'head2_approved_by',
-                            'is_cancelled',
-                            'cancelled_at',
-                            'cancelled_reason',
-                            'cancelled_by',
-                            'is_denied',
-                            'denied_at',
-                            'denied_reason',
-                            'denied_by',
-                            'rcdversion',
-                            'ip_address',
-                            'created_at',
-                            'updated_at',
-                            'created_by',
-                            'updated_by',
-                            DB::raw("'{$action}' as action"),
-                            DB::raw("'{$reason}' as action_reason")
-                        )->where('id', $otID)->where('hash_id', $otHash);
-
-                    $otHistory = DB::table('overtimes_history')
-                        ->insertUsing([
-                            'ot_ref',
-                            'u_id',
-                            'name',
-                            'employee_id',
-                            'ot_control_number',
-                            'ot_location',
-                            'ot_reason',
-                            'date_applied',
-                            'ot_date_from',
-                            'ot_date_to',
-                            'ot_time_from',
-                            'ot_time_to',
-                            'ot_hours',
-                            'ot_minutes',
-                            'ot_hrmins',
-                            'ot_status',
-                            'office',
-                            'department',
-                            'head_id',
-                            'head_name',
-                            'is_head_approved',
-                            'head_approved_at',
-                            'head_approved_by',
-                            'is_head2_approved',
-                            'head2_approved_at',
-                            'head2_approved_by',
-                            'is_cancelled',
-                            'cancelled_at',
-                            'cancelled_reason',
-                            'cancelled_by',
-                            'is_denied',
-                            'denied_at',
-                            'denied_reason',
-                            'denied_by',
-                            'rcdversion',
-                            'ip_address',
-                            'created_at',
-                            'updated_at',
-                            'created_by',
-                            'updated_by',
-                            'action',
-                            'action_reason'
-                        ], $otData);
-
-                    if ($otHistory > 0) {
-                        $message = "O.T. Request Successfully Approved!";
-                    } else {
-                        $message = "Failed Approval!";
-                        DB::rollback();
-                    }
-                } else {
+                    $message = "Failed Approval!";
                     DB::rollback();
                 }
+            } else {
+                DB::rollback();
             }
+            // }
 
             return response(['isSuccess' => true, 'message' => $message]);
         } catch (\Exception $e) {
@@ -1334,10 +1335,6 @@ class OvertimesController extends Controller
 
     public function linkHeadDenyOvertime(Request $request)
     {
-        // "otID":"6",
-        // "otHash":"OT-2aUZAaRcJqCtc6aR",
-        // "otReason":"test deny",
-        // "otAction":"Denied"
         try {
             $otID = $request->otID;
             $otHash = $request->otHash;
@@ -1364,18 +1361,10 @@ class OvertimesController extends Controller
                 'updated_by'    => $user->supervisor
             );
 
-            // return $data;
-
             $update = DB::table('overtimes')
                 ->where('id', $otID)
                 ->where('hash_id', $otHash)
                 ->update($data);
-
-            // Log::info('Head Decide: ', [
-            //     'sql' =>   $update
-            // ]);
-
-            // return "deny";
 
             if ($update > 0) {
                 $otData = DB::table('overtimes')
@@ -1542,6 +1531,114 @@ class OvertimesController extends Controller
             //     ]);
         } else {
             return redirect('/');
+        }
+    }
+
+    public function sendOvertimeToHRIS(Request $request)
+    {
+        if (!is_numeric($request->otID)) {
+            return response()->json(['error' => 'Invalid ID'], 400);
+        }
+
+        $overtime = DB::table('overtimes as ot')
+            ->leftJoin('offices as o', 'ot.office', 'o.id')
+            ->leftJoin('users as u', 'ot.u_id', 'u.id')
+            ->select(
+                'ot.ot_control_number',
+                'ot.name',
+                'u.email',
+                'u.gender as sex',
+                'ot.employee_id',
+                'o.company_name as office',
+                'ot.ot_status',
+                'ot.ot_date_from',
+                'ot.ot_date_to',
+                'ot.ot_time_from',
+                'ot.ot_time_to',
+                'ot.ot_reason',
+                'ot.ot_hours',
+                'ot.ot_minutes',
+                'ot.ot_hrmins',
+                'ot.created_at',
+                DB::raw('(SELECT name FROM users where employee_id = ot.created_by) as created_by'),
+                'ot.updated_at',
+                DB::raw('(SELECT name FROM users where employee_id = ot.updated_by) as updated_by'),
+                'ot.ot_location',
+            )
+            ->where('ot.id', $request->otID)
+            ->where('ot.is_head_approved', 1)
+            ->first();
+
+        if ($overtime) {
+
+            $payloads = [
+                'ot_control_number' => $overtime->ot_control_number,
+                'name'              => $overtime->name,
+                'employee_id'       => $overtime->employee_id,
+                'office'            => $overtime->office,
+                'ot_status'         => strtolower($overtime->ot_status) == 'head approved' ? 1 : 2,
+
+                'ot_date_from'      => $overtime->ot_date_from,
+                'ot_date_to'        => $overtime->ot_date_to,
+                'ot_time_from'      => Carbon::parse($overtime->ot_time_from)->format('H:i'),
+                'ot_time_to'        => Carbon::parse($overtime->ot_time_to)->format('H:i'),
+
+                'ot_reason'         => $overtime->ot_reason,
+                'ot_hours'          => $overtime->ot_hours,
+                'ot_minute'         => $overtime->ot_minutes,
+                'ot_hrmins'         => $overtime->ot_hrmins,
+
+                'ot_location'       => $overtime->ot_location,
+                'current_step'      => 0,
+
+                'created_at'        => $overtime->created_at,
+                'created_by'        => $overtime->created_by,
+                'updated_at'        => $overtime->updated_at,
+                'updated_by'        => $overtime->updated_by,
+            ];
+
+            $response = Http::withHeaders([
+                'x-api-key' => env('API_KEY'),
+                'Accept' => 'application/json'
+            ])->withOptions([
+                'verify' => false
+            ])->post(env('HRIS_URL') . '/api/otdata/fetch', $payloads);
+
+            if ($response->successful()) {
+                $dataArray = array(
+                    'api_sent'  => 1,
+                    'api_date'  => Carbon::now(),
+                    'api_refno' => $response->json('apiNo')
+                );
+
+                $otAPI = DB::table('overtimes')
+                    ->where('id', $request->otID)
+                    ->update($dataArray);
+
+                Log::channel('hris-api-overtime')->info('HRIS API Response', [
+                    'status'            => $response->status(),
+                    'ot_control_number' => $overtime->ot_control_number,
+                    'body'              => $response->body(),
+                    'data_array'        => $dataArray
+                ]);
+
+                // Mail::to($overtime->email)->send(new OvertimeRequested($overtime, 'approved', '', ''));
+                Mail::to($overtime->email)->send(new OvertimeRequested($overtime, $request->otAction, '', ''));
+
+                return response()->json([
+                    'status'    => $response->status(),
+                    'response'  => $response->json()
+                ]);
+            } else {
+                Log::channel('hris-api-overtime')->info('Failed or No Response from HRIS API', [
+                    'status'            => $response->status(),
+                    'ot_control_number' => $overtime->ot_control_number,
+                    'payloads'          => json_decode(json_encode($payloads), true)
+                ]);
+                return response()->json(['response' => '']);
+            }
+        } else {
+            return response()->json(['response' => '']);
         }
     }
 }

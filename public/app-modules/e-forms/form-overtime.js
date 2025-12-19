@@ -44,7 +44,7 @@ $(document).ready(function () {
             var otDateTimeTo = new Date(otDtTo + 'T' + otTTo);
 
             if (otDateTimeTo < otDateTimeFrom) {
-                $('#errorDateRange').html('Invalid Date Range');
+                $('#errorDateRange').html('Invalid Date/Time Range');
                 $("#submitOvertime").attr('disabled', true);
                 return false;
             } else {

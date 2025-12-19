@@ -8,19 +8,19 @@
 <body>
 
     <p>
-        <em>Name:</em>&nbsp;<strong>{{ $newOT->name }}</strong>
-        <br><em>Reason:</em>&nbsp;<strong>{{ $newOT->ot_reason }}</strong>
-        <br><em>OT Request #:</em>&nbsp;<strong>{{ $newOT->ot_control_number }}</strong>
+        <em>Name:</em>&nbsp;<strong>{{ $dOvertime->name }}</strong>
+        <br><em>Reason:</em>&nbsp;<strong>{{ $dOvertime->ot_reason }}</strong>
+        <br><em>OT Request #:</em>&nbsp;<strong>{{ $dOvertime->ot_control_number }}</strong>
         <br><em>OT Schedule:</em>&nbsp;<strong>
-            {{ \Carbon\Carbon::parse($newOT->ot_date_from)->format('D, m/d/Y') }}
-            {{ \Carbon\Carbon::parse($newOT->ot_time_from)->format('h:i A') }}
+            {{ \Carbon\Carbon::parse($dOvertime->ot_date_from)->format('D, m/d/Y') }}
+            {{ \Carbon\Carbon::parse($dOvertime->ot_time_from)->format('h:i A') }}
             -
-            {{ \Carbon\Carbon::parse($newOT->ot_date_to)->format('D, m/d/Y') }}
-            {{ \Carbon\Carbon::parse($newOT->ot_time_to)->format('h:i A') }}
+            {{ \Carbon\Carbon::parse($dOvertime->ot_date_to)->format('D, m/d/Y') }}
+            {{ \Carbon\Carbon::parse($dOvertime->ot_time_to)->format('h:i A') }}
         </strong>
-        <br><em>Hours:</em>&nbsp;<strong>{{ $newOT->ot_hours }}</strong>
-        <br><em>Minutes:</em>&nbsp;<strong>{{ $newOT->ot_minutes }}</strong>
-        <br><em>Total Computed Hours:</em>&nbsp;<strong>{{ $newOT->ot_hrmins }}</strong>
+        <br><em>Hours:</em>&nbsp;<strong>{{ $dOvertime->ot_hours }}</strong>
+        <br><em>Minutes:</em>&nbsp;<strong>{{ $dOvertime->ot_minutes }}</strong>
+        <br><em>Total Computed Hours:</em>&nbsp;<strong>{{ $dOvertime->ot_hrmins }}</strong>
     </p>
 
     <p>

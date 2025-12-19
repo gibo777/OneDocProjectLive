@@ -46,51 +46,58 @@ $(document).ready(function () {
                 method: 'GET',
                 data: { 'otRefID': $(this).attr('data-record-id') },
                 success: function (data) {
-                    let dLHistory = `<table class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
-                        <thead class="bg-gray-500 text-white">
-                            <tr class="dt-head-center">
-                                <th class="py-1">Status</th>
-                                <th class="py-1">Action By</th>
-                                <th class="py-1">Reason</th>
-                                <th class="py-1">Date</th>
-                            </tr>
-                        </thead>`;
+                    let dLHistory = `
+            <div style="overflow-x:auto; max-width:90vw; margin:auto;">
+                <table class="view-detailed-timelogs table table-bordered table-striped table-hover text-sm"
+                    style="width:auto; min-width:600px; margin:0;">
+                    <thead class="bg-gray-500 text-white">
+                        <tr class="dt-head-center">
+                            <th class="py-1 text-center" style="white-space: nowrap;">STATUS</th>
+                            <th class="py-1 text-center" style="white-space: nowrap;">REASON / COMMENT</th>
+                            <th class="py-1 text-center" style="white-space: nowrap;">ACTION BY</th>
+                            <th class="py-1 text-center" style="white-space: nowrap;">DATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
                     data.forEach(item => {
-                        // const approvedBy = item['is_head2_approved'] == 1 ? item['head2_approved_by'] : item['head_approved_by'];
-                        const actionBy = item['action_by'];
-
-                        dLHistory += `<tr>
-                                        <td class="py-1">${item['action']}</td>
-                                        <td class="py-1">${actionBy}</td>
-                                        <td class="py-1">${item['action_reason']}</td>
-                                        <td class="py-1">${item['action_date']}</td>
-                                    </tr>`;
+                        dLHistory += `
+                <tr>
+                    <td class="py-1 text-center" style="white-space: nowrap;">${item['action']}</td>
+                    <td class="py-1 text-center" style="white-space: nowrap;">${item['action_reason']}</td>
+                    <td class="py-1 text-center" style="white-space: nowrap;">${item['action_by']}</td>
+                    <td class="py-1 text-center" style="white-space: nowrap;">${item['action_date']}</td>
+                </tr>`;
                     });
 
-                    dLHistory += `</table>`;
+                    dLHistory += `
+                    </tbody>
+                </table>
+            </div>`;
 
                     Swal.fire({
-                        width: modalWidth,
                         showClass: { popup: '' },
-                        // hideClass: { popup: '' },
                         showCloseButton: true,
                         showConfirmButton: false,
-                        // confirmButtonText: "Close",
-                        html: `<div class="banner-blue pl-2 p-1 text-md text-left">
-                                    Overtime Status (<strong>${data[0]['ot_control_number']}</strong>)
-                                </div>
-                                <div class="row text-sm w-full text-left my-2">
-                                    <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
-                                    <div class="col-md-6"><em>Approver/s:</em> <strong>${data[0]['head_name']}</strong></div>
-                                </div>
-                                ${dLHistory}`
+                        width: 'auto',
+                        html: `
+                <div class="banner-blue pl-2 p-1 text-md text-left" style="margin-bottom:10px;">
+                    Overtime Status (<strong>${data[0]['ot_control_number']}</strong>)
+                </div>
+                <div class="row text-sm w-full text-left mb-2">
+                    <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
+                    <div class="col-md-6"><em>Approver/s:</em> <strong>${data[0]['head_name']}</strong></div>
+                </div>
+                ${dLHistory}
+            `
                     });
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error fetching leave history:', error);
+                    console.error('Error fetching overtime history:', error);
                 }
             });
+
+
         } catch (error) {
             console.log('Error:', error);
         }
@@ -117,11 +124,11 @@ $(document).ready(function () {
                     showClass: { popup: '' },
                     didOpen: () => {
                         $(document).on('click', '#otApproveRequest', async function () {
-                            approveOTRequest($(this).val(), $(this).text());
+                            approveOTRequest($(this).val(), $(this).text(), data.otData);
                         });
                         $(document).on('click', '#otDenyRequest,#otCancelRequest', async function () {
                             // Swal.fire({ html: $(this).text() }); return false;
-                            revokeOTRequest(otID, $(this).text(), data.otDtls);
+                            revokeOTRequest(otID, $(this).text(), data.otData);
                         });
                     }
                 });
@@ -181,6 +188,7 @@ $(document).ready(function () {
                 return reason;
             }
         }).then((result) => {
+            // Swal.fire({ html: otID + ' | ' + otAction.trim().split(/\s+/)[0].toLowerCase() }); return false;
             if (result.isConfirmed) {
                 handleRevokeConfirmation(otID, result.value, otAction.trim().split(/\s+/)[0].toLowerCase());
             } else {
@@ -189,12 +197,14 @@ $(document).ready(function () {
         });
     }
 
-    function approveOTRequest(otID, btnAction) {
+    function approveOTRequest(otID, btnAction, otData) {
         let otAction = btnAction.trim().split(/\s+/)[0].toLowerCase();
         let otURL = window.location.origin;
-        let otData = {
-            'otID': otID,
-        };
+        // let otData = {
+        //     'otID': otID,
+        // };
+
+        // Swal.fire({ html: JSON.stringify(otData) }); return false;
 
         switch (otAction) {
             case 'approve':
@@ -211,39 +221,182 @@ $(document).ready(function () {
                 break;
         }
 
-        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-        $.ajax({
-            url: otURL,
-            method: 'post',
-            data: otData, // prefer use serialize method
-            beforeSend: function () {
+        Swal.fire({
+            allowOutsideClick: false,
+            confirmButtonText: 'Confirm Approval',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            showCloseButton: true,
+            showClass: {
+                popup: ''
+            },
+            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
+                    Approval (${otData.ot_control_number})
+                </div>
+                <div class="inset-shadow p-1 text-left text-sm">
+                    <div>Name: <b>${otData.name}</b></div>
+                    <div>O.T. Schedule: <b> ${otData.begin_date} - ${otData.end_date} </b></div>
+                    <div>Total Hours: <b> ${otData.total_hours} </b></div>
+                    <div>O.T. Reason: <b> ${otData.ot_reason} </b></div>
+                </div>
+                <div class="text-left text-sm fw-bold py-1"><em>Approval Comment:</em></div>
+                <textarea id="otComment" name="otComment"
+                class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
+                placeholder="Kindly specify your comment here.."></textarea>`,
+            preConfirm: () => {
+                let comment = $('#otComment').val();
+                if (!comment) {
+                    Swal.showValidationMessage('Please enter your approval comment');
+                    Swal.getPopup().querySelector('#otComment').focus();
+                }
+                return comment;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Swal.fire({ html: $('#otComment').val() }); return false;
+
+                // const url = `${window.location.origin}/overtime-link/head-approve`;
+
+                // Swal.fire({ html: otURL }); return false;
                 $('#dataProcess').css({
                     'display': 'flex',
-                    'position': 'fixed',
-                    'top': '50%',
-                    'left': '50%',
-                    'transform': 'translate(-50%, -50%)'
+                    'position': 'absolute',
                 });
-            },
-            success: function (data) {
-                $('#dataProcess').hide();
-                // Swal.fire({ html: JSON.stringify(data) }); return false;
-                const { isSuccess, message } = data;
-                isSuccess ?
-                    (Livewire.emit('refreshComponent'),
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: otURL,
+                    method: 'POST',
+                    data: {
+                        'otID': otID,
+                        // 'otHash': otHash,
+                        'otComment': $('#otComment').val()
+                    },
+                    beforeSend: function () {
+                        $('#dataProcess').css({
+                            'display': 'flex',
+                            'position': 'fixed',
+                            'top': '50%',
+                            'left': '50%',
+                            'transform': 'translate(-50%, -50%)'
+                        });
+                    },
+                    success: function (data) {
+                        $('#dataProcess').hide();
+
+                        if (data.isSuccess) {
+                            Swal.fire({
+                                title: data.message,
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+
+                            $.ajaxSetup({
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            });
+
+                            // Send (API payload) to HRIS using $.ajax / JSON
+                            $.ajax({
+                                url: `${window.location.origin}/send-overtime-to-hris`,
+                                method: 'POST',
+                                data: {
+                                    'otID': otID,
+                                    'otAction': otAction,
+                                },
+                                success: function (apiResponse) {
+                                    console.log('API response:', JSON.stringify(
+                                        apiResponse));
+
+                                },
+                                error: function (xhr) {
+                                    console.error('API error:', xhr.responseText);
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: data.message,
+                                icon: 'error'
+                            });
+                            location.reload();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#dataProcess').hide();
+                        console.error('Error approving overtime:', error);
                         Swal.fire({
-                            icon: 'success',
-                            title: message,
-                        }))
-                    :
-                    Swal.fire({
-                        icon: 'error',
-                        // title: JSON.stringify(message),
-                        title: 'Failed!',
-                    });
-                // email notification here...
+                            title: 'Error',
+                            text: 'Something went wrong while approving overtime.',
+                            icon: 'error'
+                        });
+                    }
+                });
             }
         });
+
+        // $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+        // $.ajax({
+        //     url: otURL,
+        //     method: 'post',
+        //     data: otData, // prefer use serialize method
+        //     beforeSend: function () {
+        //         $('#dataProcess').css({
+        //             'display': 'flex',
+        //             'position': 'fixed',
+        //             'top': '50%',
+        //             'left': '50%',
+        //             'transform': 'translate(-50%, -50%)'
+        //         });
+        //     },
+        //     success: function (data) {
+        //         $('#dataProcess').hide();
+
+        //         const { isSuccess, message } = data;
+
+
+        //         if (isSuccess) {
+        //             Livewire.emit('refreshComponent');
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: message,
+        //             });
+        //             $.ajaxSetup({
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+        //                     'content')
+        //             });
+
+        //             // Send (API payload) to HRIS using $.ajax / JSON
+        //             $.ajax({
+        //                 url: `${window.location.origin}/send-overtime-to-hris`,
+        //                 method: 'POST',
+        //                 data: {
+        //                     'otID': otID,
+        //                 },
+        //                 success: function (apiResponse) {
+        //                     console.log('API response:', JSON.stringify(
+        //                         apiResponse));
+
+        //                 },
+        //                 error: function (xhr) {
+        //                     console.error('API error:', xhr.responseText);
+        //                 }
+        //             });
+        //         } else {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 // title: JSON.stringify(message),
+        //                 title: 'Failed!',
+        //             });
+        //         }
+
+        //     }
+        // });
     }
 
     /* function denyOTRequest(otID, lType, lOthers, dLName, dLDate, dHType) {
@@ -343,6 +496,7 @@ $(document).ready(function () {
 
                 $('#dataProcess').hide();
                 // Swal.fire({ html: JSON.stringify(data) }); return false;
+
                 if (data.isSuccess) {
                     Swal.fire({
                         title: data.message,
@@ -350,7 +504,7 @@ $(document).ready(function () {
                     }).then(() => {
                         Livewire.emit('refreshComponent');
 
-                        // if (otAction=='Denied') {
+                        // if (typeof otAction === 'string' && otAction.toLowerCase() === 'denied') {
                         // $.ajax({
                         //     url: `${window.location.origin}/e-forms/notify-overtime-action`,
                         //     method: 'POST',
@@ -363,26 +517,45 @@ $(document).ready(function () {
                         //         // Swal.fire({ html: dataMail }); return false
                         //     }
                         // });
-
-                        // if (otAction == 'Cancelled') {
-                        //     // Send (API payload) to HRIS using $.ajax / JSON
-                        //     $.ajaxSetup({
-                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        //     });
-                        //     $.ajax({
-                        //         url: `${window.location.origin}/send-leave-to-hris`,
-                        //         method: 'POST',
-                        //         data: {
-                        //             'otID': otID,
-                        //         },
-                        //         success: function (apiResponse) {
-                        //             console.log('API response:', JSON.stringify(apiResponse));
-                        //         },
-                        //         error: function (xhr) {
-                        //             console.error('API error:', xhr.responseText);
-                        //         }
-                        //     });
                         // }
+
+                        if (typeof otAction === 'string' && otAction.toLowerCase() === 'cancel') {
+
+                            // Send (API payload) to HRIS using $.ajax / JSON
+                            $.ajax({
+                                url: `${window.location.origin}/send-overtime-to-hris`,
+                                method: 'POST',
+                                data: {
+                                    'otID': otID,
+                                    'otAction': 'cancelled',
+                                },
+                                success: function (apiResponse) {
+                                    console.log('API response:', JSON.stringify(
+                                        apiResponse));
+
+                                },
+                                error: function (xhr) {
+                                    console.error('API error:', xhr.responseText);
+                                }
+                            });
+                            //     // Send (API payload) to HRIS using $.ajax / JSON
+                            //     $.ajaxSetup({
+                            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            //     });
+                            //     $.ajax({
+                            //         url: `${window.location.origin}/send-leave-to-hris`,
+                            //         method: 'POST',
+                            //         data: {
+                            //             'otID': otID,
+                            //         },
+                            //         success: function (apiResponse) {
+                            //             console.log('API response:', JSON.stringify(apiResponse));
+                            //         },
+                            //         error: function (xhr) {
+                            //             console.error('API error:', xhr.responseText);
+                            //         }
+                            //     });
+                        }
                     });
                 } else {
                     Swal.fire({

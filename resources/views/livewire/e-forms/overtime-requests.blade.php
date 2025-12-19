@@ -195,7 +195,7 @@
                                             </td>
                                         @else
                                             <td data-record-id="{{ $record->id }}"
-                                                class="{{ $record->ot_status != 'Pending' ? ($record->ot_status == 'Cancelled' || $record->ot_status == 'Denied' || $record->ot_status == 'Expired' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 view_ot_status }}">
+                                                class="{{ strtolower($record->ot_status) != 'pending' ? (strtolower($record->ot_status) == 'cancelled' || strtolower($record->ot_status) == 'denied' || strtolower($record->ot_status) == 'expired' ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500 view_ot_status }}">
                                                 {{ $record->ot_status }}
                                             </td>
                                         @endif

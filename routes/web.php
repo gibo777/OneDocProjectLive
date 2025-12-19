@@ -16,6 +16,7 @@ use App\Http\Controllers\ProcessController;
 /* E-Forms */
 use App\Http\Livewire\EForms\LeaveApplication;
 use App\Http\Livewire\EForms\OvertimeRequests;
+use App\Http\Livewire\EForms\WorkFromHome;
 /* Records Management */
 use App\Http\Livewire\RecordsManagement\Timelogs;
 use App\Http\Livewire\RecordsManagement\Employees;
@@ -130,10 +131,13 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/hris/approve-overtime', [OvertimesController::class, 'approveOvertime'])->name('approve.overtime');
 
 
-
-
     Route::get('/e-forms/overtime-listing', OvertimeRequests::class)->name('eforms.overtime-listing');
     Route::get('/e-forms/overtime-detailed', [OvertimeRequests::class, 'fetchDetailedLeave'])->name('eforms.overtime-detailed');
+
+
+    /*======= WFH SET-UP (WORK-FROM-HOME) ======*/
+    Route::get('/hris/wfhsetup', WorkFromHome::class)->name('hris.wfhsetup');
+
 
     /*======= REIMBURSEMENT =======*/
     Route::get('/reimbursement', [ReimbursementController::class, 'index'])->name('reimbursement');
@@ -332,6 +336,9 @@ Route::post('/overtime-link/head-deny', [OvertimesController::class, 'linkHeadDe
 /*=======  HRIS API =======*/
 Route::post('/send-leave-to-hris', [LeaveApplication::class, 'sendToHRIS'])->name('send.to.hris');
 Route::post('/send-allleave-to-hris', [LeaveApplication::class, 'sendAllToHRIS'])->name('sendall.to.hris');
+
+
+Route::post('/send-overtime-to-hris', [OvertimesController::class, 'sendOvertimeToHRIS'])->name('send.overtime.to.hris');
 
 
 /*======= CRON / SCHEDULER =====*/

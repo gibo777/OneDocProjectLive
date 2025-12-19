@@ -221,21 +221,21 @@ class OvertimeRequests extends Component
 
     public function fetchDetailedLeave(Request $request)
     {
-        $otDtls = DB::table('v_overtime_details')
+        $otData = DB::table('v_overtime_details')
             ->where('id', $request->id)
             ->first();
 
         $isAdmin = Auth::user()->id == 1;
-        $isApprover1 = Auth::user()->employee_id == $otDtls->approver1;
-        $isApprover2 = Auth::user()->employee_id == $otDtls->approver2 && $otDtls->approver2 != null;
-        $isHead = Auth::user()->employee_id == $otDtls->head_id;
-        $isOwner = Auth::user()->employee_id == $otDtls->employee_id;
-        $status = strtolower($otDtls->ot_status);
+        $isApprover1 = Auth::user()->employee_id == $otData->approver1;
+        $isApprover2 = Auth::user()->employee_id == $otData->approver2 && $otData->approver2 != null;
+        $isHead = Auth::user()->employee_id == $otData->head_id;
+        $isOwner = Auth::user()->employee_id == $otData->employee_id;
+        $status = strtolower($otData->ot_status);
 
         return response()->json([
             'status' => 'success',
             'html' => view('modals.e-forms.m-overtime-detailed', [
-                'otDtls'      => $otDtls,
+                'otDtls'      => $otData,
                 'isAdmin'     => $isAdmin,
                 'isApprover1' => $isApprover1,
                 'isApprover2' => $isApprover2,
@@ -243,17 +243,17 @@ class OvertimeRequests extends Component
                 'isOwner'     => $isOwner,
                 'status'      => $status,
             ])->render(),
-            'otDtls' => $otDtls
+            'otData' => $otData
         ]);
 
-        // $otDtls = DB::table('v_overtime_details')
+        // $otData = DB::table('v_overtime_details')
         //     ->where('id', $request->id)
         //     ->first();
 
         // return response()->json([
         //     'status' => 'success',
-        //     'html' => view('modals.e-forms.m-overtime-detailed', ['otDtls' => $otDtls])->render(),
-        //     'otDtls' => $otDtls
+        //     'html' => view('modals.e-forms.m-overtime-detailed', ['otDtls' => $otData])->render(),
+        //     'otDtls' => $otData
         // ]);
     }
 
@@ -379,83 +379,6 @@ class OvertimeRequests extends Component
             }
         }
     }
-
-    // public function sendToHRIS(Request $request)
-    // {
-    //     if (!is_numeric($request->lID)) {
-    //         return response()->json(['error' => 'Invalid ID'], 400);
-    //     }
-
-    //     $leave = DB::table('leaves as l')
-    //         ->select(
-    //             'l.control_number',
-    //             'l.name',
-    //             'l.employee_id',
-    //             'o.company_name as office',
-    //             'l.leave_status',
-    //             'l.leave_type',
-    //             'l.others',
-    //             'l.date_from',
-    //             'l.date_to',
-    //             'l.time_designator',
-    //             'l.reason',
-    //             'l.no_of_days',
-    //             'l.created_at'
-    //         )
-    //         ->leftJoin('offices as o', 'l.office', 'o.id')
-    //         ->where('l.id', $request->lID)
-    //         ->where('l.is_head_approved', 1)
-    //         ->first();
-
-    //     if ($leave) {
-    //         $payloads = [
-    //             'CONTROL_NO'        => $leave->control_number,
-    //             'name'              => $leave->name,
-    //             'employee_id'       => $leave->employee_id,
-    //             'office'            => $leave->office,
-    //             'leave_status_no'   => $leave->leave_status == 'Head Approved' ? 1 : 2,
-    //             'leave_type'        => $leave->leave_type,
-    //             'others'            => $leave->others,
-    //             'date_from'         => $leave->date_from,
-    //             'date_to'           => $leave->date_to,
-    //             'time_designator'   => $leave->time_designator,
-    //             'reason'            => $leave->reason,
-    //             'no_of_days'        => $leave->no_of_days,
-    //             'created_at'        => $leave->created_at,
-    //             'updated_at'        => now()->format('Y-m-d H:i:s'),
-    //             'updated_by'        => Auth::user()->employee_id,
-    //         ];
-
-    //         $response = Http::withHeaders([
-    //             'x-api-key' => env('API_KEY'),
-    //             'Accept' => 'application/json'
-    //         ])->withOptions([
-    //             'verify' => false
-    //         ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payloads);
-
-    //         if ($response->successful()) {
-    //             Log::channel('hris-api')->info('HRIS API Response', [
-    //                 'status'            => $response->status(),
-    //                 'control_number'    => $leave->control_number,
-    //                 'body'              => $response->body(),
-    //                 'json'              => $response->json()
-    //             ]);
-    //             return response()->json([
-    //                 'status'    => $response->status(),
-    //                 'response'  => $response->json()
-    //             ]);
-    //         } else {
-    //             Log::channel('hris-api')->info('Failed or No Response from HRIS API', [
-    //                 'status'            => $response->status(),
-    //                 'control_number'    => $leave->control_number
-    //             ]);
-    //             return response()->json(['response' => '']);
-    //         }
-    //     } else {
-    //         return response()->json(['response' => '']);
-    //     }
-    // }
-
 
     public function revokeLeave(Request $request)
     {

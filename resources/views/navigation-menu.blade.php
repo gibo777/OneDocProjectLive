@@ -338,7 +338,7 @@
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH
                                     Setup</a>
                                 <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                    <a class="dropdown-item" href="{{ route('hris.overtime') }}"
+                                    <a class="dropdown-item" href="{{ route('hris.wfhsetup') }}"
                                         id="dNavWFH">{{ __('WFH Form') }} </a>
                                     <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"
                                         id="nav_view_wfh">{{ __('View WFH') }} </a>
@@ -480,7 +480,7 @@
                                         {{ __('Benefits') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
-                                        {{ __('Authorize User') }}
+                                        {{ __('User Authorization') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('module.list') }}">
                                         {{ __('Module Creation') }}

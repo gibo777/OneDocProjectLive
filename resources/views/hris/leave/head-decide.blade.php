@@ -277,6 +277,7 @@
                             success: function(apiResponse) {
                                 console.log('API response:', JSON.stringify(
                                     apiResponse));
+                                // Update leaves table for api fields
                             },
                             error: function(xhr) {
                                 console.error('API error:', xhr.responseText);

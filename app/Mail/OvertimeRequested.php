@@ -11,7 +11,7 @@ class OvertimeRequested extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $newOT;
+    public $dOvertime;
     public $action;
     public $approveUrl;
     public $denyUrl;
@@ -21,9 +21,9 @@ class OvertimeRequested extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($newOT, $action, $approveUrl, $denyUrl)
+    public function __construct($dOvertime, $action, $approveUrl, $denyUrl)
     {
-        $this->newOT        = $newOT;
+        $this->dOvertime    = $dOvertime;
         $this->action       = $action;
         $this->approveUrl   = $approveUrl;
         $this->denyUrl      = $denyUrl;
@@ -36,52 +36,36 @@ class OvertimeRequested extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        // return $this->markdown('emails.overtime-request')
-        //     ->with([
-        //         'newOT' => $this->newOT,
-        //         'action' => $this->action,
-        //         'approveUrl' => $this->approveUrl,
-        //         'denyUrl' => $this->denyUrl,
-        //     ]);
-
-
-        return $this->view('emails.overtime-request')
-            ->subject('Overtime Request Submitted')
-            ->with([
-                'newOT'         => $this->newOT,
-                'action'        => $this->action,
-                'approveUrl'    => $this->approveUrl,
-                'denyUrl'       => $this->denyUrl,
-            ]);
-
-        // switch (strtolower($this->event)) {
-        //     case 'approved':
-        //         return $this->view('emails.leave-application-decided')
-        //                     ->subject('Leave Application Approved')
-        //                     ->with([
-        //                         'dLeave' => $this->newLeave,
-        //                         'decide' => $this->event,
-        //                     ]);
-        //         break;
-        //     case 'denied':
-        //     case 'cancelled':
-        //         return $this->view('emails.leave-application-decided')
-        //                     ->subject('Leave Application '.$this->event)
-        //                     ->with([
-        //                         'dLeave' => $this->newLeave,
-        //                         'decide' => $this->event,
-        //                     ]);
-        //         break;
-
-        //     default:
-        //         return $this->view('emails.leave-application-submitted')
-        //                     ->subject('Overtime Request Submitted')
-        //                     ->with([
-        //                         'newOT'  => $this->newOT,
-        //                         'approveUrl'=> $this->approveUrl,
-        //                         'denyUrl'   => $this->denyUrl,
-        //                     ]);
-        //         break;
-        // }
+        switch (strtolower($this->action)) {
+            case 'approved':
+                return $this->view('emails.overtime-decided')
+                    ->subject('Overtime Request Approved')
+                    ->with([
+                        'dOvertime' => $this->dOvertime,
+                        'action'    => $this->action,
+                    ]);
+                break;
+            case 'denied':
+            case 'cancelled':
+                return $this->view('emails.overtime-decided')
+                    ->subject('Overtime Request ' . $this->action)
+                    ->with([
+                        'dOvertime'     => $this->dOvertime,
+                        'action'        => $this->action,
+                        'approveUrl'    => $this->approveUrl,
+                        'denyUrl'       => $this->denyUrl,
+                    ]);
+                break;
+            default:
+                return $this->view('emails.overtime-request')
+                    ->subject('Overtime Request Submitted')
+                    ->with([
+                        'dOvertime'     => $this->dOvertime,
+                        'action'        => $this->action,
+                        'approveUrl'    => $this->approveUrl,
+                        'denyUrl'       => $this->denyUrl,
+                    ]);
+                break;
+        }
     }
 }
