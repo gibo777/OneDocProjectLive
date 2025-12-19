@@ -1616,6 +1616,7 @@ class OvertimesController extends Controller
                     ->update($dataArray);
 
                 Log::channel('hris-api-overtime')->info('HRIS API Response', [
+                    'ot_action'         => $request->otAction,
                     'status'            => $response->status(),
                     'ot_control_number' => $overtime->ot_control_number,
                     'body'              => $response->body(),
@@ -1623,6 +1624,7 @@ class OvertimesController extends Controller
                 ]);
 
                 // Mail::to($overtime->email)->send(new OvertimeRequested($overtime, 'approved', '', ''));
+
                 Mail::to($overtime->email)->send(new OvertimeRequested($overtime, $request->otAction, '', ''));
 
                 return response()->json([

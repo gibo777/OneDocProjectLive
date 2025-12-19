@@ -235,6 +235,7 @@
                     data: {
                         'otID': otID,
                         'otHash': otHash,
+                        'otAction': 'Approved',
                         'otComment': result.value
                     },
                     beforeSend: function() {
@@ -268,6 +269,7 @@
                                 method: 'POST',
                                 data: {
                                     'otID': otID,
+                                    'otAction': 'Approved',
                                 },
                                 success: function(apiResponse) {
                                     console.log('API response:', JSON.stringify(
