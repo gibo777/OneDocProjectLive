@@ -253,6 +253,7 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     /* Export to Excel */
     Route::get('/leaves-excel', [ViewLeavesController::class, 'leavesExcel'])->name('leaves.excel');
+    Route::get('/overtimes-excel', [OvertimesController::class, 'overtimesExcel'])->name('overtimes.excel');
     Route::get('/timelogs-excel', [EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');
     Route::get('/export-timelogs-xls', [Timelogs::class, 'timeLogsExcel'])->name('export.timelogs.excel');
 

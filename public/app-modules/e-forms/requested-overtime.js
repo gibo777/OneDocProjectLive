@@ -567,40 +567,197 @@ $(document).ready(function () {
         });
     }
 
-    /* EXPORT TO EXCEL TIMELOGS */
-    $(document).on('click', '#exportExcelLeaves', async function () {
+    function getFilterData() {
+        let filterData = {
+            office: $('#fTLOffice').val(),
+            department: $('#fTLDept').val(),
+            status: $('#fOTStatus').val(),
+            date_from: $('#fOTdtFrom').val(),
+            date_to: $('#fOTdtTo').val(),
+            search: $('#search').val(),
+            pageSize: $('#pageSize').val()
+        };
+
+        return filterData;
+    }
+
+    // ===== Helper functions =====
+    function isNumber(val) {
+        return !isNaN(val) && val !== '' && val !== null;
+    }
+
+    function isDateTime(val) {
+        // Matches YYYY-MM-DD HH:MM:SS
+        return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(val);
+    }
+
+    /* EXPORT TO EXCEL OVERTIMES */
+    $(document).on('click', '#exportExcelOvertime', async function () {
+        let url = window.location.origin + '/overtimes-excel';
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
-            url: '/leaves-excel',
+            url: url,
             method: 'GET',
-            data: { 'id': $(this).attr('id') },
-            success: function (html) {
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
+            data: getFilterData(),
+            beforeSend: function () {
+                $('#dataProcess').css({
+                    'display': 'flex',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
+                });
 
-                let currentDateValue = tempDiv.querySelector('#hidCurrentDate').value;
-                let filename = `Leaves_${currentDateValue}.xlsx`;
-
-                let blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-                let url = window.URL.createObjectURL(blob);
-
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
             },
-            error: function (xhr, status, error) {
-                console.error('Error exporting to Excel:', error);
+            success: function (data) {
+                $('#dataProcess').hide();
+
+                try {
+                    // ===== 1. Normalize data =====
+                    var rowsData = Array.isArray(data) ? data : data.otData;
+
+                    if (!rowsData || !Array.isArray(rowsData) || rowsData.length === 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No data to export!'
+                        });
+                        return;
+                    }
+
+                    // ===== 2. Column mapping =====
+                    var columnMappings = {
+                        full_name: 'Name',
+                        employee_id: 'Employee ID',
+                        office: 'Office',
+                        department: 'Department',
+                        supervisor: 'Supervisor',
+                        ot_control_number: 'OT Control No.',
+                        ot_location: 'OT Location',
+                        ot_schedule: 'OT Schedule',
+                        ot_hrmins: 'OT Hours',
+                        ot_status: 'Status',
+                        // date_applied: 'Date Applied'
+                    };
+
+                    var selectedColumns = [
+                        'full_name',
+                        'employee_id',
+                        'office',
+                        'department',
+                        'supervisor',
+                        'ot_control_number',
+                        'ot_location',
+                        'ot_schedule',
+                        'ot_hrmins',
+                        'ot_status',
+                        // 'date_applied'
+                    ];
+
+                    // ===== 3. Build rows =====
+                    var rows = [];
+                    rows.push(selectedColumns.map(c => columnMappings[c]));
+                    rowsData.forEach(function (item) {
+                        var row = selectedColumns.map(c => item[c] ?? '');
+                        rows.push(row);
+                    });
+
+                    // ===== 4. Build Excel XML with styles =====
+                    var xml = '<?xml version="1.0"?>\n';
+                    xml += '<?mso-application progid="Excel.Sheet"?>\n';
+                    xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n';
+                    xml += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+
+                    // ===== Styles =====
+                    xml += '<Styles>\n';
+                    xml += '<Style ss:ID="HeaderStyle"><Font ss:Bold="1" ss:Size="12"/></Style>\n';
+                    xml += '<Style ss:ID="DefaultStyle"><Font ss:Bold="0" ss:Size="10"/></Style>\n';
+                    xml += '<Style ss:ID="DateStyle"><NumberFormat ss:Format="yyyy-mm-dd hh:mm:ss"/></Style>\n';
+                    xml += '</Styles>\n';
+
+                    // ===== Worksheet =====
+                    xml += '<Worksheet ss:Name="Overtime Report">\n';
+                    xml += '<Table>\n';
+
+                    // ===== Add rows with styles =====
+                    rows.forEach(function (row, rowIndex) {
+                        xml += '<Row>\n';
+
+                        row.forEach(function (cell) {
+
+                            let raw = cell;
+                            let type = 'String';
+                            let value = cell;
+                            let style = rowIndex === 0 ? 'HeaderStyle' : 'DefaultStyle';
+
+                            // Detect DateTime
+                            if (isDateTime(raw)) {
+                                type = 'DateTime';
+                                value = raw.replace(' ', 'T');
+                                style = 'DateStyle';
+                            }
+                            // Detect number
+                            else if (isNumber(raw)) {
+                                type = 'Number';
+                                value = raw;
+                            }
+
+                            // Escape only strings
+                            if (type === 'String') {
+                                value = value.toString()
+                                    .replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&apos;');
+                            }
+
+                            xml += `<Cell ss:StyleID="${style}"><Data ss:Type="${type}">${value}</Data></Cell>\n`;
+                        });
+
+                        xml += '</Row>\n';
+                    });
+
+                    xml += '</Table>\n';
+                    xml += '</Worksheet>\n';
+                    xml += '</Workbook>';
+
+                    // ===== 5. Trigger download =====
+                    var blob = new Blob([xml], { type: 'application/vnd.ms-excel' });
+                    var url = window.URL.createObjectURL(blob);
+
+                    var filename = data.fileName || 'OT_Report.xls';
+
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+
+
+                    // ===== 6. Success Swal =====
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Excel file generated successfully!'
+                    });
+
+                } catch (e) {
+                    console.error('Excel generation failed:', e);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to generate Excel file.'
+                    });
+                }
             }
+
+
+
         });
 
         return false;

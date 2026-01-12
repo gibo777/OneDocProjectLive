@@ -21,6 +21,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OvertimeRequested;
 
+
+// use Maatwebsite\Excel\Facades\Excel;
+// use App\Exports\OvertimeExport;
+
 class OvertimesController extends Controller
 {
     /**
@@ -1532,6 +1536,98 @@ class OvertimesController extends Controller
         } else {
             return redirect('/');
         }
+    }
+
+    public function overtimesExcel(Request $request)
+    {
+        $otData = DB::table('overtimes as ot')
+            ->select(
+                'ot.id',
+                'ot.u_id',
+                'ot.name as full_name',
+                'o.company_name as office',
+                'd.department',
+                'u.supervisor',
+                'd.department_code as dept',
+                'ot.ot_control_number',
+                'ot.ot_location',
+                DB::raw("CONCAT(
+                DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
+                DATE_FORMAT(ot.ot_time_from, '%h:%i %p'), ' - ',
+                DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
+                DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
+            ) as ot_schedule"),
+                'ot.ot_hrmins',
+                'ot.ot_status',
+                'ot.employee_id',
+                'ot.created_at as date_applied',
+                'ot.is_head_approved',
+                'ot.is_head2_approved',
+                DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as approver1"),
+                DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2")
+            )
+            ->leftJoin('offices as o', 'ot.office', '=', 'o.id')
+            ->leftJoin('departments as d', 'ot.department', '=', 'd.department_code')
+            ->leftJoin('users as u', 'u.employee_id', '=', 'ot.employee_id')
+            ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor')
+            ->leftJoin('users as u3', function ($join) {
+                $join->on('u3.employee_id', '=', 'u.manager')
+                    ->whereNotNull('u.manager');
+            });
+
+        if (Auth::user()->id <> 1) {
+            $otData->where('u.id', '<>', 1);
+        }
+
+        if ($request->office) {
+            $otData->where('ot.office', $request->office);
+        }
+
+        if ($request->department) {
+            $otData->where('ot.department', $request->department);
+        }
+
+        if ($request->status) {
+            $otData->where('ot.ot_status', $request->status);
+        }
+
+        if ($request->date_from && $request->date_to) {
+            $otData->whereBetween('ot.ot_date_from', [
+                $request->date_from,
+                $request->date_to
+            ]);
+        } elseif ($request->date_from && !$request->date_to) {
+            $otData->whereDate('ot.ot_date_from', $request->date_from);
+            $otData->whereDate('ot.ot_date_to', $request->date_from);
+        }
+
+        if ($request->search) {
+            $otData->where(function ($q) use ($request) {
+                $q->where('ot.name', 'like', '%' . $request->search . '%')
+                    ->orWhere('ot.employee_id', 'like', '%' . $request->search . '%')
+                    ->orWhere('ot.ot_control_number', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $otData = $otData->orderBy('ot.name', 'desc')->get();
+
+        $fOffice = '';
+        if ($request->office) {
+            $fOffice = DB::table('offices')
+                ->where('id', $request->office)
+                ->value('company_name');
+        }
+
+        $fileName = 'OT_Report_' . Carbon::now()->format('YmdHi');
+        if ($fOffice) {
+            $fileName .= '_' . $fOffice;
+        }
+        $fileName .= '.xls';
+
+        return response()->json([
+            'otData' => $otData,
+            'fileName' => $fileName
+        ]);
     }
 
     public function sendOvertimeToHRIS(Request $request)
