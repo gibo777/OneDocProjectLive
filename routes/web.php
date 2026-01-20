@@ -150,7 +150,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     /*======= RECORDS MANAGEMENT =======*/
     /* EMPLOYEES */
-    Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
+    // Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
+    Route::middleware(['allowOnlySuperAdmin'])->group(function () {
+        Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
+    });
+
     Route::get('/getemployees', [EmployeesController::class, 'getEmployeeInfo']);
     Route::post('/updateemployees', [EmployeesController::class, 'updateEmployee']);
     Route::get('/verify-duplicate', [EmployeesController::class, 'verifyDuplicate'])->name('verify.duplicate');

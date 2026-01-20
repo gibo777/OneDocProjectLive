@@ -235,9 +235,38 @@
                 <div>
                     <a class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogs-listing') }}"
                         id="nav_time_logs">
-                        {{ __('TIME-LOGS') }}
+                        {{ __('Time-logs') }}
                     </a>
                 </div>
+                @if (Auth::user()->id == 1)
+                    <div class="view_nav block px-4 py-2 text-xs text-gray-400">
+                        {{ __('Records Management') }}
+                    </div>
+                    <div class="border-t border-gray-200" hidden>
+                        <x-jet-responsive-nav-link href="{{ route('hr.management.employees') }}">
+                            {{ __('Employee Management') }}
+                        </x-jet-responsive-nav-link>
+                    </div>
+
+                    <div class="view_nav block px-4 py-2 text-xs text-gray-400">
+                        {{ __('Set-up') }}
+                    </div>
+                    <div class="border-t border-gray-200" hidden>
+                        <x-jet-responsive-nav-link href="{{ route('employee-benefits') }}">
+                            {{ __('Leave Credits') }}
+                        </x-jet-responsive-nav-link>
+                        <x-jet-responsive-nav-link href="{{ route('authorize.user.list') }}">
+                            {{ __('User Authorization') }}
+                        </x-jet-responsive-nav-link>
+                        <x-jet-responsive-nav-link href="{{ route('module.list') }}">
+                            {{ __('Module Creation') }}
+                        </x-jet-responsive-nav-link>
+                        <x-jet-responsive-nav-link href="{{ route('server-status') }}"
+                            class="dropdown-item hover font-weight-bold {{ $serverStatus ? 'text-success' : 'text-danger' }}">
+                            {{ __('Server Status') }}
+                        </x-jet-responsive-nav-link>
+                    </div>
+                @endif
 
                 <div class="mt-3 space-y-1"></div>
                 <hr block px-4 py-2 text-gray-400>
@@ -394,19 +423,23 @@
                                 {{-- <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
                     {{ __('View Employees') }}
                     </a> --}}
-                                <div class="dropdown dropend">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Employee Management </a>
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('register') }}">
-                                            {{ __('User Registration') }}
-                                        </a>
-                                        <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
-                                            {{ __('View Employees') }}
-                                        </a>
+                                @if (Auth::user()->role_type == 'SUPER ADMIN')
+                                    <div class="dropdown dropend">
+                                        <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Employee Management </a>
+                                        <div class="dropdown-menu margin-left-cust"
+                                            aria-labelledby="dropdown-layouts">
+                                            <a class="dropdown-item" href="{{ route('register') }}">
+                                                {{ __('User Registration') }}
+                                            </a>
+                                            <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
+                                                {{ __('View Employees') }}
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
+
                                 <div class="dropdown dropend">
                                     <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
                                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -477,7 +510,7 @@
                                 </a>
                                 @if (Auth::user()->id == 1)
                                     <a class="dropdown-item" href="{{ route('employee-benefits') }}">
-                                        {{ __('Benefits') }}
+                                        {{ __('Leave Credits') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
                                         {{ __('User Authorization') }}

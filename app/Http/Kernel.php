@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkServerStatus' => \App\Http\Middleware\CheckServerStatus::class,
         'allowOnlyAdmin' => \App\Http\Middleware\AllowOnlyAdmin::class,
-        'x-api-auth' => \App\Http\Middleware\ApiKeyAndAuthMiddleware::class,
+        'allowOnlySuperAdmin' => \App\Http\Middleware\AllowOnlySuperAdmin::class,
+        'x-api-auth' => \App\Http\Middleware\ApiKeyMiddleware::class,
     ];
 }
