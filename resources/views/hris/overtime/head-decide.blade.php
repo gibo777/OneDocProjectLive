@@ -209,8 +209,9 @@
             preConfirm: () => {
                 let comment = $('#otComment').val();
                 if (!comment) {
-                    Swal.showValidationMessage('Please enter your comment for approval');
-                    Swal.getPopup().querySelector('#otComment').focus();
+                    $('#otComment').val('');
+                    // Swal.showValidationMessage('Please enter your comment for approval');
+                    // Swal.getPopup().querySelector('#otComment').focus();
                 }
                 return comment;
             }

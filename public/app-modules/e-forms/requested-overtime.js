@@ -114,6 +114,8 @@ $(document).ready(function () {
             method: 'get',
             data: { 'id': otID },
             success: function (data) {
+
+                parentSwalOpen = true;
                 Swal.fire({
                     html: data.html,
                     showCloseButton: true,
@@ -130,7 +132,28 @@ $(document).ready(function () {
                             // Swal.fire({ html: $(this).text() }); return false;
                             revokeOTRequest(otID, $(this).text(), data.otData);
                         });
-                    }
+                    },
+                    // didOpen: () => {
+                    //     const popup = Swal.getPopup();
+
+                    //     let x = 0;
+                    //     let y = 0;
+
+                    //     interact(popup).draggable({
+                    //         listeners: {
+                    //             move(event) {
+                    //                 x += event.dx;
+                    //                 y += event.dy;
+
+                    //                 popup.style.transform =
+                    //                     `translate(${x}px, ${y}px)`;
+                    //             }
+                    //         }
+                    //     });
+                    // },
+                    // didClose: () => {
+                    //     parentSwalOpen = false;
+                    // }
                 });
 
             },
@@ -246,18 +269,15 @@ $(document).ready(function () {
             preConfirm: () => {
                 let comment = $('#otComment').val();
                 if (!comment) {
-                    Swal.showValidationMessage('Please enter your approval comment');
-                    Swal.getPopup().querySelector('#otComment').focus();
+                    $('#otComment').val('');
+                    // Swal.showValidationMessage('Please enter your approval comment');
+                    // Swal.getPopup().querySelector('#otComment').focus();
                 }
                 return comment;
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Swal.fire({ html: $('#otComment').val() }); return false;
-
                 // const url = `${window.location.origin}/overtime-link/head-approve`;
-
-                // Swal.fire({ html: otURL }); return false;
                 $('#dataProcess').css({
                     'display': 'flex',
                     'position': 'absolute',
