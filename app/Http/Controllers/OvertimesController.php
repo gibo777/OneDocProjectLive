@@ -349,7 +349,7 @@ class OvertimesController extends Controller
             $currentDate = DB::raw('NOW()');
             $message = "";
             $data = array(
-                'ot_status'         => 'cancelled',
+                'ot_status'         => 'Cancelled',
                 'is_cancelled'      => 1,
                 'cancelled_at'      => Carbon::now()->format('Y-m-d H:i:s'),
                 'cancelled_by'      => Auth::user()->employee_id,
@@ -720,7 +720,7 @@ class OvertimesController extends Controller
                     }
                 } else {
                     $data = array(
-                        'ot_status'         => 'head approved',
+                        'ot_status'         => 'Head Approved',
                         'is_head2_approved'  => 1,
                         'head2_approved_at'  => $currentDate,
                         'head2_approved_by'  => Auth::user()->employee_id,
