@@ -314,7 +314,7 @@ $(document).ready(function () {
                                 title: data.message,
                                 icon: 'success'
                             }).then(() => {
-                                location.reload();
+                                Livewire.emit('refreshComponent');
                             });
 
                             $.ajaxSetup({
