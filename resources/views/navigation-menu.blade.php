@@ -485,7 +485,7 @@
 
 
 
-                @if (Auth::user()->role_type == 'SUPER ADMIN')
+                @if (Auth::user()->role_type == 'SUPER ADMIN' && (Auth::user()->id == 1 || Auth::user()->id == 8))
 
                     <div class="dropdown mt-3 mx-1">
                         <button
