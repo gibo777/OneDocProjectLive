@@ -3,10 +3,22 @@
     <x-jet-authentication-card>
         <x-slot name="logo">
         </x-slot>
-            <div class="drop-shadow">
-                <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded mx-auto d-block pb-3"/>
-                <!-- <x-jet-authentication-card-logo /> -->
+        <div class="flex justify-start items-center py-2 space-x-2">
+            <div class="flex justify-center items-center">
+                <img class="h-16 md:h-20 lg:h-24 object-contain" src="{{ asset('/img/company/1doc-logo-100px.jpg') }}" />
             </div>
+            <div class="flex justify-center items-center">
+                <img class="h-16 md:h-20 lg:h-24 object-contain" src="{{ asset('/img/company/sappi-logo-90px.jpg') }}" />
+            </div>
+            <div class="flex justify-center items-center">
+                <img class="h-10 md:h-16 lg:h-20 object-contain"
+                    src="{{ asset('/img/company/1food-logo-90px.jpg') }}" />
+            </div>
+            <div class="flex justify-center items-center">
+                <img class="h-12 md:h-16 lg:h-20 object-contain"
+                    src="{{ asset('/img/company/eagro-logo-100px.jpg') }}" />
+            </div>
+        </div>
 
         <div class="mb-4 text-sm text-gray-600">
             {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
@@ -25,7 +37,8 @@
 
             <div class="block">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                    required autofocus />
             </div>
 
             <div class="flex items-center justify-center mt-4">
