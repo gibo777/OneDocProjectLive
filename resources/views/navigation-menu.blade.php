@@ -50,7 +50,7 @@
 
     <div id="nav_header" class="w-full mx-auto px-2 sm:px-4 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex justify-start items-center py-2 space-x-4">
+            <div class="flex justify-start items-center py-2 space-x-2">
                 <div class="flex justify-center items-center">
                     <img class="h-16 md:h-20 lg:h-24 object-contain"
                         src="{{ asset('/img/company/1doc-logo-100px.jpg') }}" />
@@ -60,7 +60,7 @@
                         src="{{ asset('/img/company/sappi-logo-90px.jpg') }}" />
                 </div>
                 <div class="flex justify-center items-center">
-                    <img class="h-12 md:h-16 lg:h-20 object-contain"
+                    <img class="h-10 md:h-16 lg:h-20 object-contain"
                         src="{{ asset('/img/company/1food-logo-90px.jpg') }}" />
                 </div>
                 <div class="flex justify-center items-center">
