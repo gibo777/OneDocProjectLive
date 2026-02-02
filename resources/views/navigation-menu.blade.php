@@ -50,53 +50,23 @@
 
     <div id="nav_header" class="w-full mx-auto px-2 sm:px-4 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                {{-- <div class="flex items-center sm:justify-start h-8"> --}}
-                <div class="flex items-center sm:justify-start">
-                    <img class="img-company-logo" src="{{ asset('/img/company/onedoc-logo.png') }}" />
+            <div class="flex w-full justify-between items-center h-20">
+                <div class="flex-1 flex justify-center items-center">
+                    <img class="max-h-full object-contain" src="{{ asset('/img/company/1doc-logo-100px.jpg') }}" />
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex p-6">
-                    <h6>Accelerating Our Nation’s Progress Through Information Technology.</h6>
+                <div class="flex-1 flex justify-center items-center">
+                    <img class="max-h-full object-contain" src="{{ asset('/img/company/sappi-logo-90px.jpg') }}" />
                 </div>
-
-                <!-- Navigation Links -->
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-                </x-jet-nav-link>
-                <!-- Add more levels as needed -->
-                <div class="relative" x-data="{ open: false }">
-                    <x-jet-nav-link @click="open = !open" aria-haspopup="true" :active="request()->routeIs('hris.leave.eleave.*')">
-                        {{ __('E-Forms') }}
-                    </x-jet-nav-link>
-
-                    <div x-show="open" @click.away="open = false" class="absolute z-10 left-0 mt-2 w-32 bg-white rounded-md shadow-lg">
-                        <!-- Second-level menu items -->
-                        <x-jet-nav-link href="{{ route('hris.leave.eleave') }}" :active="request()->routeIs('hris.leave.eleave')">
-                            {{ __('Leave Form') }}
-                        </x-jet-nav-link>
-                        <x-jet-nav-link href="{{ route('hris.leave.view-leave') }}" :active="request()->routeIs('hris.leave.view-leave')">
-                            {{ __('View Leaves') }}
-                        </x-jet-nav-link>
-                        <!-- Add more second-level menu items as needed -->
-                    </div>
+                <div class="flex-1 flex justify-center items-center">
+                    <img class="max-h-full object-contain" src="{{ asset('/img/company/1food-logo-90px.jpg') }}" />
                 </div>
-            </div> --}}
-
+                <div class="flex-1 flex justify-center items-center">
+                    <img class="max-h-full object-contain" src="{{ asset('/img/company/eagro-logo-100px.jpg') }}" />
+                </div>
             </div>
 
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                {{-- <div class="notification">
-                    <a href="{{ route('hr.management.memos') }}" class="btn btn-outline-primary btn-sm border-0 items-center">
-            <span>
-                <img class="img-icon" src="{{ asset('img/buttons/favpng_icon.png') }}">
-            </span>
-            <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count.'3' }}</span>
-            </a>
-        </div> --}}
-
-                <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                     <x-jet-dropdown-clickable align="right" width="48">
                         <x-slot name="trigger">
@@ -105,7 +75,6 @@
                                     class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                     {{ join(' ', [Auth::user()->first_name, Auth::user()->middle_name, Auth::user()->last_name]) }}
                                     &nbsp;
-
                                     @if (Auth::user()->profile_photo_path != null)
                                         <img class="h-8 w-8 rounded-full object-cover"
                                             src="{{ Auth::user()->profile_photo_url }}"
@@ -142,12 +111,9 @@
                                     </button>
                                 </span>
                             @endif
-
                         </x-slot>
 
-
                         <x-slot name="content">
-                            <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
                                 {{ __('Manage Account') }}
                             </div>
@@ -164,18 +130,14 @@
 
                             <div class="border-t border-gray-100"></div>
 
-                            <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
-
                                 <x-jet-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
                                 </x-jet-dropdown-link>
                             </form>
-
                         </x-slot>
                     </x-jet-dropdown-clickable>
-
                 </div>
             </div>
 
@@ -194,6 +156,8 @@
             </div>
         </div>
     </div>
+
+    {{-- END of nav_header div  --}}
 
 
     <!-- Responsive Navigation Menu begin -->
