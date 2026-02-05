@@ -2,7 +2,6 @@
     {{ __('ATTENDANCE MONITORING') }}
 </x-slot>
 
-
 <div id="view_leaves">
     <div class="w-full mx-auto my-3 sm:px-6 lg:px-8">
         <!-- FORM start -->
@@ -71,7 +70,6 @@
                 </div>
             </div>
 
-
             <div id="table_data">
                 <div class="row my-1">
                     <div class="col-md-9">
@@ -104,77 +102,67 @@
                         </div>
                     </div>
                 </div>
-                <!-- Table -->
-                <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-                    {{-- <div class="d-flex justify-content-between align-items-center">
-						    <div class="form-inline">
-						        <label for="pageSize" class="mr-2">Show:</label>
-						        <select wire:model="pageSize" id="pageSize" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
-						            <option value="5">5</option>
-						            <option value="10">10</option>
-						            <option value="15">15</option>
-						            <option value="25">25</option>
-						            <option value="50">50</option>
-						        </select>
-						        <span class="mx-2">entries</span>
-						        {{ $timeLogs->links('pagination.custom') }}
-                </div>
-            </div> --}}
 
-                    <table id="dataTimeLogs"
-                        class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
-                        <thead class="thead">
-                            <tr class="dt-head-center">
-                                <th class="py-1">Name</th>
-                                <th class="py-1" style="width: 8%">Emp. ID</th>
-                                {{-- <th class="py-1">Office</th> --}}
-                                {{-- <th class="py-1" style="width: 20%">Department</th> --}}
-                                <th class="py-1" style="width: 8%">Date</th>
-                                <th class="py-1" style="width: 8%">Day</th>
-                                <th class="py-1" style="width: 8%">Time In</th>
-                                <th class="py-1" style="width: 8%">Time Out</th>
-                                {{-- <th class="py-1" style="width: 12%">Leave</th> --}}
-                                <th class="py-1" style="width: 12%">Leave Control #</th>
-                                <th class="py-1">Supervisor</th>
-                                <th class="py-1" style="width: 12%">Attendance Status</th>
-                                <th class="py-1" style="width: 12%">Employment Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="data custom-text-xs" id="viewEmployee">
-                            @if ($timeLogs->isNotEmpty())
-                                @foreach ($timeLogs as $record)
-                                    <tr id="{{ $record->id }}">
-                                        @if (url('/') == 'http://localhost')
-                                            <td>xxx, xxx x.</td>
-                                        @else
-                                            <td>{{ $record->full_name }}</td>
-                                        @endif
-                                        {{-- <td>{{ $record->id }}</td> --}}
-                                        <td>{{ $record->employee_id }}</td>
-                                        {{-- <td>{{ $record->office }}</td> --}}
-                                        {{-- <td>{{ $record->department }}</td> --}}
-                                        <td>{{ date('m/d/Y', strtotime($record->log_date)) }}</td>
-                                        <td>{{ date('D', strtotime($record->log_date)) }}</td>
-                                        <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}
-                                        </td>
-                                        <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}
-                                        </td>
-                                        <td>{{ $record->control_number ?? '' }}</td>
-                                        @if (url('/') == 'http://localhost')
-                                            <td>xxx, xxx x.</td>
-                                        @else
-                                            <td>{{ $record->supervisor }}</td>
-                                        @endif
-                                        <td>{{ $record->leave_type ?? ($record->time_in === null ? '-' : '') }}</td>
-                                        <td>{{ $record->employment_status }}</td>
+                <!-- Scrollable Table Wrapper -->
+                <div class="col-span-12 sm:col-span-7 sm:justify-center">
+                    <div style="max-height: 420px; overflow-y: auto; overflow-x: auto;">
+                        <table id="dataTimeLogs"
+                            class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
+                            <thead class="thead">
+                                <tr class="dt-head-center">
+                                    <th class="py-1">Name</th>
+                                    <th class="py-1 text-nowrap">Employee #</th>
+                                    {{-- <th class="py-1">Office</th> --}}
+                                    {{-- <th class="py-1" style="width: 20%">Department</th> --}}
+                                    <th class="py-1" style="width: 8%">Date</th>
+                                    <th class="py-1" style="width: 8%">Day</th>
+                                    <th class="py-1 text-nowrap" style="width: 8%">Time In</th>
+                                    <th class="py-1 text-nowrap" style="width: 8%">Time Out</th>
+                                    {{-- <th class="py-1" style="width: 12%">Leave</th> --}}
+                                    <th class="py-1 text-nowrap" style="width: 12%">Leave Control #</th>
+                                    <th class="py-1">Supervisor</th>
+                                    <th class="py-1" style="width: 12%">Attendance Status</th>
+                                    <th class="py-1" style="width: 12%">Employment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="data custom-text-xs" id="viewEmployee">
+                                @if ($timeLogs->isNotEmpty())
+                                    @foreach ($timeLogs as $record)
+                                        <tr id="{{ $record->id }}">
+                                            @if (url('/') == 'http://localhost')
+                                                <td class="text-nowrap">xxx, xxx x.</td>
+                                            @else
+                                                <td class="text-nowrap">{{ $record->full_name }}</td>
+                                            @endif
+                                            <td>{{ $record->employee_id }}</td>
+                                            <td>{{ date('m/d/Y', strtotime($record->log_date)) }}</td>
+                                            <td>{{ date('D', strtotime($record->log_date)) }}</td>
+                                            <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}
+                                            </td>
+                                            <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}
+                                            </td>
+                                            <td>{{ $record->control_number ?? '' }}</td>
+                                            @if (url('/') == 'http://localhost')
+                                                <td>xxx, xxx x.</td>
+                                            @else
+                                                <td>{{ $record->supervisor }}</td>
+                                            @endif
+                                            <td>{{ $record->leave_type ?? ($record->time_in === null ? '-' : '') }}
+                                            </td>
+                                            <td>{{ $record->employment_status }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="9">No Matching Records Found</td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <td colspan="9">No Matching Records Found</td>
-                            @endif
-                        </tbody>
-                    </table>
-                    <div class="d-flex justify-content-end">
+                                @endif
+                            </tbody>
+                        </table>
+                    </div> {{-- END scrollable table wrapper --}}
+
+                    <!-- Bottom Controls -->
+                    <div class="d-flex justify-content-start mt-2">
                         <div class="form-inline">
                             <label for="pageSize" class="mr-2">Show:</label>
                             <select wire:model="pageSize" id="pageSize"
@@ -186,8 +174,6 @@
                                 <option value="50">50</option>
                             </select>
                             <span class="mx-2">entries</span>
-                            {{-- </div>
-						    <div class="d-flex align-items-center"> --}}
                             {{ $timeLogs->links('pagination.custom') }}
                         </div>
                     </div>
@@ -197,7 +183,6 @@
     </div>
 </div>
 
-<!-- =========================================== -->
 <script type="text/javascript">
     const uID = `{{ Auth::user()->id }}`;
 </script>
