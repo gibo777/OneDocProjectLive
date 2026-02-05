@@ -103,9 +103,9 @@
                     </div>
                 </div>
 
-                <!-- Scrollable Table Wrapper -->
+                <!-- Horizontal Scroll Table Wrapper -->
                 <div class="col-span-12 sm:col-span-7 sm:justify-center">
-                    <div style="max-height: 420px; overflow-y: auto; overflow-x: auto;">
+                    <div style="overflow-x: auto;">
                         <table id="dataTimeLogs"
                             class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
                             <thead class="thead">
@@ -159,7 +159,7 @@
                                 @endif
                             </tbody>
                         </table>
-                    </div> {{-- END scrollable table wrapper --}}
+                    </div> {{-- END horizontal scroll table wrapper --}}
 
                     <!-- Bottom Controls -->
                     <div class="d-flex justify-content-start mt-2">
