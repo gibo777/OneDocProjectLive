@@ -97,7 +97,7 @@ class AttendanceMonitoring extends Component
                 });
             })
 
-            ->where('u.employment_status', 'NO LONGER CONNECTED')
+            ->where('u.employment_status', '!=', 'NO LONGER CONNECTED')
             ->where(function ($query) {
                 $query->whereNull('u.is_deleted')->orWhere('u.is_deleted', '!=', 1);
             })
