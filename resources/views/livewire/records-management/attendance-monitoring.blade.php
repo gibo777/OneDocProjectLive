@@ -136,7 +136,7 @@
                                 {{-- <th class="py-1" style="width: 12%">Leave</th> --}}
                                 <th class="py-1" style="width: 12%">Leave Control #</th>
                                 <th class="py-1">Supervisor</th>
-                                <th class="py-1" style="width: 12%">Status</th>
+                                <th class="py-1" style="width: 12%">Attendance Status</th>
                                 <th class="py-1" style="width: 12%">Employment Status</th>
                             </tr>
                         </thead>
