@@ -35,7 +35,7 @@
         <br><em>Hours:</em>&nbsp;<strong>{{ $dOvertime->ot_hours }}</strong>
         <br><em>Minutes:</em>&nbsp;<strong>{{ $dOvertime->ot_minutes }}</strong>
         <br><em>Total Computed Hours:</em>&nbsp;<strong>{{ $dOvertime->ot_hrmins }}</strong>
-        <br><em>OT Status:</em>&nbsp;<strong>{{ $dOvertime->ot_status }}</strong>
+        <br><em>OT Status:</em>&nbsp;<strong>{{ ucwords($dOvertime->ot_status) }}</strong>
     </p>
 
     {{-- <ul>
