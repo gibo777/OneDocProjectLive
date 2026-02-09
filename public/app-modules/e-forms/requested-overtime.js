@@ -226,7 +226,6 @@ $(document).ready(function () {
         // let otData = {
         //     'otID': otID,
         // };
-
         // Swal.fire({ html: JSON.stringify(otData) }); return false;
 
         switch (otAction) {
@@ -328,7 +327,7 @@ $(document).ready(function () {
                                 method: 'POST',
                                 data: {
                                     'otID': otID,
-                                    'otAction': otAction,
+                                    'otAction': 'approved',
                                 },
                                 success: function (apiResponse) {
                                     console.log('API response:', JSON.stringify(
