@@ -518,7 +518,7 @@ class LeaveApplication extends Component
             ])->post(env('HRIS_URL') . '/api/leaves/fetch', $payloads);
 
             if ($response->successful()) {
-                Log::channel('hris-api')->info('HRIS API Response', [
+                Log::channel('hris-api-leaves')->info('HRIS API Response', [
                     'status'            => $response->status(),
                     'control_number'    => $leave->control_number,
                     'body'              => $response->body(),
@@ -538,7 +538,7 @@ class LeaveApplication extends Component
                     'response'  => $response->json()
                 ]);
             } else {
-                Log::channel('hris-api')->info('Failed or No Response from HRIS API', [
+                Log::channel('hris-api-leaves')->info('Failed or No Response from HRIS API', [
                     'status'            => $response->status(),
                     'control_number'    => $leave->control_number
                 ]);
@@ -711,7 +711,7 @@ class LeaveApplication extends Component
 
                 if ($response->successful()) {
                     $success++;
-                    Log::channel('hris-api')->info('HRIS API Response', [
+                    Log::channel('hris-api-leaves')->info('HRIS API Response', [
                         'status'        => $response->status(),
                         'controlNumber' => $leave->control_number,
                         'isExisting'    => $response->json('isExisting')
@@ -719,7 +719,7 @@ class LeaveApplication extends Component
                     ]);
                 } else {
                     $failed++;
-                    Log::channel('hris-api')->error('Failed to send to HRIS', [
+                    Log::channel('hris-api-leaves')->error('Failed to send to HRIS', [
                         'status'        => $response->status(),
                         'controlNumber' => $leave->control_number,
                         'isExisting'    => $response->json('isExisting'),
