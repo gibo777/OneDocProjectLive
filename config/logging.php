@@ -116,40 +116,47 @@ return [
         ],
 
         'hris-api' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/hris-api.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
 
         'hris-api-leaves' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/hris-api-leaves.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
 
         'hris-api-timelogs' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/hris-api-timelogs.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
 
         'hris-api-overtime' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/hris-api-overtime.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
 
         'hris-api-wfh' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/hris-api-wfh.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
 
         'timelogs' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/timelogs.log'),
             'level' => 'debug',
+            'days' => 14,
         ],
+
 
     ],
 
