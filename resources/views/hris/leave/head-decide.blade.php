@@ -242,49 +242,50 @@
 
             },
             success: function(data) {
-                $('#dataProcess').hide();
                 if (data.isSuccess) {
-                    Swal.fire({
-                        title: data.message,
-                        icon: 'success',
-                    }).then(() => {
-                        let leaveData = data.dataLeave;
+                    let leaveData = data.dataLeave;
 
-                        $.ajax({
-                            url: `${window.location.origin}/e-forms/notify-leave-action`,
-                            method: 'POST',
-                            data: {
-                                'lID': lId,
-                                'dMail': data.dataLeave,
-                                'dAction': 'Approved',
-                            },
-                            success: function(dataMail) {
-                                // Swal.fire({ html: dataMail }); return false;
-                            }
-                        });
-
-                        $.ajaxSetup({
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        });
-
-                        // Send (API payload) to HRIS using $.ajax / JSON
-                        $.ajax({
-                            url: `${window.location.origin}/send-leave-to-hris`,
-                            method: 'POST',
-                            data: {
-                                'lID': lId,
-                            },
-                            success: function(apiResponse) {
-                                console.log('API response:', JSON.stringify(
-                                    apiResponse));
-                                // Update leaves table for api fields
-                            },
-                            error: function(xhr) {
-                                console.error('API error:', xhr.responseText);
-                            }
-                        });
-                        location.reload();
+                    $.ajax({
+                        url: `${window.location.origin}/e-forms/notify-leave-action`,
+                        method: 'POST',
+                        data: {
+                            'lID': lId,
+                            'dMail': data.dataLeave,
+                            'dAction': 'Approved',
+                        },
+                        success: function(dataMail) {
+                            // Swal.fire({ html: dataMail }); return false;
+                        }
                     });
+
+                    // Send (API payload) to HRIS using $.ajax - JSON
+                    $.ajaxSetup({
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    });
+                    $.ajax({
+                        url: `${window.location.origin}/send-leave-to-hris`,
+                        method: 'POST',
+                        data: {
+                            'lID': lId,
+                        },
+                        success: function(apiResponse) {
+                            console.log('API response:', JSON.stringify(
+                                apiResponse));
+                            $('#dataProcess').hide();
+                            Swal.fire({
+                                title: data.message,
+                                icon: 'success',
+                                allowOutsideClick: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            console.error('API error:', xhr.responseText);
+                        }
+                    });
+
+
                     console.log('Approve Leave Data:', data);
                 } else {
                     Swal.fire({

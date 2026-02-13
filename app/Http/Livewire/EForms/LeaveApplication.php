@@ -143,16 +143,24 @@ class LeaveApplication extends Component
             if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
                 // Apply search query if search term is provided
                 if (!empty($this->search)) {
-                    $searchTerms = explode(' ', $this->search);
+                    $searchTerms = explode(' ', trim($this->search));
+
                     $query->where(function ($q) use ($searchTerms) {
-                        foreach ($searchTerms as $term) {
-                            $q->where('l.name', 'like', '%' . $term . '%');
-                        }
-                    })
-                        ->orWhere('l.employee_id', 'like', '%' . $this->search . '%')
-                        ->orWhere('l.control_number', 'like', '%' . $this->search . '%');
+                        // Name search (all terms must match)
+                        $q->where(function ($nameQuery) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $nameQuery->where('l.name', 'like', '%' . $term . '%');
+                            }
+                        });
+                        // Employee ID search
+                        $q->orWhere('l.employee_id', 'like', '%' . implode(' ', $searchTerms) . '%');
+                        // Control number search
+                        $q->orWhere('l.control_number', 'like', '%' . implode(' ', $searchTerms) . '%');
+                    });
                 }
             }
+
+
             // Filter by date range
             if (!empty($this->fLdtFrom) && !empty($this->fLdtTo)) {
                 $query->where(function ($q) {
@@ -181,9 +189,7 @@ class LeaveApplication extends Component
                 // This will be changed or removed if a new module for user authorization viewing is created.
                 switch (Auth::user()->id) {
                     case 1:
-                    case 8:
-                    case 18:
-                    case 58:
+                    case 543:
                         break;
                     case 124:
                         $query->where(function ($q) {
@@ -287,7 +293,8 @@ class LeaveApplication extends Component
                 $q->whereYear('date_from', $year)
                     ->orWhereYear('date_to', $year);
             })
-            ->where('date_to', '<=', Carbon::now('Asia/Manila')->format('Y-m-d'))
+            // ->where('date_to', '<=', Carbon::now('Asia/Manila')->format('Y-m-d'))
+            ->where(DB::raw('YEAR(date_from)'), Carbon::now('Asia/Manila')->format('Y'))
             ->groupBy('employee_id')
             ->first();
 
@@ -484,6 +491,7 @@ class LeaveApplication extends Component
             ->first();
 
         if ($leave) {
+            $currenDate = Carbon::now()->format('Y-m-d H:i:s');
             $payloads = [
                 'CONTROL_NO'        => $leave->control_number,
                 'name'              => $leave->name,
@@ -498,7 +506,7 @@ class LeaveApplication extends Component
                 'reason'            => $leave->reason,
                 'no_of_days'        => $leave->no_of_days,
                 'created_at'        => $leave->created_at,
-                'updated_at'        => now()->format('Y-m-d H:i:s'),
+                'updated_at'        => $currenDate,
                 'updated_by'        => Auth::user()->employee_id,
             ];
 
@@ -516,6 +524,15 @@ class LeaveApplication extends Component
                     'body'              => $response->body(),
                     'json'              => $response->json()
                 ]);
+
+                $apiData = array(
+                    'otID'      => $request->lID,
+                    'curDate'   => $currenDate,
+                    'apiNo'     => $response->json('apiNo')
+                );
+
+                $this->updateLeaveAPI($apiData);
+
                 return response()->json([
                     'status'    => $response->status(),
                     'response'  => $response->json()
@@ -621,6 +638,7 @@ class LeaveApplication extends Component
             'message' => 'Leave data processing complete.',
         ]);
     } */
+
     public function sendAllToHRIS()
     {
         $leaves = DB::table('leaves as l')
@@ -720,7 +738,22 @@ class LeaveApplication extends Component
         ]);
     }
 
+    public function updateLeaveAPI($apiData)
+    {
+        $id       = $apiData['otID'];
+        $apiDate  = $apiData['curDate'];
+        $apiRefNo = $apiData['apiNo'];
 
+        $dataArray = array(
+            'api_sent'  => 1,
+            'api_date'  => $apiDate,
+            'api_refno' => $apiRefNo
+        );
+
+        $update = DB::table('leaves');
+        $update = $update->where('id', $id);
+        $update = $update->update($dataArray);
+    }
 
 
     public function revokeLeave(Request $request)
