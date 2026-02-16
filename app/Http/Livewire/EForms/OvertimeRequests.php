@@ -118,7 +118,7 @@ class OvertimeRequests extends Component
                     ->whereNotNull('u.manager');
             });
 
-        if (Auth::user()->id != 1 && Auth::user()->id != 2 && Auth::user()->id != 233) {
+        if (Auth::user()->id != 1 && Auth::user()->id != 2) {
             $overtimes = $overtimes->where('u.id', '<>', 1);
         }
         $overtimes = $overtimes->where(function ($query) {
@@ -167,7 +167,7 @@ class OvertimeRequests extends Component
                 // This will be changed or removed if a new module for user authorization viewing is created.
                 switch (Auth::user()->id) {
                     case 1:
-                    case 8:
+                    case 543:
                         break;
                     case 124:
                         $query->where(function ($q) {
