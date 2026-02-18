@@ -166,9 +166,9 @@
                         <img src="img/company/onedoc-logo.png" class="img-fluid">
                     </div>
                     <div id="firstImage" class="col-md-2 d-flex justify-content-center position-relative">
-                        <img src="img/company/2025Feb18_NPC_DPOSeal.png" width="180px" class="main-image">
+                        <img src="img/company/2026_DPO CORSeal.png" width="180px" class="main-image">
                         <div id="secondImage" class="zoom-image hidden">
-                            <img src="img/company/2025Feb18_NPC_DPOSeal.png">
+                            <img src="img/company/2026_DPO CORSeal.png">
                         </div>
                     </div>
                 </div>
@@ -195,10 +195,10 @@
     <script src="{{ asset('/js/confetti.js') }}"></script>
     <script type="text/javascript">
         /*$(document).ready(function() {
-                        $("#audio-button").click(function() {
-                        $("#audio-background")[0].play(); return false;
-                        });
-                      });*/
+                                $("#audio-button").click(function() {
+                                $("#audio-background")[0].play(); return false;
+                                });
+                              });*/
 
         /*Swal.fire({
           title: 'Employee Portal Maintenance Schedule',
