@@ -59,7 +59,7 @@
 
     <!-- =========================================== -->
     <div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="calendarLabel">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog" role="document" style="width:auto; max-width:none; display:inline-block;">
             <div class="modal-content">
                 <div class="modal-header banner-blue py-2">
                     <h4 class="modal-title text-xl text-white" id="calendarLabel"></h4>
@@ -68,72 +68,65 @@
                 </div>
 
                 <div class="modal-body bg-gray-50">
-                    <div class="container-fluid">
+                    <div style="display:flex; flex-direction:column; gap:20px; white-space:nowrap;">
 
-                        <div class="row">
-                            <div class="col-md-4 pr-5">
+                        <!-- Row 1 -->
+                        <div style="display:flex; gap:50px; align-items:flex-start;">
+
+                            <div>
                                 <x-jet-label for="calendar_name" value="{{ __('Name:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="calendar_name"
-                                    class="d-block w-100 text-base text-start text-nowrap text-break font-semibold text-uppercase" />
+                                    class="d-block text-base text-start font-semibold text-uppercase" />
                             </div>
-                            <div class="col-md-3 pr-5">
+
+                            <div>
                                 <x-jet-label for="calendar_employee_id" value="{{ __('Employee #:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="calendar_employee_id"
-                                    class="d-block text-base text-start text-nowrap font-semibold" />
+                                    class="d-block text-base text-start font-semibold" />
                             </div>
-                            <div class="col-md-3">
+
+                            <div>
                                 <x-jet-label for="calendar_leave_type" value="{{ __('Leave Type:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="calendar_leave_type"
-                                    class="d-block text-base text-start text-nowrap text-break font-semibold text-uppercase" />
+                                    class="d-block text-base text-start font-semibold text-uppercase" />
                             </div>
 
-                            <div class="col-md-2">
+                            <div>
                                 <x-jet-label for="leave_status" value="{{ __('Status:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="leave_status"
-                                    class="d-block text-base text-start text-nowrap text-break font-semibold text-uppercase" />
+                                    class="d-block text-base text-start font-semibold text-uppercase" />
                             </div>
+
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-9 pr-5">
+                        <!-- Row 2 -->
+                        <div style="display:flex; gap:50px; align-items:flex-start;">
+
+                            <div>
                                 <x-jet-label for="calendar_date_range" value="{{ __('Date Covered:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
                                 <x-jet-label id="calendar_date_range"
                                     class="d-block text-base text-start font-semibold" />
                             </div>
-                            <div class="col-md-3">
+
+                            <div>
                                 <x-jet-label for="no_of_days" value="{{ __('Number of Day/s:') }}"
                                     class="font-semibold text-xs leading-tight uppercase fst-italic" />
-                                <x-jet-label id="no_of_days" class="d-block text-base text-center font-semibold" />
+                                <x-jet-label id="no_of_days" class="d-block text-base text-start font-semibold" />
                             </div>
-                        </div>
 
-                        {{-- <div class="row mt-3">
-                            <div class="col-md-8 pr-5">
-                                <x-jet-label for="calendar_reason" value="{{ __('Reason:') }}"
-                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
-                                <x-jet-label id="calendar_reason"
-                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
-                            </div>
-                            <div class="col-md-4">
-                                <x-jet-label for="leave_status" value="{{ __('Status:') }}"
-                                    class="font-semibold text-xs leading-tight uppercase fst-italic" />
-                                <x-jet-label id="leave_status"
-                                    class="d-block text-base text-start text-wrap text-break font-semibold text-uppercase" />
-                            </div>
-                        </div> --}}
+                        </div>
 
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
+
 
     <!-- =========================================== -->
 
