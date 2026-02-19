@@ -196,14 +196,13 @@ class LeaveFormController extends Controller
 
             # Google Calendar Description
             $description = sprintf(
-                "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\nReason: %s\n\nStatus: %s",
+                "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\n\nStatus: %s",
                 $lFullName,
                 Auth::user()->employee_id,
                 $request->leaveType,
                 Carbon::parse($request->leaveDateFrom)->format('M d, Y (D)'),
                 Carbon::parse($request->leaveDateTo)->format('M d, Y (D)'),
                 number_format($inputData['hid_no_days'], 2),
-                strtoupper($request->reason),
                 'PENDING'
             );
 
