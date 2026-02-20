@@ -20,6 +20,7 @@ class PendingRequestNotification extends Mailable implements ShouldQueue
      * Create a new message instance.
      *
      * @return void
+     * @author Gilbert L. Retiro
      */
     public function __construct($head_id, $head_name, $sex, $pendingCount)
     {
@@ -33,6 +34,7 @@ class PendingRequestNotification extends Mailable implements ShouldQueue
      * Build the message.
      *
      * @return $this
+     * @author Gilbert L. Retiro
      */
     public function build()
     {

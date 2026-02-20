@@ -56,8 +56,8 @@ use App\Http\Controllers\PersonnelAccountingDataController;
 
 
 /* FACE RECOGNITION */
-// use App\Http\Livewire\RecordsManagement\FaceRegistration;
-// use App\Http\Controllers\FaceRegistrationController;
+use App\Http\Livewire\RecordsManagement\FaceRegistration;
+use App\Http\Controllers\FaceRegistrationController;
 
 /* CRON / SCHEDULER */
 use App\Http\Controllers\CronController;
@@ -306,11 +306,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/send-timelogs-to-hris', [Timelogs::class, 'sendTimelogsAPIHRIS'])->name('send.timelogs.to.hris');
 
     # FACE RECOGNITION AND VALIDATION #
-    // Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
-    // Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
-    // Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
-    // Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
-    // Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
+    Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
+    Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
+    Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
+    Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
+    Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
 
 
     /*======= EMPLOYEES =======*/
