@@ -27,7 +27,7 @@ use App\Http\Livewire\AdminDashboard;
 use App\Http\Livewire\Setup\AuthorizeView;
 use App\Http\Livewire\Setup\UserManagement\UserGroups;
 use App\Http\Livewire\Setup\ModuleCreation;
-use App\Http\Livewire\Benefits\LeaveCredits;
+// use App\Http\Livewire\Benefits\LeaveCredits;
 
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
@@ -168,7 +168,7 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     /* BENEFITS - LEAVE CREDITS */
     Route::get('/employee-benefits', [EmployeesController::class, 'employeeBenefits'])->name('employee-benefits');
-    Route::get('/benefits/leave-credits', LeaveCredits::class)->name('benefits.leave.credits');
+    // Route::get('/benefits/leave-credits', LeaveCredits::class)->name('benefits.leave.credits');
 
 
     /* CLEARANCE */
