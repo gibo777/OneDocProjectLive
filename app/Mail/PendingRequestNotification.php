@@ -42,8 +42,8 @@ class PendingRequestNotification extends Mailable implements ShouldQueue
                 'head_id'   => $this->head_id,
                 'head_name' => $this->head_name,
                 'head_sex'  => $this->sex,
-                'pendingLeaveCount'  => $this->pendingCount['pendingLeaveCount'],
-                'pendingOvertimes'   => $this->pendingCount['pendingOvertimes'],
+                'pendingLeaveCount'  => $this->pendingCount['pendingLeaveCount'] ?? 0,
+                'pendingOvertimes'   => $this->pendingCount['pendingOvertimes'] ?? 0,
             ]);
     }
 }

@@ -179,8 +179,8 @@ class CronController extends Controller
 
             /* PENDING LEAVES AND OVERTIME COUNTS */
             $pendingCount = [
-                'pendingLeaveCount' => $pendingLeaves,
-                'pendingOvertimes'  => $pendingOvertimes,
+                'pendingLeaveCount' => $pendingLeaves ?? 0,
+                'pendingOvertimes'  => $pendingOvertimes ?? 0,
             ];
 
             // Only proceed if there is at least one pending request
