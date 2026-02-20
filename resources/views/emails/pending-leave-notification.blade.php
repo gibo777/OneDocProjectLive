@@ -19,19 +19,30 @@
             </em></strong></p>
     <p>This is a friendly reminder that you have pending request/s awaiting your review and approval as of today.</p>
     <p>Pending Request/s for Your Action</p>
+
     @if ($pendingLeaveCount > 0)
         <p>
             Leave Requests: {{ $pendingLeaveCount }} pending{{ $pendingLeaveCount > 1 ? 's' : '' }}<br>
             <a href="{{ env('APP_URL') . 'e-forms/leaves-listing' }}">{{ env('APP_URL') . 'e-forms/leaves-listing' }}</a>
         </p>
+    @else
+        <p>
+            Leave Requests: No pending<br>
+        </p>
     @endif
+
     @if ($pendingOvertimes > 0)
         <p>
             Overtime Requests: {{ $pendingOvertimes }} pending{{ $pendingOvertimes > 1 ? 's' : '' }}<br>
             <a
                 href="{{ env('APP_URL') . 'e-forms/overtime-listing' }}">{{ env('APP_URL') . 'e-forms/overtime-listing' }}</a>
         </p>
+    @else
+        <p>
+            Overtime Requests: No pending<br>
+        </p>
     @endif
+
     <p>If you have any questions or need further assistance, feel free to contact HR.</p>
     <p>Thank you!</p>
     <p>
