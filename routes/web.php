@@ -360,7 +360,7 @@ Route::post('/send-overtime-to-hris', [OvertimesController::class, 'sendOvertime
 
 
 /*======= CRON / SCHEDULER =====*/
-Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
+// Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
 Route::get('/cron-pending-request-notification', [CronController::class, 'cronAutoPendingRequestNotification'])->name('cron.pending.request.notification');
 
 
