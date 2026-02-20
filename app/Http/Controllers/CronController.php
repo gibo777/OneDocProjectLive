@@ -15,7 +15,7 @@ use Carbon\Carbon;
 
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\PendingLeaveNotification;
+use App\Mail\PendingRequestNotification;
 
 class CronController extends Controller
 {
@@ -25,7 +25,8 @@ class CronController extends Controller
      * @return \Illuminate\Http\Response
      * @author Gilbert L. Retiro
      */
-    public function cronAutoComputeLeaveCredits() {
+    public function cronAutoComputeLeaveCredits()
+    {
 
         // Get the current month and day
         $curMonth = Carbon::now()->month;
@@ -47,7 +48,10 @@ class CronController extends Controller
             case 2:
                 $userIDs->whereRaw('DAY(date_regularized) = ? OR DAY(date_regularized) IN (29,30,31)', [$curDay]);
                 break;
-            case 4: case 6: case 9: case 11:
+            case 4:
+            case 6:
+            case 9:
+            case 11:
                 $userIDs->whereRaw('DAY(date_regularized) = ? OR DAY(date_regularized) = 31', [$curDay]);
                 break;
             default:
@@ -67,30 +71,35 @@ class CronController extends Controller
             // Check if already added monthly leave credits for VL, SL, and EL
             // Calculate VL, SL, and EL based on the Year/s of Service
             // (0 to 3 years)
-            // VL = 10/12 per month, 
-            // SL = 10/12 * month/s remaining until December, 
+            // VL = 10/12 per month,
+            // SL = 10/12 * month/s remaining until December,
             // EL = 5/12 * month/s remaining until December)
 
-            $string .= $value->date_regularized." === ".$value->month_regularized." / ".$value->day_regularized." | Current Day: ".$curDay."<br>";
+            $string .= $value->date_regularized . " === " . $value->month_regularized . " / " . $value->day_regularized . " | Current Day: " . $curDay . "<br>";
 
             $select = DB::table('users')
-            ->select(
-                'id', 'employee_id', 'name',
-                'first_name', 'middle_name', 'last_name', 'suffix',
-                'date_regularized',
-                DB::raw('NOW() as server_datetime'),
-                DB::raw('DATE_FORMAT(NOW(),"%Y-%m-%d") as server_date'),
-                DB::raw('DATE_FORMAT(NOW(),"%H:%i:%s") as server_time'),
-                DB::raw('TIMESTAMPDIFF(YEAR, date_regularized, CURDATE()) AS years_since_regularized'),
-                DB::raw('TIMESTAMPDIFF(MONTH, date_regularized, CURDATE()) % 12 AS months_since_regularized')
-            )
-            ->where('id', $value->id)
-            ->where('date_regularized', '!=', NULL)
-            ->where('date_regularized', '!=', '1970-01-01')
-            ->whereDate('date_regularized', '<=', DB::raw('CURDATE()'))
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
+                ->select(
+                    'id',
+                    'employee_id',
+                    'name',
+                    'first_name',
+                    'middle_name',
+                    'last_name',
+                    'suffix',
+                    'date_regularized',
+                    DB::raw('NOW() as server_datetime'),
+                    DB::raw('DATE_FORMAT(NOW(),"%Y-%m-%d") as server_date'),
+                    DB::raw('DATE_FORMAT(NOW(),"%H:%i:%s") as server_time'),
+                    DB::raw('TIMESTAMPDIFF(YEAR, date_regularized, CURDATE()) AS years_since_regularized'),
+                    DB::raw('TIMESTAMPDIFF(MONTH, date_regularized, CURDATE()) % 12 AS months_since_regularized')
+                )
+                ->where('id', $value->id)
+                ->where('date_regularized', '!=', NULL)
+                ->where('date_regularized', '!=', '1970-01-01')
+                ->whereDate('date_regularized', '<=', DB::raw('CURDATE()'))
+                ->orderBy('first_name')
+                ->orderBy('last_name')
+                ->get();
 
             foreach ($select as $key => $value) {
 
@@ -105,12 +114,12 @@ class CronController extends Controller
                 /*if (url('/') == 'http://localhost' && $value->id != 1 && $value->id != 2) {
                     $string .= "Name: " . implode(' ', ['Xxx', 'X', 'Xxx', ucwords(strtolower($value->suffix))]);
                 } else {*/
-                    $string .= "Name: " . implode(' ', [ucwords(strtolower($value->first_name)), ucwords(strtolower($value->middle_name)), ucwords(strtolower($value->last_name)), ucwords(strtolower($value->suffix))]);
+                $string .= "Name: " . implode(' ', [ucwords(strtolower($value->first_name)), ucwords(strtolower($value->middle_name)), ucwords(strtolower($value->last_name)), ucwords(strtolower($value->suffix))]);
                 // }
 
                 $string .= " | Employee ID: " . $value->employee_id;
                 $string .= " | Date Regularized: " . $regularDate->format('M d, Y');
-                if ($value->years_since_regularized==0) {
+                if ($value->years_since_regularized == 0) {
                     $string .= " | Regularized Tenure: " . $value->months_since_regularized . " Month/s";
                 } else {
                     $string .= " | Regularized Tenure: " . $value->years_since_regularized . " Year/s and " . $value->months_since_regularized . " Month/s";
@@ -128,45 +137,77 @@ class CronController extends Controller
                 }
 
                 $string .= "<br>";
-                for ($i = 0; $i < 125; $i++) { $string .= "="; }
+                for ($i = 0; $i < 125; $i++) {
+                    $string .= "=";
+                }
                 $string .= "<br>";
             }
-
         }
 
         // $string .= "<script>alert('❤️ I miss you my 345 partner ❤️');</script>";
         return $string;
     }
 
-    public function cronAutoPendingLeaveNotification () {
+    /**
+     * Send Pending Request Email Notifications to Supervisors via smtp
+     *
+     * @return void
+     */
+    public function cronAutoPendingRequestNotification()
+    {
+        $headUsers = DB::table('users as u')
+            // ->whereIn('u.role_type', ['SUPER ADMIN', 'ADMIN', 'COMPANY SUPER ADMIN'])
+            ->where(function ($q) {
+                $q->whereNull('u.employment_status')
+                    ->orWhere('u.employment_status', '<>', 'NO LONGER CONNECTED');
+            })
+            ->where('u.id', 2)
+            ->get();
 
-        $pendingLeaves = DB::table('leaves as l')
-        ->join('users as u', 'u.employee_id', '=', 'l.head_id')
-        ->select(
-            'l.head_id',
-            'u.name as head_name',
-            'u.email',
-            'u.gender as sex',
-            DB::raw('COUNT(*) as n')
-        )
-        ->where('l.leave_status', 'Pending')
-        ->whereNotNull('l.head_id')
-        ->where('l.head_id', '!=', '')
-        ->groupBy('l.head_id', 'u.name', 'u.email', 'u.gender')
-        ->orderByDesc('n')
-        ->get();
+        foreach ($headUsers as $head) {
+            /* PENDING LEAVE COUNTS */
+            $pendingLeaves = DB::table('leaves as l')
+                ->where('l.leave_status', 'Pending')
+                ->where('l.head_id', $head->employee_id)
+                ->count();
 
+            /* PENDING OVERTIME COUNTS */
+            $pendingOvertimes = DB::table('overtimes as ot')
+                ->where('ot.ot_status', 'Pending')
+                ->where('ot.head_id', $head->employee_id)
+                ->count();
 
+            /* PENDING LEAVES AND OVERTIME COUNTS */
+            $pendingCount = [
+                'pendingLeaveCount' => $pendingLeaves,
+                'pendingOvertimes'  => $pendingOvertimes,
+            ];
 
-        foreach ($pendingLeaves as $key => $value) {
-            // Check if the default supervisor's email contains 'jmyulo'
-            $supervisorEmail = strpos($value->email, 'jmyulo') !== false 
-                ? DB::table('users')->where('id', 32)->value('email') 
-                : $value->email;
+            // Only proceed if there is at least one pending request
+            if ($pendingLeaves > 0 || $pendingOvertimes > 0) {
+                echo $head->name . ' | ' . $head->employee_id . ' | Pending Leave: ' . $pendingLeaves . ' | Pending Overtime: ' . $pendingOvertimes . '<br>';
 
-            // Send the email to the supervisor
-            Mail::to($supervisorEmail)->send(new PendingLeaveNotification($value->head_id, $value->head_name, $value->sex, $value->n));
+                $pendingCount = [];
+                if ($pendingLeaves > 0) {
+                    $pendingCount['pendingLeaveCount'] = $pendingLeaves;
+                }
+                if ($pendingOvertimes > 0) {
+                    $pendingCount['pendingOvertimes'] = $pendingOvertimes;
+                }
+                // Check if the default supervisor's email
+                $supervisorEmail = strpos($head->email, 'jmyulo') !== false
+                    ? DB::table('users')->where('id', 32)->value('email')
+                    : $head->email;
+
+                // Send email to the supervisor
+                Mail::to($supervisorEmail)
+                    ->send(new PendingRequestNotification(
+                        $head->id,
+                        $head->name,
+                        $head->gender,
+                        $pendingCount
+                    ));
+            }
         }
-
     }
 }

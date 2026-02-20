@@ -20,15 +20,15 @@ use App\Http\Livewire\EForms\WorkFromHome;
 /* Records Management */
 use App\Http\Livewire\RecordsManagement\Timelogs;
 use App\Http\Livewire\RecordsManagement\Employees;
-// use App\Http\Livewire\RecordsManagement\FaceRegistration;
 use App\Http\Livewire\RecordsManagement\AttendanceMonitoring;
 use App\Http\Livewire\ServerStatus;
 use App\Http\Livewire\AdminDashboard;
 /* Setup */
 use App\Http\Livewire\Setup\AuthorizeView;
+use App\Http\Livewire\Setup\UserManagement\UserGroups;
 use App\Http\Livewire\Setup\ModuleCreation;
+use App\Http\Livewire\Benefits\LeaveCredits;
 
-// use App\Http\Controllers\FaceRegistrationController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\HRManagementController;
 use App\Http\Controllers\ClearancesController;
@@ -54,6 +54,12 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\PersonalDataSheetController;
 use App\Http\Controllers\PersonnelAccountingDataController;
 
+
+/* FACE RECOGNITION */
+use App\Http\Livewire\RecordsManagement\FaceRegistration;
+use App\Http\Controllers\FaceRegistrationController;
+
+/* CRON / SCHEDULER */
 use App\Http\Controllers\CronController;
 
 /*
@@ -158,7 +164,12 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/getemployees', [EmployeesController::class, 'getEmployeeInfo']);
     Route::post('/updateemployees', [EmployeesController::class, 'updateEmployee']);
     Route::get('/verify-duplicate', [EmployeesController::class, 'verifyDuplicate'])->name('verify.duplicate');
+
+
+    /* BENEFITS - LEAVE CREDITS */
     Route::get('/employee-benefits', [EmployeesController::class, 'employeeBenefits'])->name('employee-benefits');
+    Route::get('/benefits/leave-credits', LeaveCredits::class)->name('benefits.leave.credits');
+
 
     /* CLEARANCE */
     Route::get('/clearance-form', [ClearancesController::class, 'index'])->name('clearance.form');
@@ -183,10 +194,12 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/update-offices', [OfficesController::class, 'update_offices'])->name('hr.management.update-offices');
     Route::get('/getoffice', [OfficesController::class, 'geOfficeDetails'])->name('hr.management.getoffice-details');
 
-    /* AUTHORIZE VIEWING */
+    /* USER MANAGEMENT / AUTHORIZE VIEWING */
+    Route::get('/setup/user-groups', UserGroups::class)->name('setup.usergroups');
     Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
     Route::get('/authorize-user-detail', [AuthorizeView::class, 'fetchDetailedUser'])->name('authorize.user.detail');
     Route::post('/save-authorize-viewing', [AuthorizeView::class, 'saveAssignedViewing']);
+
 
     /* MODULE CREATION */
     Route::get('/module-list', ModuleCreation::class)->name('module.list');
@@ -293,11 +306,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/send-timelogs-to-hris', [Timelogs::class, 'sendTimelogsAPIHRIS'])->name('send.timelogs.to.hris');
 
     # FACE RECOGNITION AND VALIDATION #
-    // Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
-    // Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
-    // Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
-    // Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
-    // Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
+    Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
+    Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
+    Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
+    Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
+    Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
 
 
     /*======= EMPLOYEES =======*/
@@ -348,7 +361,7 @@ Route::post('/send-overtime-to-hris', [OvertimesController::class, 'sendOvertime
 
 /*======= CRON / SCHEDULER =====*/
 Route::get('/cron-autocompute-leavecredits', [CronController::class, 'cronAutoComputeLeaveCredits'])->name('cron.autocompute.leavecredits');
-Route::get('/cron-pending-leave-notification', [CronController::class, 'cronAutoPendingLeaveNotification'])->name('cron.pending.leave.notification');
+Route::get('/cron-pending-request-notification', [CronController::class, 'cronAutoPendingRequestNotification'])->name('cron.pending.request.notification');
 
 
 /* test only */
