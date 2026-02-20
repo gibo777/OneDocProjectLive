@@ -156,12 +156,12 @@ class CronController extends Controller
     public function cronAutoPendingRequestNotification()
     {
         $headUsers = DB::table('users as u')
-            // ->whereIn('u.role_type', ['SUPER ADMIN', 'ADMIN', 'COMPANY SUPER ADMIN'])
+            ->whereIn('u.role_type', ['SUPER ADMIN', 'ADMIN', 'COMPANY SUPER ADMIN'])
             ->where(function ($q) {
                 $q->whereNull('u.employment_status')
                     ->orWhere('u.employment_status', '<>', 'NO LONGER CONNECTED');
             })
-            ->where('u.id', 2)
+            // ->where('u.id', 2) // This is just for testing.. Comment this when not needed for testing.
             ->get();
 
         foreach ($headUsers as $head) {
