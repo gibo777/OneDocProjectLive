@@ -17,6 +17,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PendingRequestNotification;
 
+use Illuminate\Support\Facades\Log;
+
 class CronController extends Controller
 {
     /**
@@ -185,7 +187,12 @@ class CronController extends Controller
 
             // Only proceed if there is at least one pending request
             if ($pendingLeaves > 0 || $pendingOvertimes > 0) {
-                echo $head->name . ' | ' . $head->employee_id . ' | Pending Leave: ' . $pendingLeaves . ' | Pending Overtime: ' . $pendingOvertimes . '<br>';
+                Log::channel('pending-mail-notification')->info('Pending Request Summary', [
+                    'head_name' => $head->name,
+                    'employee_id' => $head->employee_id,
+                    'pending_leave' => $pendingLeaves,
+                    'pending_overtime' => $pendingOvertimes,
+                ]);
 
                 $pendingCount = [];
                 if ($pendingLeaves > 0) {

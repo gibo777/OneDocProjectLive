@@ -119,42 +119,49 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/hris-api.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
         ],
 
         'hris-api-leaves' => [
             'driver' => 'daily',
             'path' => storage_path('logs/leave/hris-api-leaves.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
         ],
 
         'hris-api-timelogs' => [
             'driver' => 'daily',
             'path' => storage_path('logs/timelog/hris-api-timelogs.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
         ],
 
         'hris-api-overtime' => [
             'driver' => 'daily',
             'path' => storage_path('logs/overtime/hris-api-overtime.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
         ],
 
         'hris-api-wfh' => [
             'driver' => 'daily',
             'path' => storage_path('logs/wfh/hris-api-wfh.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
         ],
 
         'timelogs' => [
             'driver' => 'daily',
             'path' => storage_path('logs/timelog/timelogs.log'),
             'level' => 'debug',
-            'days' => 14,
+            'days' => 365,
+        ],
+
+        'pending-mail-notification' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mail-notification/pending/pending-requests.log'),
+            'level' => 'debug',
+            'days' => 365,
         ],
 
 
