@@ -195,7 +195,7 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::get('/getoffice', [OfficesController::class, 'geOfficeDetails'])->name('hr.management.getoffice-details');
 
     /* USER MANAGEMENT / AUTHORIZE VIEWING */
-    Route::get('/setup/user-groups', UserGroups::class)->name('setup.usergroups');
+    // Route::get('/setup/user-groups', UserGroups::class)->name('setup.usergroups');
     Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
     Route::get('/authorize-user-detail', [AuthorizeView::class, 'fetchDetailedUser'])->name('authorize.user.detail');
     Route::post('/save-authorize-viewing', [AuthorizeView::class, 'saveAssignedViewing']);
