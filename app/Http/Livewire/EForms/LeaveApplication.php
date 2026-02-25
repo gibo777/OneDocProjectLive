@@ -194,7 +194,7 @@ class LeaveApplication extends Component
                     case 124:
                         $query->where(function ($q) {
                             return $q->where('l.office', Auth::user()->office)
-                                ->orWhere('l.office', 6);
+                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18]);
                         });
                         break;
                     case 126:
