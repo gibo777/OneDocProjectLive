@@ -152,9 +152,7 @@ class LeaveApplication extends Component
                                 $nameQuery->where('l.name', 'like', '%' . $term . '%');
                             }
                         });
-                        // Employee ID search
                         $q->orWhere('l.employee_id', 'like', '%' . implode(' ', $searchTerms) . '%');
-                        // Control number search
                         $q->orWhere('l.control_number', 'like', '%' . implode(' ', $searchTerms) . '%');
                     });
                 }
@@ -199,7 +197,7 @@ class LeaveApplication extends Component
                         break;
                     case 126:
                         $query->where(function ($q) {
-                            return $q->whereIn('l.office', [8, 12, 13, 14, 15]);
+                            return $q->whereIn('l.office', [8, 12, 13, 14, 15, 17, 18]);
                         });
                         break;
                     case 337:
