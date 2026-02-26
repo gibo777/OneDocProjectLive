@@ -164,6 +164,13 @@ return [
             'days' => 365,
         ],
 
+        'cron-hris-api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/cron/hris-api-leaves.log'),
+            'level' => 'debug',
+            'days' => 365,
+        ],
+
 
     ],
 

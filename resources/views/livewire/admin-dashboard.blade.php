@@ -157,7 +157,7 @@
                                 <a href="{{ route('module.list') }}" class="text-dark">Module Creation</a>
                             </div>
                             <div class="mb-0 font-weight-bold text-gray-800">
-                                <a id="sendApiToHRIS" class="text-dark hover">Send Leave to HRIS</a>
+                                <a id="sendApiToHRIS" class="text-dark hover">Send Data to HRIS</a>
                             </div>
                         </div>
                         <div class="col-auto mt-3">
@@ -441,38 +441,144 @@
         return false;
     });
 
+    // $(document).on('click', '#sendApiToHRIS', function(e) {
+
+    //     $.ajaxSetup({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         }
+    //     });
+    //     $.ajax({
+    //         url: '/send-allleave-to-hris',
+    //         method: 'post',
+    //         /* data: {
+    //             'id': $(this).attr('id')
+    //         },  */
+    //         beforeSend: function() {
+    //             $('#dataProcess').css({
+    //                 'display': 'flex',
+    //                 'position': 'fixed',
+    //                 'top': '50%',
+    //                 'left': '50%',
+    //                 'transform': 'translate(-50%, -50%)'
+    //             });
+
+    //         },
+    //         success: function(data) {
+    //             $('#dataProcess').css('display', 'none');
+    //             Swal.fire({
+    //                 title: data.message
+    //             });
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error:', xhr.responseText);
+    //         }
+    //     });
+    // });
+
     $(document).on('click', '#sendApiToHRIS', function(e) {
+
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Send Data to HRIS',
+            html: `
+            <label style="font-weight:600;">Select Transaction</label>
+            <select id="hrisType" class="swal2-select">
+                <option value="">-- Please Select --</option>
+                <option value="leaves">Leaves</option>
+                <option value="overtimes">Overtimes</option>
+                <option value="timelogs">Timelogs</option>
+            </select>
+        `,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            focusConfirm: false,
+
+            preConfirm: () => {
+                const type = $('#hrisType').val();
+
+                if (!type) {
+                    Swal.showValidationMessage('Please select a transaction type.');
+                    return false;
+                }
+
+                return type;
+            }
+
+        }).then((result) => {
+
+            if (!result.isConfirmed) return;
+            sendToHRIS(result.value);
+
+        });
+
+    });
+
+    function sendToHRIS(category) {
+
+        // Map category → endpoint
+        let urlMap = {
+            leaves: '/send-allleave-to-hris',
+            overtimes: '/send-allovertime-to-hris',
+            timelogs: '/send-alltimelog-to-hris'
+        };
+
+        let postUrl = urlMap[category];
+
+        if (!postUrl) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid category selected.'
+            });
+            return;
+        }
 
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         $.ajax({
-            url: '/send-allleave-to-hris',
-            method: 'post',
-            /* data: {
-                'id': $(this).attr('id')
-            },  */
+            url: postUrl,
+            method: 'POST',
+            data: {
+                category: category
+            },
+
             beforeSend: function() {
                 $('#dataProcess').css({
-                    'display': 'flex',
-                    'position': 'fixed',
-                    'top': '50%',
-                    'left': '50%',
-                    'transform': 'translate(-50%, -50%)'
+                    display: 'flex',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                });
+            },
+
+            success: function(data) {
+                $('#dataProcess').hide();
+
+                Swal.fire({
+                    icon: 'success',
+                    allowOutsideClick: false,
+                    title: data.message ?? (category + ' synced successfully!')
+                });
+            },
+
+            error: function(xhr) {
+                $('#dataProcess').hide();
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sync Failed',
+                    allowOutsideClick: false,
+                    text: 'Error while syncing ' + category
                 });
 
-            },
-            success: function(data) {
-                $('#dataProcess').css('display', 'none');
-                Swal.fire({
-                    title: data.message
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', xhr.responseText);
+                console.error(xhr.responseText);
             }
         });
-    })
+    }
 </script>

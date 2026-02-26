@@ -526,7 +526,7 @@ class LeaveApplication extends Component
                 ]);
 
                 $apiData = array(
-                    'otID'      => $request->lID,
+                    'lID'       => $request->lID,
                     'curDate'   => $currenDate,
                     'apiNo'     => $response->json('apiNo')
                 );
@@ -643,6 +643,7 @@ class LeaveApplication extends Component
     {
         $leaves = DB::table('leaves as l')
             ->select(
+                'l.id',
                 'l.control_number',
                 'l.name',
                 'l.employee_id',
@@ -664,10 +665,12 @@ class LeaveApplication extends Component
                 return $q->whereNull('l.is_cancelled')
                     ->orWhere('l.is_cancelled', '!=', 1);
             })
-            ->where(function ($q) {
-                $q->where(DB::raw('YEAR(l.date_from)'), '>=', 2024)
-                    ->orWhere(DB::raw('YEAR(l.date_to)'), '>=', 2024);
-            })
+            /* ->where(function ($q) {
+                $q->where(DB::raw('YEAR(l.date_from)'), '>=', 2026)
+                    ->orWhere(DB::raw('YEAR(l.date_to)'), '>=', 2026);
+            }) */
+            ->where('l.employee_id', '<>', '7777-7777')
+            ->where('l.api_sent', NULL)
             ->whereNotNull('l.office')
             ->get();
 
@@ -711,15 +714,23 @@ class LeaveApplication extends Component
 
                 if ($response->successful()) {
                     $success++;
-                    Log::channel('hris-api-leaves')->info('HRIS API Response', [
+                    Log::channel('cron-hris-api')->info('HRIS API Response', [
                         'status'        => $response->status(),
                         'controlNumber' => $leave->control_number,
                         'isExisting'    => $response->json('isExisting')
 
                     ]);
+
+                    $currenDate = Carbon::now()->format('Y-m-d H:i:s');
+                    $apiData = array(
+                        'lID'       => $leave->id,
+                        'curDate'   => $currenDate,
+                        'apiNo'     => $response->json('apiNo')
+                    );
+                    $this->updateLeaveAPI($apiData);
                 } else {
                     $failed++;
-                    Log::channel('hris-api-leaves')->error('Failed to send to HRIS', [
+                    Log::channel('cron-hris-api')->error('Failed to send to HRIS', [
                         'status'        => $response->status(),
                         'controlNumber' => $leave->control_number,
                         'isExisting'    => $response->json('isExisting'),
@@ -740,7 +751,7 @@ class LeaveApplication extends Component
 
     public function updateLeaveAPI($apiData)
     {
-        $id       = $apiData['otID'];
+        $id       = $apiData['lID'];
         $apiDate  = $apiData['curDate'];
         $apiRefNo = $apiData['apiNo'];
 
