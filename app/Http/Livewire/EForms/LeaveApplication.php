@@ -665,10 +665,10 @@ class LeaveApplication extends Component
                 return $q->whereNull('l.is_cancelled')
                     ->orWhere('l.is_cancelled', '!=', 1);
             })
-            /* ->where(function ($q) {
+            ->where(function ($q) {
                 $q->where(DB::raw('YEAR(l.date_from)'), '>=', 2026)
                     ->orWhere(DB::raw('YEAR(l.date_to)'), '>=', 2026);
-            }) */
+            })
             ->where('l.employee_id', '<>', '7777-7777')
             ->where('l.api_sent', NULL)
             ->whereNotNull('l.office')
