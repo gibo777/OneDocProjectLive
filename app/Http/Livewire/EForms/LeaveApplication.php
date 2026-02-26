@@ -188,6 +188,8 @@ class LeaveApplication extends Component
                 switch (Auth::user()->id) {
                     case 1:
                     case 543:
+                    case 57:
+                    case 532:
                         break;
                     case 124:
                         $query->where(function ($q) {

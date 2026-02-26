@@ -137,16 +137,20 @@ class OvertimeRequests extends Component
             }
 
             if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
+
                 // Apply search query if search term is provided
                 if (!empty($this->search)) {
-                    $searchTerms = explode(' ', $this->search);
+                    $searchTerms = explode(' ', trim($this->search));
                     $query->where(function ($q) use ($searchTerms) {
-                        foreach ($searchTerms as $term) {
-                            $q->where('ot.name', 'like', '%' . $term . '%');
-                        }
-                    })
-                        ->orWhere('ot.employee_id', 'like', '%' . $this->search . '%')
-                        ->orWhere('ot.ot_control_number', 'like', '%' . $this->search . '%');
+                        // Name search (all terms must match)
+                        $q->where(function ($nameQuery) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $nameQuery->where('ot.name', 'like', '%' . $term . '%');
+                            }
+                        });
+                        $q->orWhere('ot.employee_id', 'like', '%' . implode(' ', $searchTerms) . '%');
+                        $q->orWhere('ot.ot_control_number', 'like', '%' . implode(' ', $searchTerms) . '%');
+                    });
                 }
             }
 
@@ -168,16 +172,18 @@ class OvertimeRequests extends Component
                 switch (Auth::user()->id) {
                     case 1:
                     case 543:
+                    case 57:
+                    case 532:
                         break;
                     case 124:
                         $query->where(function ($q) {
                             return $q->where('ot.office', Auth::user()->office)
-                                ->orWhere('ot.office', 6);
+                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18]);
                         });
                         break;
                     case 126:
                         $query->where(function ($q) {
-                            return $q->whereIn('ot.office', [8, 12, 13, 14, 15]);
+                            return $q->whereIn('ot.office', [8, 12, 13, 14, 15, 17, 18]);
                         });
                         break;
                     case 337:
