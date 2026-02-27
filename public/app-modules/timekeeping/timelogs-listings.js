@@ -323,7 +323,7 @@ $(document).ready(function () {
                 var blob = new Blob([xmlContent], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
 
-                var filename = `1DOC_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
+                var filename = `Timelogs_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
 
                 // Create a download link
                 var a = document.createElement('a');
