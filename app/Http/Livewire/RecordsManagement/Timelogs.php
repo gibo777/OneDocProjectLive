@@ -98,17 +98,20 @@ class Timelogs extends Component
 
                 // Apply search query if search term is provided
                 if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN') {
-                    // \Log::info('Search Query Applied for Role: ' . Auth::user()->role_type);
                     if (!empty($this->search)) {
-                        $searchTerms = explode(' ', $this->search);
+                        $searchTerms = explode(' ', trim($this->search));
                         $query->where(function ($q) use ($searchTerms) {
-                            foreach ($searchTerms as $term) {
-                                $q->where('th.full_name', 'like', '%' . $term . '%');
-                            }
-                        })
-                            ->orWhere('th.employee_id', 'like', '%' . $this->search . '%');
+
+                            $q->where(function ($nameQuery) use ($searchTerms) {
+                                foreach ($searchTerms as $term) {
+                                    $nameQuery->where('th.full_name', 'like', '%' . $term . '%');
+                                }
+                            });
+                            $q->orWhere('th.employee_id', 'like', '%' . implode(' ', $searchTerms) . '%');
+                        });
                     }
                 }
+
 
                 // Filter by date range
                 if (!empty($this->fTLdtFrom) && !empty($this->fTLdtTo)) {
@@ -134,16 +137,14 @@ class Timelogs extends Component
                 if (Auth::user()->is_head == 1) {
                     switch (Auth::user()->id) {
                         case 1:
-                        case 8:
-                        case 18:
-                        case 58:
-                            break;
-                        case 287:
+                        case 543:
+                        case 57:
+                        case 532:
                             break;
                         case 124:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15]);
+                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18]);
                             });
                             break;
                         case 86:
