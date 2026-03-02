@@ -2,7 +2,7 @@ $(document).ready(function () {
     let parentSwalOpen = false;
 
     /* EXPORT TO EXCEL TIMELOGS */
-    $(document).on('click', '#exportExcelLeaves', async function () {
+    /* $(document).on('click', '#exportExcelLeaves', async function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -34,6 +34,175 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error('Error exporting to Excel:', error);
+            }
+        });
+
+        return false;
+    }); */
+
+    // ===== Helper functions =====
+    function isNumber(val) {
+        return !isNaN(val) && val !== '' && val !== null;
+    }
+
+    function isDateTime(val) {
+        // Matches YYYY-MM-DD HH:MM:SS
+        return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(val);
+    }
+
+
+    function getLeavesFilterData() {
+        return {
+            office: $('#fTLOffice').val(),
+            department: $('#fTLDept').val(),
+            leave_type: $('#fLType').val(),
+            status: $('#fLStatus').val(),
+            date_from: $('#fLdtFrom').val(),
+            date_to: $('#fLdtTo').val(),
+            search: $('#search').val()
+        };
+    }
+
+    /* EXPORT TO EXCEL LEAVES */
+    $(document).on('click', '#exportExcelLeaves', function () {
+
+        let url = window.location.origin + '/leaves-excel';
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: getLeavesFilterData(), // reuse your filter function if needed
+
+            beforeSend: function () {
+                $('#dataProcess').css({
+                    display: 'flex',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                });
+            },
+
+            success: function (data) {
+
+                $('#dataProcess').hide();
+
+                try {
+
+                    let rowsData = data.leavesData;
+
+                    if (!rowsData || rowsData.length === 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No data to export!'
+                        });
+                        return;
+                    }
+
+                    let columnMappings = {
+                        full_name: 'Name',
+                        employee_id: 'Employee ID',
+                        office: 'Office',
+                        department: 'Department',
+                        supervisor: 'Supervisor',
+                        // leave_number: 'Leave No.',
+                        control_number: 'Control No.',
+                        leave_type: 'Leave Type',
+                        leave_schedule: 'Leave Schedule',
+                        no_of_days: 'No. of Days',
+                        reason: 'Reason',
+                        status: 'Status',
+                        // date_applied: 'Date Applied'
+                    };
+
+                    let selectedColumns = Object.keys(columnMappings);
+                    let rows = [];
+                    rows.push(selectedColumns.map(c => columnMappings[c]));
+
+                    rowsData.forEach(item => {
+                        rows.push(selectedColumns.map(c => item[c] ?? ''));
+                    });
+
+                    /*
+                    | Build Excel XML (Same Engine)
+                    */
+                    let xml = '<?xml version="1.0"?>\n';
+                    xml += '<?mso-application progid="Excel.Sheet"?>\n';
+                    xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n';
+                    xml += ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+
+                    xml += '<Styles>\n';
+                    xml += '<Style ss:ID="HeaderStyle"><Font ss:Bold="1" ss:Size="12"/></Style>\n';
+                    xml += '<Style ss:ID="DefaultStyle"><Font ss:Size="10"/></Style>\n';
+                    xml += '<Style ss:ID="DateStyle"><NumberFormat ss:Format="yyyy-mm-dd hh:mm:ss"/></Style>\n';
+                    xml += '</Styles>\n';
+
+                    xml += '<Worksheet ss:Name="Leaves Report">\n<Table>\n';
+
+                    rows.forEach((row, rowIndex) => {
+
+                        xml += '<Row>\n';
+
+                        row.forEach(cell => {
+
+                            let type = 'String';
+                            let value = cell;
+                            let style = rowIndex === 0 ? 'HeaderStyle' : 'DefaultStyle';
+
+                            if (isDateTime(cell)) {
+                                type = 'DateTime';
+                                value = cell.replace(' ', 'T');
+                                style = 'DateStyle';
+                            } else if (isNumber(cell)) {
+                                type = 'Number';
+                            }
+
+                            if (type === 'String') {
+                                value = value.toString()
+                                    .replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&apos;');
+                            }
+
+                            xml += `<Cell ss:StyleID="${style}"><Data ss:Type="${type}">${value}</Data></Cell>\n`;
+                        });
+
+                        xml += '</Row>\n';
+                    });
+
+                    xml += '</Table>\n</Worksheet>\n</Workbook>';
+
+                    /*
+                    | Trigger Download
+                    */
+                    let blob = new Blob([xml], { type: 'application/vnd.ms-excel' });
+                    let fileUrl = window.URL.createObjectURL(blob);
+
+                    let a = document.createElement('a');
+                    a.href = fileUrl;
+                    a.download = data.fileName;
+                    document.body.appendChild(a);
+                    a.click();
+
+                    window.URL.revokeObjectURL(fileUrl);
+                    document.body.removeChild(a);
+
+                } catch (e) {
+                    console.error(e);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to generate Excel file.',
+                        html: e
+                    });
+                }
             }
         });
 

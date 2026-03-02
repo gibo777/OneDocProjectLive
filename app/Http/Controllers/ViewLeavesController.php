@@ -823,7 +823,7 @@ class ViewLeavesController extends Controller
         }
     }
 
-    function leavesExcel(Request $request)
+    /* function leavesExcel(Request $request)
     {
         if (
             Auth::check() && (Auth::user()->email_verified_at != NULL)
@@ -875,5 +875,85 @@ class ViewLeavesController extends Controller
         } else {
             return redirect('/');
         }
+    } */
+
+    public function leavesExcel(Request $request)
+    {
+        if (
+            Auth::check() &&
+            Auth::user()->email_verified_at !== null &&
+            in_array(Auth::user()->role_type, ['ADMIN', 'SUPER ADMIN'])
+        ) {
+
+            $leavesData = DB::table('leaves as L')
+                ->leftJoin('offices as o', 'L.office', '=', 'o.id')
+                ->leftJoin('departments as d', 'L.department', '=', 'd.department_code')
+                ->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id')
+                ->leftJoin('leave_balances as b', 'u.employee_id', '=', 'b.employee_id')
+                ->select(
+                    'L.name as full_name',
+                    'L.employee_id',
+                    'o.company_name as office',
+                    'd.department',
+                    DB::raw("(SELECT CONCAT(first_name,' ',last_name,IFNULL(CONCAT(' ',suffix),''))
+                          FROM users WHERE employee_id = u.supervisor) as supervisor"),
+                    'L.leave_number',
+                    'L.control_number',
+                    'L.leave_type',
+                    DB::raw("
+                    CONCAT(
+                        DATE_FORMAT(L.date_from,'%m/%d/%Y'),
+                        ' - ',
+                        DATE_FORMAT(L.date_to,'%m/%d/%Y')
+                    ) as leave_schedule
+                "),
+                    'L.no_of_days',
+                    'L.reason',
+                    DB::raw("DATE_FORMAT(L.date_applied,'%Y-%m-%d %H:%i:%s') as date_applied"),
+                    'L.leave_status as status'
+                );
+            $leavesData->where('u.id', '<>', 1);
+
+            if ($request->office) {
+                $leavesData->where('L.office', $request->office);
+            }
+
+            if ($request->department) {
+                $leavesData->where('L.department', $request->department);
+            }
+
+            if ($request->status) {
+                $leavesData->where('L.leave_status', $request->status);
+            }
+
+            if ($request->date_from && $request->date_to) {
+                $leavesData->whereBetween('L.date_from', [
+                    $request->date_from,
+                    $request->date_to
+                ]);
+            } elseif ($request->date_from && !$request->date_to) {
+                $leavesData->whereDate('L.date_from', $request->date_from);
+                $leavesData->whereDate('L.date_to', $request->date_from);
+            }
+
+            if ($request->search) {
+                $leavesData->where(function ($q) use ($request) {
+                    $q->where('L.name', 'like', '%' . $request->search . '%')
+                        ->orWhere('L.employee_id', 'like', '%' . $request->search . '%')
+                        ->orWhere('L.control_number', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $leavesData = $leavesData->orderBy('L.name')->get();
+
+            $fileName = 'Leaves_Report_' . Carbon::now()->format('YmdHi') . '.xls';
+
+            return response()->json([
+                'leavesData' => $leavesData,
+                'fileName'   => $fileName
+            ]);
+        }
+
+        return response()->json(['error' => 'Unauthorized'], 403);
     }
 }
