@@ -110,14 +110,14 @@ $(document).ready(function () {
                         employee_id: 'Employee ID',
                         office: 'Office',
                         department: 'Department',
-                        supervisor: 'Supervisor',
-                        // leave_number: 'Leave No.',
                         control_number: 'Control No.',
                         leave_type: 'Leave Type',
                         leave_schedule: 'Leave Schedule',
                         no_of_days: 'No. of Days',
                         reason: 'Reason',
+                        supervisor: 'Supervisor',
                         status: 'Status',
+                        // leave_number: 'Leave No.',
                         // date_applied: 'Date Applied'
                     };
 
@@ -328,7 +328,7 @@ $(document).ready(function () {
                                 </div>
                                 <div class="row text-sm w-full text-left my-2">
                                     <div class="col-md-6"><em>Name:</em> <strong>${data[0]['name']}</strong></div>
-                                    <div class="col-md-6"><em>Supervisor:</em> <strong>${data[0]['head_name']}</strong></div>
+                                    <div class="col-md-6"><em>Approver:</em> <strong>${data[0]['head_name']}</strong></div>
                                 </div>
                                 ${dLHistory}`
                     });
