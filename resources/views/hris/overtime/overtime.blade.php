@@ -1,13 +1,6 @@
 <link rel="shortcut icon" href="{{ asset('img/all/onedoc-favicon.png') }}">
 
 <x-app-layout>
-    <style type="text/css">
-        th,
-        td {
-            text-transform: none !important;
-        }
-    </style>
-
     <x-slot name="header">
         {{ __('OVERTIME REQUEST FORM') }}
     </x-slot>
@@ -130,21 +123,24 @@
                         </div>
                     </div>
 
+
                     <div class="row">
                         <div class="col-md-6 form-floating text-center w-full p-0 mt-2">
-                            <textarea id="otReason" name="otReason" class="form-control block w-full" placeholder="REASON" required /></textarea>
-                            {{-- <x-jet-label for="reason" value="{{ __('REASON') }}" class="w-full" /> --}}
+                            <textarea id="otReason" name="otReason" class="form-control block w-full" placeholder="REASON" required
+                                maxlength="250" oninput="updateCounter(this, 'otReasonCounter')"></textarea>
                             <label for="otReason" class="font-weight-bold text-secondary text-center w-full">
-                                <h6>REASON<span class="text-danger"> *</span></h6>
+                                <h6>REASON (Up to 250 characters only)<span class="text-danger"> *</span></h6>
                             </label>
-                            <x-jet-input-error for="reason" class="mt-2" />
+                            <small class="text-muted d-block text-end mt-1">
+                                <span id="otReasonCounter">0</span>/250
+                            </small>
                         </div>
                         <div class="col-md-6 text-center mt-2">
                             <table class="table table-bordered data-table mx-auto text-center">
                                 <tr>
-                                    <th>Hours</th>
-                                    <th>Minutes</th>
-                                    <th>Total Hours</th>
+                                    <th class="fw-normal">Hours</th>
+                                    <th class="fw-normal">Minutes</th>
+                                    <th class="fw-normal">Total Hours</th>
                                 </tr>
                                 <tr>
                                     <td id="thHours">0</td>

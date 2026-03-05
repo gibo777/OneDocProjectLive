@@ -75,6 +75,15 @@ $(document).ready(function () {
         return [totalHours, hours, minutes];
     }
 
+    function updateCounter(textarea, counterId) {
+        const current = textarea.value.length;
+        const counter = document.getElementById(counterId);
+        counter.textContent = current;
+
+        // Optional: turn red when near/at limit
+        counter.style.color = current >= 240 ? 'red' : '';
+    }
+
 
     // Key event for OT Location
     $(document).on('keyup', '#otLocation', function () {
@@ -97,8 +106,13 @@ $(document).ready(function () {
             $('#otTimeTo').val());
     });
 
-    // Key event for OT Reason
-    $(document).on('keyup', '#otReason', function () {
+    $(document).on('input', '#otReason', function () {
+        // Character counter
+        const current = $(this).val().length;
+        $('#otReasonCounter').text(current);
+        $('#otReasonCounter').css('color', current >= 240 ? 'red' : '');
+
+        // Submit button toggle
         if (fieldsEmptyCount(
             $('#otLocation').val(),
             $('#otDateFrom').val(),
@@ -111,11 +125,13 @@ $(document).ready(function () {
         } else {
             $("#submitOvertime").removeAttr('disabled');
         }
+
         isValidDateTime(
             $('#otDateFrom').val(),
             $('#otTimeFrom').val(),
             $('#otDateTo').val(),
-            $('#otTimeTo').val());
+            $('#otTimeTo').val()
+        );
     });
 
     // On change event for OT Date From

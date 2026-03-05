@@ -128,10 +128,10 @@
 
 
                 <div class="row border-1 px-2">
-                    <div class="col-md-5 pt-1 text-wrap">
-                        <x-jet-label class="text-secondary" for="ot_reason">
+                    <div class="col-md-5 p-1 text-left rounded border-1 px-2 text-break text-wrap overflow-hidden">
+                        <x-jet-label class="text-secondary text-wrap d-block w-100" for="ot_reason">
                             {!! __('<i class="text-sm">OT Reason:</i>&nbsp;<p><strong id="otLinkReason">:ot_reason</strong></p>', [
-                                'ot_reason' => nl2br(e(strtoupper($otData->ot_reason))),
+                                'ot_reason' => nl2br(e($otData->ot_reason)),
                             ]) !!}
                         </x-jet-label>
                     </div>

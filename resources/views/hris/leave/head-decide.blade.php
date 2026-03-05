@@ -122,9 +122,12 @@
                     <!-- Notification of Leave -->
                     <div class="col-md-8 text-center">
                         <div class="row">
-                            <div class="col-md-6 p-1 text-left rounded border-1 px-2">
-                                <x-jet-label class="text-secondary text-wrap" for="reason">
-                                    {!! __('<i class="text-sm">Reason:</i><br><strong>:reason</strong>', ['reason' => $dLeave->reason]) !!}
+                            <div
+                                class="col-md-6 p-1 text-left rounded border-1 px-2 text-break text-wrap overflow-hidden">
+                                <x-jet-label class="text-secondary text-wrap d-block w-100" for="reason">
+                                    {!! __('<i class="text-sm">Reason:</i><br><strong>:reason</strong>', [
+                                        'reason' => nl2br(e($dLeave->reason)),
+                                    ]) !!}
                                 </x-jet-label>
                             </div>
                             <div class="form-floating col-md-6 px-2">
