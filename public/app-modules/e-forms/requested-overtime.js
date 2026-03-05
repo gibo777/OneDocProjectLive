@@ -223,10 +223,6 @@ $(document).ready(function () {
     function approveOTRequest(otID, btnAction, otData) {
         let otAction = btnAction.trim().split(/\s+/)[0].toLowerCase();
         let otURL = window.location.origin;
-        // let otData = {
-        //     'otID': otID,
-        // };
-        // Swal.fire({ html: JSON.stringify(otData) }); return false;
 
         switch (otAction) {
             case 'approve':
@@ -253,18 +249,28 @@ $(document).ready(function () {
                 popup: ''
             },
             html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
-                    Approval (${otData.ot_control_number})
-                </div>
-                <div class="inset-shadow p-1 text-left text-sm">
-                    <div>Name: <b>${otData.name}</b></div>
-                    <div>O.T. Schedule: <b> ${otData.begin_date} - ${otData.end_date} </b></div>
-                    <div>Total Hours: <b> ${otData.total_hours} </b></div>
-                    <div>O.T. Reason: <b> ${otData.ot_reason} </b></div>
-                </div>
-                <div class="text-left text-sm fw-bold py-1"><em>Approval Comment:</em></div>
-                <textarea id="otComment" name="otComment"
-                class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
-                placeholder="Kindly specify your comment here.."></textarea>`,
+                        Approval (${otData.ot_control_number})
+                    </div>
+                    <div class="inset-shadow p-1 text-left text-sm">
+                        <div>Name: <b>${otData.name}</b></div>
+                        <div>O.T. Schedule: <b> ${otData.begin_date} - ${otData.end_date} </b></div>
+                        <div>Total Hours: <b> ${otData.total_hours} </b></div>
+                        <div>O.T. Reason: <b> ${otData.ot_reason} </b></div>
+                    </div>
+                    <div class="text-left text-sm fw-bold py-1"><em>Approval Comment:</em></div>
+                    <textarea id="otComment" name="otComment" maxlength="250"
+                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
+                    placeholder="Kindly specify your comment here.."></textarea>
+                    <small class="text-muted d-block text-end mt-1">
+                        <span id="otCommentCounter">0</span>/250
+                    </small>`,
+            didOpen: () => {
+                $('#otComment').on('input', function () {
+                    const current = $(this).val().length;
+                    $('#otCommentCounter').text(current);
+                    $('#otCommentCounter').css('color', current >= 240 ? 'red' : '');
+                });
+            },
             preConfirm: () => {
                 let comment = $('#otComment').val();
                 if (!comment) {
@@ -359,133 +365,7 @@ $(document).ready(function () {
             }
         });
 
-        // $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-        // $.ajax({
-        //     url: otURL,
-        //     method: 'post',
-        //     data: otData, // prefer use serialize method
-        //     beforeSend: function () {
-        //         $('#dataProcess').css({
-        //             'display': 'flex',
-        //             'position': 'fixed',
-        //             'top': '50%',
-        //             'left': '50%',
-        //             'transform': 'translate(-50%, -50%)'
-        //         });
-        //     },
-        //     success: function (data) {
-        //         $('#dataProcess').hide();
-
-        //         const { isSuccess, message } = data;
-
-
-        //         if (isSuccess) {
-        //             Livewire.emit('refreshComponent');
-        //             Swal.fire({
-        //                 icon: 'success',
-        //                 title: message,
-        //             });
-        //             $.ajaxSetup({
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-        //                     'content')
-        //             });
-
-        //             // Send (API payload) to HRIS using $.ajax / JSON
-        //             $.ajax({
-        //                 url: `${window.location.origin}/send-overtime-to-hris`,
-        //                 method: 'POST',
-        //                 data: {
-        //                     'otID': otID,
-        //                 },
-        //                 success: function (apiResponse) {
-        //                     console.log('API response:', JSON.stringify(
-        //                         apiResponse));
-
-        //                 },
-        //                 error: function (xhr) {
-        //                     console.error('API error:', xhr.responseText);
-        //                 }
-        //             });
-        //         } else {
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 // title: JSON.stringify(message),
-        //                 title: 'Failed!',
-        //             });
-        //         }
-
-        //     }
-        // });
     }
-
-    /* function denyOTRequest(otID, lType, lOthers, dLName, dLDate, dHType) {
-        Swal.fire({
-            allowOutsideClick: false,
-            confirmButtonText: 'Confirm Deny',
-            showCancelButton: true,
-            cancelButtonText: 'Close',
-            showCloseButton: true,
-            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
-                        Confirmation to Deny Leave
-                    </div>
-                    <div class="inset-shadow p-1">
-                        <div class="text-left text-sm">${dLName}</div>
-                        <div class="text-left text-sm">${dLDate}</div>
-                        <div class="text-left text-sm">${dHType}</div>
-                    </div>
-                    <div class="text-left text-sm fw-bold py-1"><em>Reason for denying leave:</em></div>
-                    <textarea id="confirmDenyLeave" name="confirmDenyLeave"
-                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
-                    placeholder="Kindly specify your reason here.."></textarea>`,
-            preConfirm: () => {
-                let reason = $('#confirmDenyLeave').val();
-                if (!reason) {
-                    Swal.showVaotIDationMessage('Please enter your reason for denying leave');
-                    Swal.getPopup().querySelector('#confirmDenyLeave').focus();
-                }
-                return reason;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handleRevokeConfirmation(otID, result.value, "Denied");
-            }
-        });
-    } */
-
-    /* function cancelLeave(otID, lType, lOthers, dLName, dLDate, dHType) {
-        Swal.fire({
-            allowOutsideClick: false,
-            confirmButtonText: 'Confirm Cancel',
-            showCancelButton: true,
-            cancelButtonText: 'Close',
-            showCloseButton: true,
-            html: `<div class="banner-blue pl-2 p-1 text-md text-left mb-2">
-                        Confirmation to Cancel Leave
-                    </div>
-                    <div class="inset-shadow p-1">
-                        <div class="text-left text-sm">${dLName}</div>
-                        <div class="text-left text-sm">${dLDate}</div>
-                        <div class="text-left text-sm">${dHType}</div>
-                    </div>
-                    <div class="text-left text-sm fw-bold py-1"><em>Reason for cancellation of leave:</em></div>
-                    <textarea id="confirmCancelLeave" name="confirmCancelLeave"
-                    class="border-gray-700 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-sm block w-full"
-                    placeholder="Kindly specify your reason here.."></textarea>`,
-            preConfirm: () => {
-                let reason = $('#confirmCancelLeave').val();
-                if (!reason) {
-                    Swal.showVaotIDationMessage('Please enter your reason for cancellation of leave');
-                    Swal.getPopup().querySelector('#confirmCancelLeave').focus();
-                }
-                return reason;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Call a function to handle the cancellation of the leave
-                handleRevokeConfirmation(otID, result.value, "Cancelled");
-            }
-        });
-    } */
 
     function handleRevokeConfirmation(otID, otReason, otAction) {
         // Swal.fire({ html: otID + ' | ' + otReason + ' | ' + otAction }); return false;
@@ -758,13 +638,6 @@ $(document).ready(function () {
                     a.click();
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
-
-
-                    // ===== 6. Success Swal =====
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Excel file generated successfully!'
-                    });
 
                 } catch (e) {
                     console.error('Excel generation failed:', e);
