@@ -198,6 +198,8 @@ class LeaveApplication extends Component
                         });
                         break;
                     case 126:
+                    case 127:
+                    case 271:
                         $query->where(function ($q) {
                             return $q->whereIn('l.office', [8, 12, 13, 14, 15, 17, 18]);
                         });
