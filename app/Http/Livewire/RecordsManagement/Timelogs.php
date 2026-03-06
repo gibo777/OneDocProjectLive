@@ -136,23 +136,28 @@ class Timelogs extends Component
                 }
                 if (Auth::user()->is_head == 1) {
                     switch (Auth::user()->id) {
+                        # All
                         case 1:
                         case 543:
                         case 57:
                         case 532:
                             break;
+                        # E-Agro, 1Food, ANH
                         case 124:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
                                     ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18]);
                             });
                             break;
+                        # 1Food, ANH
                         case 86:
                         case 126:
                         case 222:
+                        case 127:
+                        case 271:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [8, 12, 14, 15]);
+                                    ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18]);
                             });
                             break;
                         case 72:
@@ -190,6 +195,7 @@ class Timelogs extends Component
                         case 174:
                         case 290:
                         case 315:
+                        case 398:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office);
                             });
