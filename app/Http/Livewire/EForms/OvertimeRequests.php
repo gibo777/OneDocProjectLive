@@ -176,16 +176,26 @@ class OvertimeRequests extends Component
                     case 532:
                         break;
                     case 124:
+                        // E-Agro, 1F, ANH
                         $query->where(function ($q) {
                             return $q->where('ot.office', Auth::user()->office)
-                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18]);
+                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18])
+                                ->orWhere('d.department_code', 'like', '%1F%');
                         });
                         break;
                     case 126:
                     case 127:
                     case 271:
+                        //1F, ANH
                         $query->where(function ($q) {
-                            return $q->whereIn('ot.office', [8, 12, 13, 14, 15, 17, 18]);
+                            return $q->whereIn('ot.office', [8, 12, 13, 14, 15, 17, 18])
+                                ->orWhere('d.department_code', 'like', '%1F%');
+                        });
+                        break;
+                    case 351:
+                        //1F, ANH
+                        $query->where(function ($q) {
+                            return $q->orWhere('d.department_code', 'like', '%1F%');
                         });
                         break;
                     case 337:

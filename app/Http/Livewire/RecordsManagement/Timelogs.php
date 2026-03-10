@@ -146,7 +146,8 @@ class Timelogs extends Component
                         case 124:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18]);
+                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18])
+                                    ->orWhere('d.department_code', 'like', '%1F%');
                             });
                             break;
                         # 1Food, ANH
@@ -157,9 +158,16 @@ class Timelogs extends Component
                         case 271:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18]);
+                                    ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18])
+                                    ->orWhere('d.department_code', 'like', '%1F%');
                             });
                             break;
+                        case 351:
+                            $query->where(function ($q) {
+                                return $q->where('d.department_code', 'like', '%1F%');
+                            });
+                            break;
+
                         case 72:
                             $query->where(function ($q) {
                                 return $q->where('u.office', Auth::user()->office)

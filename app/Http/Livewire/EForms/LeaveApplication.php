@@ -194,14 +194,21 @@ class LeaveApplication extends Component
                     case 124:
                         $query->where(function ($q) {
                             return $q->where('l.office', Auth::user()->office)
-                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18]);
+                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18])
+                                ->orWhere('d.department_code', 'like', '%1F%');
                         });
                         break;
                     case 126:
                     case 127:
                     case 271:
                         $query->where(function ($q) {
-                            return $q->whereIn('l.office', [8, 12, 13, 14, 15, 17, 18]);
+                            return $q->whereIn('l.office', [8, 12, 13, 14, 15, 17, 18])
+                                ->orWhere('d.department_code', 'like', '%1F%');
+                        });
+                        break;
+                    case 351:
+                        $query->where(function ($q) {
+                            return $q->where('d.department_code', 'like', '%1F%');
                         });
                         break;
                     case 337:
