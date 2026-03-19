@@ -41,5 +41,8 @@ return [
         'detection_api_key' => env('COMPREFACE_DETECTION_API_KEY', null),
     ],
 
+    'timezonedb_key' => env('TIMEZONEDB_KEY', ''),
+    'timezonedb_url' => env('TIMEZONEDB_URL', 'https://api.timezonedb.com/v2.1/get-time-zone'),
+
 
 ];

@@ -1,137 +1,132 @@
 $(document).ready(function () {
     let parentSwalOpen = false;
+    let modalWidth = $(window).width() <= 768 ? '100%' : '900px';
 
     function isMobile() {
         return $(window).width() < 768;
     }
 
-$(document).on('dblclick', '.view-user', function() {
-    const uID = $(this).attr('id');
+    $(document).on('dblclick', '.view-user', function () {
+        const uID = $(this).attr('id');
 
-    $.ajax({
-        url: '/authorize-user-detail',
-        method: 'GET',
-        data: { 'uID': uID },
-        beforeSend: function() {
-            $('#dataLoad').css({
-                'display'   : 'flex',
-                'position'  : 'fixed',
-                'top'       : '50%',
-                'left'      : '50%',
-                'transform' : 'translate(-50%, -50%)'
-            });
+        $.ajax({
+            url: '/authorize-user-detail',
+            method: 'GET',
+            data: { uID: uID },
+            beforeSend: function () {
+                $('#dataLoad').css({
+                    display: 'flex',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                });
+            },
+            success: function (html) {
+                $('#dataLoad').hide();
+                parentSwalOpen = true;
 
-        },
-        success: function(html) {
-            $('#dataLoad').hide();
-            parentSwalOpen = true;
-            Swal.fire({
-                html: html,
-                width: 'auto',
-                showCloseButton: true,
-                showConfirmButton: false,
-                allowEscapeKey: false,
-                allowOutsideClick: false,
-                showClass: { popup: '' },
-                heightAuto: true,
-                customClass: {
-                    popup: 'p-0'
-                },
-                willOpen: () => {
-                    $('#m1Office').multiselect({
-                        enableFiltering: true,
-                        enableCaseInsensitiveFiltering: true,
-                        buttonWidth: '100%',
-                        dropRight: true,
-                        maxHeight: 200
-                    });
-                    $('#m2Office').multiselect({
-                        enableFiltering: true,
-                        enableCaseInsensitiveFiltering: true,
-                        buttonWidth: '100%',
-                        dropRight: true,
-                        maxHeight: 200
-                    });
-                    $('#m3Office').multiselect({
-                        enableFiltering: true,
-                        enableCaseInsensitiveFiltering: true,
-                        buttonWidth: '100%',
-                        dropRight: true,
-                        maxHeight: 200
-                    });
-                    $('#saveAssigned').on('click',function() {
-                        let offices = [
-                            $('#m1Office').val(),
-                            $('#m2Office').val(),
-                            $('#m3Office').val()
-                        ];
-                        let moduleNames = [
-                            'Leaves Listing',
-                            'Timelogs Listing',
-                            'Employees Listing',
-                        ];
-                        saveAssignedViewing(uID,moduleNames,offices);
-                    });
-                },
-                didClose: () => {
-                    parentSwalOpen = false;
-                }
-            });
+                Swal.fire({
+                    html: html,
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    width: modalWidth,
+                    showClass: { popup: '' },
+                    didOpen: () => {
 
-            const swalPopup = Swal.getPopup();
-            swalPopup.style.overflow = 'visible';
-            swalPopup.style.maxHeight = 'none';
-            swalPopup.style.height = 'auto';
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching user details:', error);
-        }
-    });
-});
+                        // Initialize all multiselects dynamically (based on class now, not id)
+                        $('.module-office').each(function () {
+                            $(this).multiselect({
+                                enableFiltering: true,
+                                enableCaseInsensitiveFiltering: true,
+                                buttonWidth: '100%',
+                                dropRight: true,
+                                maxHeight: 200
+                            });
+                        });
 
-function saveAssignedViewing(uID,moduleNames,offices) {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+                        // Save Assigned button (collect values dynamically per module_id)
+                        $('#saveAssigned').off('click').on('click', function () {
+
+                            let moduleOfficeMap = {};
+
+                            $('.module-office').each(function () {
+                                let moduleId = $(this).data('module-id');   // <-- real module_id
+                                let selectedOffices = $(this).val() || [];  // <-- selected offices
+
+                                moduleOfficeMap[moduleId] = selectedOffices;
+                            });
+
+                            // Debug (optional — you can remove later)
+                            console.log('Saving Map:', moduleOfficeMap);
+
+                            saveAssignedViewing(uID, moduleOfficeMap);
+                        });
+
+                        // Make table container scrollable
+                        const swalPopup = Swal.getPopup();
+                        $(swalPopup).find('div.mx-3 > div.w-full.overflow-x-auto').css({
+                            'overflow-y': 'auto',
+                            'max-height': '70vh'
+                        });
+                    },
+
+                    didClose: () => {
+                        parentSwalOpen = false;
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching user details:', error);
+            }
+        });
     });
 
-    // let numberOfOffices = offices.length;
-    // for (let i = 1; i <= numberOfOffices; i++) {
-    //     offices[`m${i}Office`] = `Office ${i}`;
-    // }
+    function saveAssignedViewing(uID, moduleOfficeMap) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-    let dataObject = {
-        'uID'           : uID,
-        'offices'       : offices,
-        'moduleNames'   : moduleNames
-    };
-
-    $.ajax({
-        url: `${window.location.origin}/save-authorize-viewing`,
-        method: 'POST',
-        data: { auData: dataObject },
-        beforeSend: function() {
-            $('#dataProcess').css({
-                'display'   : 'flex',
-                'position'  : 'fixed',
-                'top'       : '50%',
-                'left'      : '50%',
-                'transform' : 'translate(-50%, -50%)'
-            });
-
-        },
-        success: function(data) {
-            $('#dataProcess').hide();
-            // Swal.fire({ html: JSON.stringify(data.dataUsers) });
-            Swal.fire({ html: data });
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
-
-}
-
+        $.ajax({
+            url: `${window.location.origin}/save-authorize-viewing`,
+            method: 'POST',
+            data: {
+                uID: uID,
+                moduleOffices: moduleOfficeMap
+            },
+            beforeSend: function () {
+                $('#dataProcess').css({
+                    display: 'flex',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                });
+            },
+            success: function (data) {
+                $('#dataProcess').hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved!',
+                    html: 'Office assignment updated successfully.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            },
+            error: function (xhr, status, error) {
+                $('#dataProcess').hide();
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: 'Something went wrong while saving.',
+                });
+            }
+        });
+    }
 
 });

@@ -37,12 +37,12 @@ class PendingLeaveNotification extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->view('emails.pending-leave-notification')
-                    ->subject('Pending Leave Requests')
-                    ->with([
-                        'head_id'   => $this->head_id,
-                        'head_name' => $this->head_name,
-                        'head_sex'  => $this->sex,
-                        'n'         => $this->n,
-                    ]);
+            ->subject('Pending Leave Requests')
+            ->with([
+                'head_id'   => $this->head_id,
+                'head_name' => $this->head_name,
+                'head_sex'  => $this->sex,
+                'n'         => $this->n,
+            ]);
     }
 }

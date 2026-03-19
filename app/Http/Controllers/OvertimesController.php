@@ -954,8 +954,6 @@ class OvertimesController extends Controller
                 }
             }
 
-
-
             return response(['isSuccess' => true, 'message' => $message]);
         } catch (\Exception $e) {
             return response(['isSuccess' => false, 'message' => $e]);

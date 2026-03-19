@@ -262,20 +262,21 @@
 
                 </div>
             </div>
+            {{-- </div> --}}
         </div>
     </div>
-</div>
-</div>
 
 
-<!-- Loading Indicator -->
-{{-- <div id="dataLoad" style="display: none">
+
+
+    <!-- Loading Indicator -->
+    {{-- <div id="dataLoad" style="display: none">
     <img src="{{ asset('/img/misc/loading-blue-circle.gif') }}">
 </div> --}}
 
-<!-- =========================================== -->
-<script type="text/javascript">
-    const uID = `{{ Auth::user()->id }}`;
-    const lReq = `{{ route('hris.leave.eleave') }}`;
-</script>
-<script type="text/javascript" src="{{ asset('app-modules/e-forms/leaves-application.js') }}"></script>
+    <!-- =========================================== -->
+    <script type="text/javascript">
+        const uID = `{{ Auth::user()->id }}`;
+        const lReq = `{{ route('hris.leave.eleave') }}`;
+    </script>
+    <script type="text/javascript" src="{{ asset('app-modules/e-forms/leaves-application.js') }}"></script>

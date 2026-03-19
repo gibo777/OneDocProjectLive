@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+use Illuminate\Support\Facades\Log; // Do not remove this, for future use.
+
 class OvertimeRequested extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;

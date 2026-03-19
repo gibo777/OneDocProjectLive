@@ -106,13 +106,20 @@ $(document).ready(function () {
                             })
                             .then(fileContent => {
                                 var viewOnMap = `<td>
-                                                <img width="124px" src="${fileContent}" />
-                                                ${withGeoLoc ? `<a href="${googleMapsUrl}" class="text-sm text-primary" target="_blank">view on map</a>` : ''}
-                                            </td>`;
+                                                    <img width="124px" src="${fileContent}" />
+                                                    ${withGeoLoc ? `<a href="${googleMapsUrl}" class="text-sm text-primary" target="_blank">view on map</a>` : ''}
+                                                </td>`;
+
+                                // Show time + tz_abbr only if not null, otherwise empty
+                                // var timeIn = data[n]['time_in'] ? `${data[n]['time_in']}${data[n]['tz_abbr'] ? ` (${data[n]['tz_abbr']})` : ''}` : '';
+                                // var timeOut = data[n]['time_out'] ? `${data[n]['time_out']}${data[n]['tz_abbr'] ? ` (${data[n]['tz_abbr']})` : ''}` : '';
+                                var timeIn = data[n]['time_in'];
+                                var timeOut = data[n]['time_out'];
+
                                 resolve(`<tr>${viewOnMap}
-                                        <td>${data[n]['time_in']}</td>
-                                        <td>${data[n]['time_out']}</td>
-                                    </tr>`);
+                                    <td>${timeIn}</td>
+                                    <td>${timeOut}</td>
+                                </tr>`);
                             })
                             .catch(error => {
                                 console.error("Error reading the file:", error);

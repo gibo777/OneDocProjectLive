@@ -22,15 +22,15 @@ class EmployeesController extends Controller
      * @return \Illuminate\Http\Response
      * @author Gilbert L. Retiro
      */
-    public function index() {
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
-        {
+    public function index()
+    {
+        if (Auth::check() && (Auth::user()->email_verified_at != NULL)) {
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
             $employees = DB::table('v_employees');
             if (Auth::user()->id != 1) {
-                $employees = $employees->where('id','!=',1);
+                $employees = $employees->where('id', '<>', 1);
             }
             $employees = $employees->get();
 
@@ -74,57 +74,61 @@ class EmployeesController extends Controller
             $nationalities  = DB::table('nationalities')->orderBy('nationality')->get();
 
             $heads = DB::table('users')
-                ->select('employee_id','last_name','first_name','middle_name','suffix')
-                ->where('is_head',1)/*->orWhere('role_type','SUPER ADMIN')*/
+                ->select('employee_id', 'last_name', 'first_name', 'middle_name', 'suffix')
+                ->where('is_head', 1)/*->orWhere('role_type','SUPER ADMIN')*/
                 // ->where('id','!=',Auth::user()->id)->orWhere('employee_id','2000-0001')
                 // ->where('employee_id','2000-0001')
-                ->where('id','!=',1)
+                ->where('id', '!=', 1)
                 ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();
 
             $roleTypeUsers = DB::table('role_type_users')
                 ->select('role_type')
                 ->where('is_deleted', NULL)
-                ->orWhere('is_deleted',0)
+                ->orWhere('is_deleted', 0)
                 ->get();
 
-            return view('/hris/employee/employees', 
+            return view(
+                '/hris/employee/employees',
                 [
-                    'holidays'              => $holidays, 
-                    'employees'             => $employees, 
+                    'holidays'              => $holidays,
+                    'employees'             => $employees,
                     'offices'               => $offices,
                     'departments'           => $departments,
-                    'leave_types'           => $leave_types, 
+                    'leave_types'           => $leave_types,
                     'employment_statuses'   => $empStatuses,
                     'heads'                 => $heads,
                     'roleTypeUsers'         => $roleTypeUsers,
                     'genders'               => $genders,
                     'civilStatuses'         => $civilStatuses,
                     'nationalities'         => $nationalities
-                ]);
+                ]
+            );
         } else {
             return redirect('/');
         }
     }
-    
-    public function getEmployeeInfo (Request $request){
+
+    public function getEmployeeInfo(Request $request)
+    {
         $empid = $request->id;
         $getemployee = DB::table('users as u')
             ->select(
-                'u.*', 
+                'u.*',
                 DB::raw("DATE_FORMAT(u.birthdate, '%m/%d/%Y') as birthday"),
                 // DB::raw("DATE_FORMAT(u.date_regularized, '%m/%d/%Y') as date_regularized"),
                 'u.date_regularized',
-                'p.country_name')
-            ->leftJoin('provinces as p','u.country','=','p.country_code')
-            ->where('u.id',$empid)
+                'p.country_name'
+            )
+            ->leftJoin('provinces as p', 'u.country', '=', 'p.country_code')
+            ->where('u.id', $empid)
             ->first();
-        $getLeaves = DB::table('leave_balances')->where('ref_id',$empid)->first();
+        $getLeaves = DB::table('leave_balances')->where('ref_id', $empid)->first();
 
-        return response()->json(['getemployee'=>$getemployee,'getLeaves' => $getLeaves]);
+        return response()->json(['getemployee' => $getemployee, 'getLeaves' => $getLeaves]);
     }
 
-    
+
 
 
     /**
@@ -133,24 +137,24 @@ class EmployeesController extends Controller
      * @return isSuccess, message
      * @author Gilbert L. Retiro
      **/
-    public function verifyDuplicate (Request $request)
+    public function verifyDuplicate(Request $request)
     {
-        try{
-            $selectEmpId = DB::table('users')->where('employee_id',$request->employeeId)->first();
-            $selectEmail = DB::table('users')->where('email',$request->email)->first();
+        try {
+            $selectEmpId = DB::table('users')->where('employee_id', $request->employeeId)->first();
+            $selectEmail = DB::table('users')->where('email', $request->email)->first();
 
             $selectEmpId ? $dupEmpId = true : $dupEmpId = false;
             $selectEmail ? $dupEmail = true : $dupEmail = false;
 
             ($selectEmpId || $selectEmail) ? $duplicate = true : $duplicate = false;
             ($selectEmpId || $selectEmail) ? $message = '<h4>Duplicate</h4>' : $message = '';
-            ($selectEmpId) ? $message = $message . 'Employee Number: '.$selectEmpId->employee_id.'<br>' : null;
-            ($selectEmail) ? $message = $message . 'Email: '.$selectEmail->email : null;
+            ($selectEmpId) ? $message = $message . 'Employee Number: ' . $selectEmpId->employee_id . '<br>' : null;
+            ($selectEmail) ? $message = $message . 'Email: ' . $selectEmail->email : null;
 
 
-            return response(['isError' => true, 'isDuplicate'=>$duplicate, 'message'=>$message]);
-        } catch(\Error $e){
-            return response(['isError'=>false, 'isDuplicate'=>false, 'message'=>$e]);
+            return response(['isError' => true, 'isDuplicate' => $duplicate, 'message' => $message]);
+        } catch (\Error $e) {
+            return response(['isError' => false, 'isDuplicate' => false, 'message' => $e]);
         }
     }
 
@@ -160,10 +164,10 @@ class EmployeesController extends Controller
      * @return isSuccess, message
      * @author Gilbert L. Retiro
      **/
-    public function updateEmployee (Request $request)
+    public function updateEmployee(Request $request)
     {
 
-        try{
+        try {
             $data_array = array(
                 'role_type'         => $request->roleType,
                 'is_head'           => $request->is_head,
@@ -179,15 +183,15 @@ class EmployeesController extends Controller
                 'email'             => $request->email,
                 'contact_number'    => $request->contact_number,
                 'mobile_number'     => $request->mobile_number,
-                
+
                 'employment_status' => $request->employment_status,
-                'date_hired'        => $request->date_hired ? date('Y-m-d',strtotime($request->date_hired)) : null,
-                'weekly_schedule'   => join('|',$request->update_weekly_schedule),
+                'date_hired'        => $request->date_hired ? date('Y-m-d', strtotime($request->date_hired)) : null,
+                'weekly_schedule'   => join('|', $request->update_weekly_schedule),
                 'office'            => $request->office,
                 'supervisor'        => $request->supervisor,
                 'manager'           => $request->manager,
 
-                'date_regularized'  => $request->dateRegularized ? date('Y-m-d',strtotime($request->dateRegularized)) : null,
+                'date_regularized'  => $request->dateRegularized ? date('Y-m-d', strtotime($request->dateRegularized)) : null,
                 'updated_at'        => Carbon::now('Asia/Manila'),
                 'updated_by'        => Auth::user()->employee_id
             );
@@ -207,59 +211,60 @@ class EmployeesController extends Controller
             ];*/
 
             $update = DB::table('users');
-            $update = $update->where('id',$request->id);
+            $update = $update->where('id', $request->id);
             $update = $update->update($data_array);
 
             // DB::table('leave_balances')->where('employee_id',$request->employee_id)->update($leaves);
 
-            return response(['isSuccess' => true,'message'=>'Successfully updated!']);
-        }catch(\Error $e){
-            return response(['isSuccess'=>false,'message'=>$e]);
+            return response(['isSuccess' => true, 'message' => 'Successfully updated!']);
+        } catch (\Error $e) {
+            return response(['isSuccess' => false, 'message' => $e]);
         }
     }
-   
+
     /**
      * Listing of Time Logs
      *
      * @return view
      * @author Gilbert L. Retiro
      **/
-    public function timeLogsListing (Request $request)
+    public function timeLogsListing(Request $request)
     {
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
-        {
+        if (Auth::check() && (Auth::user()->email_verified_at != NULL)) {
 
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
-            if (Auth::user()->is_head == 1 || Auth::user()->is_head==1) {
-                $employees = DB::select('CALL sp_timelogs_admins('.Auth::user()->id.','.Auth::user()->office.')');
+            if (Auth::user()->is_head == 1 || Auth::user()->is_head == 1) {
+                $employees = DB::select('CALL sp_timelogs_admins(' . Auth::user()->id . ',' . Auth::user()->office . ')');
             } else {
-                $employees = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+                $employees = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
             }
 
             $offices = DB::table('offices')->orderBy('company_name')->get();
             $departments = DB::table('departments')->orderBy('department')->get();
 
-            return view('/time_logs/time-logs-listing', 
+            return view(
+                '/time_logs/time-logs-listing',
                 [
-                    'employees'     => $employees, 
+                    'employees'     => $employees,
                     'offices'       => $offices,
                     'departments'   => $departments,
-                ]);
+                ]
+            );
         } else {
             return redirect('/');
         }
     }
 
-    
+
     /**
      * Timelogs Details
      *
      * @return view for modal
      * @author Gilbert L. Retiro
      **/
-    public function timeLogsDetailed (Request $request)
+    public function timeLogsDetailed(Request $request)
     {
         $data = explode('|', $request->id);
         $employeeId = $data[0];
@@ -309,18 +314,19 @@ class EmployeesController extends Controller
      * @return view to generate Excel File
      * @author Gilbert L. Retiro
      **/
-    public function timeLogsExcel (Request $request)
+    public function timeLogsExcel(Request $request)
     {
         // return var_dump($request->input());
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL) 
-            && (Auth::user()->role_type=='ADMIN'||Auth::user()->role_type=='SUPER ADMIN') )
-        {
+        if (
+            Auth::check() && (Auth::user()->email_verified_at != NULL)
+            && (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
+        ) {
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
             $currentDate = Carbon::now('Asia/Manila');
             $formattedDateTime = $currentDate->format('YmdHis');
 
-            if (Auth::user()->is_head == 1 || Auth::user()->role_type=='SUPER ADMIN' ||  Auth::user()->role_type=='ADMIN') {
+            if (Auth::user()->is_head == 1 || Auth::user()->role_type == 'SUPER ADMIN' ||  Auth::user()->role_type == 'ADMIN') {
                 $tlSummary = DB::select("CALL sp_generated_timelogs_summary(?, ?, ?, ?, ?)", [
                     Auth::user()->id,
                     $request->office,
@@ -338,24 +344,23 @@ class EmployeesController extends Controller
                     $request->timeIn,
                     $request->timeOut
                 ]);
-                
             } else {
-                $tlSummary = DB::select('CALL sp_timelogs('.Auth::user()->id.','.Auth::user()->is_head.','.$employee_id.')');
+                $tlSummary = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
             }
 
 
             return response()->json([
-                'tlSummary'     => $tlSummary, 
-                'tlDetailed'    => $tlDetailed, 
+                'tlSummary'     => $tlSummary,
+                'tlDetailed'    => $tlDetailed,
                 'currentDate'   => $formattedDateTime
             ]);
 
             // $offices = DB::table('offices')->orderBy('company_name')->get();
             // $departments = DB::table('departments')->orderBy('department')->get();
 
-            // return view('/reports/excel/timelogs-excel', 
+            // return view('/reports/excel/timelogs-excel',
             //     [
-            //         'employees'     => $employees, 
+            //         'employees'     => $employees,
             //         'offices'       => $offices,
             //         'departments'   => $departments,
             //         'currentDate'   => $formattedDateTime
@@ -371,9 +376,9 @@ class EmployeesController extends Controller
      * @return \Illuminate\Http\Response
      * @author Gilbert L. Retiro
      */
-    public function employeeBenefits () {
-        if ( Auth::check() && (Auth::user()->email_verified_at != NULL))
-        {
+    public function employeeBenefits()
+    {
+        if (Auth::check() && (Auth::user()->email_verified_at != NULL)) {
             $access_code = Auth::user()->access_code;
             $employee_id = Auth::user()->employee_id;
 
@@ -398,11 +403,11 @@ class EmployeesController extends Controller
             );
 
             if (Auth::user()->id != 1) {
-                $employees = $employees->where('u.id','!=',1);
+                $employees = $employees->where('u.id', '!=', 1);
             }
-            $employees = $employees->where( function($query) {
-                return $query->where ('u.is_deleted','=', '0')->orWhereNull('u.is_deleted');
-                });
+            $employees = $employees->where(function ($query) {
+                return $query->where('u.is_deleted', '=', '0')->orWhereNull('u.is_deleted');
+            });
             $employees = $employees->orderBy('u.last_name');
             $employees = $employees->orderBy('u.first_name');
             $employees = $employees->get();
@@ -414,29 +419,31 @@ class EmployeesController extends Controller
             $empStatuses = DB::table('employment_statuses')/*->orderBy('employment_status')*/->get();
 
             $heads = DB::table('users')
-                ->select('employee_id','last_name','first_name','middle_name','suffix')
-                ->where('is_head',1)
-                ->where('id','!=',1)
+                ->select('employee_id', 'last_name', 'first_name', 'middle_name', 'suffix')
+                ->where('is_head', 1)
+                ->where('id', '!=', 1)
                 ->orderBy('last_name')->orderBy('first_name')->orderBy('middle_name')
                 ->get();
 
             $roleTypeUsers = DB::table('role_type_users')
                 ->select('role_type')
                 ->where('is_deleted', NULL)
-                ->orWhere('is_deleted',0)
+                ->orWhere('is_deleted', 0)
                 ->get();
 
-            return view('/hris/employee/employee-benefits', 
+            return view(
+                '/hris/employee/employee-benefits',
                 [
-                    'holidays'=>$holidays, 
-                    'employees'=>$employees, 
-                    'offices'=>$offices,
-                    'departments'=>$departments,
-                    'leave_types'=>$leave_types, 
-                    'employment_statuses'=>$empStatuses,
-                    'heads'=>$heads,
-                    'roleTypeUsers'=>$roleTypeUsers
-                ]);
+                    'holidays' => $holidays,
+                    'employees' => $employees,
+                    'offices' => $offices,
+                    'departments' => $departments,
+                    'leave_types' => $leave_types,
+                    'employment_statuses' => $empStatuses,
+                    'heads' => $heads,
+                    'roleTypeUsers' => $roleTypeUsers
+                ]
+            );
         } else {
             return redirect('/');
         }

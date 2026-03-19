@@ -15,21 +15,28 @@ use Carbon\Carbon;
 
 class AuthorizeView extends Component
 {
-	use WithPagination;
+    use WithPagination;
 
-	public $pageSize = 10;
-	public $offices;
-	public $departments;
+    public $pageSize = 10;
+    public $offices;
+    public $departments;
     public $roleTypes;
-    public $search='';
-    public $fUserOffice='';
-    public $fUserDept='';
-    public $fUserRole='';
+    public $search = '';
+    public $fUserOffice = '';
+    public $fUserDept = '';
+    public $fUserRole = '';
+
+    // Detail view properties
+    public $selectedUserId = null;
+    public $selectedUser   = null;
+    public $selectedModules = [];
+
+    public $aUserRole = '';
 
     protected $listeners = ['pageSizeChanged', 'refreshComponent'];
 
-    public function mount() {
-        
+    public function mount()
+    {
         $this->loadDropdowns();
     }
 
@@ -39,180 +46,270 @@ class AuthorizeView extends Component
         $this->loadDropdowns();
 
         return view('livewire.setup.authorize-view-list', [
-            'offices'       => $this->offices,
-            'departments'   => $this->departments,
-            'roleTypes'     => $this->roleTypes,
-            'authorizeUser' => $authorizeUser,
+            'offices'         => $this->offices,
+            'departments'     => $this->departments,
+            'roleTypes'       => $this->roleTypes,
+            'authorizeUser'   => $authorizeUser,
+            'selectedUserId'  => $this->selectedUserId,
+            'selectedUser'    => $this->selectedUser,
+            'selectedModules' => $this->selectedModules,
         ]);
     }
 
-    private function loadDropdowns() {
-        $this->offices = DB::table('offices')->orderBy('company_name')->get();
+    private function loadDropdowns()
+    {
+        $this->offices     = DB::table('offices')->orderBy('company_name')->get();
         $this->departments = DB::table('departments')->orderBy('department')->get();
-        $this->roleTypes = DB::table('role_type_users')
-        ->where(function ($query) {
-            $query->whereNull('is_deleted')
-            ->orWhere('is_deleted','!=',1);
-        })
-        ->get();
+        $this->roleTypes   = DB::table('role_type_users')
+            ->where(function ($query) {
+                $query->whereNull('is_deleted')
+                    ->orWhere('is_deleted', '!=', 1);
+            })
+            ->get();
     }
 
-    public function refreshComponent() {
+    public function refreshComponent()
+    {
         $this->reset('page');
     }
-    public function pageSizeChanged($size) {
+
+    public function pageSizeChanged($size)
+    {
         $this->pageSize = $size;
         $this->resetPage();
     }
 
-    private function fetchUsersListing() {
-    	$authorizeUser = DB::table('users as u')
-        ->leftJoin('offices as o','u.office','o.id')
-        ->leftJoin('departments as d','u.department','d.department_code')
-    	->select(
-    		'u.id',
-            'u.name',
-    		'u.employee_id',
-    		'o.company_name as office',
-    		'd.department',
-            'u.role_type'
-    	)
-        ->where(function ($query) {
-            if(!empty($this->search)) {
-                $searchTerms = explode(' ', $this->search);
-                $query->where(function ($q) use ($searchTerms){
-                    foreach ($searchTerms as $term) {
-                        $q->where('u.name', 'like', '%'.$term.'%');
-                    }
-                })
-                ->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
-            }
-            if(!empty($this->fUserOffice)) {
-                $query->where('u.office',$this->fUserOffice);
-            }
-            if(!empty($this->fUserDept)) {
-                $query->where('u.department',$this->fUserDept);
-            }
-            if(!empty($this->fUserRole)) {
-                $query->where('u.role_type',$this->fUserRole);
-            }
-        })
-        ->where(function($query) {
-            $query->where('u.role_type','ADMIN')
-            ->orWhere('u.role_type','SUPER ADMIN');
-        });
 
-	    $authorizeUser = $authorizeUser->orderBy('u.name')
-	    ->paginate($this->pageSize);
-
-	    return $authorizeUser;
-    }
-
-    public function fetchDetailedUser (Request $request) {
-
-        $userDetails = DB::table('users as u')
-        ->leftJoin('offices as o','u.office','o.id')
-        ->leftJoin('departments as d','u.department','d.department_code')
-        ->select(
-            'u.id',
-            'u.name',
-            'u.employee_id',
-            'o.company_name as office',
-            'd.department',
-            'u.role_type'
-        )
-        ->where('u.id',$request->uID)
-        ->first();
-
-        $modules = DB::table('m_authorize_users')
-        ->select('module_name', 'assigned_office')
-        ->where('u_id',$request->uID)
-        ->get();
-
-        $this->loadDropdowns();
-
-        return view('modals/setup/m-view-user-details',[
-            'userDetails'   => $userDetails,
-            'offices'       => $this->offices,
-            'departments'   => $this->departments,
-            'modules'       => $modules,
-        ]);
-    }
-
-    public function saveAssignedViewing (Request $request) {
-        try {
-            $uID = $request->auData['uID'];
-            $moduleNames = $request->auData['moduleNames'];
-            // $offices = $request->auData['offices'] ?? ;
-
-            // Check if modules and offices existing for authorization
-            $userDetails = DB::table('m_authorize_users as a')
+    private function fetchUsersListing()
+    {
+        $authorizeUser = DB::table('users as u')
+            ->leftJoin('offices as o', 'u.office', 'o.id')
+            ->leftJoin('departments as d', 'u.department', 'd.department_code')
+            ->leftJoin('m_authorize_users as au', 'u.id', '=', 'au.u_id')
             ->select(
-                DB::raw('COUNT(*) as n'),
-                'a.module_name'
+                'u.id',
+                'u.name',
+                'u.employee_id',
+                'o.company_name as office',
+                'd.department',
+                'u.role_type',
+                'u.employment_status',
+                DB::raw('(
+                SELECT GROUP_CONCAT(off.company_name ORDER BY off.id SEPARATOR ", ")
+                FROM offices AS off
+                WHERE FIND_IN_SET(off.id, REPLACE(au.assigned_office, "|", ",")) > 0
+                ) as assigned_offices')
             )
-            ->where('a.u_id',$uID)
-            ->groupBy('a.module_name')
-            ->get();
-
-            if ($userDetails->isNotEmpty()) {
-                // Update and/or insert if module not existing yet
-
-            } else {
-                // Insert modules and offices
-                // return var_dump($request->auData['moduleNames']);
-                $string = '';
-                for ($i = 0; $i < count($moduleNames); $i++) {
-                    $moduleName = $moduleNames[$i];
-                    // Check if the office data exists and assign it
-                    // If it's empty or not set, make it an empty string (or NULL if preferred)
-                    $officeList = isset($request->auData['offices'][$i]) && !empty($request->auData['offices'][$i])
-                        ? implode(',', $request->auData['offices'][$i]) // Join array values with a comma
-                        : '';  // If no offices are selected, make it an empty string
-
-                    // Prepare the data for insertion
-                    $userData = [
-                        'u_id'              => $uID,
-                        'module_name'       => $moduleName,
-                        'assigned_office'   => $officeList,
-                        'created_by'        => Auth::user()->employee_id,
-                        'created_at'        => DB::raw('NOW()'),
-                        'updated_by'        => Auth::user()->employee_id,
-                        'updated_at'        => DB::raw('NOW()')
-                    ];
-
-                    // // Extract values and convert DB expressions
-                    // $values = array_map(function ($value) {
-                    //     return ($value instanceof \Illuminate\Database\Query\Expression)
-                    //         ? $value->getValue()
-                    //         : $value;
-                    // }, array_values($userData));
-
-                    // // Prepare the string result in the desired format
-                    // $string .= 'u_id: ' . $values[0] . ' | '
-                    //     . 'module_name: ' . $values[1] . ' | '
-                    //     . 'office: ' . $values[2] . ' | '
-                    //     . 'created_by: ' . $values[3] . ' | '
-                    //     . 'created_at: ' . $values[4] . ' | '
-                    //     . 'updated_by: ' . $values[5] . ' | '
-                    //     . 'updated_at: ' . $values[6] . '<br><br>';
-
-                    // Uncomment the line below to actually insert into the database
-                    DB::table('m_authorize_users')->insert($userData);
+            /* ->where(function ($query) {
+                $query->where('u.role_type', 'ADMIN')
+                    ->orWhere('u.role_type', 'SUPER ADMIN');
+            }) */
+            ->where(function ($query) {
+                if (!empty($this->search)) {
+                    $searchTerms = explode(' ', $this->search);
+                    $query->where(function ($q) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $q->where('u.name', 'like', '%' . $term . '%');
+                        }
+                    })
+                        ->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
                 }
-                return response()->json(['isSuccess'=>true,'message' => 'Office assignment saved successfully']);
+                if (!empty($this->fUserOffice)) {
+                    $query->where('u.office', $this->fUserOffice);
+                }
+                if (!empty($this->fUserDept)) {
+                    $query->where('u.department', $this->fUserDept);
+                }
+                if (!empty($this->fUserRole)) {
+                    $query->where('u.role_type', $this->fUserRole);
+                }
+            });
 
-            }
-        } catch(Exception $e){
-            return response()->json(['isSuccess'=>false,'message' => $e]);
+        return $authorizeUser->orderBy('u.name')->paginate($this->pageSize);
+    }
+
+    /**
+     * Called on double-click of a row.
+     * Loads the user detail and modules, switches view to detail.
+     */
+    public function selectUser($id)
+    {
+        $this->selectedUserId = $id;
+
+        $user = DB::table('users as u')
+            ->leftJoin('offices as o', 'u.office', 'o.id')
+            ->leftJoin('departments as d', 'u.department', 'd.department_code')
+            ->select(
+                'u.id',
+                'u.name',
+                'u.employee_id',
+                'o.company_name as office',
+                'd.department',
+                'u.role_type'
+            )
+            ->where('u.id', $id)
+            ->first();
+
+        $this->selectedUser = $user ? (array) $user : null;
+
+        // Check if record exists, if not create a blank one
+        $existing = DB::table('m_authorize_users')->where('u_id', $id)->first();
+
+        if (!$existing) {
+            DB::table('m_authorize_users')->insert([
+                'u_id'            => $id,
+                'assigned_office' => null,
+                'created_by'      => Auth::user()->employee_id,
+                'created_at'      => DB::raw('NOW()'),
+                'updated_by'      => Auth::user()->employee_id,
+                'updated_at'      => DB::raw('NOW()'),
+            ]);
         }
 
-        // return $dataUsers = var_dump($request->all());
+        $modules = DB::table('m_authorize_users as a')
+            ->leftJoin('users as u', 'a.u_id', '=', 'u.id')
+            ->select(
+                'a.id',
+                'a.assigned_office',
+                DB::raw('(
+                SELECT GROUP_CONCAT(o.company_name ORDER BY o.id SEPARATOR ", ")
+                FROM offices as o
+                WHERE FIND_IN_SET(o.id, REPLACE(a.assigned_office, "|", ",")) > 0
+            ) as assigned_office_names')
+            )
+            ->where('a.u_id', '=', $id)
+            ->get();
 
-        return response()->json([
-            'isSuccess' => true,
-            'message'   => 'Office assignment saved successfully.',
-            'dataUsers' => $request->all(),
-        ]);
+        $this->aUserRole = $user->role_type ?? '';
+        $this->selectedModules = $modules->map(fn($m) => (array) $m)->toArray();
+
+        $this->dispatchBrowserEvent('detail-view-loaded');
+    }
+
+    /**
+     * Clears the selected user and returns to the listing view.
+     */
+    public function clearSelectedUser()
+    {
+        $this->selectedUserId  = null;
+        $this->selectedUser    = null;
+        $this->selectedModules = [];
+    }
+
+    /* public function saveAssignedViewing(Request $request)
+    {
+        try {
+            $uID     = $request->auData['uID'];
+            $modules = $request->auData['modules'];
+
+            foreach ($modules as $module) {
+
+                $moduleID   = $module['module_id'];
+                $officeList = !empty($module['offices'])
+                    ? implode(',', $module['offices'])
+                    : '';
+
+                $existing = DB::table('m_authorize_users')
+                    ->where('u_id', $uID)
+                    ->where('module_id', $moduleID)
+                    ->first();
+
+                $data = [
+                    'u_id'            => $uID,
+                    'module_id'       => $moduleID,
+                    'assigned_office' => $officeList,
+                    'updated_by'      => Auth::user()->employee_id,
+                    'updated_at'      => DB::raw('NOW()')
+                ];
+
+                if ($existing) {
+                    DB::table('m_authorize_users')
+                        ->where('id', $existing->id)
+                        ->update($data);
+                } else {
+                    $data['created_by'] = Auth::user()->employee_id;
+                    $data['created_at'] = DB::raw('NOW()');
+
+                    DB::table('m_authorize_users')->insert($data);
+                }
+            }
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'Office assignment saved successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => $e->getMessage()
+            ]);
+        }
+    } */
+
+    public function saveAssignedViewing(Request $request)
+    {
+        try {
+            $uID      = (int) $request->uID;
+            $modules  = $request->moduleOffices ?? [];
+            $aUserRole = $request->aUserRole;
+
+            // Get current role from users table
+            $currentRole = DB::table('users')->where('id', $uID)->value('role_type');
+
+            // return response()->json(['currentRole' => $currentRole, 'aUserRole' => $aUserRole]);
+
+            // Update role only if changed
+            if ($currentRole !== $aUserRole) {
+                DB::table('users')
+                    ->where('id', $uID)
+                    ->update([
+                        'role_type' => $aUserRole,
+                        'is_head'   => in_array($aUserRole, ['ADMIN', 'SUPER ADMIN']) ? 1 : 0
+                    ]);
+            }
+
+            foreach ($modules as $moduleID => $offices) {
+                $moduleID   = (int) $moduleID;
+                $officeList = !empty($offices)
+                    ? implode('|', $offices)
+                    : '';
+
+                $existing = DB::table('m_authorize_users')
+                    ->where('u_id', $uID)
+                    // ->where('module_id', $moduleID)
+                    ->first();
+
+                if ($existing) {
+                    DB::table('m_authorize_users')
+                        ->where('id', $existing->id)
+                        // ->where('module_id', $moduleID)
+                        ->update([
+                            'assigned_office' => $officeList,
+                            'updated_by'      => Auth::user()->employee_id,
+                            'updated_at'      => DB::raw('NOW()')
+                        ]);
+                } else {
+                    DB::table('m_authorize_users')->insert([
+                        // 'module_id'         => $moduleID,
+                        'u_id'              => $uID,
+                        'assigned_office'   => $officeList,
+                        'updated_by'        => Auth::user()->employee_id,
+                        'updated_at'        => DB::raw('NOW()'),
+                        'created_by'        => Auth::user()->employee_id,
+                        'created_at'        => DB::raw('NOW()')
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'Office assignment saved successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => $e->getMessage()
+            ]);
+        }
     }
 }

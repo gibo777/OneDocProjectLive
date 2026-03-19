@@ -15,18 +15,18 @@
                                     Server Status
                                 </div>
                                 <div class="h6 mb-0 font-weight-bold text-gray-800 py-2">
-                                    <p class="mb-0">Status: 
+                                    <p class="mb-0">Status:
                                         {{-- {!! $serverStatus ? '<b class="px-3 py-1 text-dark" style="background-color:rgb(185,255,102)">Server Up</b>' : '<b class="px-3 py-1 text-light" style="background-color:rgb(255,49,49)">Server Down</b>' !!} --}}
                                         <b class="px-3 py-1" style="color: rgb(128, 179, 76);">Server Up</b>
                                         {{-- <b class="px-3 py-1 text-light" style="background-color:rgb(255,49,49)">Server Down</b> --}}
                                     </p>
                                 </div>
-                                @if (Auth::user()->id==1)
-                                <div class="text-center">
-                                    <x-jet-button wire:click="toggleServer" class="btn btn-primary mt-1">
-                                        <i class="fa-solid fa-server"></i>&nbsp;Server Control
-                                    </x-jet-button>
-                                </div>
+                                @if (Auth::user()->id == 1)
+                                    <div class="text-center">
+                                        <x-jet-button wire:click="toggleServer" class="btn btn-primary mt-1">
+                                            <i class="fa-solid fa-server"></i>&nbsp;Server Control
+                                        </x-jet-button>
+                                    </div>
                                 @endif
                             </div>
                             {{-- <div class="col-auto">
@@ -47,9 +47,9 @@
                                 </div>
                                 <div class="mb-0 font-weight-bold text-gray-800">
                                     <ul class="list-unstyled">
-                                      <li>Pending (5)</li>
-                                      <li>Approved (25)</li>
-                                      <li>Denied (2)</li>
+                                        <li>Pending (5)</li>
+                                        <li>Approved (25)</li>
+                                        <li>Denied (2)</li>
                                     </ul>
                                 </div>
                             </div>
@@ -71,8 +71,8 @@
                                 </div>
                                 <div class="mb-0 font-weight-bold text-gray-800">
                                     <ul class="list-unstyled">
-                                      <li>New (12)</li>
-                                      <li>Total (221)</li>
+                                        <li>New (12)</li>
+                                        <li>Total (221)</li>
                                     </ul>
                                 </div>
                             </div>
@@ -249,15 +249,16 @@
                         </div>
                         <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
                         <div class="progress mb-4">
-                            <div class="progress-bar" role="progressbar" style="width: 60%"
-                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60"
+                                aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
                         <div class="progress mb-4">
                             <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
                                 aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
+                        <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span>
+                        </h4>
                         <div class="progress">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
                                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
@@ -345,8 +346,11 @@
                             <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
                                 src="{{ asset('sb-admin/img/undraw_posting_photo.svg') }}" alt="Illustration">
                         </div>
-                        <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
-                        <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
+                        <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank"
+                                rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection
+                            of beautiful svg images that you can use completely free and without attribution!</p>
+                        <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw
+                            &rarr;</a>
                     </div>
                 </div>
 
@@ -356,8 +360,11 @@
                         <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
                     </div>
                     <div class="card-body">
-                        <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
-                        <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
+                        <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat
+                            and poor page performance. Custom CSS classes are used to create custom components and
+                            custom utility classes.</p>
+                        <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap
+                            framework, especially the utility classes.</p>
                     </div>
                 </div>
             </div>

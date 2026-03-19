@@ -3,7 +3,7 @@
 </x-slot>
 
 
-<div id="view_leaves">
+<div id="view_overtimes">
     <div class="w-full {{ Auth::user()->id == 1 ? 'px-0 mx-0' : 'my-1 sm:px-6 lg:px-8' }}">
         <!-- FORM start -->
         @if (session('status'))
@@ -228,7 +228,6 @@
         </div>
     </div>
 </div>
-</div>
 
 
 <!-- Loading Indicator -->
@@ -243,4 +242,6 @@
     const uID = `{{ Auth::user()->id }}`;
     const lReq = `{{ route('hris.overtime') }}`;
 </script>
+
+{{-- <script type="text/javascript" src="{{ asset('js/interact.io.js') }}"></script> --}}
 <script type="text/javascript" src="{{ asset('app-modules/e-forms/requested-overtime.js') }}"></script>

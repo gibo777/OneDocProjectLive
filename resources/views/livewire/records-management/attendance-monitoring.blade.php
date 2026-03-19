@@ -89,18 +89,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="row">
-                            <div class="col-md-4">
-                                {{-- <x-jet-label for="search" value="{{ __('Search Date') }}" class="px-1 justify-content-end"/> --}}
-                            </div>
-                            <div class="col-md-8">
-                                {{-- <x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search" class="w-full"  placeholder="Name/Employee ID">
-						        			</x-jet-input> --}}
-                                {{-- <x-jet-input wire:model.debounce.500ms="fTLdtFrom" type="date" id="fTLdtFrom" name="fTLdtFrom" placeholder="mm/dd/yyyy" autocomplete="off" class="px-2 w-full"/> --}}
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Horizontal Scroll Table Wrapper -->
@@ -161,22 +149,27 @@
                         </table>
                     </div> {{-- END horizontal scroll table wrapper --}}
 
-                    <!-- Bottom Controls -->
-                    <div class="d-flex justify-content-start mt-2">
-                        <div class="form-inline">
-                            <label for="pageSize" class="mr-2">Show:</label>
-                            <select wire:model="pageSize" id="pageSize"
-                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md">
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                            <span class="mx-2">entries</span>
-                            {{ $timeLogs->links('pagination.custom') }}
+                    <div class="row my-1">
+                        <div class="col-md-9">
+                            <div class="form-inline justify-content-start">
+                                <label for="pageSize" class="mr-2">Show:</label>
+                                <select wire:model="pageSize" id="pageSize"
+                                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select>
+                                <span class="mx-2">entries</span>
+                                <div class=" sm:col-span-7 sm:justify-center scrollable">
+                                    {{ $timeLogs->links('pagination.custom') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

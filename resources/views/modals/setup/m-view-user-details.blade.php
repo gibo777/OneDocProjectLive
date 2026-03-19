@@ -1,132 +1,80 @@
-<div class="mx-3">
-
-            <div class="row my-1">
-                <table class="table table-bordered table-auto w-auto text-nowrap small m-0 p-0">
-                    <thead class="banner-blue">
-                        <tr>
-                            <th colspan="5" class="text-center py-1">Assign Viewing</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Name: <b>{{ $userDetails->name }}</b></td>
-                            <td>Employee #: <b>{{ $userDetails->employee_id }}</b></td>
-                            <td>Office: <b>{{ $userDetails->office }}</b></td>
-                            <td>Department: <b>{{ $userDetails->department }}</b></td>
-                            <td>Role: <b>{{ $userDetails->role_type }}</b></td>
-                        </tr>
-                        <tr class="bg-gray-500 text-white">
-                            <th class="text-center py-1" colspan="2">Module Name</th>
-                            <th class="text-center py-1" colspan="3">Assigned Office</th>
-                        </tr>
-
-                        @foreach ($modules as $index => $module)
-                        <tr>
-                            <td colspan="2">{{ $module->module_name }}</td>
-                            <td class="py-0" colspan="3">
-                                <select wire:model="m{{ $index + 1 }}Office" name="m{{ $index + 1 }}Office" id="m{{ $index + 1 }}Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}" @if(in_array($office->id, explode(',', $module->assigned_office))) selected @endif>{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        @endforeach
-
-
-                        {{-- <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Leaves Listing') }}
-                            </td>
-                            <td class="py-0" colspan="3">
-                                <select wire:model="m1Office" name="m1Office" id="m1Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Timelogs Listing') }}
-                            </td>
-                            <td class="py-0" colspan="3">
-                                <select wire:model="m2Office" name="m2Office" id="m2Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Employees Listing') }}
-                            </td>
-                            <td class="py-0" colspan="3">
-                                <select wire:model="m3Office" name="m3Office" id="m3Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr> --}}
-                    </tbody>
-                </table>
-            </div>
-
-
-            {{-- <div class="row my-1">
-                <table class="table table-bordered table-auto text-nowrap small w-full">
-                    <thead class="banner-blue">
-                        <tr>
-                            <th class="text-center py-1" style="width: 30%;">Module Name</th>
-                            <th class="text-center py-1">Assigned Office</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Leaves Listing') }}
-                            </td>
-                            <td class="py-0">
-                                <select wire:model="m1Office" name="m1Office" id="m1Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Timelogs Listing') }}
-                            </td>
-                            <td class="py-0">
-                                <select wire:model="m2Office" name="m2Office" id="m2Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-sm-left align-content-center py-0">
-                                {{ __('Employees Listing') }}
-                            </td>
-                            <td class="py-0">
-                                <select wire:model="m3Office" name="m3Office" id="m3Office" multiple>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> --}}
-
-			<div class="w-full text-center justify-content-center my-2">
-			<x-jet-button id="saveAssigned">Save</x-jet-button>
-			</div>
-
+<!-- Header -->
+<div class="banner-blue pl-2 p-1 text-md text-center fw-bold">
+    {{ __('AUTHORIZE USER') }}
 </div>
 
+
+<!-- User Details -->
+<div class="modal-body border p-2">
+    <div class="d-flex flex-wrap justify-between gap-2">
+        <div class="flex-grow-1 min-w-[200px]">
+            <x-jet-label class="text-secondary">
+                {!! __('<i class="text-sm">Name:</i>&nbsp;<strong>:name</strong>', ['name' => $userDetails->name]) !!}
+            </x-jet-label>
+        </div>
+
+        <div class="flex-grow-1 min-w-[200px]">
+            <x-jet-label class="text-secondary">
+                {!! __('<i class="text-sm">Employee #:</i>&nbsp;<strong>:employee</strong>', [
+                    'employee' => $userDetails->employee_id,
+                ]) !!}
+            </x-jet-label>
+        </div>
+
+        <div class="flex-grow-1 min-w-[200px]">
+            <x-jet-label class="text-secondary">
+                {!! __('<i class="text-sm">Office:</i>&nbsp;<strong>:office</strong>', ['office' => $userDetails->office]) !!}
+            </x-jet-label>
+        </div>
+
+        <div class="flex-grow-1 min-w-[200px]">
+            <x-jet-label class="text-secondary">
+                {!! __('<i class="text-sm">Department:</i>&nbsp;<strong>:department</strong>', [
+                    'department' => $userDetails->department,
+                ]) !!}
+            </x-jet-label>
+        </div>
+
+        <div class="flex-grow-1 min-w-[200px]">
+            <x-jet-label class="text-secondary">
+                {!! __('<i class="text-sm">Role:</i>&nbsp;<strong>:role</strong>', ['role' => $userDetails->role_type]) !!}
+            </x-jet-label>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-responsive my-2 w-100" style="overflow-x:auto;">
+    <table class="table table-bordered text-nowrap small m-0 p-0 w-100">
+        <thead class="banner-blue">
+            <tr class="bg-gray-500 text-white text-center py-1">
+                <th>Nav Name</th>
+                <th>Assigned Office</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($modules as $index => $module)
+                <tr>
+                    <td>{{ $module->module_name }}</td>
+                    <td class="py-0">
+                        <select class="form-select w-100 module-office" data-module-id="{{ $module->id }}" multiple>
+                            @foreach ($offices as $office)
+                                <option value="{{ $office->id }}" @if (in_array($office->id, explode(',', $module->assigned_office))) selected @endif>
+                                    {{ $office->company_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>{{ $module->module_category }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Update Button -->
+<div class="flex items-center justify-center my-2">
+    <x-jet-button id="saveAssigned" class="">{{ __('Update') }}</x-jet-button>
+</div>

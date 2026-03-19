@@ -1,187 +1,99 @@
 <x-slot name="header">
-	{{ __('MODULE CREATION') }}
+    {{ __('MODULE CREATION') }}
 </x-slot>
 
+<div id="view_modules" class="w-100 p-0">
 
-<div id="view_leaves">
-    {{-- <div class="w-full mx-auto my-1 sm:px-6 lg:px-8"> --}}
-    <div class="w-full p-0">
-        <!-- FORM start -->
+    <div class="bg-white p-3 shadow m-0">
 
-        @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
-        @endif
-
-        <div class="bg-white sm:p-6 shadow m-0 {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
-            <div class="col-span-8 sm:col-span-8 sm:justify-center">
-
-				    <div class="row mx-1 inset-shadow py-1">
-
-                        <div class="col-md-4 row my-2">
-			        		<div class="col-md-2 text-center">
-			            		<x-jet-label for="search" value="{{ __('Search') }}" class="my-0 pt-1 text-sm"/>
-			        		</div>
-			        		<div class="col-md-9">
-			        			<x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search" class="w-full" placeholder="Name/Employee ID" title="Name/Employee #">
-			        			</x-jet-input>
-			        		</div>
-                        </div>
-
-				        <div class="col-md-2 px-1">
-				            <div class="form-floating w-full">
-				                <select wire:model="fUserOffice" name="fUserOffice" id="fUserOffice" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-				                    <option value="">All Offices</option>
-				                    @foreach ($offices as $office)
-				                        <option value="{{ $office->id }}">{{ $office->company_name }}</option>
-				                    @endforeach
-				                </select>
-				                <x-jet-label for="fUserOffice" value="{{ __('OFFICE') }}" />
-				            </div>
-				        </div>
-
-				        <div class="col-md-2 px-1">
-				            <div class="form-floating w-full">
-				                <select wire:model="fUserDept" name="fUserDept" id="fUserDept" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-				                    <option value="">All Departments</option>
-				                    @foreach ($departments as $department)
-				                        <option value="{{ $department->department_code }}">{{ $department->department }}</option>
-				                    @endforeach
-				                </select>
-				                <x-jet-label for="fUserDept" value="{{ __('DEPARTMENT') }}" />
-				            </div>
-				        </div>
-
-				        <div class="col-md-2 px-1">
-				            <div class="form-floating w-full">
-				                <select wire:model="fUserRole" name="fUserRole" id="fUserRole" class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
-				                    <option value="">All Roles</option>
-				                    @foreach ($roleTypes as $roles)
-				                        <option value="{{ $roles->role_type }}">{{ $roles->role_type }}</option>
-				                    @endforeach
-				                </select>
-				                <x-jet-label for="fUserRole" value="{{ __('ROLES') }}" />
-				            </div>
-				        </div>
-				        <div class="col-md-2 p-2 d-flex justify-content-center align-items-center">
-                            <x-jet-button  id="createNewModule" class="w-full justify-content-center">
-                                {{ __('Create New Menu') }}
-                            </x-jet-button>
-				        </div>
-
-				    </div>
-				</div>
-
-
-                <div id="table_data">
-                        <div class="row">
-						    	<div class="col-md-12 text-sm pl-4 ">
-						    		<div class="form-inline mt-1">
-								        <label for="pageSize" class="mr-2">Show:</label>
-								        <select wire:model="pageSize" id="pageSize" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
-								            <option value="5">5</option>
-								            <option value="10">10</option>
-								            <option value="15">15</option>
-								            <option value="25">25</option>
-								            <option value="50">50</option>
-								        </select>
-								        <span class="mx-2">entries</span>
-								        <div class=" sm:col-span-7 sm:justify-center scrollable">
-							        	{{ $moduleList->links('pagination.custom') }}
-								        </div>
-						    		</div>
-							    </div>
-						    	{{-- <div class="col-md-4">
-						    		<div class="row mt-2">
-						        		<div class="col-md-4 mt-2 px-0 text-center">
-								            @if (Auth::user()->id==1 || Auth::user()->id==8 || Auth::user()->id==18 || Auth::user()->id==58)
-								                <div class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3">
-								                    <i class="fas fa-table"></i>
-								                    <span id="exportExcelLeaves" class="font-weight-bold">Export Excel</span>
-								                </div>
-								            @endif
-		                                </div>
-						    		</div>
-						    	</div> --}}
-						</div>
-                    <!-- Table -->
-                    <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
-
-                        <table id="dataTimeLogs" class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
-                            <thead class="thead">
-                                <tr class="dt-head-center">
-                                    <th class="py-1">Nav Order</th>
-                                    <th class="py-1">Module Name</th>
-                                    <th class="py-1">Parent Module</th>
-                                    <th class="py-1">Category</th>
-                                    <th class="py-1">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="data hover custom-text-xs" id="viewEmployee">
-                            	@if ($moduleList->isNotEmpty())
-	                                @foreach ($moduleList as $record)
-	                                <tr id="{{ $record->id }}" class="view-module">
-	                                    <td>{{ $record->nav_order }}</td>
-	                                	<td>{{ $record->module_name }}</td>
-	                                    <td>{{ $record->parent_module }}</td>
-	                                    <td>{{ $record->module_category }}</td>
-	                                    <td>{{ $record->module_status }}</td>
-	                                    {{-- @if (url('/')=='http://localhost')
-	                                    	<td>xxx, xxx x.</td>
-	                                    @else
-	                                        <td>
-	                                            @if ($record->approver1)
-	                                                {{ $record->approver1 }}
-	                                                    @if ($record->approver2)
-	                                                    {{ ' / '. $record->approver2 }}
-	                                                    @endif
-	                                            @endif
-	                                        </td>
-	                                    @endif --}}
-	                                    
-									    {{-- <td value="{{ $record->id }}" class="open_leave {{ $record->status!='Pending' ? (($record->status == 'Cancelled' || $record->status == 'Denied') ? 'red-color' : 'green-color') : '' }} items-center text-sm font-medium text-gray-500">
-									    	{{ $record->status }}
-									    </td> --}}
-
-	                                </tr>
-	                                @endforeach
-                                @else
-                                	<td colspan="10">No Matching Records Found</td>
-                                @endif
-                            </tbody>
-                        </table>
-
-
-					    	<div class="col-md-12 text-sm">
-					    		<div class="form-inline mt-1">
-							        <label for="pageSize" class="mr-2">Show:</label>
-							        <select wire:model="pageSize" id="pageSize" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
-							            <option value="5">5</option>
-							            <option value="10">10</option>
-							            <option value="15">15</option>
-							            <option value="25">25</option>
-							            <option value="50">50</option>
-							        </select>
-							        <span class="mx-2">entries</span>
-							        <div class=" sm:col-span-7 sm:justify-center scrollable">
-						        	{{ $moduleList->links('pagination.custom') }}
-							        </div>
-					    		</div>
-						    </div>
-
-                    </div>
+        {{-- FILTER & BUTTON --}}
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <div class="form-floating w-100">
+                    <select wire:model="fNavCategory" name="fNavCategory" id="fNavCategory"
+                        class="form-control rounded-md shadow-sm mt-1">
+                        <option value="">All Categories</option>
+                        @foreach ($mCategory as $category)
+                            <option
+                                value="{{ is_array($category) ? $category['category_name'] : $category->category_name }}">
+                                {{ is_array($category) ? $category['category_name'] : $category->category_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-jet-label for="fNavCategory" value="{{ __('NAV CATEGORY') }}" />
                 </div>
             </div>
+
+            <div class="col-md-2 d-flex justify-content-center align-items-center my-2">
+                <x-jet-button id="createNewModule">
+                    {{ __('Add System Item') }}
+                </x-jet-button>
+            </div>
+
         </div>
+
+        {{-- PAGE SIZE --}}
+        <div class="row mb-2 align-items-center">
+            <div class="col-auto">
+                <label for="pageSize" class="mr-2">Show:</label>
+                <select wire:model="pageSize" id="pageSize" class="form-select d-inline-block w-auto">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span class="mx-2">entries</span>
+            </div>
+            <div class="col text-end">
+                {{ $moduleList->links('pagination.custom') }}
+            </div>
+        </div>
+
+        {{-- MODULE TABLE ONLY SCROLLABLE --}}
+        <div class="table-responsive-md">
+            <table id="dataTimeLogs"
+                class="view-detailed-timelogs table table-bordered table-striped table-hover text-sm text-nowrap">
+                <thead class="thead">
+                    <tr class="align-middle">
+                        <th class="p-1 text-nowrap">Order</th>
+                        <th class="p-1 text-nowrap">Module Name</th>
+                        <th class="p-1 text-nowrap">Parent Module</th>
+                        <th class="p-1 text-nowrap">Category</th>
+                        <th class="p-1 text-nowrap">Route</th>
+                        <th class="p-1 text-nowrap">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if ($moduleList->isNotEmpty())
+                        @foreach ($moduleList as $record)
+                            <tr id="{{ $record->id }}" class="view-nav">
+                                <td
+                                    class="text-left {{ substr_count($record->nav_path, '-') === 0 ? 'fw-semibold' : 'fst-italic' }}">
+                                    {{ $record->nav_path }}
+                                </td>
+
+                                <td>{{ $record->module_name }}</td>
+                                <td>
+                                    {{ $record->parent_id ? $moduleList->firstWhere('id', $record->parent_id)->module_name ?? '-' : '-' }}
+                                </td>
+                                <td>{{ $record->module_category }}</td>
+                                <td class="text-nowrap"></td>
+                                <td>{{ $record->module_status }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="6" class="text-center">No Matching Records Found</td>
+                        </tr>
+                    @endif
+                </tbody>
+
+            </table>
+        </div>
+
     </div>
 </div>
 
-<!-- =========================================== -->
-
-{{-- <script type="text/javascript">
-    const uID = `{{ Auth::user()->id }}`;
-    const lReq = `{{ route('hris.leave.eleave') }}`;
-</script> --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script> --}}
 <script type="text/javascript" src="{{ asset('app-modules/setup/module-creation.js') }}"></script>

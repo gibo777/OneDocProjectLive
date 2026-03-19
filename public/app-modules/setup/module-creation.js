@@ -6,37 +6,36 @@ $(document).ready(function () {
     }
 
     function createCategory(moduleName, parentModule, navOrder, moduleCategory) {
+
+        Swal.fire({
+            html: 'Module Name: ' + moduleName
+                + '<br>Parent Module: ' + parentModule
+                + '<br>Nav Order: ' + navOrder
+                + '<br>Category: ' + moduleCategory
+        }); return false;
+
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
+
         $.ajax({
             url: '/create-module',
             method: 'POST',
-            data: {
-                moduleName,
-                parentModule,
-                navOrder,
-                moduleCategory
-            },
+            data: { moduleName, parentModule, navOrder, moduleCategory },
             beforeSend: function () {
-                $('#dataLoad').css({
+                $('#dataProcess').css({
                     'display': 'flex',
                     'position': 'fixed',
                     'top': '50%',
                     'left': '50%',
                     'transform': 'translate(-50%, -50%)'
                 });
-
             },
             success: function (response) {
-                $('#dataLoad').hide();
+                $('#dataProcess').hide();
+                Swal.fire({ html: JSON.stringify(response) }); return false;
                 Livewire.emit('refreshComponent');
-                Swal.fire({
-                    icon: response.isSuccess ? 'success' : 'error',
-                    html: response.message
-                });
+                // Swal.fire({ icon: response.isSuccess ? 'success' : 'error', html: response.message });
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching user details:', error);
@@ -57,7 +56,6 @@ $(document).ready(function () {
                     'left': '50%',
                     'transform': 'translate(-50%, -50%)'
                 });
-
             },
             success: function (html) {
                 $('#dataLoad').hide();
@@ -71,68 +69,54 @@ $(document).ready(function () {
                     allowOutsideClick: false,
                     showClass: { popup: '' },
                     heightAuto: true,
-                    customClass: {
-                        popup: 'p-0'
-                    },
+                    customClass: { popup: 'p-0' },
                     willOpen: () => {
+
+                        // Dynamic Parent Modules
+                        $('#createNavCategory').on('change', function () {
+                            const category = $(this).val();
+                            Livewire.emit('loadParentModules', category);
+
+                            // Clear Parent dropdown immediately
+                            $('#createNavParent').empty().append('<option value="">-</option>');
+                        });
+
+                        // Update Parent Modules when Livewire emits
+                        Livewire.on('parentModulesUpdated', function (parents) {
+                            const parentSelect = $('#createNavParent');
+                            parentSelect.empty().append('<option value="">-</option>');
+
+                            parents.forEach(function (parent) {
+                                parentSelect.append('<option value="' + parent.id + '">' + parent.module_name + '</option>');
+                            });
+                        });
+
                         $('#saveModule').on('click', function () {
-                            const moduleName = $('#moduleName').val();
-                            const parentModule = $('#parentModule').val();
-                            const navOrder = $('#navOrder').val();
-                            const moduleCategory = $('#moduleCategory').val();
+                            const moduleName = $('#createModuleName').val().trim();
+                            const parentModule = $('#createNavParent').val();
+                            const navOrder = $('#createNavOrder').val();
+                            const moduleCategory = $('#createNavCategory').val();
+
+                            const swalPopup = Swal.getPopup();
+                            const errorDiv = swalPopup.querySelector('#moduleFormError');
+                            errorDiv.textContent = '';
+
+                            if (!moduleCategory) { errorDiv.textContent = 'No Category Selected'; return; }
+                            if (!moduleName) { errorDiv.textContent = 'Module Name is empty'; return; }
+
+                            // Swal.fire({
+                            //     html: 'Module Name: ' + moduleName
+                            //         + '<br>Parent Module: ' + parentModule
+                            //         + '<br>Nav Order: ' + navOrder
+                            //         + '<br>Category: ' + moduleCategory
+                            // }); return false;
+
                             createCategory(moduleName, parentModule, navOrder, moduleCategory);
                         });
 
-                        // $('#saveModule').on('click', function() {
-                        //     $('#secondMessage').fadeIn();
-                        //     setTimeout(function() {
-                        //         $('#secondMessage').fadeOut();
-                        //     }, 5000);
-                        // });
-                        // $('#m1Office').multiselect({
-                        //     enableFiltering: true,
-                        //     enableCaseInsensitiveFiltering: true,
-                        //     buttonWidth: '100%',
-                        //     dropRight: true,
-                        //     maxHeight: 200
-                        // });
-                        // $('#m2Office').multiselect({
-                        //     enableFiltering: true,
-                        //     enableCaseInsensitiveFiltering: true,
-                        //     buttonWidth: '100%',
-                        //     dropRight: true,
-                        //     maxHeight: 200
-                        // });
-                        // $('#m3Office').multiselect({
-                        //     enableFiltering: true,
-                        //     enableCaseInsensitiveFiltering: true,
-                        //     buttonWidth: '100%',
-                        //     dropRight: true,
-                        //     maxHeight: 200
-                        // });
-                        // $('#saveAssigned').on('click',function() {
-                        //     let offices = [
-                        //         $('#m1Office').val(),
-                        //         $('#m2Office').val(),
-                        //         $('#m3Office').val()
-                        //     ];
-                        //     let moduleNames = [
-                        //         'Leaves Listing',
-                        //         'Timelogs Listing',
-                        //         'Employees Listing',
-                        //     ];
-                        //     saveAssignedViewing(uID,moduleNames,offices);
-                        // });
                     },
-                    didClose: () => {
-                        parentSwalOpen = false;
-                    }
+                    didClose: () => { parentSwalOpen = false; }
                 });
-
-                // const swalPopup = Swal.getPopup();
-                // swalPopup.style.overflow = 'visible';
-                // swalPopup.style.maxHeight = 'none';
-                // swalPopup.style.height = 'auto';
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching user details:', error);
@@ -140,95 +124,14 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('dblclick', '.view-user', function () {
+    $(document).on('dblclick', '.view-nav', function () {
         const uID = $(this).attr('id');
-
-        // $.ajax({
-        //     url: '/authorize-user-detail',
-        //     method: 'GET',
-        //     data: { 'uID': uID },
-        //     beforeSend: function() {
-        //         $('#dataLoad').css({
-        //             'display'   : 'flex',
-        //             'position'  : 'fixed',
-        //             'top'       : '50%',
-        //             'left'      : '50%',
-        //             'transform' : 'translate(-50%, -50%)'
-        //         });
-
-        //     },
-        //     success: function(html) {
-        //         $('#dataLoad').hide();
-        //         parentSwalOpen = true;
-        //         Swal.fire({
-        //             html: html,
-        //             width: 'auto',
-        //             showCloseButton: true,
-        //             showConfirmButton: false,
-        //             allowEscapeKey: false,
-        //             allowOutsideClick: false,
-        //             showClass: { popup: '' },
-        //             heightAuto: true,
-        //             customClass: {
-        //                 popup: 'p-0'
-        //             },
-        //             willOpen: () => {
-        //                 $('#m1Office').multiselect({
-        //                     enableFiltering: true,
-        //                     enableCaseInsensitiveFiltering: true,
-        //                     buttonWidth: '100%',
-        //                     dropRight: true,
-        //                     maxHeight: 200
-        //                 });
-        //                 $('#m2Office').multiselect({
-        //                     enableFiltering: true,
-        //                     enableCaseInsensitiveFiltering: true,
-        //                     buttonWidth: '100%',
-        //                     dropRight: true,
-        //                     maxHeight: 200
-        //                 });
-        //                 $('#m3Office').multiselect({
-        //                     enableFiltering: true,
-        //                     enableCaseInsensitiveFiltering: true,
-        //                     buttonWidth: '100%',
-        //                     dropRight: true,
-        //                     maxHeight: 200
-        //                 });
-        //                 $('#saveAssigned').on('click',function() {
-        //                     let offices = [
-        //                         $('#m1Office').val(),
-        //                         $('#m2Office').val(),
-        //                         $('#m3Office').val()
-        //                     ];
-        //                     let moduleNames = [
-        //                         'Leaves Listing',
-        //                         'Timelogs Listing',
-        //                         'Employees Listing',
-        //                     ];
-        //                     saveAssignedViewing(uID,moduleNames,offices);
-        //                 });
-        //             },
-        //             didClose: () => {
-        //                 parentSwalOpen = false;
-        //             }
-        //         });
-
-        //         const swalPopup = Swal.getPopup();
-        //         swalPopup.style.overflow = 'visible';
-        //         swalPopup.style.maxHeight = 'none';
-        //         swalPopup.style.height = 'auto';
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('Error fetching user details:', error);
-        //     }
-        // });
+        Swal.fire({ html: uID });
     });
 
     function saveAssignedViewing(uID, moduleNames, offices) {
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
 
         let dataObject = {
@@ -249,19 +152,14 @@ $(document).ready(function () {
                     'left': '50%',
                     'transform': 'translate(-50%, -50%)'
                 });
-
             },
             success: function (data) {
                 $('#dataProcess').hide();
-                // Swal.fire({ html: JSON.stringify(data.dataUsers) });
                 Swal.fire({ html: data });
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
             }
         });
-
     }
-
-
 });

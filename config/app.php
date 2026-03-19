@@ -169,7 +169,7 @@ return [
          * Package Service Providers...
          */
 
-       Barryvdh\DomPDF\ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -181,7 +181,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
-
 
         // Elibyy\TCPDF\ServiceProvider::class,
 
@@ -203,7 +202,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
-     //   'TCPDF' => Elibyy\TCPDF\Facades\TCPDF::class,
+        //   'TCPDF' => Elibyy\TCPDF\Facades\TCPDF::class,
     ])->toArray(),
 
     'file_encryption_blocks' => 10000,

@@ -104,8 +104,6 @@ class ViewLeavesController extends Controller
 
     function filter_leave(Request $request)
     {
-        // dd($request);
-
         $filter_search      = $request->filter_search;
         $filter_leave_type  = $request->filter_leave_type;
         $filter_department  = $request->filter_department;
@@ -172,9 +170,7 @@ class ViewLeavesController extends Controller
 
     function view_leave(Request $request)
     {
-        // return "gilbert";
         if ($request->ajax()) {
-            // return $request->leaveID;
             $holidays = DB::table('holidays')->get();
             $departments = DB::table('departments')->get();
             $leave_types = DB::table('leave_types')->get();

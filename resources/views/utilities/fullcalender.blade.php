@@ -221,6 +221,9 @@
                     });
                 },
                 eventClick: function(event) {
+
+                    // Check session here...
+
                     if (event.color === 'red') {
                         return false;
                     }
