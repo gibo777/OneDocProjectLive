@@ -104,6 +104,7 @@ class AuthorizeView extends Component
                 $query->where('u.role_type', 'ADMIN')
                     ->orWhere('u.role_type', 'SUPER ADMIN');
             }) */
+            ->where('u.employment_status', '<>', 'NO LONGER CONNECTED')
             ->where(function ($query) {
                 if (!empty($this->search)) {
                     $searchTerms = explode(' ', $this->search);
@@ -148,6 +149,7 @@ class AuthorizeView extends Component
                 'u.role_type'
             )
             ->where('u.id', $id)
+            ->where('u.employment_status', '<>', 'NO LONGER CONNECTED')
             ->first();
 
         $this->selectedUser = $user ? (array) $user : null;
