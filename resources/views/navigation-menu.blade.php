@@ -1,15 +1,10 @@
 <style type="text/css">
     .notification {
-        /*text-decoration: none;*/
         padding: 5px 15px;
         position: relative;
         display: inline-block;
         border-radius: 2px;
     }
-
-    /*.notification:hover {
-      background: lightblue;
-    }*/
 
     .notification .badge {
         position: absolute;
@@ -17,8 +12,6 @@
         right: 2px;
         padding: 3px 6px;
         border-radius: 50%;
-        /*background: blue;*/
-        /*color: white;*/
     }
 
     .my-popup-class {
@@ -43,15 +36,33 @@
         transform: scaleX(-1);
     }
 
-    /* FIX: Ensure modal backdrop covers full screen */
     #modalTimeLogCam {
         z-index: 1055 !important;
     }
 
-    /* SweetAlert2 timelog popup styles */
+    /* SweetAlert2 timelog popup */
     .swal-timelog-popup {
         overflow: hidden !important;
         padding: 0 !important;
+    }
+
+    /* Full-screen on mobile */
+    @media (max-width: 768px) {
+        .swal-timelog-popup {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-height: 100dvh !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Swal2 container also needs to be fullscreen */
+        .swal2-container.swal2-center {
+            align-items: flex-start !important;
+            padding: 0 !important;
+        }
     }
 
     .swal-timelog-popup .swal2-title {
@@ -60,23 +71,43 @@
         background-color: #1a56db;
         width: 100%;
         justify-content: center;
+        flex-shrink: 0;
     }
 
     .swal-timelog-popup .swal2-html-container {
         margin: 0 !important;
         padding: 0 !important;
         overflow: hidden !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
     }
 
     .swal-timelog-popup .swal2-close {
         color: white !important;
         font-size: 1.5rem !important;
     }
+
+    /* Camera container fills available space */
+    #logCamera {
+        display: block;
+        width: 100% !important;
+        flex: 1;
+    }
+
+    #logCamera video,
+    #logCamera canvas,
+    #logCamera embed,
+    #logCamera object {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover;
+    }
 </style>
 
 
 <nav id="nav_header" x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
 
     <div id="nav_header" class="w-full mx-auto px-2 sm:px-4 lg:px-8">
         <div class="flex justify-between h-16">
@@ -191,8 +222,6 @@
         </div>
     </div>
 
-    {{-- END of nav_header div  --}}
-
 
     <!-- Responsive Navigation Menu begin -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
@@ -285,7 +314,6 @@
 
             <div class="mt-3 space-y-1">
 
-                <!-- Account Management -->
                 <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Personnel Data') }}
                 </x-jet-responsive-nav-link>
@@ -296,15 +324,12 @@
                     </x-jet-responsive-nav-link>
                 @endif
 
-                <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}" x-data>
                     @csrf
-
                     <x-jet-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
                     </x-jet-responsive-nav-link>
                 </form>
-
 
             </div>
         </div>
@@ -346,7 +371,6 @@
                                     id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
                             </div>
                         </div>
-                        {{-- @if (Auth::user()->id == 1) --}}
                         <div class="dropdown dropend">
                             <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overtime</a>
@@ -357,7 +381,6 @@
                                     id="nav_view_leaves">{{ __('View Overtimes') }} </a>
                             </div>
                         </div>
-                        {{-- @endif --}}
 
                         @if (Auth::user()->id == 1)
                             <div class="dropdown dropend">
@@ -371,25 +394,9 @@
                                         id="nav_view_wfh">{{ __('View WFH') }} </a>
                                 </div>
                             </div>
-
-                            {{-- <div class="dropdown dropend">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement"
-                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">Reimbursement</a>
-                                @if (Auth::user()->id == 1)
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item"
-                                            href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement
-                                            Form</a>
-                                    </div>
-                                @endif
-                            </div> --}}
                         @endif
 
                     </div>
-                    {{-- @if ($notification_count > 0)
-                        <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
-            @endif --}}
                 </div>
 
                 @if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
@@ -418,9 +425,6 @@
                         </button>
                         <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
-                                {{-- <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
-                    {{ __('View Employees') }}
-                    </a> --}}
                                 @if (Auth::user()->role_type == 'SUPER ADMIN')
                                     <div class="dropdown dropend">
                                         <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
@@ -446,31 +450,8 @@
                                         <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
                                         <a class="dropdown-item"
                                             href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
-                                        {{-- @if (Auth::user()->id == 1)
-                                            <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
-                                                Registration</a>
-                                            <a class="dropdown-item"
-                                                href="{{ route('face.registered.listing') }}">Face Registration</a>
-                                        @endif --}}
                                     </div>
                                 </div>
-                                @if (Auth::user()->id == 1 || Auth::user()->id == 2)
-                                    {{-- <div class="dropdown dropend">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Employee Clearance </a>
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('clearance.form') }}" >
-                    {{ __('Employee Clearance Form') }}
-                    </a>
-                    <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
-                        {{ __('View Clearances') }}
-                    </a>
-                </div>
-            </div> --}}
-                                @endif
-                                {{-- <a class="dropdown-item" href="{{ route('hr.management.memos') }}">
-            {{ __('Memo') }}
-            </a> --}}
                             </div>
                         </div>
                     </div>
@@ -481,10 +462,7 @@
                     </div>
                 @endif
 
-
-
                 @if (Auth::user()->role_type == 'SUPER ADMIN' && (Auth::user()->id == 1 || Auth::user()->id == 543))
-
                     <div class="dropdown mt-3 mx-1">
                         <button
                             class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
@@ -494,9 +472,6 @@
                         </button>
                         <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
                             <div class="dropdown dropend">
-                                {{-- <a class="dropdown-item" href="{{ route('register') }}" >
-                {{ __('User Registration') }}
-                </a> --}}
                                 <a class="dropdown-item" href="{{ route('hr.management.offices') }}">
                                     {{ __('Offices') }}
                                 </a>
@@ -510,9 +485,6 @@
                                     <a class="dropdown-item" href="{{ route('employee-benefits') }}">
                                         {{ __('Leave Credits') }}
                                     </a>
-                                    {{-- <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
-                                        {{ __('User Authorization') }}
-                                    </a> --}}
                                     <div class="dropdown dropend">
                                         <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -523,10 +495,6 @@
                                             <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
                                                 {{ __('User Authorization') }}
                                             </a>
-                                            {{-- <a class="dropdown-item" href="{{ route('faces.create') }}">
-                                                {{ __('User Face Registration') }}
-                                            </a> --}}
-
                                         </div>
                                     </div>
                                     <a class="dropdown-item" href="{{ route('module.list') }}">
@@ -540,7 +508,6 @@
                             </div>
                         </div>
                     </div>
-
                 @endif
 
             </div>
@@ -573,56 +540,30 @@
 </nav>
 
 
-
-{{-- Bootstrap modal replaced by SweetAlert2 popup in startWebcam() to fix
-     position:fixed being broken by parent overflow:auto context in app.blade.php.
-     Keeping hidden elements here that are still referenced by JS. --}}
+{{-- Hidden elements still referenced by JS --}}
 <div hidden>
     <input id="logEvent">
-    <video id="video-element"></video>
-    <canvas id="canvas-element"></canvas>
 </div>
 
 
-{{-- <script src="node_modules/@popperjs/core/dist/umd/popper.min.js"></script> --}}
 <script type="text/javascript" src="{{ asset('/popper/js/bootstrap.bundle.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('/nav-bar/bootstrap5-dropdown-ml-hack.js') }}"></script>
 
 <!-- NAVIGATOR end -->
 <script type="text/javascript">
-    // scripts.js
     document.addEventListener('DOMContentLoaded', function() {
-        let isActive = JSON.parse(document.getElementById('navServerStatus').getAttribute('data-is-active'));
-        console.log(isActive); // Logs the current value of isActive
+        const navServerStatus = document.getElementById('navServerStatus');
+        if (navServerStatus) {
+            let isActive = JSON.parse(navServerStatus.getAttribute('data-is-active'));
+            console.log(isActive);
+        }
     });
 
     $(document).ready(function() {
 
         let has_supervisor = "{{ Auth::user()->supervisor }}";
         let role_type = "{{ Auth::user()->role_type }}";
-
-        /*Pusher.logToConsole = true;
-        var pusher = new Pusher('264cb3116052cba73db3', {
-        cluster: 'us2',
-        forceTLS: true
-        });
-        var channel = pusher.subscribe('my-channel');
-        channel.bind("my-event", function(data) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            url: "{{ route('counts_pusher') }}",
-            method: 'get',
-            data: JSON.stringify(data), // prefer use serialize method
-            success:function(data){
-                $("#nav-memo-counter").text(data.memo_counts);
-            }
-        });
-        }); */
 
         $(document).on('click', '#dNavEleave, #dNavOvertime', function(e) {
             if (has_supervisor == '' || has_supervisor == null) {
@@ -636,20 +577,17 @@
         });
 
         /**
-         * This will capture temporary photo using webcam
+         * This will capture temporary photo using webcam (profile photo)
          */
         $("#saveTempPhoto").click(function() {
-
             var data_uri = $("#capturedPhoto").attr("src");
             Webcam.reset('#logCamera');
-
             $('#divPhotoPreview1').addClass('hidden');
             $('#divPhotoPreview2').empty();
             $('#divPhotoPreview2').css('display', 'flex');
             $('#divPhotoPreview2').append(
                 '<span class="block rounded-full w-id h-id bg-cover bg-no-repeat" id="capturedPhoto text-center" style="background-image:url(' +
                 data_uri + ')"></span>');
-            // alert("{{ route('webcam.capture') }}"); return false;
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -661,14 +599,11 @@
                 data: $("#formWebCam").serialize(),
                 success: function(data) {
                     $("#modalWebCam").modal("hide");
-                    // alert(data); return false;
                     Webcam.reset('#logCamera');
                     $("#divPhotoPreview1").addClass("hidden");
                     $("#divPhotoPreview2").addClass("hidden");
                     $("#divPhotoPreview3").removeClass("hidden");
                     $("#profilePhotoPreview").attr("src", data);
-
-                    // $("#modalWebCam").modal("show");
                 }
             });
             return false;
@@ -680,31 +615,12 @@
     /* TIME-LOGS CAPTURE */
     $(document).ready(function() {
 
-        // Variables for video element, canvas, and media stream
-        var video = document.getElementById('video-element');
-        var canvas = document.getElementById('canvas-element');
-        var stream = null;
         let latitude, longitude;
 
         function getCoordinates(position) {
             latitude = position.coords.latitude.toFixed(7);
             longitude = position.coords.longitude.toFixed(7);
-
-            // var coords = position.coords.latitude.toFixed(7)+','+position.coords.longitude.toFixed(7);
-            // var googleMapsUrl = `https://www.google.com/maps?q=${position.coords.latitude.toFixed(7)},${position.coords.longitude.toFixed(7)}`;
-            /*Swal.fire({
-            html: `<a id="mapsLink" href="#">${coords}</a>`,
-            didOpen: () => {
-                document.getElementById('mapsLink').addEventListener('click', () => {
-                window.open(googleMapsUrl, '_blank');
-                Swal.close(); // Optionally close the modal after opening the link
-                });
-            }
-            });*/
-
-            // Start the webcam when the page loads
             startWebcam();
-            // $("#modalTimeLogCam").modal("show")
         }
 
         function showError(error) {
@@ -733,41 +649,23 @@
             return false;
         }
 
-        // Event handler for the capture button
-        /*$('#btnTimeIn').click(function() {
-            $("#logEvent").val("TimeIn");
-            startWebcam();
-            // if (navigator.geolocation) {
-            //   navigator.geolocation.getCurrentPosition(getCoordinates, showError);
-            // }
-            // else {
-            //   Swal.fire({ html: "Geolocation is not supported by this browser." }); return false;
-            // }
-        });*/
-
-        // Function to start the webcam
-        // Converted from Bootstrap modal to SweetAlert2 to avoid position:fixed being broken
-        // by parent overflow:auto context in app.blade.php.
-        // Swal renders directly on <body> and is unaffected by any parent stacking context.
+        // ─── startWebcam ────────────────────────────────────────────────────────────
+        // Uses Webcam.js only (no duplicate getUserMedia call).
+        // On mobile the preview fills ~90 vw; on desktop it's 460 px wide.
+        // ────────────────────────────────────────────────────────────────────────────
         function startWebcam() {
 
-            /*var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-            Swal.fire({
-                html: `<a id="mapsLink" href="#">${latitude},${longitude}</a>`,
-                didOpen: () => {
-                    document.getElementById('mapsLink').addEventListener('click', () => {
-                    window.open(googleMapsUrl, '_blank');
-                    });
-                }
-            }); return false;*/
-
             const isMobile = window.innerWidth <= 768;
-            // Width fills the popup minus the 16px padding on each side
-            const popupWidth = isMobile ? (window.innerWidth * 0.95) : 520;
-            const webcamWidth = Math.floor(popupWidth - 32);
-            const webcamHeight = Math.floor(webcamWidth * 0.72); // 4:3 ratio
 
-            // Get the current log event label for the title (Time-In or Time-Out)
+            // On mobile: full viewport. On desktop: fixed 520px popup.
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const camW = isMobile ? vw : 488; // 520 - 32px padding
+            const camH = isMobile ?
+                vh - 120 // viewport minus title + bottom bar
+                :
+                Math.floor(camW * 0.75); // 4:3 on desktop
+
             var logEventLabel = $("#logEvent").val() === 'TimeIn' ? 'Time-In' : 'Time-Out';
 
             Swal.fire({
@@ -775,7 +673,7 @@
                     logEventLabel + '</span>',
                 background: '#ffffff',
                 color: '#000',
-                width: isMobile ? '95%' : '520px',
+                width: isMobile ? '100%' : '520px',
                 padding: '0',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
@@ -783,185 +681,96 @@
                 showCloseButton: true,
                 customClass: {
                     popup: 'swal-timelog-popup',
-                    header: 'banner-blue',
                     closeButton: 'swal-timelog-close'
                 },
                 html: `
-                    <div style="overflow:hidden; padding: 12px 16px 16px 16px;">
-                        <form id="formWebCam">
+                    <div style="display:flex; flex-direction:column; height:100%; padding: 0 0 12px 0;">
+                        <form id="formWebCam" style="display:flex; flex-direction:column; flex:1;">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <div id="image-capture-container">
-                                <video id="video-element" hidden></video>
-                                <canvas id="canvas-element" hidden></canvas>
+
+                            {{-- Camera preview fills all available vertical space --}}
+                            <div style="flex:1; overflow:hidden; background:#000;">
+                                <div id="logCamera"
+                                     style="width:${camW}px; height:${camH}px; overflow:hidden;">
+                                </div>
                             </div>
-                            <div style="display:flex; justify-content:center; margin-bottom:10px;">
-                                <div id="logCamera" style="overflow:hidden;"></div>
-                                <input type="hidden" name="image" class="image-tag">
-                            </div>
-                            <div style="margin-bottom: 10px; border: 1px solid #dee2e6; border-radius: 4px; padding: 6px 10px;">
+                            <input type="hidden" name="image" class="image-tag">
+
+                            {{-- Policy notice --}}
+                            <div style="margin: 10px 12px 8px; border:1px solid #dee2e6; border-radius:4px; padding:6px 10px; flex-shrink:0;">
                                 <p style="font-size:0.82rem; font-weight:bold; font-style:italic; margin:0; text-align:justify;">
                                     In compliance with company policy, ensure that your picture clearly shows your office location.
                                 </p>
                             </div>
-                            <div style="display:flex; justify-content:center;">
+
+                            {{-- Snapshot button --}}
+                            <div style="display:flex; justify-content:center; flex-shrink:0;">
                                 <input type="button" id="takeSnapshot" value="Take Snapshot" class="btn btn-primary">
                             </div>
                         </form>
                     </div>`,
-                didOpen: () => {
-                    // Re-assign video/canvas references after Swal renders HTML
-                    video = document.getElementById('video-element');
-                    canvas = document.getElementById('canvas-element');
 
+                didOpen: () => {
+                    // ── Webcam.js only – no getUserMedia() here ──────────────────
                     Webcam.set({
-                        width: webcamWidth,
-                        height: webcamHeight,
+                        width: camW,
+                        height: camH,
                         image_format: 'jpeg',
                         jpeg_quality: 90,
+                        flip_horiz: true, // mirror (replaces CSS scaleX(-1))
                         constraints: {
                             video: {
-                                facingMode: "user",
-                                mirror: true
-                            }
+                                // ideal: front cam on mobile, webcam on desktop
+                                facingMode: {
+                                    ideal: 'user'
+                                },
+                                width: {
+                                    ideal: camW
+                                },
+                                height: {
+                                    ideal: camH
+                                }
+                            },
+                            audio: false
                         }
                     });
 
                     Webcam.attach('#logCamera');
 
-                    // Access the user's webcam
-                    navigator.mediaDevices.getUserMedia({
-                            video: true
-                        })
-                        .then(function(mediaStream) {
-                            // Store the media stream for later use
-                            stream = mediaStream;
-                            video.srcObject = mediaStream;
-                            video.play();
-                        })
-                        .catch(function(error) {
-                            // Display an error message using Swal
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Failed to access webcam!',
-                            });
-                        });
-
-                    // Capture image for Time Logs
                     document.getElementById('takeSnapshot').addEventListener('click', function() {
                         captureImage();
                     });
                 },
+
                 willClose: () => {
-                    // Closing Camera - reset webcam and stop stream
+                    // Detach and release camera
                     Webcam.reset('#logCamera');
-                    if (stream !== null) {
-                        stream.getTracks().forEach(track => track.stop());
-                        stream = null;
-                    }
                 }
             }); // end Swal.fire
 
         } // end startWebcam
 
-        /* function startWebcam() {
-            const isMobile = window.innerWidth <= 768;
-            // const webcamWidth = isMobile ? 320 : 430;
-            // const webcamHeight = isMobile ? 240 : 350;
-            const webcamWidth = isMobile ? 365 : 430;
-            const webcamHeight = 350;
 
-            Swal.fire({
-                title: 'Capture Image for Timelog',
-                html: `
-            <div id="swalLogCam"></div>
-            <input type="hidden" name="image" class="image-tag" id="imageTag">
-            <div class="my-2 text-sm font-weight-bold font-italic">
-                In compliance with company policy, ensure that your picture clearly shows your office location.
-            </div>
-            <button type="button" id="takeSnapshot" class="btn btn-primary">Take Snapshot</button>
-            <div id="results" class="mt-2"></div>
-        `,
-                showConfirmButton: false,
-                showCloseButton: true,
-                didOpen: () => {
-                    Webcam.set({
-                        width: webcamWidth,
-                        height: webcamHeight,
-                        image_format: 'jpeg',
-                        jpeg_quality: 90,
-                        constraints: {
-                            video: {
-                                facingMode: "user",
-                                mirror: true
-                            }
-                        }
-                    });
-                    Webcam.attach('#swalLogCam');
-
-                    document.getElementById('takeSnapshot').addEventListener('click', function() {
-                        Webcam.snap(function(data_uri) {
-                            document.getElementById('results').innerHTML =
-                                '<img src="' + data_uri +
-                                '" class="img-fluid rounded-md"/>';
-                            document.getElementById('imageTag').value = data_uri;
-                        });
-                    });
-                },
-                willClose: () => {
-                    Webcam.reset();
-                }
-            });
-        } */
-
-
-        // Function to capture an image
+        // ─── captureImage ────────────────────────────────────────────────────────────
+        // Uses Webcam.snap() – no manual canvas/video drawing needed.
+        // ────────────────────────────────────────────────────────────────────────────
         function captureImage() {
-
-            if (stream !== null) {
-                // Pause the video playback
-                video.pause();
-
-                // Assuming 'video' is the video element and 'canvas' is the canvas element
-                var canvas = document.createElement('canvas');
-                var context = canvas.getContext('2d');
-
-                // Set the desired percentage for the resized image
-                var percentageWidth = 50; // Adjust this value as needed
-                var percentageHeight = 50; // Adjust this value as needed
-
-                // Calculate the target dimensions based on the percentages
-                var targetWidth = (percentageWidth / 100) * video.videoWidth;
-                var targetHeight = (percentageHeight / 100) * video.videoHeight;
-
-                // Set the canvas dimensions to the target dimensions
-                canvas.width = targetWidth;
-                canvas.height = targetHeight;
-
-                // Mirror the canvas horizontally
-                context.translate(targetWidth, 0);
-                context.scale(-1, 1);
-
-                // Draw the current video frame onto the canvas with the resized dimensions
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, targetWidth,
-                    targetHeight);
-
-                // Convert the canvas image to a data URL with a desired quality (e.g., 0.8)
-                var dataURL = canvas.toDataURL('image/jpeg', 0.8);
+            Webcam.snap(function(data_uri) {
 
                 Swal.fire({
-                    // title: 'Captured Image',
-                    imageUrl: dataURL,
+                    imageUrl: data_uri,
                     imageAlt: 'Captured Image',
                     allowOutsideClick: false,
                     showCancelButton: true,
-                    cancelButtonText: 'Close',
+                    cancelButtonText: 'Retake',
                     confirmButtonText: 'Save',
                 }).then(function(result) {
+
                     if (result.isConfirmed) {
                         $.ajaxSetup({
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
                             }
                         });
                         $.ajax({
@@ -971,9 +780,7 @@
                                 'logEvent': $("#logEvent").val(),
                                 'latitude': parseFloat(latitude),
                                 'longitude': parseFloat(longitude),
-                                // 'latitude': '27.994402', // Lat for testing
-                                // 'longitude': '-81.760254', // Long for testing
-                                'image': dataURL
+                                'image': data_uri
                             },
                             beforeSend: function() {
                                 $('#dataProcess').css({
@@ -992,28 +799,24 @@
                                         title: 'Image saved successfully!',
                                     });
 
-                                    // Send Timelog to HRIS using API
-                                    $.ajaxSetup({
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                                            .attr('content')
-                                    });
+                                    // Send Timelog to HRIS via API
                                     $.ajax({
                                         url: `${window.location.origin}/send-timelogs-to-hris`,
                                         method: 'POST',
                                         data: {
-                                            'tID': data.tID,
+                                            'tID': data.tID
                                         },
                                         success: function(apiResponse) {
-                                            console.log('API response:', JSON
-                                                .stringify(apiResponse));
+                                            console.log('API response:',
+                                                JSON.stringify(
+                                                    apiResponse));
                                         },
                                         error: function(xhr) {
-                                            console.error('API error:', xhr
-                                                .responseText);
+                                            console.error('API error:',
+                                                xhr.responseText);
                                         }
                                     });
-                                    video.currentTime = 0;
-                                    video.style.display = "none";
+
                                     setTimeout(function() {
                                         location.reload();
                                     }, 5000);
@@ -1030,18 +833,17 @@
                             }
                         }); // end $.ajax
 
-                    } else {
-                        // Resume video playback
-                        video.play();
                     }
+                    // On cancel/retake – Webcam.js stream is still live, nothing to do
+
                 }); // end .then
-            }
+            }); // end Webcam.snap
         } // end captureImage
 
 
+        // ─── Button click handlers ───────────────────────────────────────────────────
         $('#btnTimeIn').click(function() {
             $("#logEvent").val("TimeIn");
-            // startWebcam();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(getCoordinates, showError);
             } else {
@@ -1052,10 +854,8 @@
             }
         });
 
-
         $('#btnTimeOut').click(function() {
             $("#logEvent").val("TimeOut");
-            // startWebcam();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(getCoordinates, showError);
             } else {
@@ -1065,19 +865,6 @@
                 location.reload();
             }
         });
-
-        // Note: takeSnapshot click and camera close are now handled inside
-        // the Swal didOpen/willClose callbacks in startWebcam() above.
-
-        // Closing Camera Modal (kept for legacy reference)
-        // $("#closeLogCamModal").click(function() {
-        //     closeCam();
-        // });
-
-        // function closeCam() {
-        //     Webcam.reset('#logCamera');
-        //     location.reload();
-        // }
 
     }); // end TIME-LOGS CAPTURE $(document).ready
 </script>
