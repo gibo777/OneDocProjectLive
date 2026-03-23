@@ -25,6 +25,7 @@ class AuthorizeView extends Component
     public $search = '';
     public $fUserOffice = '';
     public $fUserDept = '';
+    public $fUserStatus = '';
     public $fUserRole = '';
 
     // Detail view properties
@@ -130,6 +131,9 @@ class AuthorizeView extends Component
                 }
                 if (!empty($this->fUserRole)) {
                     $query->where('u.role_type', $this->fUserRole);
+                }
+                if (!empty($this->fUserStatus)) {
+                    $query->where('u.employment_status', $this->fUserStatus);
                 }
             });
 
