@@ -63,7 +63,7 @@ class AuthorizeView extends Component
     {
         $this->offices      = DB::table('offices')->orderBy('company_name')->get();
         $this->departments  = DB::table('departments')->orderBy('department')->get();
-        $this->statuses     = DB::table('employment_statuses')->get();
+        $this->statuses     = DB::table('employment_statuses')->where('employment_status', '<>', 'NO LONGER CONNECTED')->get();
         $this->roleTypes    = DB::table('role_type_users')
             ->where(function ($query) {
                 $query->whereNull('is_deleted')
