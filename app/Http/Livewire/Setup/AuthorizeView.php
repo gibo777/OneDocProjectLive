@@ -105,8 +105,9 @@ class AuthorizeView extends Component
                 ) as assigned_offices')
             );
 
-        if (Auth::user()->id <> 1) {
-            $authorizeUser->where('u.id', '<>', 1);
+        if (Auth::user()->id !== 1) {
+            $authorizeUser->where('u.id', '<>', 1)
+                ->where('u.role_type', '<>', 'SUPER ADMIN');
         }
         /* ->where(function ($query) {
                 $query->where('u.role_type', 'ADMIN')
