@@ -20,6 +20,7 @@ class AuthorizeView extends Component
     public $pageSize = 10;
     public $offices;
     public $departments;
+    public $statuses;
     public $roleTypes;
     public $search = '';
     public $fUserOffice = '';
@@ -48,6 +49,7 @@ class AuthorizeView extends Component
         return view('livewire.setup.authorize-view-list', [
             'offices'         => $this->offices,
             'departments'     => $this->departments,
+            'statuses'        => $this->statuses,
             'roleTypes'       => $this->roleTypes,
             'authorizeUser'   => $authorizeUser,
             'selectedUserId'  => $this->selectedUserId,
@@ -58,9 +60,10 @@ class AuthorizeView extends Component
 
     private function loadDropdowns()
     {
-        $this->offices     = DB::table('offices')->orderBy('company_name')->get();
-        $this->departments = DB::table('departments')->orderBy('department')->get();
-        $this->roleTypes   = DB::table('role_type_users')
+        $this->offices      = DB::table('offices')->orderBy('company_name')->get();
+        $this->departments  = DB::table('departments')->orderBy('department')->get();
+        $this->statuses     = DB::table('employment_statuses')->get();
+        $this->roleTypes    = DB::table('role_type_users')
             ->where(function ($query) {
                 $query->whereNull('is_deleted')
                     ->orWhere('is_deleted', '!=', 1);
@@ -99,12 +102,16 @@ class AuthorizeView extends Component
                 FROM offices AS off
                 WHERE FIND_IN_SET(off.id, REPLACE(au.assigned_office, "|", ",")) > 0
                 ) as assigned_offices')
-            )
-            /* ->where(function ($query) {
+            );
+
+        if (Auth::user()->id <> 1) {
+            $authorizeUser->where('u.id', '<>', 1);
+        }
+        /* ->where(function ($query) {
                 $query->where('u.role_type', 'ADMIN')
                     ->orWhere('u.role_type', 'SUPER ADMIN');
             }) */
-            ->where('u.employment_status', '<>', 'NO LONGER CONNECTED')
+        $authorizeUser->where('u.employment_status', '<>', 'NO LONGER CONNECTED')
             ->where(function ($query) {
                 if (!empty($this->search)) {
                     $searchTerms = explode(' ', $this->search);

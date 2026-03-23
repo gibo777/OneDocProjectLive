@@ -39,26 +39,27 @@
                         <!-- Department -->
                         <div class="col-12 col-md-2 px-1">
                             <div class="form-floating w-100">
-                                <select wire:model="fTLDept" id="fTLDept" class="form-select w-100">
+                                <select wire:model="fUserDept" id="fUserDept" class="form-select w-100">
                                     <option value="">All Departments</option>
-                                    {{-- @foreach ($departments as $department)
-                                        <option value="{{ $department->department_code }}">{{ $department->department }}</option>
-                                    @endforeach --}}
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department->department_code }}">{{ $department->department }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                                <label for="fTLDept">{{ __('DEPARTMENT') }}</label>
+                                <label for="fUserDept">{{ __('DEPARTMENT') }}</label>
                             </div>
                         </div>
 
                         <!-- Status -->
                         <div class="col-12 col-md-2 px-1">
                             <div class="form-floating w-100">
-                                <select wire:model="fOTStatus" id="fOTStatus" class="form-select w-100">
+                                <select wire:model="fUserStatus" id="fUserStatus" class="form-select w-100">
                                     <option value="">All Statuses</option>
-                                    {{-- @foreach ($lStatus as $status)
-                                        <option>{{ $status->request_status }}</option>
-                                    @endforeach --}}
+                                    @foreach ($statuses as $status)
+                                        <option>{{ $status->employment_status }}</option>
+                                    @endforeach
                                 </select>
-                                <label for="fOTStatus">{{ __('STATUS') }}</label>
+                                <label for="fUserStatus">{{ __('STATUS') }}</label>
                             </div>
                         </div>
 
@@ -83,7 +84,7 @@
 
                     <!-- Top Pagination -->
                     <div class="row">
-                        <div class="col-md-12 text-sm pl-4">
+                        <div class="col-md-8 text-sm">
                             <div class="form-inline mt-1">
                                 <label for="pageSize" class="mr-2">Show:</label>
                                 <select wire:model="pageSize" id="pageSize"
@@ -95,11 +96,40 @@
                                     <option value="50">50</option>
                                 </select>
                                 <span class="mx-2">entries</span>
-                                <div class="sm:col-span-7 sm:justify-center scrollable">
+                                <div class=" sm:col-span-7 sm:justify-center scrollable">
                                     {{ $authorizeUser->links('pagination.custom') }}
                                 </div>
                             </div>
                         </div>
+                        @if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN')
+                            <div class="col-md-4">
+                                <div class="row mt-2">
+                                    <div class="col-md-4 mt-2 px-0 text-center">
+                                        @if (Auth::user()->id == 1)
+                                            <div
+                                                class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3">
+                                                <i class="fas fa-table"></i>
+                                                <span id="exportExcel" class="font-weight-bold">Export Excel</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="row col-md-8 my-2">
+                                        <div class="col-md-2 text-left">
+                                            <x-jet-label for="search" value="{{ __('Search') }}"
+                                                class="my-0 pt-1 text-sm" />
+                                        </div>
+                                        <div class="col-md-10">
+                                            <x-jet-input wire:model.debounce.300ms="search" type="text"
+                                                id="search" name="search" class="w-full"
+                                                placeholder="Name/Employee ID/ Control Number"
+                                                title="Name/Employee #/ Control #">
+                                            </x-jet-input>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Table -->
@@ -113,7 +143,7 @@
                                         <th class="text-nowrap">Employee #</th>
                                         <th class="text-nowrap">Office</th>
                                         <th class="text-nowrap">Department</th>
-                                        <th class="text-nowrap">Assigned Office/s</th>
+                                        <th class="text-nowrap" style="width: 20%;">Assigned Office/s</th>
                                         <th class="text-nowrap">Role</th>
                                         <th class="text-nowrap">Employment Status</th>
                                     </tr>
@@ -132,16 +162,14 @@
                                                 <td class="text-nowrap">{{ $record->employee_id }}</td>
                                                 <td class="text-nowrap">{{ $record->office }}</td>
                                                 <td class="text-nowrap">{{ $record->department }}</td>
-                                                <td class="text-nowrap">
-                                                    {{ $record->assigned_offices ?? '-' }}
-                                                </td>
+                                                <td> {{ $record->assigned_offices ?? '-' }} </td>
                                                 <td class="text-nowrap">{{ $record->role_type }}</td>
                                                 <td class="text-nowrap">{{ $record->employment_status }}</td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="6">No Matching Records Found</td>
+                                            <td colspan="7">No Matching Records Found</td>
                                         </tr>
                                     @endif
                                 </tbody>
@@ -236,10 +264,10 @@
                     <!-- Modules Section -->
                     @if (in_array($aUserRole, ['ADMIN', 'SUPER ADMIN']))
                         <div class="mb-3 border rounded" style="overflow: visible;">
-                            <div class="d-flex flex-column flex-md-row">
+                            <div class="row g-0">
 
                                 <!-- CURRENT ASSIGNED OFFICE/S -->
-                                <div class="flex-fill border-end">
+                                <div class="col-6 border-end overflow-hidden">
                                     <div class="p-2 border-bottom">
                                         <x-jet-label value="{{ __('CURRENT ASSIGNED OFFICE/S') }}"
                                             class="w-full bg-light" />
@@ -270,7 +298,7 @@
                                 </div>
 
                                 <!-- ASSIGN NEW OFFICE/S -->
-                                <div class="flex-fill position-relative">
+                                <div class="col-6 position-relative overflow-visible">
                                     <div class="p-2 border-bottom">
                                         <x-jet-label value="{{ __('ASSIGN NEW OFFICE/S') }}"
                                             class="w-fulll bg-light" />
@@ -404,11 +432,6 @@
             },
             success: function(data) {
                 $('#dataProcess').hide();
-
-                // Swal.fire({
-                //     html: JSON.stringify(data)
-                // });
-                // return false;
 
                 if (data.isSuccess) {
                     Swal.fire({
