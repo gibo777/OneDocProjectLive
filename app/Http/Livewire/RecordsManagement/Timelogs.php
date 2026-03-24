@@ -134,90 +134,123 @@ class Timelogs extends Component
                 if (Auth::user()->id != 1 && Auth::user()->id != 2) {
                     $query->where('u.id', '!=', 1);
                 }
-                if (Auth::user()->is_head == 1) {
-                    switch (Auth::user()->id) {
-                        # All
-                        case 1:
-                        case 543:
-                        case 57:
-                        case 532:
-                            break;
-                        # E-Agro, 1Food, ANH
-                        case 124:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18])
-                                    ->orWhere('d.department_code', 'like', '%1F%');
-                            });
-                            break;
-                        # 1Food, ANH
-                        case 86:
-                        case 126:
-                        case 222:
-                        case 127:
-                        case 271:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18])
-                                    ->orWhere('d.department_code', 'like', '%1F%');
-                            });
-                            break;
-                        case 351:
-                            $query->where(function ($q) {
-                                return $q->where('d.department_code', 'like', '%1F%');
-                            });
-                            break;
 
-                        case 72:
+                if (Auth::user()->is_head == 1) {
+                    if (Auth::user()->id != 1) {
+
+                        $userAccess = DB::table('m_authorize_users')
+                            ->where('u_id', Auth::user()->id)
+                            ->first();
+
+                        if (!$userAccess) {
                             $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [12]);
-                            });
-                            break;
-                        case 135:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [8, 12]);
-                            });
-                            break;
-                        case 223:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [8, 14]);
-                            });
-                            break;
-                        case 131:
-                        case 238:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [14]);
-                            });
-                            break;
-                        case 155:
-                        case 159:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', [15]);
-                            });
-                            break;
-                        case 174:
-                        case 290:
-                        case 315:
-                        case 398:
-                            $query->where(function ($q) {
-                                return $q->where('u.office', Auth::user()->office);
-                            });
-                            break;
-                        default:
-                            $query->where(function ($q) {
-                                return $q->where('u.employee_id', Auth::user()->employee_id)
+                                $q->where('u.employee_id', Auth::user()->employee_id)
                                     ->orWhere('u.supervisor', Auth::user()->employee_id);
                             });
-                            break;
+                        } else {
+                            if (is_null($userAccess->assigned_office)) {
+                                $query->where(function ($q) {
+                                    $q->where('u.employee_id', Auth::user()->employee_id)
+                                        ->orWhere('u.supervisor', Auth::user()->employee_id);
+                                });
+                            } else {
+                                $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                                $query->where(function ($q) use ($assignedOffices) {
+                                    $q->where('u.office', Auth::user()->office)
+                                        ->orWhereIn('u.office', $assignedOffices);
+                                });
+                            }
+                        }
                     }
                 } else {
-                    $query->where('u.employee_id', Auth::user()->employee_id);
+                    $query->where('u.id', Auth::user()->id);
                 }
+
+                // if (Auth::user()->is_head == 1) {
+                //     switch (Auth::user()->id) {
+                //         # All
+                //         case 1:
+                //         case 543:
+                //         case 57:
+                //         case 532:
+                //             break;
+                //         # E-Agro, 1Food, ANH
+                //         case 124:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18])
+                //                     ->orWhere('d.department_code', 'like', '%1F%');
+                //             });
+                //             break;
+                //         # 1Food, ANH
+                //         case 86:
+                //         case 126:
+                //         case 222:
+                //         case 127:
+                //         case 271:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18])
+                //                     ->orWhere('d.department_code', 'like', '%1F%');
+                //             });
+                //             break;
+                //         case 351:
+                //             $query->where(function ($q) {
+                //                 return $q->where('d.department_code', 'like', '%1F%');
+                //             });
+                //             break;
+
+                //         case 72:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [12]);
+                //             });
+                //             break;
+                //         case 135:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [8, 12]);
+                //             });
+                //             break;
+                //         case 223:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [8, 14]);
+                //             });
+                //             break;
+                //         case 131:
+                //         case 238:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [14]);
+                //             });
+                //             break;
+                //         case 155:
+                //         case 159:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office)
+                //                     ->orWhereIn('u.office', [15]);
+                //             });
+                //             break;
+                //         case 174:
+                //         case 290:
+                //         case 315:
+                //         case 398:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.office', Auth::user()->office);
+                //             });
+                //             break;
+                //         default:
+                //             $query->where(function ($q) {
+                //                 return $q->where('u.employee_id', Auth::user()->employee_id)
+                //                     ->orWhere('u.supervisor', Auth::user()->employee_id);
+                //             });
+                //             break;
+                //     }
+                // } else {
+                //     $query->where('u.employee_id', Auth::user()->employee_id);
+                // }
 
                 // Filter by deleted users
                 $query->where(function ($q) {

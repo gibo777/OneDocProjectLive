@@ -171,58 +171,38 @@ class LeaveApplication extends Component
                 $query->where('l.date_to', $this->fLdtTo);
             }
 
-            // Additional conditional check for user role
-            /*if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
-                    $query->where(function ($q) {
-                        $q->where('th.employee_id', Auth::user()->employee_id)
-                            ->orWhere('u.supervisor', Auth::user()->employee_id);
-                    });
-                }*/
-
             // Exclude specific user IDs
             if (Auth::user()->id != 1 && Auth::user()->id != 2) {
                 $query->where('u.id', '!=', 1);
             }
+
             if (Auth::user()->is_head == 1) {
-                // This will be changed or removed if a new module for user authorization viewing is created.
-                switch (Auth::user()->id) {
-                    case 1:
-                    case 543:
-                    case 57:
-                    case 532:
-                        break;
-                    case 124:
+                if (Auth::user()->id != 1) {
+
+                    $userAccess = DB::table('m_authorize_users')
+                        ->where('u_id', Auth::user()->id)
+                        ->first();
+
+                    if (!$userAccess) {
                         $query->where(function ($q) {
-                            return $q->where('l.office', Auth::user()->office)
-                                ->orWhereIn('l.office', [6, 8, 12, 14, 15, 17, 18])
-                                ->orWhere('d.department_code', 'like', '%1F%');
-                        });
-                        break;
-                    case 126:
-                    case 127:
-                    case 271:
-                        $query->where(function ($q) {
-                            return $q->whereIn('l.office', [8, 12, 13, 14, 15, 17, 18])
-                                ->orWhere('d.department_code', 'like', '%1F%');
-                        });
-                        break;
-                    case 351:
-                        $query->where(function ($q) {
-                            return $q->where('d.department_code', 'like', '%1F%');
-                        });
-                        break;
-                    case 337:
-                        $query->where(function ($q) {
-                            return $q->where('l.office', Auth::user()->office)
-                                ->orWhere('l.office', 17);
-                        });
-                        break;
-                    default:
-                        $query->where(function ($q) {
-                            return $q->where('l.employee_id', Auth::user()->employee_id)
+                            $q->where('u.employee_id', Auth::user()->employee_id)
                                 ->orWhere('u.supervisor', Auth::user()->employee_id);
                         });
-                        break;
+                    } else {
+                        if (is_null($userAccess->assigned_office)) {
+                            $query->where(function ($q) {
+                                $q->where('u.employee_id', Auth::user()->employee_id)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                        } else {
+                            $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                            $query->where(function ($q) use ($assignedOffices) {
+                                $q->where('u.office', Auth::user()->office)
+                                    ->orWhereIn('u.office', $assignedOffices);
+                            });
+                        }
+                    }
                 }
             } else {
                 $query->where('u.id', Auth::user()->id);

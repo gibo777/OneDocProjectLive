@@ -273,14 +273,12 @@ class AuthorizeView extends Component
     public function saveAssignedViewing(Request $request)
     {
         try {
-            $uID      = (int) $request->uID;
-            $modules  = $request->moduleOffices ?? [];
+            $uID       = (int) $request->uID;
+            $modules   = $request->moduleOffices ?? [];
             $aUserRole = $request->aUserRole;
 
             // Get current role from users table
             $currentRole = DB::table('users')->where('id', $uID)->value('role_type');
-
-            // return response()->json(['currentRole' => $currentRole, 'aUserRole' => $aUserRole]);
 
             // Update role only if changed
             if ($currentRole !== $aUserRole) {
@@ -293,20 +291,18 @@ class AuthorizeView extends Component
             }
 
             foreach ($modules as $moduleID => $offices) {
-                $moduleID   = (int) $moduleID;
-                $officeList = !empty($offices)
-                    ? implode('|', $offices)
-                    : '';
+                $moduleID = (int) $moduleID;
+
+                // Save null if no offices selected, otherwise pipe-separated string
+                $officeList = !empty($offices) ? implode('|', $offices) : null;
 
                 $existing = DB::table('m_authorize_users')
                     ->where('u_id', $uID)
-                    // ->where('module_id', $moduleID)
                     ->first();
 
                 if ($existing) {
                     DB::table('m_authorize_users')
                         ->where('id', $existing->id)
-                        // ->where('module_id', $moduleID)
                         ->update([
                             'assigned_office' => $officeList,
                             'updated_by'      => Auth::user()->employee_id,
@@ -314,13 +310,36 @@ class AuthorizeView extends Component
                         ]);
                 } else {
                     DB::table('m_authorize_users')->insert([
-                        // 'module_id'         => $moduleID,
-                        'u_id'              => $uID,
-                        'assigned_office'   => $officeList,
-                        'updated_by'        => Auth::user()->employee_id,
-                        'updated_at'        => DB::raw('NOW()'),
-                        'created_by'        => Auth::user()->employee_id,
-                        'created_at'        => DB::raw('NOW()')
+                        'u_id'            => $uID,
+                        'assigned_office' => $officeList,
+                        'updated_by'      => Auth::user()->employee_id,
+                        'updated_at'      => DB::raw('NOW()'),
+                        'created_by'      => Auth::user()->employee_id,
+                        'created_at'      => DB::raw('NOW()')
+                    ]);
+                }
+            }
+
+            // If no modules passed at all, still ensure record exists with null
+            if (empty($modules)) {
+                $existing = DB::table('m_authorize_users')->where('u_id', $uID)->first();
+
+                if ($existing) {
+                    DB::table('m_authorize_users')
+                        ->where('id', $existing->id)
+                        ->update([
+                            'assigned_office' => null,
+                            'updated_by'      => Auth::user()->employee_id,
+                            'updated_at'      => DB::raw('NOW()')
+                        ]);
+                } else {
+                    DB::table('m_authorize_users')->insert([
+                        'u_id'            => $uID,
+                        'assigned_office' => null,
+                        'updated_by'      => Auth::user()->employee_id,
+                        'updated_at'      => DB::raw('NOW()'),
+                        'created_by'      => Auth::user()->employee_id,
+                        'created_at'      => DB::raw('NOW()')
                     ]);
                 }
             }
