@@ -139,6 +139,9 @@
                                 class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
                                 <thead class="thead">
                                     <tr class="dt-head-center">
+                                        @if (Auth::user()->id == 1)
+                                            <th class="text-nowrap">Id</th>
+                                        @endif
                                         <th class="text-nowrap">Name</th>
                                         <th class="text-nowrap">Employee #</th>
                                         <th class="text-nowrap">Office</th>
@@ -154,6 +157,9 @@
                                             <tr id="{{ $record->id }}" class="view-user"
                                                 wire:dblclick="selectUser({{ $record->id }})"
                                                 style="cursor: pointer;">
+                                                @if (Auth::user()->id == 1)
+                                                    <td class="text-nowrap">{{ $record->id }}</td>
+                                                @endif
                                                 @if (url('/') == 'http://localhost')
                                                     <td class="text-nowrap">xxx, xxx x.</td>
                                                 @else
@@ -169,7 +175,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="7">No Matching Records Found</td>
+                                            <td colspan="8">No Matching Records Found</td>
                                         </tr>
                                     @endif
                                 </tbody>
