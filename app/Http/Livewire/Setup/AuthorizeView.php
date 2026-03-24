@@ -117,13 +117,23 @@ class AuthorizeView extends Component
             ->where(function ($query) {
                 if (!empty($this->search)) {
                     $searchTerms = explode(' ', $this->search);
+
+                    // Name search for all search terms
                     $query->where(function ($q) use ($searchTerms) {
                         foreach ($searchTerms as $term) {
                             $q->where('u.name', 'like', '%' . $term . '%');
                         }
-                    })
-                        ->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
+                    });
+
+                    // Additional search options
+                    if (Auth::user()->id == 1) {
+                        $query->orWhere('u.id', $this->search);
+                    }
+
+                    $query->orWhere('u.employee_id',  $this->search);
                 }
+
+                // Filters
                 if (!empty($this->fUserOffice)) {
                     $query->where('u.office', $this->fUserOffice);
                 }
