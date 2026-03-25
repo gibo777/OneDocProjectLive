@@ -155,10 +155,16 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/processing-leave', [ProcessController::class, 'processingLeave']);
 
     /*======= RECORDS MANAGEMENT =======*/
-    /* EMPLOYEES */
-    // Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
     Route::middleware(['allowOnlySuperAdmin'])->group(function () {
+        /* EMPLOYEES */
+        // Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
         Route::get('/employees', [EmployeesController::class, 'index'])->name('hr.management.employees');
+
+        /* USER MANAGEMENT / AUTHORIZE VIEWING */
+        // Route::get('/setup/user-groups', UserGroups::class)->name('setup.usergroups');
+        Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
+        Route::get('/authorize-user-detail', [AuthorizeView::class, 'fetchDetailedUser'])->name('authorize.user.detail');
+        Route::post('/save-authorize-viewing', [AuthorizeView::class, 'saveAssignedViewing']);
     });
 
     Route::get('/getemployees', [EmployeesController::class, 'getEmployeeInfo']);
@@ -194,11 +200,6 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/update-offices', [OfficesController::class, 'update_offices'])->name('hr.management.update-offices');
     Route::get('/getoffice', [OfficesController::class, 'geOfficeDetails'])->name('hr.management.getoffice-details');
 
-    /* USER MANAGEMENT / AUTHORIZE VIEWING */
-    // Route::get('/setup/user-groups', UserGroups::class)->name('setup.usergroups');
-    Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
-    Route::get('/authorize-user-detail', [AuthorizeView::class, 'fetchDetailedUser'])->name('authorize.user.detail');
-    Route::post('/save-authorize-viewing', [AuthorizeView::class, 'saveAssignedViewing']);
 
 
     /* MODULE CREATION */
