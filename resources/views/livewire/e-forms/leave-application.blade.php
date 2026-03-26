@@ -25,7 +25,7 @@
 
             {{-- FILTERS AND FORM BUTTON - START --}}
             <div class="container-fluid">
-                <div class="row g-2 pb-2 px-1 align-items-end">
+                <div class="row g-2 pb-2 px-1 align-items-end inset-shadow">
 
                     <!-- Office -->
                     <div class="col-6 col-md-2 px-1">
