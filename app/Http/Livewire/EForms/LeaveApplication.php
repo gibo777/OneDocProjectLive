@@ -1227,14 +1227,13 @@ class LeaveApplication extends Component
             if ($event) {
                 if ($request->dAction === 'Approved') {
                     $description = sprintf(
-                        "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\nReason: %s\n\nStatus: %s",
+                        "Name: %s\nEmployee #: %s\n\nLeave Type: %s\nDate Covered: %s to %s\nNumber of Day/s: %.1f\n\nStatus: %s",
                         $googleEvent->name,
                         $googleEvent->employee_id,
                         $googleEvent->leave_type,
                         Carbon::parse($googleEvent->date_from)->format('M d, Y (D)'),
                         Carbon::parse($googleEvent->date_to)->format('M d, Y (D)'),
                         number_format($googleEvent->no_of_days, 2),
-                        strtoupper($googleEvent->reason),
                         $dAction
                     );
                     $event->description = $description;
