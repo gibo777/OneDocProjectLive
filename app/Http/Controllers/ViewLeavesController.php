@@ -819,60 +819,6 @@ class ViewLeavesController extends Controller
         }
     }
 
-    /* function leavesExcel(Request $request)
-    {
-        if (
-            Auth::check() && (Auth::user()->email_verified_at != NULL)
-            && (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
-        ) {
-            $currentDate = Carbon::now('Asia/Manila');
-            $formattedDateTime = $currentDate->format('YmdHis');
-
-            $leavesData = DB::table('leaves as L')
-                ->leftJoin('offices as o', 'L.office', '=', 'o.id')
-                ->leftJoin('departments as d', 'L.department', '=', 'd.department_code')
-                ->leftJoin('users as u', 'u.employee_id', '=', 'L.employee_id')
-                ->leftJoin('leave_balances as b', 'u.employee_id', 'b.employee_id')
-                ->select(
-                    'L.id',
-                    'L.leave_number',
-                    'L.name',
-                    'L.employee_id',
-                    DB::raw('(SELECT company_name FROM offices where id=L.office) as office'),
-                    'd.department',
-                    'd.department_code as dept',
-                    'L.control_number',
-                    'L.leave_type',
-                    'L.others',
-                    'L.date_from',
-                    'L.date_to',
-                    'L.no_of_days',
-                    'L.reason',
-                    'o.company_name',
-                    'u.supervisor',
-                    'L.created_at',
-                    DB::raw('(SELECT CONCAT(first_name, " ", last_name, IFNULL(CONCAT(" ", suffix), "")) FROM users WHERE employee_id = u.supervisor) as head_name'),
-                    DB::raw("DATE_FORMAT(L.date_applied, '%m-%d-%Y %h:%i %p') as date_applied"),
-                    'L.leave_status as status'
-                )
-                ->where('u.id', '!=', 1)
-                // ->where('l.')
-                ->orderBy('L.name')
-                ->orderBy('L.id')
-                ->get();
-
-            return view(
-                '/reports/excel/leaves-excel',
-                [
-                    'leavesData'    => $leavesData,
-                    'currentDate'   => $formattedDateTime
-                ]
-            );
-        } else {
-            return redirect('/');
-        }
-    } */
-
     public function leavesExcel(Request $request)
     {
         if (
@@ -880,6 +826,8 @@ class ViewLeavesController extends Controller
             Auth::user()->email_verified_at !== null &&
             in_array(Auth::user()->role_type, ['ADMIN', 'SUPER ADMIN'])
         ) {
+
+            $fileName = 'Leaves_Report_';
 
             $leavesData = DB::table('leaves as L')
                 ->leftJoin('offices as o', 'L.office', '=', 'o.id')
@@ -908,7 +856,10 @@ class ViewLeavesController extends Controller
                     DB::raw("DATE_FORMAT(L.date_applied,'%Y-%m-%d %H:%i:%s') as date_applied"),
                     'L.leave_status as status'
                 );
-            $leavesData->where('u.id', '<>', 1);
+            if (url('/') != 'http://localhost' && Auth::user()->id <> 1) {
+                $leavesData->where('u.id', '<>', 1);
+            }
+
 
             if ($request->office) {
                 $leavesData->where('L.office', $request->office);
@@ -942,7 +893,21 @@ class ViewLeavesController extends Controller
 
             $leavesData = $leavesData->orderBy('L.name')->get();
 
-            $fileName = 'Leaves_Report_' . Carbon::now()->format('YmdHi') . '.xls';
+            if ($request->office) {
+                $officeName = $leavesData->first()->office ?? '';
+                $fileName .= strtoupper($officeName) . '_';
+            }
+
+            if ($request->date_from && $request->date_to) {
+                $dateFrom = Carbon::parse($request->date_from);
+                $dateTo   = Carbon::parse($request->date_to);
+                $fileName .= $dateFrom->format('Md') . '_' . $dateTo->format('Md_Y') . '_';
+            } elseif ($request->date_from && !$request->date_to) {
+                $dateFrom = Carbon::parse($request->date_from);
+                $fileName .= $dateFrom->format('Md_Y') . '_';
+            }
+
+            $fileName .= Carbon::now()->format('mdHi') . '.xls';
 
             return response()->json([
                 'leavesData' => $leavesData,

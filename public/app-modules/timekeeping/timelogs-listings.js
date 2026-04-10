@@ -181,7 +181,7 @@ $(document).ready(function () {
                 // prompt('test',response); return false;
 
                 // Extracting data from the SQL response JSON
-                const { tlSummary, tlDetailed, currentDate } = response;
+                const { tlSummary, tlDetailed, currentDate, fileName } = response;
                 var currentDateValue = currentDate;
 
                 /* Columns for Summary Timelogs */
@@ -330,7 +330,8 @@ $(document).ready(function () {
                 var blob = new Blob([xmlContent], { type: 'application/vnd.ms-excel' });
                 var url = window.URL.createObjectURL(blob);
 
-                var filename = `Timelogs_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
+                // var filename = `Timelogs_${currentDateValue}.xlsx`; // Use .xlsx extension for Excel files
+                var filename = fileName;
 
                 // Create a download link
                 var a = document.createElement('a');

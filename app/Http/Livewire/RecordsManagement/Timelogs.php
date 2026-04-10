@@ -167,91 +167,6 @@ class Timelogs extends Component
                     $query->where('u.id', Auth::user()->id);
                 }
 
-                // if (Auth::user()->is_head == 1) {
-                //     switch (Auth::user()->id) {
-                //         # All
-                //         case 1:
-                //         case 543:
-                //         case 57:
-                //         case 532:
-                //             break;
-                //         # E-Agro, 1Food, ANH
-                //         case 124:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [6, 8, 12, 14, 15, 17, 18])
-                //                     ->orWhere('d.department_code', 'like', '%1F%');
-                //             });
-                //             break;
-                //         # 1Food, ANH
-                //         case 86:
-                //         case 126:
-                //         case 222:
-                //         case 127:
-                //         case 271:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [8, 12, 13, 14, 15, 17, 18])
-                //                     ->orWhere('d.department_code', 'like', '%1F%');
-                //             });
-                //             break;
-                //         case 351:
-                //             $query->where(function ($q) {
-                //                 return $q->where('d.department_code', 'like', '%1F%');
-                //             });
-                //             break;
-
-                //         case 72:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [12]);
-                //             });
-                //             break;
-                //         case 135:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [8, 12]);
-                //             });
-                //             break;
-                //         case 223:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [8, 14]);
-                //             });
-                //             break;
-                //         case 131:
-                //         case 238:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [14]);
-                //             });
-                //             break;
-                //         case 155:
-                //         case 159:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office)
-                //                     ->orWhereIn('u.office', [15]);
-                //             });
-                //             break;
-                //         case 174:
-                //         case 290:
-                //         case 315:
-                //         case 398:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.office', Auth::user()->office);
-                //             });
-                //             break;
-                //         default:
-                //             $query->where(function ($q) {
-                //                 return $q->where('u.employee_id', Auth::user()->employee_id)
-                //                     ->orWhere('u.supervisor', Auth::user()->employee_id);
-                //             });
-                //             break;
-                //     }
-                // } else {
-                //     $query->where('u.employee_id', Auth::user()->employee_id);
-                // }
-
                 // Filter by deleted users
                 $query->where(function ($q) {
                     $q->where('u.is_deleted', 0)
@@ -371,6 +286,8 @@ class Timelogs extends Component
             $currentDate = Carbon::now('Asia/Manila');
             $formattedDateTime = $currentDate->format('YmdHis');
 
+            $fileName = 'Timelogs_';
+
 
             if (Auth::user()->is_head == 1 || Auth::user()->role_type == 'SUPER ADMIN' ||  Auth::user()->role_type == 'ADMIN') {
                 $tlSummary = DB::select("CALL sp_timelogs_header(?, ?, ?, ?, ?, ?)", [
@@ -394,11 +311,25 @@ class Timelogs extends Component
                 $tlSummary = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
             }
 
+            if ($request->office) {
+                $officeName = DB::table('offices')->where('id', $request->office)->value('company_name') ?? '';
+                $fileName .= strtoupper($officeName) . '_';
+            }
+            if ($request->timeIn && $request->timeOut) {
+                $dateFrom = Carbon::parse($request->timeIn);
+                $dateTo   = Carbon::parse($request->timeOut);
+                $fileName .= $dateFrom->format('Md') . '_' . $dateTo->format('Md_Y') . '_';
+            } elseif ($request->timeIn && !$request->timeOut) {
+                $dateFrom = Carbon::parse($request->timeIn);
+                $fileName .= $dateFrom->format('Md_Y') . '_';
+            }
+            $fileName .= Carbon::now()->format('mdHi') . '.xls';
 
             return response()->json([
                 'tlSummary'     => $tlSummary,
                 'tlDetailed'    => $tlDetailed,
-                'currentDate'   => $formattedDateTime
+                'currentDate'   => $formattedDateTime,
+                'fileName'      => $fileName
             ]);
 
             // $offices = DB::table('offices')->orderBy('company_name')->get();
