@@ -64,12 +64,16 @@ class AuthorizeView extends Component
         $this->offices      = DB::table('offices')->orderBy('company_name')->get();
         $this->departments  = DB::table('departments')->orderBy('department')->get();
         $this->statuses     = DB::table('employment_statuses')->where('employment_status', '<>', 'NO LONGER CONNECTED')->get();
-        $this->roleTypes    = DB::table('role_type_users')
+        $query = DB::table('role_type_users')
             ->where(function ($query) {
                 $query->whereNull('is_deleted')
                     ->orWhere('is_deleted', '!=', 1);
-            })
-            ->get();
+            });
+
+        if (Auth::user()->id !== 1) {
+            $query->where('role_type', '<>', 'SUPER ADMIN');
+        }
+        $this->roleTypes = $query->get();
     }
 
     public function refreshComponent()
@@ -130,7 +134,7 @@ class AuthorizeView extends Component
                         $query->orWhere('u.id', $this->search);
                     }
 
-                    $query->orWhere('u.employee_id',  $this->search);
+                    $query->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
                 }
 
                 // Filters
