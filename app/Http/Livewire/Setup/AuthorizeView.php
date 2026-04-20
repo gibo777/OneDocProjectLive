@@ -134,7 +134,7 @@ class AuthorizeView extends Component
                         $query->orWhere('u.id', $this->search);
                     }
 
-                    $query->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
+                    $query->orWhere('u.employee_id', 'like',  $this->search);
                 }
 
                 // Filters
