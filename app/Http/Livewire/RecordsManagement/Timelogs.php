@@ -158,7 +158,8 @@ class Timelogs extends Component
 
                                 $query->where(function ($q) use ($assignedOffices) {
                                     $q->where('u.office', Auth::user()->office)
-                                        ->orWhereIn('u.office', $assignedOffices);
+                                        ->orWhereIn('u.office', $assignedOffices)
+                                        ->orWhere('u.supervisor', Auth::user()->employee_id);
                                 });
                             }
                         }
