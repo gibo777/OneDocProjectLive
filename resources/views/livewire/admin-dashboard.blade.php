@@ -426,16 +426,14 @@
 <script type="text/javascript">
     $(document).on('click', '#gCalendar', function(e) {
         Swal.fire({
-            width: '100%',
+            width: '96%',
             allowOutsideClick: false,
-            // confirmButtonText: 'Close Calendar',
             showConfirmButton: false,
             showCloseButton: true,
             customClass: {
-                title: 'custom-title'
+                title: 'custom-title banner-blue'
             },
             title: 'Google Calendar Integration of Leaves',
-            // html: `<iframe src="https://calendar.google.com/calendar/embed?src=5be3de62c935b7c9d0c1a00efc90e540d12911a0fd034b048ce4a6ab0f7e859e%40group.calendar.google.com&ctz=Asia%2FManila" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>`
             html: `<iframe src="https://calendar.google.com/calendar/embed?src=3c87eiuludrrdasrmr3qc0b8hs%40group.calendar.google.com&ctz=Asia%2FManila" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>`
         });
         return false;
