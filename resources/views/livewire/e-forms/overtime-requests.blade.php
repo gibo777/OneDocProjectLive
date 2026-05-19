@@ -115,7 +115,7 @@
                         <div class="col-md-4">
                             <div class="row mt-2">
                                 <div class="col-md-4 mt-2 px-0 text-center">
-                                    @if (Auth::user()->id == 1)
+                                    @if (Auth::user()->role_type == 'SUPER ADMIN')
                                         <div
                                             class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3">
                                             <i class="fas fa-table"></i>

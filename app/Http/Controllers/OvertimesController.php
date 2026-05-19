@@ -1577,6 +1577,37 @@ class OvertimesController extends Controller
             $otData->where('u.id', '<>', 1);
         }
 
+        if (Auth::user()->is_head == 1) {
+            if (Auth::user()->id != 1) {
+
+                $userAccess = DB::table('m_authorize_users')
+                    ->where('u_id', Auth::user()->id)
+                    ->first();
+
+                if (!$userAccess) {
+                    $otData->where(function ($q) {
+                        $q->where('u.employee_id', Auth::user()->employee_id)
+                            ->orWhere('u.supervisor', Auth::user()->employee_id);
+                    });
+                } else {
+                    if (is_null($userAccess->assigned_office)) {
+                        $otData->where(function ($q) {
+                            $q->where('u.employee_id', Auth::user()->employee_id)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    } else {
+                        $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                        $otData->where(function ($q) use ($assignedOffices) {
+                            $q->where('u.office', Auth::user()->office)
+                                ->orWhereIn('u.office', $assignedOffices)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    }
+                }
+            }
+        }
+
         if ($request->office) {
             $otData->where('ot.office', $request->office);
         }
@@ -1609,18 +1640,18 @@ class OvertimesController extends Controller
 
         $otData = $otData->orderBy('ot.name', 'desc')->get();
 
-        // $fOffice = '';
-        // if ($request->office) {
-        //     $fOffice = DB::table('offices')
-        //         ->where('id', $request->office)
-        //         ->value('company_name');
-        // }
 
         $fileName = 'OT_Report_';
         if ($request->office) {
-            $officeName = $otData->first()->office ?? '';
+            $officeName = DB::table('offices')
+                ->where('id', $request->office)
+                ->value('company_name');
             $fileName .= strtoupper($officeName) . '_';
         }
+        // if ($request->office) {
+        //     $officeName = $otData->first()->office ?? '';
+        //     $fileName .= strtoupper($officeName) . '_';
+        // }
         if ($request->date_from && $request->date_to) {
             $dateFrom = Carbon::parse($request->date_from);
             $dateTo   = Carbon::parse($request->date_to);
