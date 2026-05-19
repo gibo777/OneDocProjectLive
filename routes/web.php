@@ -165,6 +165,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
         Route::get('/authorize-user-list', AuthorizeView::class)->name('authorize.user.list');
         Route::get('/authorize-user-detail', [AuthorizeView::class, 'fetchDetailedUser'])->name('authorize.user.detail');
         Route::post('/save-authorize-viewing', [AuthorizeView::class, 'saveAssignedViewing']);
+
+        /*======= EMPLOYEES =======*/
+        Route::get('/employees-listing', Employees::class)->name('employees-listing');
+        Route::get('/employee-detailed', [Employees::class, 'fetchDetailedEmployee']);
+        Route::post('/update-employee-info', [Employees::class, 'updateEmployeeInfo']);
     });
 
     Route::get('/getemployees', [EmployeesController::class, 'getEmployeeInfo']);
@@ -314,10 +319,6 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     // Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
 
 
-    /*======= EMPLOYEES =======*/
-    Route::get('/employees-listing', Employees::class)->name('employees-listing');
-    Route::get('/employee-detailed', [Employees::class, 'fetchDetailedEmployee']);
-    Route::post('/update-employee-info', [Employees::class, 'updateEmployeeInfo']);
 
     Route::get('/timelogs', [WebcamController::class, 'timeLogs'])->name('timelogs');
     Route::post('/save-timelogs', [WebcamController::class, 'saveTimeLogs'])->name('save.timelogs');
