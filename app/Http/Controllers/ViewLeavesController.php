@@ -860,6 +860,37 @@ class ViewLeavesController extends Controller
                 $leavesData->where('u.id', '<>', 1);
             }
 
+            if (Auth::user()->is_head == 1) {
+                if (Auth::user()->id != 1) {
+
+                    $userAccess = DB::table('m_authorize_users')
+                        ->where('u_id', Auth::user()->id)
+                        ->first();
+
+                    if (!$userAccess) {
+                        $leavesData->where(function ($q) {
+                            $q->where('u.employee_id', Auth::user()->employee_id)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    } else {
+                        if (is_null($userAccess->assigned_office)) {
+                            $leavesData->where(function ($q) {
+                                $q->where('u.employee_id', Auth::user()->employee_id)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                        } else {
+                            $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                            $leavesData->where(function ($q) use ($assignedOffices) {
+                                $q->where('u.office', Auth::user()->office)
+                                    ->orWhereIn('u.office', $assignedOffices)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                        }
+                    }
+                }
+            }
+
 
             if ($request->office) {
                 $leavesData->where('L.office', $request->office);

@@ -26,8 +26,8 @@ class LeaveApplication extends Component
     use WithPagination;
 
     public $pageSize = 15;  // Default page size
-    public $offices;        // Variable to hold offices
-    public $departments;    // Variable to hold departments
+    public $offices = [];        // Variable to hold offices
+    public $departments = [];    // Variable to hold departments
     public $search = '';    // Search input variable
     public $fTLOffice = ''; // Office filter variable
     public $fTLDept = '';   // Office filter variable
@@ -120,7 +120,9 @@ class LeaveApplication extends Component
             $query->where('l.is_deleted', 0)
                 ->orWhereNull('l.is_deleted');
         });
-        (Auth::user()->id != 1 && Auth::user()->id != 2) ? $leaves = $leaves->where('u.id', '<>', 1) : '';
+        if (url('/') != 'http://localhost' && Auth::user()->id <> 1) {
+            $leaves = $leaves->where('u.id', '<>', 1);
+        }
         $leaves = $leaves->where(function ($query) {
 
             // Apply office filter if selected
@@ -172,7 +174,7 @@ class LeaveApplication extends Component
             }
 
             // Exclude specific user IDs
-            if (Auth::user()->id != 1 && Auth::user()->id != 2) {
+            if (url('/') != 'http://localhost' && Auth::user()->id != 1) {
                 $query->where('u.id', '!=', 1);
             }
 
@@ -199,7 +201,8 @@ class LeaveApplication extends Component
 
                             $query->where(function ($q) use ($assignedOffices) {
                                 $q->where('u.office', Auth::user()->office)
-                                    ->orWhereIn('u.office', $assignedOffices)->orWhere('u.supervisor', Auth::user()->employee_id);
+                                    ->orWhereIn('u.office', $assignedOffices)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
                             });
                         }
                     }
