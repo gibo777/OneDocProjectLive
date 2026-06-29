@@ -227,7 +227,7 @@
                     @endif --}}
                 @endif
             @else
-                @if ($dLeave->leave_status == 'Head Approved')
+                @if ($dLeave->leave_status == 'Head Approved' || $dLeave->leave_status == 'Processed')
                     <div class="col-md-12 px-1 my-1">
                         <x-jet-button id="bCancelLeave" class="w-full">
                             Cancel Leave
