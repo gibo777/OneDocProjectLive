@@ -130,7 +130,7 @@
                     <!-- Right: Export + Search + File Leave Button -->
                     <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                        @if (Auth::user()->role_type == 'SUPER ADMIN')
+                        @if (Auth::user()->is_head == 1)
                             <div id="exportExcelLeaves"
                                 class="btn btn-outline-success btn-sm d-inline-flex align-items-center gap-1 px-3 shadow-sm">
                                 <i class="fas fa-table"></i>
