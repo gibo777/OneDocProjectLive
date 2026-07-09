@@ -174,7 +174,11 @@
                             @if ($leaves->isNotEmpty())
                                 @foreach ($leaves as $record)
                                     <tr id="{{ $record->id }}" class="view-leave">
-                                        <td>{{ $record->full_name }}</td>
+                                        @if (url('/') == 'http://localhost')
+                                            <td>xxx, xxx x.</td>
+                                        @else
+                                            <td>{{ $record->full_name }}</td>
+                                        @endif
                                         <td>{{ $record->office }}</td>
                                         <td>{{ $record->department }}</td>
                                         <td>{{ $record->control_number }}</td>

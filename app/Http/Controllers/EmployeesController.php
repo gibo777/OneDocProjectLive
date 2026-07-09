@@ -348,23 +348,11 @@ class EmployeesController extends Controller
                 $tlSummary = DB::select('CALL sp_timelogs(' . Auth::user()->id . ',' . Auth::user()->is_head . ',' . $employee_id . ')');
             }
 
-
             return response()->json([
                 'tlSummary'     => $tlSummary,
                 'tlDetailed'    => $tlDetailed,
                 'currentDate'   => $formattedDateTime
             ]);
-
-            // $offices = DB::table('offices')->orderBy('company_name')->get();
-            // $departments = DB::table('departments')->orderBy('department')->get();
-
-            // return view('/reports/excel/timelogs-excel',
-            //     [
-            //         'employees'     => $employees,
-            //         'offices'       => $offices,
-            //         'departments'   => $departments,
-            //         'currentDate'   => $formattedDateTime
-            //     ]);
         } else {
             return redirect('/');
         }

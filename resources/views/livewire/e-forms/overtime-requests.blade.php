@@ -93,7 +93,7 @@
 
             <div id="table_data">
                 <div class="row">
-                    <div class="col-md-8 text-sm">
+                    <div class="col-md-7 text-sm">
                         <div class="form-inline mt-1">
                             <label for="pageSize" class="mr-2">Show:</label>
                             <select wire:model="pageSize" id="pageSize"
@@ -110,37 +110,38 @@
                             </div>
                         </div>
                     </div>
-
                     @if (Auth::user()->role_type == 'SUPER ADMIN' || Auth::user()->role_type == 'ADMIN')
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="row mt-2">
-                                <div class="col-md-4 mt-2 px-0 text-center">
+                                <div
+                                    class="col-md-7 mt-2 px-0 d-flex flex-nowrap justify-content-center align-items-center">
                                     @if (Auth::user()->is_head == 1)
                                         <div
-                                            class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3">
+                                            class="form-group btn btn-outline-danger d-inline-block shadow-sm px-1 rounded capitalize hover px-3 mr-1 text-nowrap">
+                                            <i class="fas fa-file-pdf"></i>
+                                            <span id="exportPDFOvertime" class="font-weight-bold">Export PDF</span>
+                                        </div>
+                                        <div
+                                            class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3 text-nowrap">
                                             <i class="fas fa-table"></i>
                                             <span id="exportExcelOvertime" class="font-weight-bold">Export Excel</span>
                                         </div>
                                     @endif
                                 </div>
-                                <div class="row col-md-8 my-2">
-                                    <div class="col-md-2 text-left">
-                                        <x-jet-label for="search" value="{{ __('Search') }}"
-                                            class="my-0 pt-1 text-sm" />
-                                    </div>
-                                    <div class="col-md-10">
+                                <div class="row col-md-5 my-2">
+                                    <div class="form-floating p-0">
                                         <x-jet-input wire:model.debounce.300ms="search" type="text" id="search"
-                                            name="search" class="w-full" placeholder="Name/Employee ID/ Control Number"
+                                            name="search" class="w-full form-control"
                                             title="Name/Employee #/ Control #">
                                         </x-jet-input>
+                                        <x-jet-label for="search" value="{{ __('Search') }}" class="w-full" />
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     @endif
-
                 </div>
+
                 <!-- Table -->
                 <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
 

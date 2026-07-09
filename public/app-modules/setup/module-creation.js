@@ -7,13 +7,6 @@ $(document).ready(function () {
 
     function createCategory(moduleName, parentModule, navOrder, moduleCategory) {
 
-        Swal.fire({
-            html: 'Module Name: ' + moduleName
-                + '<br>Parent Module: ' + parentModule
-                + '<br>Nav Order: ' + navOrder
-                + '<br>Category: ' + moduleCategory
-        }); return false;
-
         $.ajaxSetup({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });

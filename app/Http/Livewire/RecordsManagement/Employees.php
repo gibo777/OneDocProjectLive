@@ -18,8 +18,8 @@ class Employees extends Component
     use WithPagination;
 
     public $pageSize = 15;     // Default page size
-    public $offices;         // Variable to hold offices
-    public $departments;     // Variable to hold departments
+    public $offices = [];         // Variable to hold offices
+    public $departments = [];     // Variable to hold departments
     public $search = '';     // Search input variable
     public $fTLOffice = ''; // Office filter variable
     public $fTLDept = '';     // Office filter variable
@@ -91,7 +91,7 @@ class Employees extends Component
     private function fetchUsersListing()
     {
 
-        $leaves = DB::table('users as u')
+        $employees = DB::table('users as u')
             ->select(
                 'u.id',
                 'u.name as full_name',
@@ -105,12 +105,12 @@ class Employees extends Component
             ->leftJoin('offices as o', 'u.office', '=', 'o.id')
             ->leftJoin('departments as d', 'u.department', '=', 'd.department_code')
             ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor');
-        // $leaves = $leaves->where(function ($query) {
+        // $employees = $employees->where(function ($query) {
         //          $query->where('l.is_deleted', 0)
         //              ->orWhereNull('l.is_deleted');
         //      });
-        (Auth::user()->id != 1 && Auth::user()->id != 2) ? $leaves = $leaves->where('u.id', '<>', 1) : '';
-        $leaves = $leaves->where(function ($query) {
+        (Auth::user()->id != 1 && Auth::user()->id != 2) ? $employees = $employees->where('u.id', '<>', 1) : '';
+        $employees = $employees->where(function ($query) {
 
             // Apply office filter if selected
             if (!empty($this->fTLOffice)) {
@@ -138,38 +138,34 @@ class Employees extends Component
                     ->orWhere('u.employee_id', 'like', '%' . $this->search . '%');
             }
 
+            if (Auth::user()->id != 1) {
 
-            // Additional conditional check for user role
-            /*if (Auth::user()->role_type != 'SUPER ADMIN' && Auth::user()->role_type != 'ADMIN') {
-		            $query->where(function ($q) {
-		                $q->where('th.employee_id', Auth::user()->employee_id)
-		                  ->orWhere('u.supervisor', Auth::user()->employee_id);
-		            });
-		        }*/
+                $userAccess = DB::table('m_authorize_users')
+                    ->where('u_id', Auth::user()->id)
+                    ->first();
 
-            // // Exclude specific user IDs
-            // if (Auth::user()->id != 1 && Auth::user()->id != 2) {
-            //     $query->where('u.id', '!=', 1);
-            // }
-            // if  (Auth::user()->is_head==1) {
-            // 	switch (Auth::user()->id) {
-            // 		case 1: case 8: case 18: case 58: break;
-            // 		case 124:
-            // 			$query->where(function($q) {
-            // 				return $q->where('l.office', Auth::user()->office)
-            // 						->orWhere('l.office',6);
-            // 			});
-            // 			break;
-            // 		default:
-            // 			$query->where(function($q) {
-            // 				return $q->where('l.employee_id', Auth::user()->employee_id)
-            // 						->orWhere('u.supervisor', Auth::user()->employee_id);
-            // 			});
-            // 			break;
-            // 	}
-            // } /*else {
-            // 	$query->where('u.employee_id', Auth::user()->employee_id);
-            // }*/
+                if (!$userAccess) {
+                    $query->where(function ($q) {
+                        $q->where('u.employee_id', Auth::user()->employee_id)
+                            ->orWhere('u.supervisor', Auth::user()->employee_id);
+                    });
+                } else {
+                    if (is_null($userAccess->assigned_office)) {
+                        $query->where(function ($q) {
+                            $q->where('u.employee_id', Auth::user()->employee_id)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    } else {
+                        $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                        $query->where(function ($q) use ($assignedOffices) {
+                            $q->where('u.office', Auth::user()->office)
+                                ->orWhereIn('u.office', $assignedOffices)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    }
+                }
+            }
 
             // Filter by deleted users
             $query->where(function ($q) {
@@ -177,10 +173,10 @@ class Employees extends Component
                     ->orWhereNull('u.is_deleted');
             });
         });
-        $leaves = $leaves->orderBy('u.created_at', 'desc')
+        $employees = $employees->orderBy('u.name')
             ->paginate($this->pageSize);
 
-        return $leaves;
+        return $employees;
     }
 
 

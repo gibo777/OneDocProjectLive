@@ -123,6 +123,7 @@ class LeaveApplication extends Component
         if (url('/') != 'http://localhost' && Auth::user()->id <> 1) {
             $leaves = $leaves->where('u.id', '<>', 1);
         }
+
         $leaves = $leaves->where(function ($query) {
 
             // Apply office filter if selected
@@ -173,7 +174,7 @@ class LeaveApplication extends Component
                 $query->where('l.date_to', $this->fLdtTo);
             }
 
-            // Exclude specific user IDs
+            // For System Admin only
             if (url('/') != 'http://localhost' && Auth::user()->id != 1) {
                 $query->where('u.id', '!=', 1);
             }
@@ -189,12 +190,18 @@ class LeaveApplication extends Component
                         $query->where(function ($q) {
                             $q->where('u.employee_id', Auth::user()->employee_id)
                                 ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            if (Auth::user()->id == 32) {
+                                $q->orWhere('u.supervisor', '2000-0001');
+                            }
                         });
                     } else {
                         if (is_null($userAccess->assigned_office)) {
                             $query->where(function ($q) {
                                 $q->where('u.employee_id', Auth::user()->employee_id)
                                     ->orWhere('u.supervisor', Auth::user()->employee_id);
+                                if (Auth::user()->id == 32) {
+                                    $q->orWhere('u.supervisor', '2000-0001');
+                                }
                             });
                         } else {
                             $assignedOffices = explode('|', $userAccess->assigned_office);
@@ -203,6 +210,9 @@ class LeaveApplication extends Component
                                 $q->where('u.office', Auth::user()->office)
                                     ->orWhereIn('u.office', $assignedOffices)
                                     ->orWhere('u.supervisor', Auth::user()->employee_id);
+                                if (Auth::user()->id == 32) {
+                                    $q->orWhere('u.supervisor', '2000-0001');
+                                }
                             });
                         }
                     }
@@ -233,6 +243,7 @@ class LeaveApplication extends Component
     public function fetchDetailedLeave(Request $request)
     {
         $year = Carbon::now('Asia/Manila')->year;
+        $altApprover = '';
         $dLeave = DB::table('leaves as l')
             ->select(
                 'l.id',
@@ -260,6 +271,11 @@ class LeaveApplication extends Component
             ->leftJoin('leave_types as lt', 'l.leave_type', 'lt.leave_type')
             ->where('l.id', $request->id)
             ->first();
+
+        if ($dLeave->supervisor == '2000-0001') {
+            $altApprover = DB::table('users')->where('id', 32)->value('employee_id');
+        }
+
 
         $leaveCredits = DB::table('leaves')
             ->select(
@@ -310,8 +326,9 @@ class LeaveApplication extends Component
             'modals/m-view-leave-detailed',
             [
                 'dLeave'        => $dLeave,
+                'altApprover'   => $altApprover,
                 'leaveTypes'    => $leaveTypes,
-                'leaveCredits'    => $leaveCredits
+                'leaveCredits'  => $leaveCredits
             ]
         );
     }
@@ -340,6 +357,8 @@ class LeaveApplication extends Component
                 //         $event->save();
                 //     }
                 // }
+
+                // $headName = DB::table('users')->select('first_name','last_name')->get();
 
                 $dataArray = array(
                     'leave_status'          => $newStatus,

@@ -1536,7 +1536,7 @@ class OvertimesController extends Controller
         }
     }
 
-    public function overtimesExcel(Request $request)
+    public function exportExcelOvertime(Request $request)
     {
         $otData = DB::table('overtimes as ot')
             ->select(
@@ -1666,6 +1666,172 @@ class OvertimesController extends Controller
             'otData' => $otData,
             'fileName' => $fileName
         ]);
+    }
+
+    public function exportPDFOvertime(Request $request)
+    {
+        try {
+            $otData = DB::table('overtimes as ot')
+                ->select(
+                    'ot.id',
+                    'ot.u_id',
+                    'ot.name as full_name',
+                    'o.company_name as office',
+                    'd.department',
+                    'u.supervisor',
+                    'd.department_code as dept',
+                    'ot.ot_control_number',
+                    'ot.ot_reason',
+                    'ot.ot_location',
+                    DB::raw("CONCAT(
+                        DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
+                        DATE_FORMAT(ot.ot_time_from, '%h:%i %p'), ' - ',
+                        DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
+                        DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
+                    ) as ot_schedule"),
+                    'ot.ot_hrmins',
+                    'ot.ot_status',
+                    'ot.employee_id',
+                    'ot.created_at as date_applied',
+                    'ot.is_head_approved',
+                    'ot.is_head2_approved',
+                    DB::raw("CONCAT(u2.first_name, ' ', u2.last_name) as approver1"),
+                    DB::raw("CONCAT(u3.first_name, ' ', u3.last_name) as approver2")
+                )
+                ->leftJoin('offices as o', 'ot.office', '=', 'o.id')
+                ->leftJoin('departments as d', 'ot.department', '=', 'd.department_code')
+                ->leftJoin('users as u', 'u.employee_id', '=', 'ot.employee_id')
+                ->leftJoin('users as u2', 'u2.employee_id', '=', 'u.supervisor')
+                ->leftJoin('users as u3', function ($join) {
+                    $join->on('u3.employee_id', '=', 'u.manager')
+                        ->whereNotNull('u.manager');
+                });
+
+            if (url('/') != 'http://localhost' && Auth::user()->id <> 1) {
+                $otData->where('u.id', '<>', 1);
+            }
+
+            if (Auth::user()->is_head == 1) {
+                if (Auth::user()->id != 1) {
+
+                    $userAccess = DB::table('m_authorize_users')
+                        ->where('u_id', Auth::user()->id)
+                        ->first();
+
+                    if (!$userAccess) {
+                        $otData->where(function ($q) {
+                            $q->where('u.employee_id', Auth::user()->employee_id)
+                                ->orWhere('u.supervisor', Auth::user()->employee_id);
+                        });
+                    } else {
+                        if (is_null($userAccess->assigned_office)) {
+                            $otData->where(function ($q) {
+                                $q->where('u.employee_id', Auth::user()->employee_id)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                        } else {
+                            $assignedOffices = explode('|', $userAccess->assigned_office);
+
+                            $otData->where(function ($q) use ($assignedOffices) {
+                                $q->where('u.office', Auth::user()->office)
+                                    ->orWhereIn('u.office', $assignedOffices)
+                                    ->orWhere('u.supervisor', Auth::user()->employee_id);
+                            });
+                        }
+                    }
+                }
+            }
+
+            if ($request->office) {
+                $otData->where('ot.office', $request->office);
+            }
+
+            if ($request->department) {
+                $otData->where('ot.department', $request->department);
+            }
+
+            if ($request->status) {
+                $otData->where('ot.ot_status', $request->status);
+            }
+
+            if ($request->date_from && $request->date_to) {
+                $otData->whereBetween('ot.ot_date_from', [
+                    $request->date_from,
+                    $request->date_to
+                ]);
+            } elseif ($request->date_from && !$request->date_to) {
+                $otData->whereDate('ot.ot_date_from', $request->date_from);
+                $otData->whereDate('ot.ot_date_to', $request->date_from);
+            }
+
+            if ($request->search) {
+                $otData->where(function ($q) use ($request) {
+                    $q->where('ot.name', 'like', '%' . $request->search . '%')
+                        ->orWhere('ot.employee_id', 'like', '%' . $request->search . '%')
+                        ->orWhere('ot.ot_control_number', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            $otData = $otData->orderBy('ot.name')->orderBy('ot.ot_date_from', 'desc')->get();
+
+            \Log::info('exportPDFOvertime: row count', ['count' => $otData->count()]);
+
+            if ($otData->isEmpty()) {
+                return response()->json(['message' => 'No data to export!'], 404);
+            }
+
+            $fileName = 'OT_Report_';
+            if ($request->office) {
+                $officeName = DB::table('offices')
+                    ->where('id', $request->office)
+                    ->value('company_name');
+                $fileName .= strtoupper($officeName) . '_';
+            }
+            if ($request->date_from && $request->date_to) {
+                $dateFrom = Carbon::parse($request->date_from);
+                $dateTo   = Carbon::parse($request->date_to);
+                $fileName .= $dateFrom->format('Md') . '_' . $dateTo->format('Md_Y') . '_';
+            } elseif ($request->date_from && !$request->date_to) {
+                $dateFrom = Carbon::parse($request->date_from);
+                $fileName .= $dateFrom->format('Md_Y') . '_';
+            }
+            $fileName .= Carbon::now()->format('mdHi') . '.pdf';
+
+            \Log::info('exportPDFOvertime: building PDF', ['fileName' => $fileName]);
+
+            $data = [
+                'otData' => $otData,
+            ];
+
+            $pdf = Pdf::setPaper('legal', 'landscape')
+                ->setOptions([
+                    'dpi' => 100,
+                    'defaultFont' => 'sans-serif',
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'isJavascriptEnabled' => true,
+                    'isPhpEnabled' => true
+                ])
+                ->loadView('reports.pdf.overtime-report', ['data' => $data])
+                ->setWarnings(false);
+
+            $pdf->output();
+
+            \Log::info('exportPDFOvertime: PDF generated successfully, sending download');
+
+            return $pdf->download($fileName);
+        } catch (\Throwable $e) {
+            \Log::error('exportPDFOvertime failed', [
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to generate PDF: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function sendOvertimeToHRIS(Request $request)

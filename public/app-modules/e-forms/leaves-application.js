@@ -530,7 +530,7 @@ $(document).ready(function () {
                     }).then(() => {
                         // Swal.fire({ html: lAction }); return false;
                         Livewire.emit('refreshComponent');
-                        // if (lAction=='Denied') {
+                        
                         $.ajax({
                             url: `${window.location.origin}/e-forms/notify-leave-action`,
                             method: 'POST',

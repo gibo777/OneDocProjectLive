@@ -56,8 +56,8 @@ use App\Http\Controllers\PersonnelAccountingDataController;
 
 
 /* FACE RECOGNITION */
-// use App\Http\Livewire\RecordsManagement\FaceRegistration;
-// use App\Http\Controllers\FaceRegistrationController;
+use App\Http\Livewire\RecordsManagement\FaceRegistration;
+use App\Http\Controllers\FaceRegistrationController;
 
 /* CRON / SCHEDULER */
 use App\Http\Controllers\CronController;
@@ -276,11 +276,16 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
 
     /* Export to Excel */
     Route::get('/leaves-excel', [ViewLeavesController::class, 'leavesExcel'])->name('leaves.excel');
-    Route::get('/overtimes-excel', [OvertimesController::class, 'overtimesExcel'])->name('overtimes.excel');
+    Route::get('/overtimes-excel', [OvertimesController::class, 'exportExcelOvertime'])->name('overtimes.excel');
     Route::get('/timelogs-excel', [EmployeesController::class, 'timeLogsExcel'])->name('timelogs.excel');
     Route::get('/export-timelogs-xls', [Timelogs::class, 'timeLogsExcel'])->name('export.timelogs.excel');
 
     Route::get('/ot-timelogs-excel', [OvertimesController::class, 'otTimeLogsExcel'])->name('ot.timelogs.excel');
+
+
+    /* Export to PDF */
+
+    Route::get('/overtimes-pdf', [OvertimesController::class, 'exportPDFOvertime'])->name('overtimes.pdf');
 
     /* ===== MAIL ======*/
     Route::get('/send-mail', [PageController::class, 'send_mail']);
@@ -312,11 +317,11 @@ Route::middleware(['auth:sanctum', 'verified', 'checkServerStatus'])->group(func
     Route::post('/send-timelogs-to-hris', [Timelogs::class, 'sendTimelogsAPIHRIS'])->name('send.timelogs.to.hris');
 
     # FACE RECOGNITION AND VALIDATION #
-    // Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
-    // Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
-    // Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
-    // Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
-    // Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
+    Route::get('/face-registered-listing', FaceRegistration::class)->name('face.registered.listing');
+    Route::get('/face-registration', [FaceRegistration::class, 'userFaceRegistration'])->name('face.registration');
+    Route::get('/faces/register', [FaceRegistrationController::class, 'index'])->name('faces.create');
+    Route::post('/faces/register', [FaceRegistrationController::class, 'store'])->name('faces.store');
+    Route::post('/faces/detect', [FaceRegistrationController::class, 'detect'])->name('faces.detect');
 
 
 

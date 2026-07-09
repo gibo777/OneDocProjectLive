@@ -114,15 +114,13 @@ class ModuleCreation extends Component
         ]);
     }
 
-    public function createModule()
+    public function createModule(Request $request)
     {
+
         $this->validate();
 
         $category = strtoupper($this->createNavCategory);
 
-        return response()->json([
-            'category' => $category,
-        ]);
 
         if ($category === 'MAIN') {
             $this->createNavParent = null;

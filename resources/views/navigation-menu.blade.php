@@ -256,6 +256,11 @@
                         <x-jet-responsive-nav-link href="{{ route('authorize.user.list') }}">
                             {{ __('User Authorization') }}
                         </x-jet-responsive-nav-link>
+
+                        <x-jet-responsive-nav-link href="{{ route('face.registered.listing') }}">
+                            {{ __('User Face Registration') }}
+                        </x-jet-responsive-nav-link>
+
                         <x-jet-responsive-nav-link href="{{ route('module.list') }}">
                             {{ __('Module Creation') }}
                         </x-jet-responsive-nav-link>
@@ -523,9 +528,10 @@
                                             <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
                                                 {{ __('User Authorization') }}
                                             </a>
-                                            {{-- <a class="dropdown-item" href="{{ route('faces.create') }}">
+
+                                            <a class="dropdown-item" href="{{ route('face.registered.listing') }}">
                                                 {{ __('User Face Registration') }}
-                                            </a> --}}
+                                            </a>
 
                                         </div>
                                     </div>

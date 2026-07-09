@@ -238,18 +238,16 @@
                                     <x-jet-label value="{{ __('EMPLOYEE #') }}" class="w-full" />
                                     <h6 class="mb-0">{{ $selectedUser['employee_id'] }}</h6>
                                 </div>
-                                <div class="col-6 col-md-3 pt-1">
+                                <div class="col-6 col-md-2 pt-1">
                                     <x-jet-label value="{{ __('OFFICE') }}" class="w-full" />
                                     <h6 class="mb-0">{{ $selectedUser['office'] }}</h6>
                                 </div>
-                                <div class="col-6 col-md-2 pt-1">
+                                <div class="col-6 col-md-3 pt-1">
                                     <x-jet-label value="{{ __('DEPARTMENT') }}" class="w-full" />
                                     <h6 class="mb-0">{{ $selectedUser['department'] }}</h6>
                                 </div>
 
                                 <div class="col-6 col-md-2 pt-1">
-                                    <x-jet-label value="{{ __('ROLE') }}" class="w-full" />
-                                    {{-- <h6 class="mb-0">{{ $selectedUser['role_type'] }}</h6> --}}
                                     <div class="form-floating w-100">
                                         <select wire:model="aUserRole" id="aUserRole" class="form-select w-100">
                                             <option value="">- Select Role -</option>

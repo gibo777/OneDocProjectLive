@@ -200,7 +200,9 @@
     <div class="flex items-center justify-center sm:px-6 sm:rounded-bl-md sm:rounded-br-md">
         <div class="row text-center justify-content-center space-y-2">
 
-            @if (Auth::user()->employee_id == $dLeave->supervisor || Auth::user()->id == 1)
+            @if (Auth::user()->employee_id == $dLeave->supervisor ||
+                    Auth::user()->employee_id == $altApprover ||
+                    Auth::user()->id == 1)
                 @if ($dLeave->leave_status == 'Pending')
                     <div class="col-md-4 px-1 my-1">
                         <x-jet-button id="bApproveLeave" class="w-full">

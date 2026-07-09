@@ -655,4 +655,92 @@ $(document).ready(function () {
         return false;
     });
 
+    /* EXPORT TO PDF OVERTIMES */
+    $(document).on('click', '#exportPDFOvertime', async function () {
+        let url = window.location.origin + '/overtimes-pdf';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: getFilterData(),
+            xhrFields: {
+                responseType: 'blob'
+            },
+            beforeSend: function () {
+                $('#dataProcess').css({
+                    'display': 'flex',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'left': '50%',
+                    'transform': 'translate(-50%, -50%)'
+                });
+            },
+            success: function (blob, status, xhr) {
+                $('#dataProcess').hide();
+                try {
+                    // ===== 1. Extract filename from Content-Disposition header =====
+                    var disposition = xhr.getResponseHeader('Content-Disposition');
+                    var filename = 'OT_Report.pdf';
+                    if (disposition && disposition.indexOf('filename=') !== -1) {
+                        var match = disposition.match(/filename="?([^"]+)"?/);
+                        if (match && match[1]) {
+                            filename = match[1];
+                        }
+                    }
+                    // ===== 2. Trigger download =====
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } catch (e) {
+                    console.error('PDF download failed:', e);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to generate PDF file.'
+                    });
+                }
+            },
+            error: function (xhr) {
+                $('#dataProcess').hide();
+
+                // Server errors (404, 500, etc.) come back as a JSON blob since
+                // responseType is 'blob' — read it back as text to see the real message.
+                if (xhr.response) {
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        console.error('PDF export error response:', reader.result);
+                        try {
+                            var json = JSON.parse(reader.result);
+                            Swal.fire({
+                                icon: 'error',
+                                title: json.message || 'Failed to generate PDF file.'
+                            });
+                        } catch (e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Failed to generate PDF file.'
+                            });
+                        }
+                    };
+                    reader.readAsText(xhr.response);
+                } else {
+                    console.error('PDF export error (no response body):', xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to generate PDF file.'
+                    });
+                }
+            }
+        });
+        return false;
+    });
+
 });

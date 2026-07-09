@@ -157,6 +157,20 @@ return [
             'days' => 365,
         ],
 
+        'pdf-overtime' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/reports/pdf/overtime-pdf.log'),
+            'level' => 'debug',
+            'days' => 365,
+        ],
+
+        'excel-overtime' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/reports/excel/overtime-excel.log'),
+            'level' => 'debug',
+            'days' => 365,
+        ],
+
         'pending-mail-notification' => [
             'driver' => 'daily',
             'path' => storage_path('logs/mail-notification/pending/pending-requests.log'),
