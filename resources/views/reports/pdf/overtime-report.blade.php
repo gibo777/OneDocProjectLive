@@ -92,7 +92,7 @@
                     <td>{{ $item->ot_from }}</td>
                     <td>{{ $item->ot_to }}</td>
                     <td>{{ $item->ot_hrmins }}</td>
-                    <td>{{ $item->ot_status }}</td>
+                    <td>{{ ucwords(strtolower($item->ot_status)) }}</td>
                 </tr>
             @endforeach
         </tbody>
