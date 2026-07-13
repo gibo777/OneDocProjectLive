@@ -56,7 +56,7 @@
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-break: break-word;
-            max-width: 150px;
+            max-width: 180px;
         }
     </style>
 </head>
@@ -74,7 +74,8 @@
                 <th>OT Control No.</th>
                 <th>OT Reason</th>
                 <th>OT Location</th>
-                <th>OT Schedule</th>
+                <th>From</th>
+                <th>To</th>
                 <th>OT Hours</th>
                 <th>Status</th>
             </tr>
@@ -88,7 +89,8 @@
                     <td>{{ $item->ot_control_number }}</td>
                     <td class="ot-reason">{{ $item->ot_reason }}</td>
                     <td>{{ $item->ot_location }}</td>
-                    <td>{{ $item->ot_schedule }}</td>
+                    <td>{{ $item->ot_from }}</td>
+                    <td>{{ $item->ot_to }}</td>
                     <td>{{ $item->ot_hrmins }}</td>
                     <td>{{ $item->ot_status }}</td>
                 </tr>
