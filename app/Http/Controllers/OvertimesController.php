@@ -1548,13 +1548,22 @@ class OvertimesController extends Controller
                 'u.supervisor',
                 'd.department_code as dept',
                 'ot.ot_control_number',
+                'ot.ot_reason',
                 'ot.ot_location',
                 DB::raw("CONCAT(
-                DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
-                DATE_FORMAT(ot.ot_time_from, '%h:%i %p'), ' - ',
-                DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
-                DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
-            ) as ot_schedule"),
+                    DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_from, '%h:%i %p'), ' - ',
+                    DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
+                ) as ot_schedule"),
+                DB::raw("CONCAT(
+                    DATE_FORMAT(ot.ot_date_from, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_from, '%h:%i %p')
+                ) as ot_from"),
+                DB::raw("CONCAT(
+                    DATE_FORMAT(ot.ot_date_to, '%m/%d/%Y'), ' ',
+                    DATE_FORMAT(ot.ot_time_to, '%h:%i %p')
+                ) as ot_to"),
                 'ot.ot_hrmins',
                 'ot.ot_status',
                 'ot.employee_id',

@@ -531,27 +531,34 @@ $(document).ready(function () {
                     // ===== 2. Column mapping =====
                     var columnMappings = {
                         full_name: 'Name',
-                        employee_id: 'Employee ID',
+                        // employee_id      : 'Employee ID',
                         office: 'Office',
                         department: 'Department',
-                        supervisor: 'Supervisor',
+                        // supervisor       : 'Supervisor',
                         ot_control_number: 'OT Control No.',
+                        ot_reason: 'OT Reason',
                         ot_location: 'OT Location',
-                        ot_schedule: 'OT Schedule',
+                        ot_from: 'From',
+                        ot_to: 'To',
+                        // ot_schedule: 'OT Schedule',
                         ot_hrmins: 'OT Hours',
                         ot_status: 'Status',
-                        // date_applied: 'Date Applied'
+                        // date_applied     : 'Date Applied'
                     };
 
+                    // Name, Office, Department, OT Control No., OT Reason, OT Location, From, To, OT Hours, Status
                     var selectedColumns = [
                         'full_name',
-                        'employee_id',
+                        // 'employee_id',
                         'office',
                         'department',
-                        'supervisor',
+                        // 'supervisor',
                         'ot_control_number',
+                        'ot_reason',
                         'ot_location',
-                        'ot_schedule',
+                        'ot_from',
+                        'ot_to',
+                        // 'ot_schedule',
                         'ot_hrmins',
                         'ot_status',
                         // 'date_applied'
@@ -561,7 +568,16 @@ $(document).ready(function () {
                     var rows = [];
                     rows.push(selectedColumns.map(c => columnMappings[c]));
                     rowsData.forEach(function (item) {
-                        var row = selectedColumns.map(c => item[c] ?? '');
+                        var row = selectedColumns.map(function (c) {
+                            let value = item[c] ?? '';
+
+                            // Convert status to proper case
+                            if (c === 'ot_status' && typeof value === 'string') {
+                                value = value.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+                            }
+
+                            return value;
+                        });
                         rows.push(row);
                     });
 
@@ -576,6 +592,7 @@ $(document).ready(function () {
                     xml += '<Style ss:ID="HeaderStyle"><Font ss:Bold="1" ss:Size="12"/></Style>\n';
                     xml += '<Style ss:ID="DefaultStyle"><Font ss:Bold="0" ss:Size="10"/></Style>\n';
                     xml += '<Style ss:ID="DateStyle"><NumberFormat ss:Format="yyyy-mm-dd hh:mm:ss"/></Style>\n';
+                    xml += '<Style ss:ID="WrapStyle"><Alignment ss:Vertical="Top" ss:WrapText="1"/><Font ss:Bold="0" ss:Size="10"/></Style>\n';
                     xml += '</Styles>\n';
 
                     // ===== Worksheet =====
@@ -586,36 +603,40 @@ $(document).ready(function () {
                     rows.forEach(function (row, rowIndex) {
                         xml += '<Row>\n';
 
-                        row.forEach(function (cell) {
+                        row.forEach(function (cell, cellIndex) {
 
                             let raw = cell;
                             let type = 'String';
                             let value = cell;
                             let style = rowIndex === 0 ? 'HeaderStyle' : 'DefaultStyle';
 
-                            // Detect DateTime
+                            if (rowIndex > 0 && selectedColumns[cellIndex] === 'ot_reason') {
+                                style = 'WrapStyle';
+                            }
+
                             if (isDateTime(raw)) {
                                 type = 'DateTime';
                                 value = raw.replace(' ', 'T');
                                 style = 'DateStyle';
                             }
-                            // Detect number
                             else if (isNumber(raw)) {
                                 type = 'Number';
                                 value = raw;
                             }
 
-                            // Escape only strings
                             if (type === 'String') {
                                 value = value.toString()
                                     .replace(/&/g, '&amp;')
                                     .replace(/</g, '&lt;')
                                     .replace(/>/g, '&gt;')
                                     .replace(/"/g, '&quot;')
-                                    .replace(/'/g, '&apos;');
+                                    .replace(/'/g, '&apos;')
+                                    .replace(/\r\n|\r|\n/g, '&#10;');
                             }
 
-                            xml += `<Cell ss:StyleID="${style}"><Data ss:Type="${type}">${value}</Data></Cell>\n`;
+                            xml += `<Cell ss:StyleID="${style}">
+<Data ss:Type="${type}" xml:space="preserve">${value}</Data>
+</Cell>\n`;
                         });
 
                         xml += '</Row>\n';
@@ -643,7 +664,8 @@ $(document).ready(function () {
                     console.error('Excel generation failed:', e);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Failed to generate Excel file.'
+                        title: 'Failed to generate Excel file.',
+                        // html: e,
                     });
                 }
             }
