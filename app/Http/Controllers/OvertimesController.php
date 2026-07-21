@@ -1647,7 +1647,8 @@ class OvertimesController extends Controller
             });
         }
 
-        $otData = $otData->orderBy('ot.name', 'desc')->get();
+        // $otData = $otData->orderBy('ot.name', 'desc')->get();
+        $otData = $otData->orderBy('ot.name')->orderBy('ot.ot_date_from', 'desc')->get();
 
 
         $fileName = 'OT_Report_';
