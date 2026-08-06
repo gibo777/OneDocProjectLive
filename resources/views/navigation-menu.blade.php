@@ -956,13 +956,13 @@
                 var dataURL = canvas.toDataURL('image/jpeg', 0.8);
 
                 Swal.fire({
-                    // title: 'Captured Image',
+                    // title: 'Captured Snapshot',
                     imageUrl: dataURL,
-                    imageAlt: 'Captured Image',
+                    imageAlt: 'Captured Snapshot',
                     allowOutsideClick: false,
                     showCancelButton: true,
-                    cancelButtonText: 'Close',
-                    confirmButtonText: 'Save',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonText: 'Save Snapshot',
                 }).then(function(result) {
                     if (result.isConfirmed) {
                         $.ajaxSetup({
@@ -977,8 +977,8 @@
                                 'logEvent': $("#logEvent").val(),
                                 'latitude': parseFloat(latitude),
                                 'longitude': parseFloat(longitude),
-                                // 'latitude': '27.994402', // Lat for testing
-                                // 'longitude': '-81.760254', // Long for testing
+                                // 'latitude': '27.994402', // Lat for testing only
+                                // 'longitude': '-81.760254', // Long for testing only
                                 'image': dataURL
                             },
                             beforeSend: function() {
@@ -1037,8 +1037,8 @@
                         }); // end $.ajax
 
                     } else {
-                        // Resume video playback
-                        video.play();
+                        // Resume video playback when cancel Snapshot preview
+                        startWebcam();
                     }
                 }); // end .then
             }
