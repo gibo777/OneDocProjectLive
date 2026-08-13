@@ -3,10 +3,27 @@
     <x-jet-authentication-card>
         <x-slot name="logo">
         </x-slot>
-            <div class="drop-shadow">
+            {{-- <div class="drop-shadow">
                 <img src="{{ asset('/img/company/onedoc-logo.png') }}" class="rounded mx-auto d-block py-2"/>
-                <!-- <x-jet-authentication-card-logo /> -->
+            </div> --}}
+
+
+        <div class="flex justify-start items-center py-2 space-x-2">
+            <div class="flex justify-center items-center">
+                <img class="h-16 md:h-20 lg:h-24 object-contain" src="{{ asset('/img/company/1doc-logo-100px.jpg') }}" />
             </div>
+            <div class="flex justify-center items-center">
+                <img class="h-16 md:h-20 lg:h-24 object-contain" src="{{ asset('/img/company/sappi-logo-90px.jpg') }}" />
+            </div>
+            <div class="flex justify-center items-center">
+                <img class="h-10 md:h-16 lg:h-20 object-contain"
+                    src="{{ asset('/img/company/1food-logo-90px.jpg') }}" />
+            </div>
+            <div class="flex justify-center items-center">
+                <img class="h-12 md:h-16 lg:h-20 object-contain"
+                    src="{{ asset('/img/company/eagro-logo-100px.jpg') }}" />
+            </div>
+        </div>
 
         <x-jet-validation-errors class="mb-4" />
 
