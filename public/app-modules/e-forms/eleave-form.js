@@ -74,9 +74,9 @@ $(document).ready(function () {
             $("#range_notice").html("");
             if (isNaN(number_of_days) == false) {
                 if (number_of_days > 0 && $('#isHalfDay').is(':checked')) {
-                    $("#hid_no_days").val(0.5);
+                    $("#hid_no_days").text(0.5);
                 } else {
-                    $("#hid_no_days").val(number_of_days);
+                    $("#hid_no_days").text(number_of_days);
                 }
             }
 

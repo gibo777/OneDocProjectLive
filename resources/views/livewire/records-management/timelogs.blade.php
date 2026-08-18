@@ -17,11 +17,11 @@
             class="px-3 bg-white sm:p-6 shadow {{ isset($actions) ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md' }}">
             <div class="col-span-8 sm:col-span-8 sm:justify-center">
 
-                {{-- Filter bar --}}
+                {{-- Filter bar: Office | Department | Search Dates --}}
                 <div class="row pb-1 mx-1 inset-shadow align-items-end py-2">
 
                     {{-- Office Filter --}}
-                    <div class="col-md-2 p-1">
+                    <div class="col-md-3 p-1">
                         <div class="form-floating">
                             <select wire:model="fTLOffice" name="fTLOffice" id="fTLOffice"
                                 class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
@@ -35,7 +35,7 @@
                     </div>
 
                     {{-- Department Filter --}}
-                    <div class="col-md-2 p-1">
+                    <div class="col-md-3 p-1">
                         <div class="form-floating">
                             <select wire:model="fTLDept" name="fTLDept" id="fTLDept"
                                 class="form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
@@ -50,7 +50,7 @@
                     </div>
 
                     {{-- Date Filter --}}
-                    <div class="col-md-5 p-1">
+                    <div class="col-md-6 p-1">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <x-jet-label class="mb-0" value="{{ __('Search Dates') }}" />
                             <span id="clearFilter" wire:click="clearDateFilters" class="text-primary text-sm"
@@ -69,59 +69,58 @@
                         </div>
                     </div>
 
-                    {{-- Export to Excel --}}
-                    @if (Auth::user()->role_type === 'SUPER ADMIN')
-                        <div class="col-md-3 d-flex align-items-end">
-                            <div class="btn btn-outline-success shadow-sm w-100 text-center py-2">
-                                <i class="fas fa-table mr-1"></i>
-                                <span id="exportExcel" class="font-weight-bold">Export to Excel</span>
-                            </div>
-                        </div>
-                    @endif
-
                 </div>
             </div>
 
 
             <div id="table_data">
-
-                {{-- Page size, pagination, and search --}}
-
-                {{-- Top row: Show entries on the left, Search on the right --}}
-                <div class="d-flex align-items-center justify-content-between my-2" style="gap: 8px;">
-
-                    {{-- Page size --}}
-                    <div class="d-flex align-items-center flex-shrink-0" style="gap: 6px;">
-                        <label for="pageSize" class="mb-0 text-nowrap">Show:</label>
-                        <select wire:model="pageSize" id="pageSize"
-                            class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                        <span class="text-nowrap">entries</span>
+                <div class="row">
+                    <div class="col-md-7 text-sm">
+                        <div class="form-inline mt-1">
+                            <label for="pageSize" class="mr-2">Show:</label>
+                            <select wire:model="pageSize" id="pageSize"
+                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                            <span class="mx-2">entries</span>
+                            <div class="sm:col-span-7 sm:justify-center scrollable">
+                                {{ $timeLogs->links('pagination.custom') }}
+                            </div>
+                        </div>
                     </div>
 
-                    {{-- Search --}}
-                    <div class="d-flex align-items-center flex-shrink-0" style="gap: 6px;">
-                        <x-jet-label for="search" value="{{ __('Search') }}" class="mb-0 text-nowrap" />
-                        <x-jet-input wire:model.debounce.300ms="search" type="text" id="search" name="search"
-                            placeholder="Name/Employee ID" style="width: 180px; max-width: 45vw;" />
-                    </div>
-
-                </div>
-
-                {{-- Pagination on its own row so it always has full width to scroll across --}}
-                <div style="overflow-x: auto; white-space: nowrap; width: 100%; padding: 2px 0; margin-bottom: 8px;">
-                    {{ $timeLogs->links('pagination.custom') }}
+                    @if (Auth::user()->role_type === 'SUPER ADMIN')
+                        <div class="col-md-5">
+                            <div class="row mt-2">
+                                <div
+                                    class="col-md-7 mt-2 px-0 d-flex flex-nowrap justify-content-center align-items-center">
+                                    <div
+                                        class="form-group btn btn-outline-success d-inline-block shadow-sm px-1 rounded capitalize hover px-3 text-nowrap">
+                                        <i class="fas fa-table"></i>
+                                        <span id="exportExcel" class="font-weight-bold">Export Excel</span>
+                                    </div>
+                                </div>
+                                <div class="row col-md-5 my-2">
+                                    <div class="form-floating p-0">
+                                        <x-jet-input wire:model.debounce.300ms="search" type="text" id="search"
+                                            name="search" class="w-full form-control" title="Name/Employee ID">
+                                        </x-jet-input>
+                                        <x-jet-label for="search" value="{{ __('Search') }}" class="w-full" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Time logs table --}}
-                <div style="overflow-x: auto; width: 100%;">
+                <div class="col-span-12 sm:col-span-7 sm:justify-center scrollable">
                     <table id="dataTimeLogs"
-                        class="view-detailed-timelogs table table-bordered table-striped table-hover text-sm mb-0">
+                        class="view-detailed-timelogs table table-bordered table-striped sm:justify-center table-hover text-sm">
                         <thead class="thead">
                             <tr class="dt-head-center">
                                 <th class="py-1">Name</th>
@@ -139,7 +138,6 @@
                             @if ($timeLogs->isNotEmpty())
                                 @foreach ($timeLogs as $record)
                                     <tr id="{{ $record->id }}">
-                                        {{-- Mask names on localhost --}}
                                         @if (url('/') == 'http://localhost')
                                             <td>xxx, xxx x.</td>
                                         @else
@@ -152,7 +150,6 @@
                                         <td>{{ date('m/d/Y', strtotime($record->log_date)) }}</td>
                                         <td>{{ date('D', strtotime($record->log_date)) }}</td>
 
-                                        {{-- Blank when no time logged --}}
                                         <td>{{ $record->time_in ? date('g:i A', strtotime($record->time_in)) : '' }}
                                         </td>
                                         <td>{{ $record->time_out ? date('g:i A', strtotime($record->time_out)) : '' }}
@@ -170,25 +167,23 @@
                             @endif
                         </tbody>
                     </table>
-                </div>
 
-                {{-- Bottom page size and pagination --}}
-                <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 6px;">
-                    <label for="pageSize" class="mb-0">Show:</label>
-                    <select wire:model="pageSize" id="pageSize"
-                        class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md py-1">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                    <span>entries</span>
-                    <div style="overflow-x: auto; white-space: nowrap; flex: 1 1 0; min-width: 0;">
-                        {{ $timeLogs->links('pagination.custom') }}
+                    <div class="d-flex justify-content-between align-items-center text-sm">
+                        <div class="form-inline">
+                            <label for="pageSize" class="mr-2">Show:</label>
+                            <select wire:model="pageSize" id="pageSize"
+                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                            <span class="mx-2">entries</span>
+                            {{ $timeLogs->links('pagination.custom') }}
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
 

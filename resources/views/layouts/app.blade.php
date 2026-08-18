@@ -26,6 +26,8 @@
 
     <!-- font awesome  -->
     <link rel="stylesheet" href="{{ asset('/fontawesome-6.2.0/css/all.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('/fontawesome-free-7.3.1-web/css/all.min.css') }}"> --}}
+
 
     <link rel="stylesheet" href="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('/jquery-ui-1.13.1.custom/jquery-ui.min.css') }}">
