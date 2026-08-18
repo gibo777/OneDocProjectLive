@@ -83,6 +83,10 @@
             <div class="flex justify-start items-center py-2 space-x-2">
                 <div class="flex justify-center items-center">
                     <img class="h-16 md:h-20 lg:h-24 object-contain"
+                        src="{{ asset('/img/company/one-document-group-logo.png') }}" />
+                </div>
+                {{-- <div class="flex justify-center items-center">
+                    <img class="h-16 md:h-20 lg:h-24 object-contain"
                         src="{{ asset('/img/company/1doc-logo-100px.jpg') }}" />
                 </div>
                 <div class="flex justify-center items-center">
@@ -96,7 +100,7 @@
                 <div class="flex justify-center items-center">
                     <img class="h-12 md:h-16 lg:h-20 object-contain"
                         src="{{ asset('/img/company/eagro-logo-100px.jpg') }}" />
-                </div>
+                </div> --}}
             </div>
 
             <!-- Settings Dropdown -->
