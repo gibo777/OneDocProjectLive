@@ -234,12 +234,26 @@
                     </x-jet-responsive-nav-link>
                 </div>
 
-                <div>
-                    <a class="view_nav block px-4 py-2 text-xs text-gray-400" href="{{ route('timelogs-listing') }}"
-                        id="nav_time_logs">
-                        {{ __('Time-logs') }}
-                    </a>
-                </div>
+                @if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
+                    <div class="view_nav block px-4 py-2 text-xs text-gray-400">
+                        {{ __('Time Keeping') }}
+                    </div>
+                    <div class="border-t border-gray-200" hidden>
+                        <x-jet-responsive-nav-link href="{{ route('timelogs-listing') }}">
+                            {{ __('Time Logs') }}
+                        </x-jet-responsive-nav-link>
+                        <x-jet-responsive-nav-link href="{{ route('attendance-monitoring') }}">
+                            {{ __('Attendance Monitoring') }}
+                        </x-jet-responsive-nav-link>
+                    </div>
+                @else
+                    <div>
+                        <a class="view_nav block px-4 py-2 text-xs text-gray-400"
+                            href="{{ route('timelogs-listing') }}" id="nav_time_logs">
+                            {{ __('Time-logs') }}
+                        </a>
+                    </div>
+                @endif
                 @if (Auth::user()->id == 1)
                     <div class="view_nav block px-4 py-2 text-xs text-gray-400">
                         {{ __('Records Management') }}
