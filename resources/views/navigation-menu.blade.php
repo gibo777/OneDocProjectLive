@@ -26,18 +26,46 @@
         transform: none !important;
     }
 
-    .dropdown-hover-all .dropdown-menu,
-    .dropdown-hover>.dropdown-menu.dropend {
-        margin-left: -1px !important
+    /* ===== CLICK-BASED DROPDOWNS (Alpine) ===== */
+
+    /* Hidden by default, shown when Alpine adds .show */
+    #nav_header .dropdown-menu {
+        display: none;
     }
 
-    .margin-left-cust {
-        left: -3 !important;
+    #nav_header .dropdown-menu.show {
+        display: block;
     }
 
-    .margin-top-cust {
-        top: -2 !important;
+    /* Submenu parent is the positioning anchor */
+    #nav_header .dropdown-menu .dropend {
+        position: relative;
     }
+
+    /* Fly the submenu out to the right, aligned with its parent item */
+    #nav_header .dropdown-menu .dropend>.dropdown-menu {
+        position: absolute;
+        top: 0 !important;
+        left: 100% !important;
+        right: auto;
+        margin: 0 !important;
+    }
+
+    /* Arrow on items that have a submenu */
+    #nav_header .dropdown-menu .dropend>.dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        white-space: nowrap;
+    }
+
+    #nav_header .dropdown-menu .dropend>.dropdown-toggle::after {
+        float: none;
+        margin-top: 0;
+        margin-left: 1.5rem;
+    }
+
+    /* ===== END DROPDOWNS ===== */
 
     #logCamera video {
         transform: scaleX(-1);
@@ -340,231 +368,190 @@
 
         <div class="flex justify-between p-1">
 
-            <div class="hidden sm:flex sm:items-center sm:ml-6 dropdown-hover-all">
+            <div class="hidden sm:flex sm:items-center sm:ml-6">
 
-                <!-- HOME start-->
+                <!-- HOME -->
                 <div class="dropdown mt-3 mx-1">
                     <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
                         href="{{ route('dashboard') }}" id="nav_home">HOME</a>
                 </div>
-                <!-- HOME end  -->
 
-                <div class="dropdown mt-3 mx-1">
+                <!-- E-FORMS -->
+                <div class="dropdown mt-3 mx-1" x-data="{ open: false, sub: null }" @click.away="open = false; sub = null"
+                    @keydown.escape.window="open = false; sub = null">
+
                     <button
                         class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
-                        type="button" id="dropdownEForms" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                        type="button" id="dropdownEForms" @click="open = !open; sub = null"
+                        :aria-expanded="open.toString()">
                         E-FORMS
                     </button>
-                    <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownEForms">
+
+                    <div class="dropdown-menu" :class="{ 'show': open }">
+
+                        {{-- E-Leave --}}
                         <div class="dropdown dropend">
                             <a class="dropdown-item dropdown-toggle" href="#" id="submenuELeaves"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">E-Leave</a>
-                            <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                @click.prevent.stop="sub = (sub === 'eleave' ? null : 'eleave')">E-Leave</a>
+                            <div class="dropdown-menu" :class="{ 'show': sub === 'eleave' }">
                                 <a class="dropdown-item" href="{{ route('hris.leave.eleave') }}"
-                                    id="dNavEleave">{{ __('E-Leave Form') }} </a>
+                                    id="dNavEleave">{{ __('E-Leave Form') }}</a>
                                 <a class="dropdown-item" href="{{ route('eforms.leaves-listing') }}"
-                                    id="nav_view_leaves">{{ __('View Leaves') }} </a>
+                                    id="nav_view_leaves">{{ __('View Leaves') }}</a>
                                 <a class="dropdown-item" href="{{ route('calendar') }}"
-                                    id="nav_leaves_calendar">{{ __('Leaves Calendar') }} </a>
+                                    id="nav_leaves_calendar">{{ __('Leaves Calendar') }}</a>
                             </div>
                         </div>
-                        {{-- @if (Auth::user()->id == 1) --}}
+
+                        {{-- Overtime --}}
                         <div class="dropdown dropend">
                             <a class="dropdown-item dropdown-toggle" href="#" id="submenuOvertimes"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overtime</a>
-                            <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
+                                @click.prevent.stop="sub = (sub === 'overtime' ? null : 'overtime')">Overtime</a>
+                            <div class="dropdown-menu" :class="{ 'show': sub === 'overtime' }">
                                 <a class="dropdown-item" href="{{ route('hris.overtime') }}"
-                                    id="dNavOvertime">{{ __('Overtime Form') }} </a>
+                                    id="dNavOvertime">{{ __('Overtime Form') }}</a>
                                 <a class="dropdown-item" href="{{ route('eforms.overtime-listing') }}"
-                                    id="nav_view_leaves">{{ __('View Overtimes') }} </a>
+                                    id="nav_view_overtimes">{{ __('View Overtimes') }}</a>
                             </div>
                         </div>
-                        {{-- @endif --}}
-
-                        @if (Auth::user()->id == 1)
-                            <div class="dropdown dropend">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuWFH"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WFH
-                                    Setup</a>
-                                <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                    <a class="dropdown-item" href="{{ route('hris.wfhsetup') }}"
-                                        id="dNavWFH">{{ __('WFH Form') }} </a>
-                                    <a class="dropdown-item" href="{{ route('hris.leave.view-leave') }}"
-                                        id="nav_view_wfh">{{ __('View WFH') }} </a>
-                                </div>
-                            </div>
-
-                            {{-- <div class="dropdown dropend">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuReimbursement"
-                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">Reimbursement</a>
-                                @if (Auth::user()->id == 1)
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item"
-                                            href="{{ route('hris.reimbursement.reimbursement') }}">Reimbursement
-                                            Form</a>
-                                    </div>
-                                @endif
-                            </div> --}}
-                        @endif
 
                     </div>
-                    {{-- @if ($notification_count > 0)
-                        <span id="nav-memo-counter" class="badge badge-primary badge-pill">{{ $notification_count }}</span>
-            @endif --}}
                 </div>
 
                 @if (Auth::user()->role_type == 'ADMIN' || Auth::user()->role_type == 'SUPER ADMIN')
+
                     @if (str_contains(Auth::user()->department, 'ACCTG') == 1)
-                        <div class="dropdown mt-3 mx-1">
+                        <!-- PROCESS -->
+                        <div class="dropdown mt-3 mx-1" x-data="{ open: false }" @click.away="open = false"
+                            @keydown.escape.window="open = false">
+
                             <button
                                 class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
-                                type="button" id="dropdownProcess" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
+                                type="button" id="dropdownProcess" @click="open = !open"
+                                :aria-expanded="open.toString()">
                                 PROCESS
                             </button>
-                            <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownProcess">
-                                <div class="dropdown dropend">
-                                    <a class="dropdown-item" href="{{ route('process.eleave') }}">Process e-Leave</a>
-                                </div>
+
+                            <div class="dropdown-menu" :class="{ 'show': open }">
+                                <a class="dropdown-item" href="{{ route('process.eleave') }}">Process e-Leave</a>
                             </div>
                         </div>
                     @endif
 
-                    <div class="dropdown mt-3 mx-1">
+                    <!-- RECORDS MANAGEMENT -->
+                    <div class="dropdown mt-3 mx-1" x-data="{ open: false, sub: null }" @click.away="open = false; sub = null"
+                        @keydown.escape.window="open = false; sub = null">
+
                         <button
                             class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
-                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                            type="button" id="dropdownRecords" @click="open = !open; sub = null"
+                            :aria-expanded="open.toString()">
                             RECORDS MANAGEMENT
                         </button>
-                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
-                            <div class="dropdown dropend">
-                                {{-- <a class="dropdown-item" href="{{ route('hr.management.employees') }}" >
-                    {{ __('View Employees') }}
-                    </a> --}}
-                                @if (Auth::user()->role_type == 'SUPER ADMIN')
-                                    <div class="dropdown dropend">
-                                        <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Employee Management </a>
-                                        <div class="dropdown-menu margin-left-cust"
-                                            aria-labelledby="dropdown-layouts">
-                                            <a class="dropdown-item" href="{{ route('register') }}">
-                                                {{ __('User Registration') }}
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
-                                                {{ __('View Employees') }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endif
 
+                        <div class="dropdown-menu" :class="{ 'show': open }">
+
+                            @if (Auth::user()->role_type == 'SUPER ADMIN')
+                                {{-- Employee Management --}}
                                 <div class="dropdown dropend">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Time Keeping </a>
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
-                                        <a class="dropdown-item"
-                                            href="{{ route('attendance-monitoring') }}">Attendance Monitoring</a>
-                                        {{-- @if (Auth::user()->id == 1)
-                                            <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
-                                                Registration</a>
-                                            <a class="dropdown-item"
-                                                href="{{ route('face.registered.listing') }}">Face Registration</a>
-                                        @endif --}}
+                                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuEmployeeMgmt"
+                                        @click.prevent.stop="sub = (sub === 'employee' ? null : 'employee')">
+                                        Employee Management </a>
+                                    <div class="dropdown-menu" :class="{ 'show': sub === 'employee' }">
+                                        <a class="dropdown-item" href="{{ route('register') }}">
+                                            {{ __('User Registration') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
+                                            {{ __('View Employees') }}
+                                        </a>
                                     </div>
                                 </div>
-                                @if (Auth::user()->id == 1 || Auth::user()->id == 2)
-                                    {{-- <div class="dropdown dropend">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Employee Clearance </a>
-                                    <div class="dropdown-menu margin-left-cust" aria-labelledby="dropdown-layouts">
-                                        <a class="dropdown-item" href="{{ route('clearance.form') }}" >
-                    {{ __('Employee Clearance Form') }}
-                    </a>
-                    <a class="dropdown-item" href="{{ route('hr.management.employees') }}">
-                        {{ __('View Clearances') }}
-                    </a>
-                </div>
-            </div> --}}
-                                @endif
-                                {{-- <a class="dropdown-item" href="{{ route('hr.management.memos') }}">
-            {{ __('Memo') }}
-            </a> --}}
+                            @endif
+
+                            {{-- Time Keeping --}}
+                            <div class="dropdown dropend">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="submenuTimeKeeping"
+                                    @click.prevent.stop="sub = (sub === 'timekeeping' ? null : 'timekeeping')">
+                                    Time Keeping </a>
+                                <div class="dropdown-menu" :class="{ 'show': sub === 'timekeeping' }">
+                                    <a class="dropdown-item" href="{{ route('timelogs-listing') }}">Time Logs</a>
+                                    <a class="dropdown-item" href="{{ route('attendance-monitoring') }}">Attendance
+                                        Monitoring</a>
+                                    {{-- @if (Auth::user()->id == 1)
+                                        <a class="dropdown-item" href="{{ route('faces.create') }}">User Face
+                                            Registration</a>
+                                        <a class="dropdown-item"
+                                            href="{{ route('face.registered.listing') }}">Face Registration</a>
+                                    @endif --}}
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 @else
                     <div class="dropdown mt-3 mx-1">
                         <a class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
-                            href="{{ route('timelogs-listing') }}" id="nav_home">TIME-LOGS</a>
+                            href="{{ route('timelogs-listing') }}" id="nav_timelogs">TIME-LOGS</a>
                     </div>
                 @endif
 
-
-
                 @if (Auth::user()->role_type == 'SUPER ADMIN' && (Auth::user()->id == 1 || Auth::user()->id == 543))
+                    <!-- SET-UP -->
+                    <div class="dropdown mt-3 mx-1" x-data="{ open: false }" @click.away="open = false"
+                        @keydown.escape.window="open = false">
 
-                    <div class="dropdown mt-3 mx-1">
                         <button
                             class="btn-outline-secondary inline-flex items-center px-3 py-1 m-0 text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition hover"
-                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
+                            type="button" id="dropdownSetup" @click="open = !open"
+                            :aria-expanded="open.toString()">
                             {{ __('SET-UP') }}
                         </button>
-                        <div class="dropdown-menu margin-top-cust" aria-labelledby="dropdownMenuButton1">
-                            <div class="dropdown dropend">
-                                {{-- <a class="dropdown-item" href="{{ route('register') }}" >
-                {{ __('User Registration') }}
-                </a> --}}
-                                <a class="dropdown-item" href="{{ route('hr.management.offices') }}">
-                                    {{ __('Offices') }}
-                                </a>
-                                <a class="dropdown-item" href="{{ route('hr.management.departments') }}">
-                                    {{ __('Departments') }}
-                                </a>
-                                <a class="dropdown-item" href="{{ route('hr.management.holidays') }}">
-                                    {{ __('Holidays') }}
-                                </a>
-                                @if (Auth::user()->id == 1)
-                                    <a class="dropdown-item" href="{{ route('employee-benefits') }}">
-                                        {{ __('Leave Credits') }}
-                                    </a>
-                                    {{-- <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
-                                        {{ __('User Authorization') }}
-                                    </a> --}}
-                                    <div class="dropdown dropend">
-                                        <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-layouts"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            User Management </a>
-                                        <div class="dropdown-menu margin-left-cust"
-                                            aria-labelledby="dropdown-layouts">
-                                            <a class="dropdown-item" href="#"> {{ __('User Group') }} </a>
-                                            <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
-                                                {{ __('User Authorization') }}
-                                            </a>
 
-                                            <a class="dropdown-item" href="{{ route('face.registered.listing') }}">
-                                                {{ __('User Face Registration') }}
-                                            </a>
+                        <div class="dropdown-menu" :class="{ 'show': open }">
 
-                                        </div>
+                            <a class="dropdown-item" href="{{ route('hr.management.offices') }}">
+                                {{ __('Offices') }}
+                            </a>
+                            <a class="dropdown-item" href="{{ route('hr.management.departments') }}">
+                                {{ __('Departments') }}
+                            </a>
+                            <a class="dropdown-item" href="{{ route('hr.management.holidays') }}">
+                                {{ __('Holidays') }}
+                            </a>
+
+                            @if (Auth::user()->id == 1)
+                                <a class="dropdown-item" href="{{ route('employee-benefits') }}">
+                                    {{ __('Leave Credits') }}
+                                </a>
+
+                                {{-- User Management --}}
+                                <div class="dropdown dropend" x-data="{ sub: false }"
+                                    x-effect="if (!open) sub = false">
+                                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuUserMgmt"
+                                        @click.prevent.stop="sub = !sub">
+                                        User Management </a>
+                                    <div class="dropdown-menu" :class="{ 'show': sub }">
+                                        <a class="dropdown-item" href="#"> {{ __('User Group') }} </a>
+                                        <a class="dropdown-item" href="{{ route('authorize.user.list') }}">
+                                            {{ __('User Authorization') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('face.registered.listing') }}">
+                                            {{ __('User Face Registration') }}
+                                        </a>
                                     </div>
-                                    <a class="dropdown-item" href="{{ route('module.list') }}">
-                                        {{ __('Module Creation') }}
-                                    </a>
-                                    <a id="navServerStatus" href="{{ route('server-status') }}"
-                                        class="dropdown-item hover font-weight-bold {{ $serverStatus ? 'text-success' : 'text-danger' }}">
-                                        {{ __('Server Status') }}
-                                    </a>
-                                @endif
-                            </div>
+                                </div>
+
+                                <a class="dropdown-item" href="{{ route('module.list') }}">
+                                    {{ __('Module Creation') }}
+                                </a>
+                                <a id="navServerStatus" href="{{ route('server-status') }}"
+                                    class="dropdown-item hover font-weight-bold {{ $serverStatus ? 'text-success' : 'text-danger' }}">
+                                    {{ __('Server Status') }}
+                                </a>
+                            @endif
+
                         </div>
                     </div>
-
                 @endif
 
             </div>
@@ -598,9 +585,6 @@
 
 
 
-{{-- Bootstrap modal replaced by SweetAlert2 popup in startWebcam() to fix
-     position:fixed being broken by parent overflow:auto context in app.blade.php.
-     Keeping hidden elements here that are still referenced by JS. --}}
 <div hidden>
     <input id="logEvent">
     <video id="video-element"></video>
@@ -611,14 +595,19 @@
 {{-- <script src="node_modules/@popperjs/core/dist/umd/popper.min.js"></script> --}}
 <script type="text/javascript" src="{{ asset('/popper/js/bootstrap.bundle.js') }}"></script>
 <script type="text/javascript" src="{{ asset('/bootstrap-5.0.2-dist/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('/nav-bar/bootstrap5-dropdown-ml-hack.js') }}"></script>
+{{-- No longer needed: the menus no longer use Bootstrap's data-bs-toggle dropdowns --}}
+{{-- <script src="{{ asset('/nav-bar/bootstrap5-dropdown-ml-hack.js') }}"></script> --}}
 
 <!-- NAVIGATOR end -->
 <script type="text/javascript">
     // scripts.js
     document.addEventListener('DOMContentLoaded', function() {
-        let isActive = JSON.parse(document.getElementById('navServerStatus').getAttribute('data-is-active'));
-        console.log(isActive); // Logs the current value of isActive
+        // #navServerStatus only exists for user id 1, so guard against null
+        const statusEl = document.getElementById('navServerStatus');
+        if (statusEl && statusEl.hasAttribute('data-is-active')) {
+            let isActive = JSON.parse(statusEl.getAttribute('data-is-active'));
+            console.log(isActive); // Logs the current value of isActive
+        }
     });
 
     $(document).ready(function() {
